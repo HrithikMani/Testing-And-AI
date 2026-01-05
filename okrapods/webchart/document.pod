@@ -1,0 +1,91 @@
+"""
+Pod used to interact with document dynOps.
+
+Usage examples:
+	Hover "0000477" "Injection" document header
+	Hover "07-11-2023 12:33 | MMR" "Injection" document header
+	Click the "Link to Encounter" document dynop
+	Verify exists "Batch" document dynop
+	Verify exists "Injection" document
+"""
+
+document://div[contains(@class, "document_wrapper")]{OKRA_TEXT_CLS}
+	|//table[contains(@class, "newui zebra")]//tr{OKRA_TEXT_CLS}
+
+header://div[contains(@class, "document_header")]{OKRA_TEXT_CLS}
+
+dynop://span[contains(@class, "dynOps") and not(contains(@style, "display: none"))]/*[self::a or self::button][contains(@title, "{{OKRA_TEXT}}")]
+	|//span[contains(@class, "dynOps") and not(contains(@style, "display: none"))]/*[self::a or self::button][contains(@title, "{{OKRA_TEXT}}")]
+	|//div[contains(@class, "dyndiv") and contains(@data-name, "doc_id_dyn")]//div[contains(@class, "dynItem")]
+
+@Hover
+"""
+def parse(str):
+   if "|" in str:
+      spl = [x.strip() for x in str.split('|')]
+      str1 = spl[0]
+      str2 = spl[1]
+      return(str1,str2)
+   else:
+      str1 = str
+      str2 = "None"
+      return(str1,str2)
+"""
+@@@ Hover over the document header
+docHeaderOneVal = '//div[contains(@class, "dynItem")][contains(., "{0}")]|//div[contains(@class, "dyndiv") and contains(@data-name, "doc_id_dyn")]//div[contains(@class, "dynItem")][contains(., "{0}")]|//tr[contains(., "{0}")]/td/div/div/div/div[contains(@class, "dynItem")]'
+docHeaderTwoVal = '//div[contains(@class, "document_header")][contains(., "{0}")]//div[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]|//tr[contains(., "{0}")]//div[contains(@class, "dyndiv") and contains(@data-name, "doc_id_dyn")]//div[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]|//tr[contains(., "{0}") and contains(., "{{OKRA_TEXT}}")]/td/div/div/div/div[contains(@class, "dynItem")]'
+docHeaderThreeVal = '//div[contains(@class, "document_header")][contains(., "{0}") and contains(., "{1}")]//div[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]|//tr[contains(., "{0}") and contains(., "{1}")]//div[contains(@class, "dyndiv") and contains(@data-name, "doc_id_dyn")]//div[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]|//tr[contains(., "{0}") and contains(., "{1}") and contains(., "{{OKRA_TEXT}}")]/td/div/div/div/div[contains(@class, "dynItem")]'
+oldTimeout = driver.timeout
+driver.setTimeout(.5)
+driver.reportCommandStatus("{0}", "{1}", True, "{{OKRA_TEXT}}", "")
+if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=90, comments='Wait for ajax and layoutInsert operations to complete'):
+	driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+if "{{OKRA_TEXT}}"=="None":
+	driver.reportCommandStatus("{0}", "{1}", True, "{{OKRA_TEXT}}", "docHeaderOveVal used")
+	if driver.wcutils.waitFor(lambda d: d.getElement(xpath=docHeaderOneVal), timeout=60, comments='Wait and verify document header is present'):
+		driver.mouseOver(xpath=docHeaderOneVal)
+		driver.mouseOver(xpath=docHeaderOneVal)
+elif "{{OKRA_TEXT}}"!="None":
+	if "{1}"=="None":
+		driver.reportCommandStatus("{0}", "{1}", True, "{{OKRA_TEXT}}", "docHeaderOveVal used")
+		if driver.wcutils.waitFor(lambda d: d.getElement(xpath=docHeaderTwoVal), timeout=60, comments='Wait and verify document header is present'):
+			driver.mouseOver(xpath=docHeaderTwoVal)
+			driver.mouseOver(xpath=docHeaderTwoVal)
+	if "{1}"!="None":
+		driver.reportCommandStatus("{0}", "{1}", True, "{{OKRA_TEXT}}", "docHeaderOveVal used")
+		if driver.wcutils.waitFor(lambda d: d.getElement(xpath=docHeaderThreeVal), timeout=60, comments='Wait and verify document header is present'):
+			driver.mouseOver(xpath=docHeaderThreeVal)
+			driver.mouseOver(xpath=docHeaderThreeVal)
+else:
+	driver.reportCommandStatus('document.pod', 'Hover verb', False, '', 'Document header not found')
+driver.setTimeout(oldTimeout)
+@@@
+
+@Click
+"""
+def parse(str):
+	return(str, )
+"""
+@@@ Click the dynButton
+docHeader = '//div[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+visibleDynOps = '//span[contains(@class, "dynOps") and not(contains(@style, "display: none"))]/*[self::a or self::button][contains(@title, "{{OKRA_TEXT}}")]'
+hiddenDynOps = '//span[contains(@class, "dynOps") and (contains(@style, "display: none") or not(contains(@style, "display: block")))]/*[self::a or self::button][contains(@title, "{{OKRA_TEXT}}")]'
+dynOpBtn = '//span[contains(@class, "dynOps")]/*[self::a or self::button][contains(@title, "{{OKRA_TEXT}}")]'
+oldTimeout = driver.timeout
+driver.setTimeout(.5)
+if docHeader:
+	if dynOpBtn:
+		if visibleDynOps:
+			driver.clickElement(xpath=visibleDynOps)
+		elif hiddenDynOps:
+			driver.reportCommandStatus('document.pod', 'Click verb', False, '', 'The dynOp button is hidden and is not clickable')
+		else:
+			driver.reportCommandStatus('document.pod', 'Click verb', False, '', 'The dynOp button was not found to be in a visible or hidden state')
+	else:
+		driver.reportCommandStatus('document.pod', 'Click verb', False, '', 'The dynOp button you\'ve given was not found on the page')
+else:
+	driver.reportCommandStatus('document.pod', 'Click verb', False, '', 'The document header was not found')
+if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=90, comments='Wait for ajax and layoutInsert operations to complete'):
+	driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+driver.setTimeout(oldTimeout)
+@@@

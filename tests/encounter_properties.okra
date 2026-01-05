@@ -1,0 +1,61 @@
+@Create auto route@
+@@@
+insert = """INSERT INTO datasend_auto_route
+SET trigger_type=9, description="OKRA Billing",
+custom_join="LEFT JOIN patient_mrns mr ON mr.pat_id=e.pat_id",
+where_clause="mr.wc_partition IN ('MIE') AND e.closed=1 AND e.visit_type IN ('BILLING','VISIT','HISTEXAM')",
+user_id=101, recipient_name="OpenPM", method=4, method_detail="OPENPM", no_auto_resend=0, route_option="crr_as_html:0";"""
+driver.miedb.dbExec(insert)
+@@@
+
+Begin "Create new encounter"
+	Navigate "?f=chart&s=pat&t=Medical Record%3AEncounters&v=encounter&pat_id=42"
+	Wait for page
+	Click the "Add Encounter" link
+	Wait for page
+	Select "Visit" from the "Visit Type" dropdown
+	Select "Butler, Internist E." from the "Performing Provider" dropdown
+	Click the "Save" button
+	Wait for page
+	Begin "Add chief complaint"
+		Open the "Chief complaint" dynamicsection
+		Type "OKRA TEST ENCOUNTER" in the "enc_ccomplaint" input
+	Begin "Add charges to encounter"
+		@Scroll the section into view@driver.runJS('jQuery("h3:contains(Tests & procedures)")[0].scrollIntoView()')
+		Open the "Tests & procedures" dynamicsection
+		Click the @In-House Procedures Link@id=InHouseProceduresLink
+		@Wait for the picklist window@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//div[@id='In House Testing_picklists_orderwin0']"))
+		Click the @Urinalysis checkbox@xpath=//input[@type='checkbox' and @name='order'][following-sibling::span[normalize-space(text())='Urinalysis ']]
+		Click the "Add Procedures" popup button
+		Wait for ajax
+		Charge "Urinalysis" "Urinalysis" dynamicitem
+		Wait for ajax
+		Enter "Urinalysis" in the "Item:" autocomplete
+		Enter "Essential (primary) hypertension" in the "Reason #1:" autocomplete
+		Click the "Save" popup button
+		Wait for ajax
+		Complete "Urinalysis" "Urinalysis" dynamicitem
+	Click the @Archive and close button@xpath=//div[@id="wc_encnav_buttons"]/a[@title="Archive & Close"]
+	Wait for page
+
+Begin "Check encounter properties - current routes"
+	Navigate "?f=chart&s=pat&t=Medical Record%3AEncounters&v=encounter&pat_id=42"
+	Gridclick "Chief Complaint:OKRA TEST ENCOUNTER" "Properties" grid link
+	Wait for page
+	Wait for "EncounterCurrentRoutes" grid
+	Click the "HL7 Send - Open PM Billing" grid checkbox
+	Click the "Message" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//div[@class='wc_win']"))
+	Verify exists "You do not have access to view messages." popup text
+	Close popup
+	Wait for ajax
+	Wait for "EncounterCurrentRoutes" grid
+	Click the "HL7 Send - Open PM Billing" grid checkbox
+	Click the "Deactivate" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//div[@class='wc_win']"))
+	Verify exists "You are about to deactivate this route." popup text
+	Click the "No" popup radio
+	Click the "Save" button
+	Wait for ajax
+	Wait for "EncounterCurrentRoutes" grid
+	Verify notexists "HL7 Send - Open PM Billing" grid entry

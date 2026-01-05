@@ -1,0 +1,47 @@
+Open the sidemenu
+Click the "Inventory" sidemenu entry
+Begin "Verify that giving a bad user gives an empty report"
+	Click the "Fill Reports" charttab
+	Enter "Dave" in the "u_user_id" autocomplete
+	Screenshot "inv_report_dave"
+	Click the "Create Report" button
+	# "Fill Report" table
+	Verify exists The "0 Results" text in the listview footer
+Begin "Clear the username, and give one that will generate a report with more information"
+	Click the "Clear" button
+	Verify "value=" int the "u_user_id" autocomplete
+	Enter "Selenium" in the "u_user_id" autocomplete
+	Click the "Create Report" button
+	# "Fill Report" table
+	Verify exists The "Displaying 1-1 / 1" text in the listview footer
+Begin "Adding a patient that isn't Selenium's will result in a 0 report"
+	Type "Carter!" in the @Patient autocomplete@xpath=//input[@id='tS_p_pat_id_patac_txt']
+	@Wait@driver.wcutils.waitForAJAX(30)
+	Click the "Carter, David (TEST-10054) DOB: 03-02-2010" autocomplete choice
+	Verify !"value=" in the 2nd autocomplete
+	Screenshot "inv_report_pat"
+	Verify exists The "Carter, David (TEST-10054) DOB: 03-02-2010" text
+	Click the "Create Report" button
+	# "Fill Report" table
+	Verify exists The "0 Results" text in the listview footer
+Begin "Add Wm. Hart to the report, we'll get data"
+	Type "Hart!" in the @Patient autocomplete@xpath=//input[@id='tS_p_pat_id_patac_txt']
+	@Wait@driver.wcutils.waitForAJAX(30)
+	Blur the "tS_p_pat_id_patac_txt" autocomplete
+	#Click the "Hart, William S. (TEST-10019) DOB: 11-30-1954 selenium@mieweb.com" autocomplete choice
+	Verify exists The "Hart, William S. (TEST-10019) DOB: 11-30-1954 selenium@mieweb.com" text
+	Click the "Create Report" button
+	# "Fill Report" table
+	Verify exists The "Displaying 1-1 / 1" text in the listview footer
+Begin "Make a report by trend"
+	Click the "Trend" radio
+	Type "02-01-2007 16:20" in the tS_fdate date
+	Type "02-03-2007 16:20" in the tS_tdate date
+	Click the "Create Report" button
+	Screenshot "48_hours" in the "Number Filled" box
+	# Vision needs to learn how to switch to anonymous windows
+	Begin "Verify that we can plot the values"
+		Click the @"Plot Values" button@xpath=//input[@type='image' and @title='Plot Values']
+		@Switch windows@driver.switchToPopup()
+		@Close this window@driver.closePopup()
+		@Switch to main window@driver.returnToMainWindow()

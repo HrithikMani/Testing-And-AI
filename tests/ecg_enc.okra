@@ -1,0 +1,51 @@
+"""
+	Workflow test for ECG cardioperfect functionality
+	@owners: levij
+	@systemType: EH
+	@filedeps: system/layouts/Exam Orders/EKG Search.html
+	@funcdeps: EC_StreamPDFImagesMakeKey, EC_StreamPDFImagesCacheJPG, ec_stream_doc_pdf, wc_stream_data_TMP, wc_stream_data_RAW
+"""
+Begin "Go to William Hart's Chart"
+	Navigate "?f=chart&s=pat&t=Patient+Summary&v=dashboard&pat_id=18"
+Begin "Order an EGC"
+	Click the "Add Visit" link
+	Wait for page
+	Click the "In House Testing Pick List" icon
+	Click the "ECG" picklist checkbox
+	Click the "Add Procedures" button
+Begin "Upload ECG"
+	Open the "ECG" dynamicsection
+	Wait for ajax
+	Click the "Load CardioPerfect" button
+	Enter "Butler" in the "ecg_provider_ac" autocomplete
+	Type "dummy.pdf" into the file input
+	Type "004 Normal sinus rhythm. 193 Anteroseptal infarction, probably old. 239 Ischemic ST-T changes in posterior lead" into the interp_text input
+	Click the @Normal radio button@id="ecg_flag_normal"
+	Click the Upload button
+	Wait for ajax
+	Close the "ECG" dynamicsection
+Begin "Verify Upload"
+	Open the "ECG" dynamicsection
+	Wait for ajax
+	@@@Verify ECG Interpretation Text
+	expected_text = "004 Normal sinus rhythm. 193 Anteroseptal infarction, probably old. 239 Ischemic ST-T changes in posterior lead"
+	textarea = driver.getElement(xpath="//div[@id='ecg_res']//textarea")
+	actual_text = textarea.get_attribute('value')
+	success = (expected_text == actual_text)
+	driver.reportCommandStatus('Verify ECG Text', 'Comparing textarea value', success, expected_text, actual_text)
+	@@@
+	@@@Verify ECG Image Loaded
+	img = driver.getElement(xpath="//div[@id='ecg_res']//img")
+	is_complete = driver.runJS('return arguments[0].complete', img)
+	width = driver.runJS('return arguments[0].naturalWidth', img)
+	# Both must be true for the image to be considered loaded
+	success = (is_complete and width > 0)
+	driver.reportCommandStatus('Verify ECG Image', 'Check image loaded', success, 'Image loaded (complete=True, naturalWidth > 0)', f'complete={is_complete}, naturalWidth={width}')
+	@@@
+	Complete "ECG" "ECG" dynamicitem
+Begin "Archive Encounter"
+	Click the "Archive & Close" button
+	Wait for ajax
+	Click the "Yes" popup button
+	Wait for page
+	Verify exists @ECG PDF@xpath='//a[@title="Click to stream document"]/embed[@type="application/pdf"]'

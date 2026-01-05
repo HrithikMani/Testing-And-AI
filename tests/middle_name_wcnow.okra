@@ -1,0 +1,28 @@
+"""
+	Registers an employee using the standard registration screen when the added "middle name" input is active
+	Verifies that the entered data saves correctly by checking the demographic view screen
+	@systemtype: WCNOW
+"""
+Begin "Add and Enable system settings"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Begin "Add preferred name in Patient Search"
+		Click the "Add System Setting" link
+		Enter "Show middle name input on registration screen" into the "System Settings" autocomplete
+		Select "Enabled" in the "Value" dropdown
+		Type "Chart search test" in the "Reason" input
+		Click the "Add" button
+Begin Register Patient with middle name
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "Patient Registration" charttab
+	Type "Kennedy" in the "Last Name" input
+	Type "John" in the "First Name" input
+	Type "Fitzgerald" in the "Middle Name" input
+	Enter "05-29-1917" into the "Birth Date" date
+	Click the "Search" button
+	Click the "Save" button
+	Wait for ajax
+	Verify exists "Kennedy, John Fitzgerald" text

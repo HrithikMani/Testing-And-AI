@@ -1,0 +1,92 @@
+"""
+   @systemtype: WCNOW
+"""
+Open the sidemenu
+Click the "Control Panel" sidemenu entry
+Begin "Verify a Standard Help Layout Works"
+	Click the help icon
+	Verify exists "Control panel help" text
+	Verify exists "About control panel" text
+	Close popup
+Begin "Verify Providing Some Help Works"
+	Open "My Settings" charttab
+	Begin "Verify the Help Icon Indicates that Help is Not Available"
+		Verify exists @Help Icon Indicates that Help is Not Available@xpath='//span[@id="wc_help" and not(contains(@class, "hasHelp"))]'
+	Click the help icon
+	Click the "Provide Help" link
+	Type "Test adding help text" into the freetext field
+	Click the "Add" button
+	Close popup
+	Refresh page
+	Begin "Verify the Help Icon Indicates that Help is Available"
+		Verify exists @Help Icon Indicates that Help is Available@xpath='//span[@id="wc_help" and contains(@class, "hasHelp")]'
+	Click the help icon
+	Verify exists "Test adding help text" text
+	Close popup
+Begin "Ensure auto-popping works correctly"
+	Begin "Turn on auto-popping"
+		Navigate "?func=omniscope"
+		Click the help icon
+		Click the "Automatically popup unseen help" checkbox
+		Click the Dismiss popup button
+		Verify !exists "WebChart Online Help" popup
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Open "My Settings" charttab
+		Verify exists "WebChart Online Help" popup
+		Click the Dismiss popup button
+	Begin "Turn off auto-popping"
+		Navigate "?func=omniscope"
+		Click the help icon
+		Click the "Automatically popup unseen help" checkbox
+		Click the Dismiss popup button
+		Verify !exists "WebChart Online Help" popup
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Open "My Settings" charttab
+		Verify !exists "WebChart Online Help" popup
+Begin "Verify the Index link retrieves documentation"
+	Navigate "?f=admin&tabmodule=admin&tabselect=My%20Settings"
+	Click the help icon
+	Verify exists the "Index" link
+	Wait for page
+	Click the Index link
+	Wait for page
+	@Switch Windows@driver.switchToPopup(wait=True)
+	Verify exists "WebChart" text
+	Verify exists "Video Library" text
+	Verify exists "Documentation" text
+	Verify exists "Rapid Install & Deployment" text
+	@Close Windows@driver.closePopup()
+	Close popup
+Begin "Search for a help topic"
+	Navigate "?f=admin&tabmodule=admin&tabselect=My%20Settings"
+	Click the help icon
+	Verify exists "WebChart Online Help" popup
+	Type "encounter" in the "search" popup input
+	Click the "search" popup button
+# Ticket #136023: Element not found unless element is inspected from dev tools. Added a screenshot to be added to baselines to verify that results are found, IF the screenshot remains stable.
+#	Verify exists "results found" text
+	Screenshot 'WebChart Help Results Found'
+	Click the "Dismiss" button
+Begin "Ensure editing works"
+	Click the help icon
+	Click the "Edit this Help" link
+	Type "This help is now edited" into the @xpath=//textarea
+	Click the Edit button
+	Close popup
+	Refresh page
+	Click the help icon
+	Verify exists "This help is now edited" text
+	Close popup
+Begin "Ensure 'Get Editing Help' works"
+	Click the help icon
+	Verify exists "WebChart Online Help" popup
+	Click the "Edit this Help" link
+	Verify exists "Provide Help" popup
+	Click the "Get Editing Help" link
+	Verify exists "Editing Help" popup
+	Verify exists "Wiki Editing Help" text
+	Close popup
+	Close popup
+	Close popup

@@ -1,0 +1,12 @@
+Begin "Edit User Chart"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "Acardi" in the input
+	Click the "Go!" button
+	Gridclick "User:Acardi, Sergio" "Edit" grid link
+	Type "260-459-6270" in the "Work Number" input
+	Click the "Submit" button
+	Verify exists "Acardi, Sergio" grid entry
+	Verify exists "(260) 459-6270" grid entry

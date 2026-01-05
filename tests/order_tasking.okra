@@ -1,0 +1,94 @@
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+Begin Add Fast Task for Adding Orders
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Fast Tasks" charttab
+	Click the "Add New Fast Task" link
+	Type "New Order Request" in the "Name:" field
+	Type "A new order request has been created." in the "Description:" field
+	Type "A new order request has been created. Make sure it gets done." in the "Notes:" field
+	Click the "assign_to_self" checkbox
+	Click the "Save" button
+Begin Add Fast Task for Updating Orders
+	Click the "Add New Fast Task" link
+	Type "Updated Order Request" in the "Name:" field
+	Type "An order request has been updated." in the "Description:" field
+	Type "An order request has been updated. Find out what's going on." in the "Notes:" field
+	Click the "assign_to_self" checkbox
+	Click the "Save" button
+
+Begin Add Tasklist Event for Adding Orders
+	Click the "Tasklist Events" charttab
+	Click the "Add A Task Event" link
+	Select "New Order Request" from the "Use Fast Task" autocomplete
+	Type "1" in the "Task Priority" field
+	Select "On Document Add" from the "Event Type" dropdown
+	Click the "Build Stg. Types Clause" button
+	Verify exists "Build Storage Types Clause" text
+	Click the "stg_type_15" checkbox
+	Click the "Done" popup button
+	Click the "Insert Stg. Types Clause" button
+	Verify "value=d.storage_type IN ('15')" @id=evt_where
+	Click the "Save And Close" button
+Begin Add Tasklist Event for Updating Orders
+	Click the "Add A Task Event" link
+	Select "Updated Order Request" from the "Use Fast Task" autocomplete
+	Type "1" in the "Task Priority" field
+	Select "On Document Update" from the "Event Type" dropdown
+	Click the "Build Stg. Types Clause" button
+	Verify exists "Build Storage Types Clause" text
+	Click the "stg_type_15" checkbox
+	Click the "Done" popup button
+	Click the "Insert Stg. Types Clause" button
+	Verify "value=d.storage_type IN ('15')" @id=evt_where
+	Click the "Save And Close" button
+
+Begin Edit an Order Request
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Washburn" in the "sstring" input
+	Click the "Search" button
+	Open the quicklink list
+	Click the "Add Order" quicklink
+	Select "Selenium, Selenium" from the "ordering_physician" dropdown
+	Select "Soon" from the "schedule_comment" dropdown
+	Click the "ANA" picklist checkbox
+	Click the "BUN" picklist checkbox
+	Click the "Submit" button
+	@Switch Windows@driver.switchToPopup()
+	Verify exists "ANA" text
+	Verify exists "BUN" text
+	@Switch to main window@driver.returnToMainWindow()
+
+Begin Check for task creation
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Task Search" charttab
+	Select "New Order Request" from the "Task Template" dropdown
+	Click the "Submit" button
+	Verify exists "A new order request has been created." listview link
+	Click the "A new order request has been created." listview link
+	@Switch Windows@driver.switchToPopup()
+	Click the "Mark Done w/o Note" button
+	@Switch to main window@driver.returnToMainWindow()
+
+Begin Edit an Order Request
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10029" link
+	Click the "Medical Record" charttab
+	Click the "OrderRequestsLegacy" charttab subtab
+	Click the "Edit" listview link
+	Click the "Calcium" picklist checkbox
+	Click the "Submit" button
+
+Begin Check for task creation
+	Navigate "?func=tlist"
+	Verify exists "An order request has been updated." text
+	Verify !exists "A new order request has been created." text
+@@@Switch Back to New Requisition Screen
+driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@

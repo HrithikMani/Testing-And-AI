@@ -1,0 +1,23 @@
+Begin Verify that the Dictation Search form works
+	Navigate "?f=dictation"
+	Click the "Search" link
+	Click @greater than from the Duration dropdown@xpath='//select[@id="durationRange"]/option[@value="gt"]'
+	Click the "Search" button
+	Verify exists "Displaying 1-1 / 1" text
+	Type 123 in the "Dictation ID" field
+	Enter "Hart, William S" in the Patient autocomplete
+	Type "WebChart Test" in the Comment field
+	Enter "Selenium" in the Dictator autocomplete
+	Select "No Job Type" from the "Job Type" field
+	Type ">5m" in the "Duration" field
+	Enter "01-01-2000" in the uploaddate date
+	Enter "01-01-2050" in the uploaddate_end date
+	Type 1 in the "Priority" field
+	Enter "12-25-2012" in the dob date
+	Type Selenium in the "Transcriber" field
+	Select "Office" from the "Location Code" field
+	Type 1"in the "Encounter ID" field
+	Type "01-01-2000" in the transdate date
+	Type "01-01-2050" in the transdate_end date
+	Click the Search button
+	Verify exists "0 Results" text

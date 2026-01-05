@@ -1,0 +1,70 @@
+Begin "Import the test data file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Wait for the "DataImportTypes" grid
+	Click the "Show/Hide Grid Controls" icon
+	Select "Name" from the @Filters dropdown@xpath='//span[contains(., "Filters")]/parent::div/following-sibling::div/select[@class="wcdv_control_addField"]'
+	Sumoselect "Chart Data CSV API" from the "Name" grid sumoselect
+	Click the "OK" grid sumobutton
+	Wait for ajax
+	Click "Chart Data CSV API" grid checkbox
+	Click the "Upload Data" button
+	Verify exists @xpath="//div[@class='wc_win']"
+	Verify exists "Chart Data CSV API" text in @xpath="//div[@class='wc_win']"
+	Screenshot "test"
+	Click the "DI_Verbose" checkbox
+	@Wait@driver.pause(1)
+	Type 'GenericImportTestFile.csv' in the 'csv_file' input
+	Click the "Upload File" button
+	@driver.getWebDriver().switch_to.frame("di_output_frame")
+	@Wait@driver.pause(1)
+	Verify exists "Successfully imported file GenericImportTestFile.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+	Click the @Close button@xpath='//button[@class="xclose"]'
+Begin "Validate CDC Race and CDC Ethnicity values"
+	Begin "Check values for Lastname1, Firstname1"
+		Verify exists sidemenu
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Type "Lastname1" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Lastname1" text
+		Click the "Lastname1" link
+		Click the "Demographics" icon manageinformation
+		Verify exists "American Indian or Alaska Native" text
+		Verify exists "Hispanic or Latino" text
+	Begin "Check values for Lastname2, Firstname2"
+		Verify exists sidemenu
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Type "Lastname2" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Lastname2" text
+		Click the "Lastname2" link
+		Click the "Demographics" icon manageinformation
+		Verify exists "Asian" text
+		Verify exists "Not Hispanic or Latino" text
+	Begin "Check values for Lastname3, Firstname3"
+		Verify exists sidemenu
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Type "Lastname3" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Lastname3" text
+		Click the "Lastname3" link
+		Click the "Demographics" icon manageinformation
+		Verify exists "Black or African American" text
+		Verify exists "Hispanic or Latino" text
+	Begin "Check values for Lastname4, Firstname4"
+		Verify exists sidemenu
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Type "Lastname4" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Lastname4" text
+		Click the "Lastname4" link
+		Click the "Demographics" icon manageinformation
+		Verify exists "Native Hawaiian or Other Pacific Islander" text
+		Verify exists "Not Hispanic or Latino" text

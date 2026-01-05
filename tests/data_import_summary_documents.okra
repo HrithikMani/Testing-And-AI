@@ -1,0 +1,35 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Wait for the "DataImportTypes" grid
+	Click the "Show/Hide Grid Controls" icon
+	Select "Name" from the @Filters dropdown@xpath='//span[contains(., "Filters")]/parent::div/following-sibling::div/select[@class="wcdv_control_addField"]'
+	Sumoselect "Summary Documents CSV API" from the "Name" grid sumoselect
+	Click the "OK" grid sumobutton
+	Wait for ajax
+	Click "Summary Documents CSV API" grid checkbox
+	Click the "Upload Data" button
+	Verify exists @xpath="//div[@class='wc_win']"
+	Verify exists "Summary Documents CSV API" text in @xpath="//div[@class='wc_win']"
+	Type "data_import_summary_documents.okra" in the Interface input
+	Screenshot "test"
+	Click the "DI_Verbose" checkbox
+	@Wait@driver.pause(1)
+	Type 'DocSumImportSuccess.csv' in the 'csv_file' input
+	Click the "Upload File" button
+	@driver.getWebDriver().switch_to.frame("di_output_frame")
+	@Wait@driver.pause(1)
+	Verify exists "Successfully imported file DocSumImportSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+	Click the @Close button@xpath='//button[@class="xclose"]'
+Begin "Verify Documents"
+	Verify exists sidemenu
+	Open the sidemenu
+	Click "E-Chart" sidemenu entry
+	Click the "Documents" link
+	Select "data_import_summary_documents.okra" in the Interface dropdown
+	Click the Search button
+	Verify exists "Advanced Directives" text
+	Verify exists "OB Office Note" text

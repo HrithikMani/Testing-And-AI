@@ -1,0 +1,24 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Click the "Legacy Data Import" link
+	Verify exists "Please Choose Data Import type:" text 
+	Select "Summary Documents CSV API" in the opp dropdown
+	Click the Go button
+	@driver.getWebDriver().switch_to.frame("di_frame_Document_20Summary")
+	Type "data_import_summary_documents.okra" in the Interface input
+	Click the "DI_Verbose" checkbox
+	Type 'DocSumImportSuccess.csv' in the 'csv_file' input
+	Click the "Upload" button
+	Verify exists "Successfully imported file DocSumImportSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+Begin "Verify Documents"
+	Open the sidemenu
+	Click "E-Chart" sidemenu entry
+	Click the "Documents" link
+	Select "data_import_summary_documents.okra" in the Interface dropdown
+	Click the Search button
+	Verify exists "Advanced Directives" text
+	Verify exists "OB Office Note" text

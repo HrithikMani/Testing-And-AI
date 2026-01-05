@@ -1,0 +1,11 @@
+Begin Add a New Document Type
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Document Types" charttab subtab
+	Click the "Add Document Type" link
+	Type TESTDOX in the "Document type" field
+	Type "This is a better doc type"  in the Description field
+	Check PDF field
+	Click the Submit button
+	Verify exists "Document type (TESTDOX) has been created successfully!" text

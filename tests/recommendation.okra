@@ -1,0 +1,36 @@
+Begin "Turn on the needed settings"
+	@Set the ICD10Calculator preference to Icon@driver.wcutils.SetPreference('{selenium_username}', 'E-Chart', 'Conditions', 'ICD10 Calculator', 1)
+	@Set the ICD10Calculator preference to Icon@driver.wcutils.SetPreference('{nurse_username}', 'E-Chart', 'Conditions', 'ICD10 Calculator', 1)
+	@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{nurse_username}')
+Begin "Nurse adds Visit encounter on Christine Harris"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	Begin "Encounter"
+		@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+		@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+		Open the "Encounter" dynamicsection
+		Enter "02-02-2007" into the DED_serv_date date
+		Click the dynamicsection nextbutton
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+	Begin "Recommendations"
+		Open the "Recommendations" dynamicsection
+		Click the "Add Recommendations" link
+		Click "Smart Plan" "Medical Clearance" picklist checkbox
+		Click the 1st "Add Procedures" popup button
+		Verify notexists "Recommendations" picklist
+		Verify exists "Medical Clearance" dynamicsection
+		Open the "Medical Clearance" dynamicsection
+		Click the @Fit radio@xpath=//input[not(@disabled) and @type="radio"][(@value = "Fit")]
+		Close the  "Medical Clearance" dynamicsection
+	Begin "Verify Medical Clearance order is completed"
+		Open the "Smart Plan" dynamicsection
+		Wait for the EncounterOrdersGridDV grid
+		Close the "Smart Plan" dynamicsection
+		Verify exists "Medical Clearance" dynamicitem
+		Edit "Smart Plan" "Medical Clearance" dynamicitem
+		Verify exists "Edit Encounter Order" popup
+		Verify exists @Completed value for status@xpath=//select[@id="status"]/option[@value="2" and . = "Completed"]

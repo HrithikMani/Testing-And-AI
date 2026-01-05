@@ -1,0 +1,80 @@
+Begin "Add DOT to Acardi's Due List"
+	Navigate "?f=chart"
+	Type "Acardi" into @name='sstring'
+	Click "Search" button
+	Open "Health Surveillance" charttab
+	Click the "Due List" charttab subtab
+	Wait for the "EncounterOrdersGridDV" grid
+	Wait for ajax
+	Verify exists "Add New Orders" button
+	Click the "Add New Orders" button
+	Verify !exists "Add New Orders" button
+	Verify exists 'ordersle_orderac_txt' autocomplete
+	Enter "Driver Fitness Determination (DOT) Entry with Membership" in the 'ordersle_orderac_txt' autocomplete
+	Click "Submit" button
+	Wait for the "EncounterOrdersGridDV" grid
+	Click the "Driver Fitness Determination" grid checkbox
+	Wait for the "EncounterOrdersGridDV" grid
+	@Wait 4 seconds@driver.pause(4)
+# Ticket 120461 grid buttons
+#	Click the "Evaluate" grid button
+	Click @the "Evaluate" grid button@xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Evaluate")]'
+	Verify exists "Membership: ok" text
+	Close the popup
+	Verify exists "Written Opinion - Driver Fitness (DOT)" text
+	Verify exists 1st "03-02-2023" text
+	Verify exists "Audiogram" text
+	Verify exists 2nd "03-02-2023" text
+	Verify exists "DMV DOT Physica" text
+	Verify exists 3rd "03-02-2023" text
+	Verify exists "Monocular" text
+	Verify exists 4th "03-02-2023" text
+	Verify exists "Urinalysis" text
+	Verify exists 5th "03-02-2023" text
+	Verify exists "Vision Acuity" text
+	Verify exists 6th "03-02-2023" text
+	Verify exists "Vision Ishihara" text
+	Verify exists 7th "03-02-2023" text
+	Verify exists "Driver Questionnaire" text
+	Verify exists 8th "03-02-2023" text
+Begin "Verify the appointment is on waiting list"
+	Click the "Admin" charttab
+	Click the "Appointments" charttab subtab
+	Verify exists "Audiogram, Driver Fitness Determination (DOT)" text
+Begin "Add another order on waitinglist w/o due date"
+	Open "Health Surveillance" charttab
+	Click the "Due List" charttab subtab
+	Wait for ajax
+	Verify exists "Add New Orders" button
+	Click the "Add New Orders" button
+	Verify !exists "Add New Orders" button
+	Verify exists 'ordersle_orderac_txt' autocomplete
+	Enter "Blood Pressure" in the 'ordersle_orderac_txt' autocomplete
+	Click "Add" listedit button
+	Enter "Written Opinion - TB Sensitive" in the 'ordersle_orderac_txt' autocomplete
+	Enter "03-28-2023" in the 'le_ordersle_eo_due_date_value_var' date
+	Click "Submit" button
+	Wait for the "EncounterOrdersGridDV" grid
+	Click the "Blood Pressure" grid checkbox
+# Ticket 120461 grid buttons
+#	Click the "Add To Waitlist" grid button
+	Click @the "Add To Waitlist" grid button@xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Add To Waitlist")]'
+	Verify exists "Add To Waitlist" text
+	Verify exists "1 waitlist appointment has been added" text
+	Close the "Add To Waitlist" popup
+	Click the "Admin" charttab
+	Click the "Appointments" charttab subtab
+	Verify exists "Audiogram, Driver Fitness Determination (DOT)" text
+	Verify exists "Blood Pressure Check" text
+
+Begin "Verify Due Dates"
+	Navigate "?f=chart"
+	Type "Acardi" into @name='sstring'
+	Click the "Search" button
+	Click the "Select Portlets" link
+	Click the "Panel Membership" checkbox
+	Click "Save" button
+	@Wait 3 seconds@driver.pause(3)
+	Verify exists "Driver Fitness (DOT)" text
+	Verify exists "Due: 03-02-2023" text
+

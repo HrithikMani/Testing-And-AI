@@ -1,0 +1,17 @@
+Begin "Open Lab Document"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+	Open "Medical Record" charttab
+	Click the "Labs" charttab subtab
+	Click the "0000340" link
+Begin "Verify Test data exists"
+	Verify exists "PROTIME" text
+	Verify exists "PT" text
+	Verify exists "INR" text
+	Verify exists "30.7 H" text
+	Verify exists "22.1 H" text
+	Verify exists "2.5" text
+	Verify exists "2.0" text
+	Verify exists "10.6-12.8" text
+	Verify exists "Seconds" text

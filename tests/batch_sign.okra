@@ -1,0 +1,81 @@
+Begin "Add Portlets"
+	Click "Select Portlets" link
+	Click "All Unsent Prescriptions" checkbox
+	Click "My Unsigned Prescriptions" checkbox
+	Click "Save" button
+	Verify exists "All Unsent Prescriptions" text
+	Verify exists "My Unsigned Prescriptions" text
+
+Begin "Make Prescriptions in Multiple Charts" 
+	Navigate "?f=chart&s=pat&pat_id=18"
+	@Wait for the page to load@driver.waitFor(driver, lambda d: d.getElement(xpath='//a[contains(., "Hart, William S.")] '), expected_return=True, timeout=30)
+	Click "Prescribe" link
+	Enter "Xanax" into the qp_acval0 autocomplete
+	Enter "tablet 0.5mg" into qp_formacval0 autocomplete
+	@Pause@driver.pause(5)
+	Type "1 qd" into qp_sig0 input
+	Type "30d" into qp_duration0 input
+	Type "0" into qp_refills0 input
+	Click 1st "Prescribe" button
+	Navigate "?f=chart&s=pat&pat_id=40"
+	Click "Prescribe" link
+	@Pause@driver.pause(5)
+	Enter "tramadol" into the qp_acval0 autocomplete
+	Click qp_formacval0 autocomplete
+	Click qp_sig0 input
+	Close the "Warning for tramadol" popup
+	Type "1 qd" into qp_sig0 input
+	Type "30d" into qp_duration0 input
+	Type "0" into qp_refills0 input
+	Click 1st "Prescribe" button
+
+Begin "Check Sign with Batch Signing Enabled"
+	@Update System Setting@driver.miedb.dbExec("UPDATE system_settings SET value=1 WHERE item='Allow Batch Signing'")
+	Click @Home button@xpath=//*[@id="wc_homeicon"]
+	Verify exists "Xanax" text
+	Verify exists "tramadol" text
+	Click "Sign All" button
+	Verify exists @Hart, William S. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Hart, William S.")]
+	Verify exists @Harris, Christine M. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Harris, Christine M.")]
+	Click the @Close button@xpath=//button[@class="xclose"]
+
+	Click the @Check All in Unsent Prescriptions DV@xpath=//*[@id="UnsentPrescriptions_gridContainer"]/div/div[3]/div/table/thead/tr/th[1]/input[@name="checkAll"]
+	Click the @Sign button@xpath=//*[@id="UnsentPrescriptions-scriptlet-unsent.refill_id-tt"]/div/button[2]/span[contains(.,"Sign")]
+	Verify exists @Hart, William S. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Hart, William S.")]
+	Verify exists @Harris, Christine M. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Harris, Christine M.")]
+	Click the @Close button@xpath=//button[@class="xclose"]
+
+Begin "Check Sign with Batch Signing Disabled"
+	@Update System Setting@driver.miedb.dbExec("UPDATE system_settings SET value=0 WHERE item='Allow Batch Signing'")
+	Click @Home button@xpath=//*[@id="wc_homeicon"]
+	Verify exists "Xanax" text
+	Verify exists 1st "Sign All" button
+	Click 1st "Sign All" button
+	Verify exists Hart grid checkbox
+	Verify !exists @Harris, Christine M. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Harris, Christine M.")]
+	Click the @Close button@xpath=//button[@class="xclose"]
+
+	Verify exists "tramadol" text
+	Verify exists 2nd "Sign All" button
+	Click 2nd "Sign All" button
+	Verify exists Harris grid checkbox
+	Verify !exists @Hart, William S. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Hart, William S.")]
+	Click the @Close button@xpath=//button[@class="xclose"]
+
+	Click the @Check All in Unsent Prescriptions DV@xpath=//*[@id="UnsentPrescriptions_gridContainer"]/div/div[3]/div/table/thead/tr/th[1]/input[@name="checkAll"]
+	Click the @Sign button@xpath=//*[@id="UnsentPrescriptions-scriptlet-unsent.refill_id-tt"]/div/button[2]/span[contains(.,"Sign")]
+	Verify exists "Please review only one patient's controlled substances at a time." text
+
+	Click the @Check All in Unsent Prescriptions DV@xpath=//*[@id="UnsentPrescriptions_gridContainer"]/div/div[3]/div/table/thead/tr/th[1]/input[@name="checkAll"]
+	Click the Hart grid checkbox
+	Click the @Sign button@xpath=//*[@id="UnsentPrescriptions-scriptlet-unsent.refill_id-tt"]/div/button[2]/span[contains(.,"Sign")]
+	Verify exists @Hart, William S. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Hart, William S.")]
+	Verify !exists @Harris, Christine M. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Harris, Christine M.")]
+	Click the @Close button@xpath=//button[@class="xclose"]
+	@Pause@driver.pause(5)
+	
+	Click the Harris grid checkbox
+	Click the @Sign button@xpath=//*[@id="UnsentPrescriptions-scriptlet-unsent.refill_id-tt"]/div/button[2]/span[contains(.,"Sign")]
+	Verify exists @Harris, Christine M. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Harris, Christine M.")]
+	Verify !exists @Hart, William S. prescription@xpath=//div[contains(@class, "medInfo")]/div[contains(., "Hart, William S.")]
+	Click the @Close button@xpath=//button[@class="xclose"]

@@ -1,0 +1,45 @@
+@Set Inactive Members System Setting to OSHANOISE@driver.miedb.dbExec("REPLACE INTO system_settings SET module='WebChart', section='Health Surveillance', item='Inactive Members Allowed Panels', value='\\'OSHANOISE\\''")
+Begin Add Acardi to panels
+	Navigate "?f=chart&s=pat&t=Health+Surveillance%3APanel+Membership+Overview&v=dashboard&pat_id=46"
+	Wait for page
+	Select "OSHA Noise" from the dropdown
+	Click the "Submit" button
+	Select "Driver Fitness Determination (DOT)" from the dropdown
+	Click the "Submit" button
+	Click the "HSPPM_E_DOT_46_check" checkbox
+	Verify exists @After DOT checking@xpath=//input[@id="HSPPM_E_DOT_46_check"][contains(@checked,"")]
+	Type "dot testing" into the @id=HSPPM_E_DOT_46_comment
+	Click the "HSPPM_E_OSHANOISE_46_check" checkbox
+	Verify exists @After Noise checking@xpath=//input[@id="HSPPM_I_OSHARESPROT_46_check"][contains(@checked,"")]
+	Type "noise testing" into the @id=HSPPM_E_OSHANOISE_46_comment
+	Click the "Submit" button
+	Verify exists "dot testing" table row
+	Verify exists "noise testing" table row
+	#Verify exists @After DOT comment@xpath=//textarea[@id="HSPPM_E_DOT_46_comment"][contains(.,"dot testing")]
+	#Verify exists @After Noise comment@xpath=//textarea[@id="HSPPM_I_OSHARESPROT_46_comment"][contains(.,"noise testing")]
+
+Begin Examine Acardi Pending Orders
+	Navigate "?f=chart&s=pat&t=Health+Surveillance%3ADue+List&v=dashboard&pat_id=46"
+	Wait for page
+	Verify exists @xpath=//div[@id='EncounterOrdersGridDV_gridContainer']//td[text()='Written Opinion - Driver Fitness (DOT)']
+	Verify exists @xpath=//div[@id='EncounterOrdersGridDV_gridContainer']//td[text()='Written Opinion - Noise']
+
+Begin Kill Acardi
+	Navigate "?f=chart&s=pat&t=Edit+Demographics&v=dashboard&pat_id=46"
+	Wait for page
+	Enter "01/01/2007" into the 2nd date
+# Temporary fix until figure something out to distinguish between the save demo button and the new other demo dynamic section save button
+# Broken by commit: dce93ac4a1fc38fd2d9aec3030486c4f4b4e1008
+#	Click the 2nd "Save" button
+	Click the @Demographics Save button@xpath='//input[@type="button" or @type="submit"][contains(@value, "Save")]'
+
+Begin Run panel action evaluator for Acardi
+	Navigate "?f=panelactiontest&tabmodule=admin&tabselect=HSP&pat_id=46"
+	Wait for page
+	Click the "Evaluate" button
+
+Begin Examine Acardi Pending Orders Again
+	Navigate "?f=chart&s=pat&t=Health+Surveillance%3ADue+List&v=dashboard&pat_id=46"
+	Wait for page
+	Verify notexists @xpath=//div[@id='EncounterOrdersGridDV_gridContainer']//td[text()='Written Opinion - Driver Fitness (DOT)']
+	Verify exists @xpath=//div[@id='EncounterOrdersGridDV_gridContainer']//td[text()='Written Opinion - Noise']

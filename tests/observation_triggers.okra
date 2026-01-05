@@ -1,0 +1,36 @@
+@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Observation Add Task',description='Observation Add Task',notes='An observation has been added.',type='document'")
+@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Observation Add Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('389F9347FBA511EBA7C0B82A72DD83F3'), evt_type='on_observation_add',template_name='Observation Add Task',skip_is_tmp=1,where_clause='WHERE 1',perform_url='',priority=1")
+
+Open the sidemenu
+Click the "E-Chart" link
+Type "Haynes" in the "sstring" input
+Click the "Search" button
+
+Click the "Add Visit" link
+Open the "Tests & procedures" dynamicsection
+Close the "Tests & procedures" dynamicsection
+Verify exists "In House Testing Pick List" icon
+Click the "In House Testing Pick List" icon
+Select "Labs" from the "next_set_name" dropdown
+Click the "Sodium" picklist checkbox
+Click the "Add Procedures" button
+Begin "Sodium Section"
+	Open the "Sodium" dynamicsection
+	Type "150" in the "Sodium" input
+	Close the "Sodium" dynamicsection
+
+Begin Check for observation add task creation
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Task Search" charttab
+	Select "Observation Add Task" from the "Task Template" dropdown
+	Click the "Submit" button
+	Verify exists "Observation Add Task" listview link
+	Click the "Observation Add Task" listview link
+	@Switch Windows@driver.switchToPopup()
+	Click the "Mark Done w/o Note" button
+	@Switch to main window@driver.returnToMainWindow()
+
+@Sweep up@driver.miedb.dbExec("DELETE tt.*, ttu.*, te.* FROM tasklist_events te LEFT JOIN task_template tt ON te.template_name=tt.name LEFT JOIN task_template_users ttu ON tt.task_template_id=ttu.task_template_id WHERE te.template_name = 'Observation Add Task'")
+

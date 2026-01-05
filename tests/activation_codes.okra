@@ -1,0 +1,119 @@
+"""
+	This test runs through the Portal Registration Process, checking that both secondary factor's work
+	Per https://pm.mieweb.com/issues/126093, the pauses are OK for now, if we want to assign someone else 
+    (not Carlson, I've literally spent 20-30 hours over weeks trying different things, I don't know why it is happening only
+	in a selenium test w/o the pauses.  If we could get console.log in Console Streams to actually show what is being put in the log vs. 
+	just SUPERMACRO, that would help)
+	@owners: dcarlson
+	@filedeps: src/patmr.c,src/nomoreclipboard.c, system/layouts/No Login/Login.html
+"""
+Begin "Set up system"
+	@Delete bad rows from user_patients@driver.miedb.dbExec("DELETE FROM user_patients WHERE id=14")
+	@Set New Login Style@driver.miedb.dbExec("UPDATE system_settings SET value=1 WHERE item='New login style'")
+	@Set Activation Codes for Better Corp@driver.miedb.dbExec("UPDATE patient_extended_values SET value=1 WHERE pat_id=43 AND ext_id=(SELECT ext_id FROM patient_extended_index WHERE name='portal_enable_activation_codes')")
+	@Set Portal Portlet to be visible on all accounts@driver.miedb.dbExec("INSERT INTO user_moveable_layout SET user_id=8, module_name='Patient Portlet', layout_name='Portal',col=2, row=0, col_order=2")
+	@Delete Documents Portlet to be visible on all accounts@driver.miedb.dbExec("DELETE FROM user_moveable_layout WHERE module_name='Patient Portlet' AND layout_name='Documents'")
+Begin Register Boba Fett
+	@Set the Applicant partition to Edit (Optional) to test manually entering an MR#@driver.miedb.dbExec("UPDATE patient_partitions SET echart_opts='O' WHERE name='APP'")	
+	Open the sidemenu
+	Click the E-Chart link
+	Click the "Patient Registration" charttab
+	Type Fett into the "Last Name" field
+	Type Boba into the "First Name" field
+	Enter "07-01-1998" into the birth_date date
+	Click the "Add New" button
+	Verify exists "Summary" charttab
+	Click the "Summary" charttab
+	Verify exists "Generate" button
+	Click the "Generate" button
+	Verify exists "Better Corp. portal activation" text
+Begin "Set up Boba activation code to be one we can use in the test"
+	@Update Activation Code@driver.miedb.dbExec("UPDATE patient_mrns SET mrnumber='ABCDEF123456' WHERE pat_id=(SELECT pat_id FROM patients WHERE first_name='Boba') AND wc_partition='PICKUP'")
+	@Update Activation Code@driver.miedb.dbExec("UPDATE documents_txt LEFT JOIN documents USING (doc_id) SET subject='Better Corp. portal activation(ABCDEF123456)' WHERE pat_id=(SELECT pat_id FROM patients WHERE first_name='Boba') AND doc_type='PORTACTINS'")
+Begin "Register Boba for a portal account"
+	Navigate ?f=logout
+	Navigate ?svar_cobrand_patid=43
+	Click the "Create account" button
+	Verify exists mrnumber input
+	@Wait@driver.pause(2)
+	Type "ABCDEF123456" into the mrnumber input
+	@Wait@driver.pause(2)
+	@Wait for date input to be present@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//div[not(contains(@style, 'hidden'))]/span//input[@id='DPD_birth_dateMONTH']"))
+	@Wait@driver.pause(2)
+	Verify exists "Date of birth" text
+	@Wait@driver.pause(2)
+	Type "07" into the DPD_birth_dateMONTH input
+	Type "01" into the DPD_birth_dateDAY input
+	Type "1998" into the DPD_birth_dateYEAR input
+	Click @xpath="//input[@id='referral_submit']"
+	Type "noreply@mieweb.com" into the email input
+	Type "NewPa$$w0rd1" into the referral_passwd input
+	Type "NewPa$$w0rd1" into the referral_confirm_passwd input
+	Click @xpath="//input[@id='referral_submit']"
+	Verify exists "Complete the following forms" text
+Begin "Check the contacts page for Boba"
+	Navigate ?f=logout
+	Navigate ?
+	Click @xpath="//button[@id='cya-standard-btn']"
+	Type "selenium" into the login_user input
+	Click @xpath="//input[@id='login_submit']"
+	Type "selenium" into the login_passwd input
+	Click @xpath="//input[@id='login_submit']"
+	Open the sidemenu
+	Click "E-Chart" link
+	Type "Fett, Boba" into the sstring input
+	Click the Search button
+	Verify !exists "Better Corp. portal activation" text
+Begin "Change Better Corp to use Phone number instead of Birth Date as Secondary Factor"
+	@Add patient_ext_index@driver.miedb.dbExec("INSERT IGNORE INTO patient_extended_index SET name='portal_enable_activation_codes_factor'")
+	@Set Activation Codes for Better Corp@driver.miedb.dbExec("INSERT IGNORE INTO patient_extended_values SET value=1, pat_id=43, ext_id=(SELECT ext_id FROM patient_extended_index WHERE name='portal_enable_activation_codes_factor');")
+Begin Register Baba Fett
+	@Set the Applicant partition to Edit (Optional) to test manually entering an MR#@driver.miedb.dbExec("UPDATE patient_partitions SET echart_opts='O' WHERE name='APP'")
+	Open the sidemenu
+	Click the E-Chart link
+	Click the "Patient Registration" charttab
+	Type Fett into the "Last Name" field
+	Type Baba into the "First Name" field
+	Enter "04-04-1981" into the birth_date date
+	Click the "Add New" button
+	Verify exists "Summary" charttab
+	Click the "Summary" charttab
+	Verify exists "Generate" button
+	Click the "Generate" button
+	Verify exists "Better Corp. portal activation" text
+Begin "Set up Boba activation code to be one we can use in the test"
+	@Update Activation Code@driver.miedb.dbExec("UPDATE patient_mrns SET mrnumber='ABCDEF123457' WHERE pat_id=(SELECT pat_id FROM patients WHERE first_name='Baba') AND wc_partition='PICKUP'")
+	@Update Activation Code@driver.miedb.dbExec("UPDATE documents_txt LEFT JOIN documents USING (doc_id) SET subject='Better Corp. portal activation(ABCDEF123457)' WHERE pat_id=(SELECT pat_id FROM patients WHERE first_name='Baba') AND doc_type='PORTACTINS'")
+	@Add Phone Number@driver.miedb.dbExec("UPDATE patients SET home_phone='2415551212' WHERE pat_id=(SELECT pat_id FROM patients WHERE first_name='Baba')")
+Begin "Register Baba for a portal account"
+	Navigate ?f=logout
+	Navigate ?svar_cobrand_patid=43
+	Click the "Create account" button
+	Verify exists mrnumber input
+	@Wait@driver.pause(2)
+	Type "ABCDEF123457" into the mrnumber input
+	@Wait@driver.pause(2)
+	@Wait for phone input to be present@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//input[not(contains(., 'hidden'))]/following-sibling::input[@id='DPI_home_phone']"))
+	@Wait@driver.pause(2)
+	Verify exists "Phone Number" text
+	@Wait@driver.pause(2)
+	Type "2415551212" into the DPI_home_phone input
+	Click @xpath="//input[@id='referral_submit']"
+	Type "noreply@med-web.com" into the email input
+	Type "NewPa$$w0rd1" into the referral_passwd input
+	Type "NewPa$$w0rd1" into the referral_confirm_passwd input
+	Click @xpath="//input[@id='referral_submit']"
+	Verify exists "Complete the following forms" text
+Begin "Check the contacts page for Baba"
+	Navigate ?f=logout
+	Navigate ?
+	Click @xpath="//button[@id='cya-standard-btn']"
+	Type "selenium" into the login_user input
+	Click @xpath="//input[@id='login_submit']"
+	Type "selenium" into the login_passwd input
+	Click @xpath="//input[@id='login_submit']"
+	Open the sidemenu
+	Click "E-Chart" link
+	Type "Fett, Baba" into the sstring input
+	Click the Search button
+	Verify !exists "Better Corp. portal activation" text

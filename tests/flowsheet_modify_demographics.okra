@@ -1,0 +1,37 @@
+Begin "Add a new flowsheet"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Flowsheets" charttab subtab
+	Click the "Add Flowsheet" link
+Begin "Add observations to the flowsheet"
+	Type "Account Data" in the "Flowsheet Name" input
+	Verify exists "That Flowsheet Name is already in use." text
+	Close the popup
+	Type "My New Fancy Flowsheet" in the "Flowsheet Name" input
+	Enter "Date of last eye examination" in the "obs_name" autocomplete
+	Enter "p.last_name" in the "obs_name" autocomplete
+	Enter "pev.license_issue_state" in the "obs_name" autocomplete
+	Verify exists "Date of last eye examination" text
+	Verify exists "p.last_name" text
+	Verify exists "pev.license_issue_state" text
+	Click the "Submit" button
+	Type "My New Fancy" in the "select_text" input
+	Click the "Go" button
+	Verify exists "My New Fancy Flowsheet" text
+Begin "Create order and add encounter"
+	@Insert My New Fancy Flowsheet order@driver.miedb.dbExec("INSERT INTO order_list (type, name, layout_module, layout_name) VALUES ('HS', 'My New Fancy Flowsheet', 'Exam Orders', 'Obs Survey')")
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Open the quicklink list
+	Click the "Add Results" quicklink
+Begin "Add procedure to encounter"
+	Open "Tests & procedures" dynamicsection
+	Enter "My New Fancy Flowsheet" in the "procedureorderac_txt" autocomplete
+	Click the "Add To Exam" button
+	Close the "Tests & procedures" dynamicsection
+	Open "My New Fancy Flowsheet" dynamicsection
+	Type "NewLastName" in the "p.last_name" freetext field
+	Close "My New Fancy Flowsheet" dynamicsection
+Begin "Verify demographics changed"
+	Click the "Summary" charttab
+	Verify exists "NewLastName" text

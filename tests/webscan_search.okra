@@ -1,0 +1,32 @@
+Open the sidemenu
+Click the WebScan sidemenu entry
+Type 1 into the batch_id_start input
+Type 20 into the batch_id_end input
+Select all from the status dropdown
+Select "Begins With" from the search_comment_type dropdown
+Type "Search comment" into the search_comment input
+# Autocomplete Hart, William into the patient input
+Enter "03-01-1981" into the batch_date_start date
+Enter "12-30-2000" into the batch_date_end date
+Click the Search button
+Verify exists @Batch Listview@id=lv_root_Batch
+Begin "Setup Enable Clinic Location for Batch Processes System Setting"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click "System" charttab
+	Click "System Settings" charttab subtab
+	Click "Add System Setting" link
+	Enter "Enable Clinic Location for Batch Processes" in the "settings_query" autocomplete
+	@Wait@driver.wcutils.waitForAJAX(30)
+	Select "1" in the "value" dropdown
+	Type "Setup Enable Clinic Location for Batch Processes System Setting" into "reason" input
+	Click Add button
+Begin "Add Batch with Clinic Location for Testing"
+	@Update start date for Better Corp EO@driver.miedb.dbExec("INSERT INTO batches(storage_id, user_id, project, create_user_id, pages) VALUES(281784665, 2, 'OFFICE', 2, 8)")
+Begin "Test Clinic Location Search"
+	Open the sidemenu
+	Click the WebScan sidemenu entry
+	Verify exists "Clinic Location:" autocomplete
+	Enter "Office" in the "Clinic Location:" autocomplete
+	Click the Search button
+	Verify exists "Office" listview row

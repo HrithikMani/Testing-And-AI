@@ -1,0 +1,28 @@
+Open the sidemenu
+Click the "Control Panel" sidemenu entry
+Click the "Orders" charttab
+Click the "Orders-List Editor" charttab subtab
+Click the "Orders-List Editor" link
+Click the "Legacy Orders List Editor" link
+Begin "Add a New Order"
+	Click the "Add An Order" link
+	Type "PROC" in the "Type" input
+	Type "Procedure" in the 1st "Description" input
+	Select "Before Type" from the "Where?" dropdown
+	Select "Protocols" from the "Relative to..." dropdown
+	Type "Bleeding by Leeches" in the "Order Name" field
+	Type "BLEED" in the "Order Code" input
+	Type "Best done by Theodoric of York, Medieval Barber" in the "Provider Guideline" field
+	Click the "Save" button
+	Verify exists "Order List Entry Added" text
+Begin "Search for New Order"
+	Type "Bleed" in the 1st input
+	Click the "Search" button
+	Verify exists "Bleeding by Leeches" text
+Begin "Edit the New Order"
+	Click the "Edit" listview link
+	Type "OU812" in the "Order Billing Code" input
+	Click the "Save" button
+Begin "Verify changes"
+	Verify exists "OU812" text
+

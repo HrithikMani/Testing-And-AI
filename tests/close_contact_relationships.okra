@@ -1,0 +1,27 @@
+"""
+@filedeps: system/layouts/encounters/Visit.html,system/layouts/WCENCSECTION/Close Contact Relationships.html
+@owners: aris,aaronc
+@systemType: EH
+"""
+Begin "Start Visit."
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Hart, William" into the sstring input
+	Click the "TEST-10019" link
+	Click the "Add Visit" link
+Begin "Add Close Contacts hidden item"
+	@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	Click the @Tools button@xpath='//div[@id="wc_encnav_buttons"]/a[@title="Tools"]'
+	Click the "!Close Contacts" text
+	Click the @Close button@xpath='//button[@class="xclose"]'
+Begin "Close Contacts"
+	Open the "Close Contacts" dynamicsection
+		Enter "Smith, Joe" in the "le_close_contacts__name__display" autocomplete
+		Select "Close Contact" from the "le_close_contacts_eu_role_id_value" dropdown
+		Click the Add Button
+		Verify exists "Smith, Joe (TEST-10061)" text
+		Enter "Smith, Theodore" in the "le_close_contacts__name__display" autocomplete
+		Select "Close Contact-Notified" from the "le_close_contacts_eu_role_id_value" dropdown
+		Click the Add Button
+		Verify exists "Smith, Theodore S. (TEST-10062)" text

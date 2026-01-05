@@ -1,0 +1,90 @@
+Open the sidemenu
+Click the "Control Panel" link
+Begin "Set the user up for E-Prescribing"
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Click the "Show All" link
+	Click the 1st Physicians listview link
+	Begin "Edit User (physician)"
+		Gridclick "Username:physician" "Edit" grid link
+		Type 2604596271 in the "Fax Number" field
+		Click @id=erx_newrx
+		Type FV7315787 in the "DEA Number" field
+		Type 5883325743 in the "National Provider Id (NPI)" field
+		Click the "Submit" button
+		@Enable Ashish Patel for E-prescribing@driver.miedb.dbExec("UPDATE users SET spi='0791135990424' WHERE user_id=40")
+		Verify exists "User (physician) was updated successfully" text
+Begin "Set up system for QA sending of prescriptions"
+	@Set staging@driver.wcutils.SetSystemSetting('E-Chart','Meds','SureScripts Staging','1',False)
+	@Set zeus-qa endpoint@driver.wcutils.SetSystemSetting('E-Chart','Meds','SureScripts Staging URL','https://zeus-qa.med-web.com/ssdms/interface.cgi',False)
+	@Mock surescripts@driver.wcutils.SetSystemSetting('E-Chart','Meds','SureScripts Mock Client Base URL','https://zeus.med-web.com/webchart/',False)
+Begin "Set up a preferred pharmacy for William Hart"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Click the TEST-10019 link
+	Click the "Medical Record" charttab
+	Click the Allergies/Medications link
+	Click the "Preferred Pharmacy" link
+	Click @id=phsearch_filter_zip
+	Type 46804 in @id=zipinput
+	Enter "Bannockburn Pharmacy" in the pharmacy_ac_text autocomplete
+	Click the "Set as Preferred" button
+	@Little pause to make sure screen is back@driver.pause(5)
+Begin "Prescribe some levothyroxine"
+	Open the quicklink list
+	Click the Prescribe quicklink
+	Enter levothyroxine in the qp_acval0 autocomplete
+	Enter "capsule 150mcg" in the qp_formacval0 autocomplete
+	Close the "Warning for levothyroxine" popup
+	Type "1 bid" in @id=qp_sig0
+	Type 30d in @id=qp_duration0
+	Type 60 in @id=qp_total_quantity0
+	Type 0 in @id=qp_refills0
+	Select "Patel, Ashish" from @id=qp_doctor_id0
+	#Close the "Dose Calculation Alert" popup
+	Click the 1st Prescribe button
+	Verify exists "levothyroxine 150 mcg capsule" text
+Begin "Transmit the E-prescription"
+	Click the Submit button
+	@Switch to "Print Chart" Window@driver.switchToPopup()
+	Verify exists "levothyroxine 150 mcg capsule" text
+	Click the "-- Fax/Transmit --" button
+	Verify exists "All scripts sent successfully." text
+	@Close this window@driver.closePopup()
+Verify exists "levothyroxine 150 mcg capsule" text
+Verify exists "E-sent: 02-02-2007" text
+Begin "Discontinue Levothyroxine for Hart"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Click the TEST-10019 link
+	Click the "Medical Record" charttab
+	Click the Allergies/Medications link
+	# Click the discontinue link for levothyroxine.
+	Click the @Levothyroxine Discontinue Link@xpath="//tr[contains(.,'levothyroxine 150 mcg capsule')]//td[8]//a[contains(., 'Discontinue')]"
+	Click @xpath="//button[@id='disc_dateTODAY']"
+	Type "Testing" into @id='reason'
+	Click the "Simply Discontinue" button
+Begin "Open Encounter and continue Levothyroxine"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Click the TEST-10019 link
+	Click the "Add Visit" link
+	Begin "Add Provider"
+		Open the "Encounter" dynamicsection
+		Enter "Butler, Internist" in the provider_chart_ac_input autocomplete
+		Click the dynamicsection nextbutton
+		Unmask dynamicsection
+	Begin "Continue Levothyroxine"
+		Open the "Medication orders" dynamicsection
+		Enter "levothyroxine" in the "medordersle_orderac_txt" autocomplete
+		Close the "Warning for levothyroxine" popup
+		Enter "capsule 150mcg" in the "medordersle_formac_txt" autocomplete
+		Type "1 qd" into @id='medordersle_sigac_txt'
+		Type "30" into @id='le_medordersle_rf_duration_value'
+		Type "1" into @id='le_medordersle_rf_refills_value'
+		Select "Butler, Internist E." from the "le_medordersle_rf_doctor_id_value" dropdown
+		Advance the dynamicsection
+	Click the "Save Incomplete & View" button
+	@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath='//a[contains(., "Archive and Close Encounter")]//a[contains(., "Archive and Close Encounter")]'))
+	Click the "Archive and Close Encounter" link
+	Verify exists "Encounter has been closed and Archived successfully as Document" text

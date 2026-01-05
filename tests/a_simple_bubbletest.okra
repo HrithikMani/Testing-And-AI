@@ -1,0 +1,8 @@
+Begin "Login as Dave"
+	Navigate "?f=logout"
+	@Dave superuser WCTestSession@driver.wcutils.insertWCTSession('dave')
+Begin "Navigate to chart"
+	Navigate "?f=chart&s=pat&pat_id=18"
+
+
+

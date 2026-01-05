@@ -1,0 +1,163 @@
+"""
+ Statements Workflow Test
+ @owners: aris
+ @filedeps: system/layouts/MASTER/CommonRegistrationPage.html, system/layouts/SystemReport/Encounter Billing Pending.html, system/layouts/EO/Maintenance.html, system/layouts/No Login/Deal.html
+"""
+Begin "Setup Accounts for Enterprise Orthopedics"
+	Navigate "?f=chart&s=pat&t=Overview+%28PO%29&v=dashboard&pat_id=59"
+	Click the "Setup Location Accounts" link
+	@Wait for Account Setup@driver.waitFor(driver, lambda d: d.getElement(xpath="//div[@class='contact']/a[contains(.,'Enterprise Orthopedics Checking')]"), expected_return=True, timeout=30)
+Begin "Create NEWEO Employer Organization and setup accounts"
+	@Set Manage Prices to Edit@driver.miedb.dbExec("INSERT INTO security_exception (user_id, module_name, category_name, security_value) VALUES ('8', 'Financials', 'Price', '4')")
+	@Set Manage Funding Source to Edit@driver.miedb.dbExec("INSERT INTO security_exception (user_id, module_name, category_name, security_value) VALUES ('8', 'Financials', 'Funding Source', '4')")
+	@Set Manage Funding Source to Edit@driver.miedb.dbExec("INSERT INTO security_exception (user_id, module_name, category_name, security_value) VALUES ('8', 'Financials', 'Modifiers', '4')")
+	@Set Chest X-Ray Price to $72@driver.miedb.dbExec("UPDATE order_list SET price = 72 WHERE name='Xray Chest PA and Lateral'")
+	Navigate "?f=layout&s=pat&module=MASTER&name=CommonRegistrationPage&partition_value=EO&chart_type_value=Employer+Organization&tabmodule=+"
+	Type "NEWEO" into the "last_name" input
+	Click the "Add New" button
+Begin "Set the registration partition value for new employees"
+	@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//ul[@id='wc_tabwrapper']//span[contains(@class, 'wc_tab')]/*[contains(@class, 'wc_tab_title')]"), expected_return=True, timeout=30)
+	@Wait 4 seconds for mask to be removed@driver.pause(4)
+	Click the "Overview (EO)" charttab
+	Open the "Employer Organization" dynamicsection
+	Select "MIE" from the "DPI_chart_registration_partition" dropdown
+	Advance the dynamicsection
+Begin "Create a Deal"
+	Click the "Add Deal" link
+	Open the "Parties" dynamicsection
+	Enter "Enterprise Orthopedics" in the "enc_chart" autocomplete
+	Save the "Parties" dynamicsection
+	@Wait 4 seconds@driver.pause(4)
+	Open the "Details" dynamicsection
+	@Wait for sections to finish@driver.wcutils.waitForAJAX(30)
+	# Start Date 
+	EnterDate "01-01-2023" in the "Start Date" flowsheet 
+	# End Date
+	EnterDate "12-31-2023" in the "End Date" flowsheet
+	Click "Yes" in the "Executed" flowsheet radio
+	Close the "Details" dynamicsection
+	Toggle the "Charges" quicklist
+	Click the "Charge" quicklist item
+	Enter "CBC with Automated Diff" in the Item autocomplete
+	@Blur the CBC Autocomplete field by focusing the Price field@driver.runJS("arguments[0].focus()", driver.getElement(xpath="//form[@id='encbillform']//input[@name='price']"))
+	@Wait for autocomplete ajax to populate inputs@driver.wcutils.waitForAJAX(30)
+	Type "25" in the @Price input@xpath="//form[@id='encbillform']//input[@name='price']"
+	Screenshot price_input
+	Click the 2nd "Save" popup button
+	Screenshot save_button_clicked
+	Verify exists "CBC with Automated Diff" dynamicitem
+	Verify exists "$25.00" text
+	Click the "Archive & Close" button
+	@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//*[contains(., 'Encounter has been closed and Archived successfully')]"), expected_return=True, timeout=15)
+Begin "Add new employee for NEWEO Employer Organization"
+	Click the "Admin (EO/PO)" charttab
+	Click the "Employees" charttab subtab
+	# Unmask dynamicsection
+	Click the "Add New Employee" link
+	Type "Finance" into the "last_name" input
+	Type "Bill" into the "first_name" input
+	Enter "01-01-1980" into the birth_date date
+	Click the "Add New" button
+Begin "Add Visit encounter on new employee"
+	@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//ul[@id='wc_tabwrapper']//span[contains(@class, 'wc_tab')]/*[contains(@class, 'wc_tab_title')]"), expected_return=True, timeout=30)
+	Open "Summary" charttab
+	Click the "Add Visit" link
+	Begin "Encounter Info"
+		@Wait 4 seconds@driver.pause(4)
+		Open the "Encounter" dynamicsection
+		@Wait for Date Ajax to finish@driver.wcutils.waitForAJAX(30)
+		Enter "Patel, Ashish " in the "provider_chart_ac" autocomplete
+		Enter "02-02-2023" into the 'DED_serv_date' date
+		@Wait for Date Ajax to finish@driver.wcutils.waitForAJAX(30)
+		Close the "Encounter" dynamicsection
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+	Begin "Tests & procedures"
+		Toggle the "Tests & procedures" quicklist
+		Click the 2nd "CBC with Automated Diff" quicklist item
+		Verify exists "CBC with Automated Diff" dynamicitem
+		Open the "Tests & procedures" dynamicsection
+		Enter "Xray Chest PA and Lateral" into the procedureorder autocomplete
+		Click the "Add To Exam" button
+		# Close the "Tests & procedures" dynamicsection
+	Begin "Xray Chest PA and Lateral section"
+		Open the "Xray Chest PA and Lateral" dynamicsection
+		Type "Test" into the "Xray Chest PA and Lateral" input
+		Edit "Xray Chest PA" "71020-Xray Chest" dynamicitem
+		Type "22" in the @Modifiers input@xpath="//form[@id='encbillform']//input[@id='modifiers']"
+		Click the "Save" popup button
+		Complete "Xray Chest PA" "Xray Chest" dynamicitem
+		Verify exists "PA and Lateral, 22" text
+		Close the "Xray Chest PA and Lateral" dynamicsection
+	Begin "CBC with Automated Diff section"
+		Complete "CBC with Automated" "CBC" dynamicitem
+	Begin "Verify order exists in Financials section"
+		Open the "Financials" dynamicsection
+		Close the "Financials" dynamicsection
+		Verify exists "Xray Chest PA and Lateral" text
+		Verify exists "CBC with Automated Diff" text
+	Begin "Closing out the patient's encounter"
+		Click the "Archive & Close" button
+		@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//*[contains(., 'Encounter has been closed and Archived successfully')]"), expected_return=True, timeout=15)
+Begin "Validate Services Portlet"
+	Open "Summary" charttab
+	Click the "Select Portlets" link
+	Click the "Deal Quick Links" checkbox
+	Click the "Save" button
+	@Wait for the page to reload@driver.wcutils.waitForAJAX(30)
+	Verify exists "Deal Quick Links" text
+	Verify exists "CBC with Automated Diff" text
+	@Scroll evaluate button into view@driver.runJS('document.getElementById("DealQuickLinksEvaluateButton").scrollIntoView(true)')
+	Click the "NEWEO" checkbox
+	Verify "checked=true" "chkbx_2385" input
+	Click the "Evaluate Selected Orders" button
+	Verify exists "These orders are now on the due list" text
+	Click the "OK" button
+Begin "Process Billing"
+	Navigate "?f=layout&s=pat&module=SystemReport&name=Encounter+Billing+Pending&tabmodule=reports&t=Financials"
+	Wait for the encounterbillingpending grid
+	Click the "NEWEO" grid checkbox
+	Click the 2nd "NEWEO" grid checkbox
+	@Wait 4 seconds@driver.pause(4)
+	# Ticket 120461 grid buttons
+	Click @the "Close" grid button@xpath='//div[@class="wcdv_grid"]//div[contains(@id,"scriptlet") and contains(@style, "inline-block")]//button[@type="button" and not(@disabled)][contains(., "Close")]'
+	Verify exists "Close Transactions" popup
+	Click the Yes button
+	@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//*[contains(., "2/2")]'), timeout=120)
+	@Wait@driver.pause(120)
+	Verify exists "Closing 2/2 Transactions" text
+	Close "Closing Transactions" popup
+Begin "Make invoice document"
+	Navigate "?f=layout&module=EO&name=Maintenance&tabmodule=+"
+	Type "NEWEO" into the "name" input
+	Click the "Search" button
+	Wait for the EmployerOrganizations grid
+	Click the !NEWEO link
+	@Wait 2 seconds@driver.pause(2)
+	Click the "Accounting" charttab
+	Click the "Invoices/Statements" charttab subtab
+	Enter "02-02-2023" into the start_date date
+	Enter "02-02-2023" into the end_date date
+	Click the "Search" button
+	@Wait 2 seconds@driver.pause(2)
+	Verify exists "Xray Chest PA and Lateral (71020)" text
+	Verify exists "$72.00" text
+	Click the "Create Statement" button"
+	@Wait 2 seconds@driver.pause(2)
+	Verify exists !Print link
+Begin "Validate aging has happened"
+	Navigate "?f=admin&s=system_report&opp=query&report_name=Charge+Aging+Report&submit_query"
+	Enter "NEWEO" in the pat_id autocomplete
+	Click the "Run Report" button
+	Verify exists "$97.00" text
+Begin "Disable aging"
+	@Update System Setting@driver.miedb.dbExec("UPDATE system_settings SET value=0 WHERE module='Webchart' AND section='Billing' AND item='Account Aging'")
+	Navigate "?f=memcache&flush_it=Flush+All+Values"
+	@Update ledger@driver.miedb.dbExec("UPDATE ledger SET amount = IF(amount < 0, amount - 5, amount + 5), price = IF(price < 0, price - 5, price + 5) WHERE trx_id = 12")
+Begin "Validate aging did not happen"
+	Navigate "?f=admin&s=system_report&opp=query&report_name=Charge+Aging+Report&submit_query"
+	Enter "NEWEO" in the pat_id autocomplete
+	Click the "Run Report" button
+	Verify exists "$97.00" text
+Begin "Validate charges are available from endpoint"
+	Navigate "?f=layout&module=No+Login&name=Deal"
+	Verify exists "CBC with Automated Diff" text

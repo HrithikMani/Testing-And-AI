@@ -1,0 +1,49 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Wait for the "DataImportTypes" grid
+	Click the "Show/Hide Grid Controls" icon
+	Select "Name" from the @Filters dropdown@xpath='//span[contains(., "Filters")]/parent::div/following-sibling::div/select[@class="wcdv_control_addField"]'
+	Sumoselect "PFT Data CSV API" from the "Name" grid sumoselect
+	Click the "OK" grid sumobutton
+	Wait for ajax
+	Click "PFT Data CSV API" grid checkbox
+	Click the "Upload Data" button
+	Verify exists @xpath="//div[@class='wc_win']"
+	Verify exists "PFT Data CSV API" text in @xpath="//div[@class='wc_win']"
+	Screenshot "test"
+	Click the "DI_Verbose" checkbox
+	Select "| - Pipe" from the "Delimiter" dropdown
+	@Wait@driver.pause(1)
+	Type 'PftDataImportSuccess.csv' in the 'csv_file' input
+	Click the "Upload File" button
+	@driver.getWebDriver().switch_to.frame("di_output_frame")
+	@Wait@driver.pause(1)
+	Verify exists "Successfully imported file PftDataImportSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+	Click the @Close button@xpath='//button[@class="xclose"]'
+Begin "Verify Entries"
+	Verify exists sidemenu
+	Open the sidemenu
+	Click "E-Chart" sidemenu entry
+	Click the "Name" radio
+	Type "Doe" in the "sstring" input
+	Click the "Search" button
+	Verify exists "TEST-10006" link
+	Click the "TEST-10006" link
+	Click the "Medical Record" charttab
+	Click the PFT charttab subtab
+	Verify exists "Displaying 1-2" text
+	@driver.wcutils.waitForAJAX(quiet=2)
+	Verify exists "01-01-2014" listview link
+	Click the "01-01-2014" listview link
+	Verify exists "PFT Results" text
+	Click the "Medical Record" charttab
+	Click the PFT charttab subtab
+	Verify exists "Displaying 1-2" text
+	@driver.wcutils.waitForAJAX(quiet=2)
+	Verify exists "01-02-2014" listview link
+	Click the "01-02-2014" listview link
+	Verify exists "PFT Results" text

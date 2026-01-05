@@ -1,0 +1,16 @@
+Open the sidemenu
+Click the "E-Chart" link
+Type "Thompson" in the "sstring" input
+Click the "Search" button
+Click the "TEST-10065" link
+Click the "Add Visit" link
+Open the "Tests & procedures" dynamicsection
+	@Wait for section to finish@driver.wcutils.waitForAJAX
+	Enter "Animal Exposure (Allergy) Entry with Membership" in the "procedureorderac_txt" autocomplete
+	Click the "Evaluate" button
+	Verify exists "Successfully Evaluated" text
+	Click the "OK" popup button
+	Verify !exists "Animal Exposure (Allergy) Entry with Membership" text
+Advance the dynamicsection
+@removeSeleniumsAbilityToAddPeopleToPanels@driver.miedb.dbExec("INSERT INTO security_exception (user_id, module_name, category_name, security_value, comment) VALUES (8, 'Health Surveillance', 'Membership', 0, 'test')")
+	Verify !exists "Evaluate" button

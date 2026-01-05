@@ -1,0 +1,377 @@
+"""
+Used for interacting with or referencing the new encounter UI quicklist functionality 
+
+Usage examples:
+	Open the "Financials" quicklist
+	Hover the "Charge" quicklist item
+	Open the "Financials" quicklist
+	Expand the "Financials" quicklist
+	Collapse the "Financials" quicklist
+	Hide the "Financials" quicklist
+	Show "Smart Plan"(dynamic section) "Visit Orders"(quick list title) quicklist
+	Type "P" in the "Financials" quicklist search
+	Add "Presenting medications:Quick List" "Acetaminophen" quicklist item
+	Add "Presenting medications" "Acetaminophen" quicklist item
+	Quickadd the "NKDA" quicklist item
+	Toggle the "Past procedures" quicklist
+	Link case "S205" linkcase
+	Link doc "S205" linkdoc
+	Unlink "S205" quicklist item
+	Decline "Glass Blowers Cataract" quicklist item
+	Approve "Milk inhalation pneumonitis" quicklist item
+
+"""
+
+quicklist://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]/div[@class="ql-container"]//*[@class="dynTitle"][contains(., "{OKRA_TEXT}")]
+	|//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//*[@class="dynTitle"]
+
+item://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(., "{OKRA_TEXT}")]
+	|//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")]
+
+add://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Add" or "Prescribe"]
+
+toggle://div/*[@class="exam_tab"][contains(.,"{OKRA_TEXT}")]/following-sibling::div[@class="heading_buttons"]/a[@class="ql_toggle"]
+	|//div/*[@class="exam_tab"][contains(., "{OKRA_TEXT}")]/following-sibling::div/a[@class="ql_toggle"]
+	|//a[@class="ql_toggle"]
+
+expand://div/*[@class="exam_tab"][contains(.,"{OKRA_TEXT}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]/span[contains(@class, "ql-mode-toggle") and contains(@class,"fa-caret-left")]
+	|//div/*[@class="exam_tab"]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]/span[contains(@class, "ql-mode-toggle") and contains(@class,"fa-caret-left")]
+
+collapse://div/*[@class="exam_tab"][contains(.,"{OKRA_TEXT}")]/following-sibling::div//div[@class="dynQL expand-me" and (contains(@style, "display: block")) and not(contains(., "display: none;"))]/span[contains(@class, "ql-mode-toggle") and contains(@class,"fa-caret-right")]
+	|//div/*[@class="exam_tab"]/following-sibling::div//div[@class="dynQL expand-me"]/span[contains(@class, "ql-mode-toggle") and contains(@class,"fa-caret-right")]
+
+hide://div/*[@class="exam_tab"]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]/div[not(contains(@class, "ql-collapse"))]//*[@class="dynTitle"][contains(.,"{OKRA_TEXT}")]//span[@class="dynQL-controls"]/span[@class="fa fa-caret-up"]
+	|//div/*[@class="exam_tab"]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]/div[contains(@class, "ql-collapse")]//span[@class="dynQL-controls"]/span[@class="fa fa-caret-up"]
+
+show://div/*[@class="exam_tab"]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]/div[contains(@class, "ql-collapse")]//*[@class="dynTitle"][contains(.,"{OKRA_TEXT}")]//span[@class="dynQL-controls"]/span[@class="fa fa-caret-up"]
+	|//div/*[@class="exam_tab"]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]/div[contains(@class, "ql-collapse")]//span[@class="dynQL-controls"]/span[@class="fa fa-caret-up"]
+
+search://div/*[@class="exam_tab"][contains(., "{OKRA_TEXT}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[contains(@class, "ql-search")]//span[contains(., "Search")]/following-sibling::input[contains(@type, "search")]
+	|//div/*[@class="exam_tab"][contains(.,"{OKRA_TEXT}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-search"]/input[@type="search"]
+	|//div/*[@class="exam_tab"]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[contains(@class, "ql-search")]//span[contains(., "Search")]/following-sibling::input[contains(@type, "search")]
+	|//div/*[@class="exam_tab"]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-search"]/input[@type="search"]
+
+linkcase://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Link Case"]
+
+linkdoc://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Link Document"]
+
+unlink://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Unlink"]
+
+approveunconfirmed://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Approve"]
+
+declineunconfirmed://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Decline"]
+
+addtopmh://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Add to PMH"]
+
+addtoproblemlist://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Add to Problem List"]
+
+medrefill://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Refill" or @title="REFILL"]
+
+medchange://div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]//span[@class="dynOps"][contains(@style, "display: block") and not(contains(@style, "display: none"))]//*[self::a or self::button][@title="Change Therapy"]
+
+@@@
+def qlopHoverClick():
+	oldtimeout = driver.timeout
+	driver.setTimeout(5)
+	driver.reportCommandStatus('', '', True, 'section xpath', section)
+	driver.reportCommandStatus('', '', True, 'qlitem xpath', qlitem)
+	driver.reportCommandStatus('', '', True, 'qlop xpath', qlop)
+	if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=60,
+		comments='Wait for ajax and layoutInsert operations to complete prior to adding'):
+		driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+	driver.wcutils.waitForAJAX(timeout=60, quiet=5)
+	if driver.getElement(xpath=section):
+		if driver.waitFor(driver, lambda driver: driver.getElement(xpath=qlitem), expected_return=True):
+			driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=section))
+			driver.mouseOver(xpath=qlitem)
+		else:
+			driver.reportCommandStatus('', '', False, '', 'Quicklist dynItem not found')
+	else:
+		driver.reportCommandStatus('', '', False, '', 'Section not found')
+	if driver.waitFor(driver, lambda driver: driver.getElement(xpath=qlitem), expected_return=True):
+		driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=section))
+		driver.mouseOver(xpath=qlitem)
+		if driver.waitFor(driver, lambda driver: driver.getElement(xpath=qlop), expected_return=True):
+			driver.clickElement(xpath=qlop)
+		elif not driver.waitFor(driver, lambda driver: driver.getElement(xpath=qlop), expected_return=True):
+			driver.reportCommandStatus('', '', True, '', '2nd attempt')
+			driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=section))
+			driver.mouseOver(xpath=qlitem)
+			if driver.waitFor(driver, lambda driver: driver.getElement(xpath=qlop), expected_return=True):
+				driver.clickElement(xpath=qlop)
+			elif not driver.waitFor(driver, lambda driver: driver.getElement(xpath=qlop), expected_return=True, timeout=60):
+				driver.reportCommandStatus('', '', True, '', '3rd attempt')
+				driver.wcutils.waitForAJAX(timeout=30)
+				driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=section))
+				driver.mouseOver(xpath=qlitem)
+				driver.waitFor(driver, lambda driver: driver.getElement(xpath=qlop), expected_return=True, timeout=60)
+				driver.clickElement(xpath=qlop)
+			else:
+				driver.reportCommandStatus('quicklist.pod', 'Edit/Correct Medication/Change Therapy', False, 'Variables given', 'Unable to click DynOps button after 2 attempts')
+		else:
+			driver.reportCommandStatus('quicklist.pod', 'Edit/Correct Medication/Change Therapy', False, 'Variables given', 'DynOps button not found')
+	else:
+		driver.reportCommandStatus('quicklist.pod', 'Edit/Correct Medication/Change Therapy', False, 'Variables given', 'Quicklist Item not found')
+	if driver.getElement(xpath='//div[@id="miewin_progress"]'):
+		driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@id="miewin_progress"]'), timeout=60, expected=False, comments='Wait for miewin to finish building')
+	if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=60,
+		comments='Wait for ajax and layoutInsert operations to complete after inserting item'):
+		driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+	driver.setTimeout(oldtimeout)
+
+@@@
+
+@Hover
+@@@
+xp = '//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(@style, "display: none;"))]//div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{OKRA_TEXT}")]'
+section = '/ancestor::div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"]'
+driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=xp+section))
+driver.mouseOver(xpath=xp)
+xp = xp + '[contains(@style, "display: block") and not(contains(@style, "display: none"))]/*[self::a or self::button]'
+@@@
+
+@Toggle
+@@@
+driver.clickElement(xpath='//div/*[@class="exam_tab"][contains(., "{OKRA_TEXT}")]/following-sibling::div/a[@class="ql_toggle"]')
+@@@
+
+@Expand
+Click the {OKRA_TEXT} quicklist expand
+
+@Collapse
+Click the {OKRA_TEXT} quicklist collapse
+
+@Approve
+"""
+def parse(str):
+	if ":" in str:
+		spl = [x.strip() for x in str.split(':')]
+		sec = spl[0]
+		ql = spl[1]
+		return(sec,ql)
+	else:
+		sec = str
+		ql = ""
+		return(sec,ql)
+"""
+@@@
+global qlitem, qlop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"!="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header" and contains(., "{1}")]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][@title="Approve"]'
+	qlopHoverClick()
+elif "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"=="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header"]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][@title="Approve"]'
+	qlopHoverClick()
+else:
+	driver.reportCommandStatus('quicklist.pod', 'Approve', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'Must at least give section and quicklist item')
+@@@
+
+@ChangeTherapy
+"""
+def parse(str):
+	if ":" in str:
+		spl = [x.strip() for x in str.split(':')]
+		sec = spl[0]
+		ql = spl[1]
+		return(sec,ql)
+	else:
+		sec = str
+		ql = ""
+		return(sec,ql)
+"""
+@@@
+global qlitem, qlop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"!="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header" and contains(., "{1}")]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][@title="Change Therapy"]'
+	qlopHoverClick()
+elif "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"=="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header"]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][@title="Change Therapy"]'
+	qlopHoverClick()
+else:
+	driver.reportCommandStatus('quicklist.pod', 'Change Therapy', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'Must at least give section and quicklist item')
+@@@
+
+@Decline
+"""
+def parse(str):
+	if ":" in str:
+		spl = [x.strip() for x in str.split(':')]
+		sec = spl[0]
+		ql = spl[1]
+		return(sec,ql)
+	else:
+		sec = str
+		ql = ""
+		return(sec,ql)
+"""
+@@@
+global qlitem, qlop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"!="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header" and contains(., "{1}")]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][@title="Decline"]'
+	qlopHoverClick()
+elif "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"=="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header"]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][@title="Decline"]'
+	qlopHoverClick()
+else:
+	driver.reportCommandStatus('quicklist.pod', 'Decline', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'Must at least give section and quicklist item')
+@@@
+
+@Refill
+"""
+def parse(str):
+	if ":" in str:
+		spl = [x.strip() for x in str.split(':')]
+		sec = spl[0]
+		ql = spl[1]
+		return(sec,ql)
+	else:
+		sec = str
+		ql = ""
+		return(sec,ql)
+"""
+@@@
+global qlitem, qlop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"!="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header" and contains(., "{1}")]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][@title="Refill" or @title="REFILL"]'
+	qlopHoverClick()
+elif "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"=="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header"]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][@title="Refill" or @title="REFILL"]'
+	qlopHoverClick()
+else:
+	driver.reportCommandStatus('quicklist.pod', 'Refill', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'Must at least give section and quicklist item')
+@@@
+
+@Show
+"""
+def parse(str):
+		return(str,)
+"""
+@@@
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{0}" and "{{OKRA_TEXT}}"!="None":
+	xp = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"]'
+	ele = driver.getElement(xpath=xp)
+	driver.pause(1)
+	driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"]'))
+	if driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and contains(@style, "display: block")]//div[contains(@class, "ql-container") and contains(@class, "collapse")]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]/ancestor::div[contains(@class, "ql-container") and contains(@class, "collapse")]|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "forceQL")][contains(@style, "display: block") or not(contains(@style, "display")) and not(contains(@style, "display: none"))]//div[contains(@class, "ql-container") and contains(@class, "collapse")]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]/ancestor::div[contains(@class, "ql-container") and contains(@class, "collapse")]'), expected_return=True):
+		driver.clickElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and contains(@style, "display: block")]//div[contains(@class, "ql-container") and contains(@class, "collapse")]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]/ancestor::div[contains(@class, "ql-container") and contains(@class, "collapse")]|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "forceQL")][contains(@style, "display: block") or not(contains(@style, "display")) and not(contains(@style, "display: none"))]//div[contains(@class, "ql-container") and contains(@class, "collapse")]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]')
+		driver.reportCommandStatus('quicklist.pod', 'Verb: Show', True, '', '{{OKRA_TEXT}} clicked')
+		if driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and contains(@style, "display: block")]//div[contains(@class, "ql-container") and not(contains(@class, "collapse"))]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "forceQL")][contains(@style, "display: block") or not(contains(@style, "display")) and not(contains(@style, "display: none"))]//div[contains(@class, "ql-container") and not(contains(@class, "collapse"))]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]'), expected_return=True):
+			driver.reportCommandStatus('quicklist.pod', 'Verb: Show', True, '', '{{OKRA_TEXT}} successfully opened')
+		else:
+			driver.reportCommandStatus('quicklist.pod', 'Verb: Show', False, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', '{{OKRA_TEXT}} failed to open')
+	elif driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and contains(@style, "display: block")]//div[contains(@class, "ql-container") and not(contains(@class, "collapse"))]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "forceQL")][contains(@style, "display: block") or not(contains(@style, "display")) and not(contains(@style, "display: none"))]//div[contains(@class, "ql-container") and not(contains(@class, "collapse"))]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]'), expected_return=True):
+		driver.reportCommandStatus('quicklist.pod', 'Verb: Show', True, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', '{{OKRA_TEXT}} is already open')
+	else:
+		driver.reportCommandStatus('quicklist.pod', 'Verb: Show', False, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', '{{OKRA_TEXT}} quicklist not found')
+elif "{0}"!="None" and "{{OKRA_TEXT}}"=="None":
+	driver.reportCommandStatus('quicklist.pod', 'Verb: Show', False, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', 'Must specify the encounter section and the quicklist you\'re attempting to interact with')
+else:
+	driver.reportCommandStatus('quicklist.pod', 'Verb: Show', False, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', 'Something went wrong check your syntax')
+@@@
+
+@Hide
+"""
+def parse(str):
+		return(str,)
+"""
+@@@
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{0}" and "{{OKRA_TEXT}}"!="None":
+	driver.pause(1)
+	if driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and contains(@style, "display: block")]//div[contains(@class, "ql-container") and not(contains(@class, "collapse"))]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "forceQL")][contains(@style, "display: block") or not(contains(@style, "display")) and not(contains(@style, "display: none"))]//div[contains(@class, "ql-container") and not(contains(@class, "collapse"))]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]'), expected_return=True):
+		driver.clickElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and contains(@style, "display: block")]//div[contains(@class, "ql-container") and not(contains(@class, "collapse"))]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "forceQL")][contains(@style, "display: block") or not(contains(@style, "display")) and not(contains(@style, "display: none"))]//div[contains(@class, "ql-container") and not(contains(@class, "collapse"))]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]')
+		driver.reportCommandStatus('quicklist.pod', 'Verb: Hide', True, '', '{{OKRA_TEXT}} clicked')
+		if driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and contains(@style, "display: block")]//div[contains(@class, "ql-container") and contains(@class, "collapse")]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "forceQL")][contains(@style, "display: block") or not(contains(@style, "display")) and not(contains(@style, "display: none"))]//div[contains(@class, "ql-container") and contains(@class, "collapse")]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]'), expected_return=True):
+			driver.reportCommandStatus('quicklist.pod', 'Verb: Hide', True, '', '{{OKRA_TEXT}} successfully closed')
+		else:
+			driver.reportCommandStatus('quicklist.pod', 'Verb: Hide', False, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', '{{OKRA_TEXT}} failed to close')
+	elif driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and contains(@style, "display: block")]//div[contains(@class, "ql-container") and contains(@class, "collapse")]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]/ancestor::div[contains(@class, "ql-container") and contains(@class, "collapse")]|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "forceQL")][contains(@style, "display: block") or not(contains(@style, "display")) and not(contains(@style, "display: none"))]//div[contains(@class, "ql-container") and contains(@class, "collapse")]//*[self::div or self::h3][contains(@class, "dynTitle") and contains(., "{{OKRA_TEXT}}") and (not(contains(., " {{OKRA_TEXT}}")) and not(contains(., "{{OKRA_TEXT}} ")))]/ancestor::div[contains(@class, "ql-container") and contains(@class, "collapse")]'), expected_return=True):
+		driver.reportCommandStatus('quicklist.pod', 'Verb: Hide', True, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', '{{OKRA_TEXT}} is already closed')
+	else:
+		driver.reportCommandStatus('quicklist.pod', 'Verb: Hide', True, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', '{{OKRA_TEXT}} quicklist not found')
+elif "{0}"!="None" and "{{OKRA_TEXT}}"=="None":
+	driver.reportCommandStatus('quicklist.pod', 'Verb: Hide', False, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', 'Must specify the encounter section and the quicklist you\'re attempting to interact with')
+else:
+	driver.reportCommandStatus('quicklist.pod', 'Verb: Hide', False, 'Parsed value: {0}, Okra text: {{OKRA_TEXT}}', 'Something went wrong check your syntax')
+@@@
+
+@Link
+"""
+def parse(str):
+		return(str,)
+"""
+@@@
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "Case")]/following-sibling::div//div[contains(@class, "dynQL") and contains(@style, "display: block")]|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "Case")]/following-sibling::div//div[contains(@class, "forceQL")][contains(@style, "display: block") or not(contains(@style, "display")) and not(contains(@style, "display: none"))]'), expected_return=True):
+	if not "{0}":
+		driver.reportCommandStatus('Link case failure', 'Link option "case" or "doc" not provided', False, '', '')
+	else:
+		qlitem = driver.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "Case")]/following-sibling::div//div[contains(@class, "dynQL")]/div//div[contains(@class, "dyndiv")]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]')
+		qlitemxp = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "Case")]/following-sibling::div//div[contains(@class, "dynQL")]/div//div[contains(@class, "dyndiv")]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+		if "{0}"=="case":
+			linkcase = driver.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "Case")]/following-sibling::div//div[contains(@class, "dynQL")]/div//div[contains(@class, "dyndiv")]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]/span[contains(@class, "dynOps")][contains(@style, "display: block") and not(contains(@style, "display: none"))]/*[self::a or self::button][contains(@title, "Link Case")]')
+			driver.runJS('arguments[0].scrollIntoView(true)', qlitemxp)
+			driver.clickElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "Case")]/following-sibling::div//div[contains(@class, "dynQL")]/div//div[contains(@class, "dyndiv")]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]/span[contains(@class, "dynOps")][contains(@style, "display: block") and not(contains(@style, "display: none"))]/*[self::a or self::button][contains(@title, "Link Case")]')
+			driver.reportCommandStatus('Link case success', 'Expected: "case"', True, 'Received: {0}', '{{OKRA_TEXT}}')
+		elif "{0}"=="doc":
+			linkdoc = driver.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "Case")]/following-sibling::div//div[contains(@class, "dynQL")]/div//div[contains(@class, "dyndiv")]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]/span[contains(@class, "dynOps")][contains(@style, "display: block") and not(contains(@style, "display: none"))]/*[self::a or self::button][contains(@title, "Link Document")]')
+			driver.runJS('arguments[0].scrollIntoView(true)', qlitemxp)
+			driver.clickElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "Case")]/following-sibling::div//div[contains(@class, "dynQL")]/div//div[contains(@class, "dyndiv")]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]/span[contains(@class, "dynOps")][contains(@style, "display: block") and not(contains(@style, "display: none"))]/*[self::a or self::button][contains(@title, "Link Document")]')
+			driver.reportCommandStatus('Link case success', 'Expected: "doc"', True, 'Received: {0}', '{{OKRA_TEXT}}')
+		else:
+			driver.reportCommandStatus('Link case failure', 'invalid string given', False, 'The value {0} must be either "case" or "doc"', '')
+else:
+	driver.reportCommandStatus('Quicklist failure', 'The Case section\'s quicklist container is not open', False, '', '')
+@@@
+
+@Unlink
+Hover "{OKRA_TEXT}" quicklist item
+Click "{OKRA_TEXT}" quicklist unlink
+
+@Add
+"""
+def parse(str):
+	if ":" in str:
+		spl = [x.strip() for x in str.split(':')]
+		sec = spl[0]
+		ql = spl[1]
+		return(sec,ql)
+	else:
+		sec = str
+		ql = "None"
+		return(sec,ql)
+"""
+@@@
+global qlitem, qlop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"!="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header" and contains(., "{1}")]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][contains(@title, "Add") or contains(@title, "Prescribe")]'
+	qlopHoverClick()
+elif "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"=="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header"]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][contains(@title, "Add") or contains(@title, "Prescribe")]'
+	qlopHoverClick()
+elif "{{OKRA_TEXT}}"!="None" and "{0}"=="None" and "{1}"=="None":
+	qlitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{{OKRA_TEXT}}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header"]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "Other")]'
+	qlop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][contains(@title, "Add") or contains(@title, "Prescribe")]'
+	qlopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None" and "{1}"=="None":
+	driver.clickElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-group-controls"]//span[contains(@class, "plus") and contains(@title, "Add")]')
+else:
+	driver.reportCommandStatus('quicklist.pod', 'Add', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'Add quicklist item failed')
+@@@
+

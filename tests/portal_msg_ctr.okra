@@ -1,0 +1,32 @@
+@@@
+
+driver.miedb.dbExec("INSERT INTO document_types (doc_type) VALUES ('MYDOC');")
+driver.miedb.dbExec("INSERT INTO chart_type_link (chart_type_id, linked_type, linked_id) SELECT ct.chart_type_id, 'CHART_TAB', c.ctab_id FROM chart_types AS ct, charttabs AS c WHERE ct.description='Portal' AND c.tabname='Message Center';")
+driver.miedb.dbExec("INSERT INTO charttab_doctypes (ctab_id, doc_type) SELECT c.ctab_id, 'MYDOC' FROM charttabs c WHERE c.tabname='Message Center';")
+driver.miedb.dbExec("INSERT INTO charttab_doctypes (ctab_id, doc_type) SELECT c.ctab_id, 'MYDOC' FROM charttabs c WHERE c.tabname='Supervisor Documents';")
+driver.miedb.dbExec("INSERT INTO documents (pat_id, doc_type, storage_type) SELECT up.pat_id, 'MYDOC', 1 FROM user_patients AS up INNER JOIN users AS u ON up.id = u.user_id WHERE u.username = 'selenium';")
+
+@@@
+
+Begin "Employee Portal"
+	Begin "Homepage"
+		Click the "Better Corp." link
+		Click the @id="modal-close"
+
+	Begin "Message Center"
+		Click the @xpath='//a/span[contains(text(), "Message Center")]'
+		Screenshot Patient Message Center Unread
+		Click the 'Mark all Read' link
+		Screenshot Patient Message Center Marked Read
+
+Begin "Supervisor Portal"
+	Begin "Homepage"
+		Click the @id='portal-user-menu-top'
+		Click the @id='goto-sv-portal'
+		@Blur for a problematic screenshot@driver.blurAll()
+
+	Begin "Message Center"
+		Click the @xpath='//a/span/span[contains(text(), "Message Center")]'
+		Screenshot Supervisor Message Center Unread
+		Click the 'Mark all Read' link
+		Screenshot Supervisor Message Center Marked Read

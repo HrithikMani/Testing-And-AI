@@ -1,0 +1,34 @@
+"""
+ Test for checking if Perform Selected handles operations if wc_json_key_pair concatenation is applied
+ @owners: nchoudhry
+ @filedeps: jsbin/system_reports.js
+"""
+Begin "Verify initial name is 'Doe, Jane'"
+	Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+	Click the @"MR# or EMP#" radio button@xpath='//input[@value="m"][@type="radio"]'
+	Type "10006" in the "sstring" input
+	Click the "Search" button
+	Verify exists "Doe, Jane" text
+	Screenshot Doe_Jane_Name
+Begin "Change name of Doe, Jane to Object, JSON to test system_reports.js 'Perform Selected' when concatenation is used in query"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	#Click the "System" charttab
+	#Click the "System Report" charttab subtab
+	Navigate "?f=admin&s=system_report&tabmodule=admin”
+	Type "ScriptTest_ChangeName" in the "search_value" input
+	Click the "Search" button
+	Click the “ScriptTest_ChangeName" listview link
+	Verify exists “Perform” link
+	Click the 1st checkbox
+	Click the “Perform” link
+	Click the “Perform Selected” button
+	Verify exists “Perform operation completed” text
+	Click the "OK" button
+Begin "Verify name is now 'OBJECT, JSON'"
+	Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+	Click the @"MR# or EMP#" radio button@xpath='//input[@value="m"][@type="radio"]'
+	Type "10006" in the "sstring" input
+	Click the "Search" button
+	Verify exists "Object, JSON" text
+	Screenshot Object_JSON_Name

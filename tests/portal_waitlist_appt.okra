@@ -1,0 +1,38 @@
+"""
+	@owners: aris
+	@filedep: system/layouts/Patient Portal Helpers/Appointments Needing Scheduled.html
+	@filedep: system/layouts/Patient Portal/Add Appointment.html
+	@filedep: system/layouts/Patient Portal/My Appointments.html
+	@filedep: system/layouts/Patient Portal/Home.html, src/schedtemplate.c
+	@systemtype: EH
+"""
+Begin "Update all schedules so that audiogram is now Waitilist Only"
+	@Add System Setting@driver.miedb.dbExec("UPDATE multi_type_sched SET portal_available = 2 WHERE type = 'AUDIO'")
+	@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{selenium_username}')
+Begin "Setting up appointment for Frederick Anderson"
+	Open the sidemenu
+	Click the "Scheduler" sidemenu entry
+	Click the "Wizard" charttab
+	Enter "Anderson, Frederick" into the "Patient" autocomplete
+	Click the @minus button@xpath='//input[@id="minus"]'
+	Enter "Scheduler Waiting List" into the "res_idacinp" autocomplete
+	Enter "Audiogram" into the "typeacinp" autocomplete
+	Enter "Office" into the "locationacinp" autocomplete
+	@Scroll the button into view (No idea why only this page needs this)@driver.runJS('arguments[0].scrollIntoView();', driver.getElement(value='Use Waitlist'))
+	Click the "Use Waitlist" button
+	Click the "Save" button
+	Verify exists "Waiting List" listview name
+	Verify exists "Audiogram" listview row
+	Open the sidemenu
+	Click the Logout sidemenu entry
+Begin "Log in in as Frederick Anderson"
+	@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{employee_username}')
+	Click the "Better Corp." link
+	Begin "Accept the time zone alert"
+		Verify exists "TIMEZONE MISMATCH" popup
+		Click the "Update" popup button
+	Begin "My Appointments"
+		Click the @xpath='//ul[@class="homegridbtns"]/child::li/child::a[contains(@class, "im-appointments")]'
+		Verify exists "Audiogram" text
+		Click the @schedule new appointment button@xpath='//a[contains(@class, "nav-btn") and contains(., "schedule a new appointment")]'
+		Verify notexists @Audiogram option@xpath='//select[@id="APPT_type"]//child::option[@value="AUDIO"]'

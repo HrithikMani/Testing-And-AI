@@ -1,0 +1,62 @@
+Navigate "?f=chart&s=pat&pat_id=18"
+Begin "Create Encounter"
+	Click the quicklink bolt
+	Click the "Add Visit" quicklink
+	Wait for ajax
+	Verify exists @Encounter exam tab@xpath='//div[contains(@class, "wc-enc-dynamic-section")]/h2[@class="exam_tab" and contains(., "Encounter")]'
+Begin "Attempt Duplicate Encounter - Yes"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the quicklink bolt
+	Click the "Add Visit" quicklink
+	Verify exists @Attention window@xpath='//div[@class='wc_win_title' and contains(., 'Attention')]'
+	Click "Yes" button
+	Wait for ajax
+	Verify exists @Encounter exam tab@xpath='//div[contains(@class, "wc-enc-dynamic-section")]/h2[@class="exam_tab" and contains(., "Encounter")]'
+Begin "Attempt Duplicate Encounter - No"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the quicklink bolt
+	Click the "Add Visit" quicklink
+	Verify exists @Attention window@xpath='//div[@class='wc_win_title' and contains(., 'Attention')]'
+	Click "No" button
+	Verify exists @Demographics section@xpath='//div[@class="portlet-header"]/label[contains(., 'Demographics')]'
+Begin "Attempt Duplicate Encounter - Yes from list"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the quicklink bolt
+	Click the "Add Visit" quicklink
+	Verify exists @Attention window@xpath='//div[@class='wc_win_title' and contains(., 'Attention')]'
+	Click @Existing Encounter Link@xpath='//div[contains(@class, "wc_win_body")]/div/ul/li[1]/a'
+	Wait for ajax
+	Verify exists @Encounter exam tab@xpath='//div[contains(@class, "wc-enc-dynamic-section")]/h2[@class="exam_tab" and contains(., "Encounter")]'
+Begin "Create Encounter from Template"
+	Click the quicklink bolt
+	Click the @Visit Templates icon@xpath='//div[contains(@class, "wc_win_body")]/div/div/ul/li/a[@data-visit-type="VISIT"]'
+	Click "Work Related Injury or Illness" link
+	Wait for ajax
+	Verify exists @Encounter exam tab@xpath='//div[contains(@class, "wc-enc-dynamic-section")]/h2[@class="exam_tab" and contains(., "Encounter")]'
+Begin "Attempt Duplicate Encounter from Template - Yes"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the quicklink bolt
+	Click the @Visit Templates icon@xpath='//div[contains(@class, "wc_win_body")]/div/div/ul/li/a[@data-visit-type="VISIT"]'
+	Click "Work Related Injury or Illness" link
+	Verify exists @Attention window@xpath='//div[@class='wc_win_title' and contains(., 'Attention')]'
+	Click "Yes" button
+	Wait for ajax
+	Verify exists @Encounter exam tab@xpath='//div[contains(@class, "wc-enc-dynamic-section")]/h2[@class="exam_tab" and contains(., "Encounter")]'
+Begin "Attempt Duplicate Encounter from Template - Yes from list"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the quicklink bolt
+	Click the @Visit Templates icon@xpath='//div[contains(@class, "wc_win_body")]/div/div/ul/li/a[@data-visit-type="VISIT"]'
+	Click "Work Related Injury or Illness" link
+	Verify exists @Attention window@xpath='//div[@class='wc_win_title' and contains(., 'Attention')]'
+	Verify exists @Existing Encounter Link@xpath='//div[contains(@class, "wc_win_body")]/div/ul/li[1]/a'
+	Click @Existing Encounter Link@xpath='//div[contains(@class, "wc_win_body")]/div/ul/li[1]/a'
+	Wait for ajax
+	Verify exists @Encounter exam tab@xpath='//div[contains(@class, "wc-enc-dynamic-section")]/h2[@class="exam_tab" and contains(., "Encounter")]'
+Begin "Attempt Duplicate Encounter from Template - No"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the quicklink bolt
+	Click the @Visit Templates icon@xpath='//div[contains(@class, "wc_win_body")]/div/div/ul/li/a[@data-visit-type="VISIT"]'
+	Click "Work Related Injury or Illness" link
+	Verify exists @Attention window@xpath='//div[@class='wc_win_title' and contains(., 'Attention')]'
+	Click "No" button
+	Verify exists @Demographics section@xpath='//div[@class="portlet-header"]/label[contains(., 'Demographics')]'

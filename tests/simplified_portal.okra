@@ -1,0 +1,393 @@
+@@@
+driver.miedb.dbExec("UPDATE system_settings SET value = 0 WHERE module = 'E-Chart' AND section = 'Injections' AND item = 'Allow Free Text in Autocomplete';")
+@@@
+
+Begin "Set Security Role to Employee"
+	@Update Selenium user security role to Employee@driver.miedb.dbExec("UPDATE users SET security_role_id = (SELECT security_role_id FROM security_roles WHERE security_role_name='Employees') WHERE username = 'selenium'")
+
+Begin "Employee Portal"
+	Begin "Homepage"
+		Click the "Better Corp." link
+		Verify exists the "Portal Consent" link
+		@Axe Test@driver.wcutils.reportAxe()
+		Begin "Consent to using the portal"
+			Click on the "Portal Consent" link
+			Click on the @Acknowledge radio@xpath='//input[@id="obs_result_293_2_0"]/parent::span'
+			Click on the @SMS Opt-In Agreement@xpath='//input[@id="obs_result_293_12_0"]/parent::span'
+			Click on the @Telehealth Consent@xpath='//input[@id="obs_result_293_15_0"]/parent::span'
+			Click on the SUBMIT button
+		Begin "Verify First Visit popup"
+			Wait for ajax
+			Verify exists "Portal Home" text
+			Verify exists "Welcome to your provider's health portal" text
+		Close popup
+		Begin "Verify Employee Homepage"
+			Wait for ajax
+			Verify exists "Selenium" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists @Help icon@id='portal-header-help'
+			Verify exists @Help icon img@xpath='//img[contains(@src, "portal-header-help.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists @Announcement Banner@id='announcement'
+			Verify exists @Announcement Banner img@xpath='//img[contains(@src, "portal-landing.png")]'
+			Verify exists "Message Center" text
+			Verify exists "My Appointments" text
+			Verify exists "My Medical Information" text
+			Verify exists "Report an Injury/Illness" text
+			Verify exists "Other Health Resources" text
+		@Blur for a problematic screenshot@driver.blurAll()
+		Screenshot Employee Homepage
+
+	Begin "Message Center"
+		Click the @Message Center button@xpath='//a/span[contains(text(), "Message Center")]'
+		Wait for page
+		Begin "Verify Message Center"
+			Wait for ajax
+			Verify exists "Selenium" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists "Message Center" text
+			Verify exists "Messages" text
+			Verify exists "Unread" text
+			Verify exists "Date" text
+			Verify exists "Sender" text
+			Verify exists "Subject" text
+			Verify exists "Unread Only" text
+			Verify exists "Show All" text
+			Verify exists "Send a Message" link
+			@Axe Test@driver.wcutils.reportAxe()
+
+	Begin "My Appointments"
+		Click the @id='portal-user-menu-top'
+		Wait for page
+		Click the @My Appointments button@xpath='//a/span[contains(text(), "My Appointments")]'
+		Wait for page
+		Begin "Verify My Appointments"
+			Wait for ajax
+			Verify exists "Selenium" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @Help icon@id='portal-header-help'
+			Verify exists @Help icon img@xpath='//img[contains(@src, "portal-header-help.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists "My Appointments" text
+			Verify exists "Appointments" text
+			Verify exists "There are no scheduled appointments" text
+			Verify exists "schedule a new appointment" link
+			@Axe Test@driver.wcutils.reportAxe()
+	Begin "Test link to Add Appointment with Reason in the link"
+		Navigate "?f=layout&module=Patient%20Portal&module=Patient%20Portal&name=Add%20Appointment&type=AUDIO&pat_id=55"
+		Verify exists Location text
+
+	Begin "Other Health Resources"
+		Click the @id='portal-user-menu-top'
+		Wait for page
+		Click the @Other Health Resources button@xpath='//a/span[contains(text(), "Other Health Resources")]'
+		Wait for page
+		Begin "Verify Other Health Resources"
+			Wait for ajax
+			Verify exists "Selenium" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @Help icon@id='portal-header-help'
+			Verify exists @Help icon img@xpath='//img[contains(@src, "portal-header-help.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists "Other Health Resources" text
+			Verify exists "NoMoreClipboard" text
+			Verify exists "A NoMoreClipboard personal health record" text
+			Verify exists "NMC home" link
+			Verify exists "CENTERS FOR DISEASE CONTROL AND PREVENTION" text
+			Verify exists "CDC is the nation's health protection agency" text
+			Verify exists "cdc home" link
+			Verify exists "cdc 24/7" link
+			Verify exists "AMERICAN HEART ASSOCIATION" text
+			Verify exists "The American Heart Association is the nation’s oldest and largest voluntary organization" text
+			Verify exists "ama home" link
+			Verify exists "heart conditions" link
+			Verify exists "INTERNATIONAL SOS" text
+			Verify exists "International SOS provides medical advice" text
+			Verify exists "sos home" link
+			Verify exists "sos solutions" link
+			Verify exists "AMERICAN CANCER SOCIETY" text
+			Verify exists "For over 100 years, the American Cancer Society (ACS)" text
+			Verify exists "acs home" link
+			Verify exists "cancer basics" link
+			@Axe Test@driver.wcutils.reportAxe()
+
+	Begin "My Medical Information"
+		Click the @id='portal-user-menu-top'
+		Wait for page
+		Click the @My Medical Information button@xpath='//a/span[contains(text(), "My Medical Information")]'
+		Wait for page
+		Click the @Yes button@xpath="//div[@id='uniform-obs_result_72_1_0']"
+		Wait for page
+		@Wait for the bell to load@driver.wcutils.waitForAJAX(30)
+		Verify !exists @"Bell loading spinner" text@xpath='//div[contains(@class,'dyndiv')]/div/span[contains(@class,'fa-spin')]'
+		Begin "Verify My Medical Information"
+			Wait for ajax
+			Verify exists "Selenium" text
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify")]'
+			Verify exists "MY MEDICAL INFORMATION" text
+			Verify exists "PRINT INSTRUCTIONS" text
+			Verify exists "Medications/Allergies" text
+			Verify exists "Immunizations" text
+			Verify exists "Respirator Information" text
+			@Axe Test@driver.wcutils.reportAxe()
+			Click the SUBMIT button
+			@Wait for Screen mask@driver.wcutils.waitForToggle(lambda d: d.getElement(xpath="//*[contains(@class, 'portal-mask') and not(contains(@class, 'hidden'))]"), expected=False, timeout=30)
+
+	Begin "Report an Injury/Illness"
+		Wait for page
+		Click the @id='portal-user-menu-top'
+		Wait for page
+		@Wait for menu@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//a/span[contains(text(), "Report an Injury/Illness")]'), expected=True, timeout=30)
+		Click the @Report an Injury/Illness button@xpath='//a/span[contains(text(), "Report an Injury/Illness")]'
+		Wait for page
+		@Axe Test@driver.wcutils.reportAxe()
+		Click @"The employee involved in the incident"@xpath="//label[contains(.,'The employee involved in the incident')]"
+		Begin "Verify Report a work injury or illness"
+			Wait for ajax
+			Verify exists "Selenium" text
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists "Incident Report" text
+			Verify exists "Person completing this form is" text
+			Verify exists "MR Number" text
+			Verify exists "What Would You Like To Report?" text
+			Verify exists "What were you doing immediately prior to the injury or illness?" text
+			Verify exists "How did the incident happen?" text
+			Verify exists "Save for later" text
+			Verify exists "Cancel" text
+			Verify exists "SUBMIT" text
+			@Axe Test@driver.wcutils.reportAxe()
+		@Scroll the section into view@driver.runJS('jQuery("h2:contains(Please complete the following questions)")[0].scrollIntoView()')
+		#Select "Accident/Injury" from the "What Would You Like To Report?" dropdown
+		@Select "Accident/Injury" from the "What Would You Like To Report?" dropdown@driver.runJS("mieel.$('obs_result_70_11').value='Accident/Injury'")
+		Type "Making lunch" in the "What were you doing immediately prior to the injury or illness?" input
+		Type "Toby was telling us we should watch this new show. Sean came in and heard some of it and was like yea I know that show. Are we watching it? Aris already had the usual show pulled up so he was like but I got this up already! Cappy was pulling his food out of the microwave and said yea it was a cliff hanger we have to finish the next one at least. So, I went to put my food in the microwave but slipped and hit my head on the counter." in the "How did the incident happen?" input
+		Type "Upstairs Breakroom" in the "Description of where the injury or illness occurred" input
+		Verify exists @Homepage Image@xpath=//img[@alt='Return to homepage']
+		Click the SUBMIT button
+
+Begin "Supervisor Portal"
+	@Updates prefs so popup will pop automatically@driver.miedb.dbExec("DELETE FROM preferences WHERE user_id=8 AND preference_name='portalfirstvisit'")
+#	Begin "Log out and log back in as a supervisor"
+#		Navigate "?f=logout"
+#		@Setup WCTestSession for Supervisor@driver.wcutils.insertWCTSession('supervisor')
+	Navigate "?func=omniscope"
+	Click the "Supervisor Access" link
+	Begin "Homepage"
+#		Click the @Better Corp Toggle dropdown@xpath='//button[contains(@class, "btn dropdown-toggle")]'
+#		Click the @Supervisor Access option link@xpath='//button[contains(@class, "btn dropdown-toggle")]/following-sibling::div/a[contains(., "Supervisor Access")]'
+		@Wait for page ready@driver.wcutils.waitFor(lambda d: d.runJS('return document.readyState === "complete"'))
+		Verify exists popup
+		@Axe Test@driver.wcutils.reportAxe()
+		Close popup
+#		Verify exists "TIMEZONE MISMATCH" popup
+#		Verify exists "Cancel" button
+#		Verify exists "Update" button
+		@Axe Test@driver.wcutils.reportAxe()
+#		Click the Update button
+		@Blur for a problematic screenshot@driver.blurAll()
+		Begin "Verify Supervisor Portal"
+			Wait for ajax
+			Verify exists @Message Center button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Message Center')]"
+			Verify exists @Order Status button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Order Status')]"
+			Verify exists @Reports button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Reports')]"
+			Verify exists @Schedule Appointments button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Schedule Appointments')]"
+			Verify exists @Work Status button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Work Status')]"
+			Verify exists @Notification Bell@id='portal-header-notify'
+			@Blur for a problematic screenshot@driver.blurAll()
+			@Axe Test@driver.wcutils.reportAxe()
+			Screenshot Supervisor Homepage
+
+	Begin "Message Center"
+		Click the @Message Center button@xpath='//a/span/span[contains(text(), "Message Center")]'
+		Wait for page
+		Begin "Verify Message Center"
+			Wait for ajax
+#			Verify exists "Acardi" text
+			Verify exists "Selenium" text
+			Verify exists "Selenium" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists "Message Center" text
+			Verify exists "Unread" text
+			Verify exists "Date" text
+			Verify exists "Regarding" text
+			Verify exists "Subject" text
+			Verify exists "Unread Only" text
+			Verify exists "Show All" text
+			Verify exists "Send a Message" link
+			Verify exists "Mark all Read" link
+# Breaks			@Axe Test@driver.wcutils.reportAxe()
+
+	Begin "Order Status"
+		Click the @Home icon@id='portal-header-home'
+		Wait for page
+		Click the @Order Status button@xpath='//div[@id="btn-container"]//span[contains(text(), "Order Status")]'
+		Wait for page
+		Begin "Verify Order Status"
+			Wait for ajax
+#			Verify exists "Acardi" text
+			Verify exists "Selenium" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists "Order Status" text
+			Verify exists "Open orders" text
+			Verify exists "last-name" input
+			Verify exists "ORDER NAME" button
+			Verify exists "date-range" dropdown
+			#Select "1 YEAR" in the "date-range" dropdown
+			Click the @Open Orders dropdown@xpath=//div[@id="uniform-date-range"]
+			@Wait for dropdown options@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//select[@id='date-range']//option[@value='1 YEAR']").is_displayed(), expected=True, timeout=30)
+			Click the @Past 1 year option@xpath=//select[@id="date-range"]//option[@value="1 YEAR"]
+			Verify exists "Completed orders" text
+			Verify exists "last-name-c" input
+			Verify exists 2nd "ORDER NAME" button
+			Verify exists "date-range-c" dropdown
+			#Select "1 YEAR" in the "date-range-c" dropdown
+			Click the @Completed Orders dropdown@xpath=//div[@id="uniform-date-range-c"]
+			@Wait for dropdown options@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//select[@id='date-range-c']//option[@value='1 YEAR']").is_displayed(), expected=True, timeout=30)
+			Click the @Past 1 year option@xpath=//select[@id="date-range-c"]//option[@value="1 YEAR"]
+			Verify exists "Anderson" text
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			# breaks			@Axe Test@driver.wcutils.reportAxe()
+
+	Begin "Work Status"
+		Click the @Home icon@id='portal-header-home'
+		Wait for page
+		Click the @Work Status button@xpath='//div[@id="btn-container"]//span[contains(text(), "Work Status")]'
+		Wait for page
+		Begin "Verify Work Status"
+			Wait for ajax
+#			Verify exists "Acardi" text
+			Verify exists "Selenium" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists "Work Status" text
+			Verify exists "pats_ac_txt" input
+			Verify exists "Search" button
+			Verify exists "Frederick Anderson" text
+			@Axe Test@driver.wcutils.reportAxe()
+
+# This was reporting that there were no employees under a supervisor.  The changes to the portal security have changed this
+# to show a list of employees, but there is now a permission issue with creating an order and so the page is sent back to the
+# homepage.  This should be enabled and updated to the correct workflow as part of https://pm.mieweb.com/issues/127371
+#	Begin "Scheduling"
+#		Click the @Home icon@id='portal-header-home'
+#		Wait for ajax
+#		Click the @Request an Appointment button@xpath='//div[@id="btn-container"]//span[contains(text(), "Request an Appointment")]'
+#		Wait for page
+#		Begin "Verify Supervisor Scheduling"
+#			Wait for ajax
+##			Verify exists "Acardi" text
+#			Verify exists "Selenium" text
+#			Verify exists @Notification Bell@id='portal-header-notify'
+#			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+#			Verify exists "Request an Appointment" text
+#			Verify exists "You do not have access to any employees or a matching flowsheet does not exist" text
+#			Verify exists "Please contact your portal administrator for assistance" text
+#			Verify exists "Warning" icon
+#			Verify exists @Home icon@id='portal-header-home'
+#			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+#			Verify exists @System logo@id='header-logo'
+#			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+#			@Axe Test@driver.wcutils.reportAxe()
+
+# Old travel test
+#	Begin "Travel Questionnaire"
+#		Click the @id='portal-user-menu-top'
+#		Wait for page
+#		Click the @Travel Questionnaire button@xpath='//a/span[contains(text(), "Travel Questionnaire")]'
+#		Wait for page
+#		@Axe Test@driver.wcutils.reportAxe()
+#		Begin "Verify Travel Questionnaire"
+#		Click the @id='portal-user-menu-top'
+#		Wait for page
+#		Click the @Report an Injury/Illness button@xpath='//a/span[contains(text(), "Report an Injury/Illness")]'
+#		Wait for page
+#		@Axe Test@driver.wcutils.reportAxe()
+#		Click @"The employee involved in the incident"@xpath="//label[contains(.,'The employee involved in the incident')]"
+#		Begin "Verify Report a work injury or illness"
+#			Verify exists "Selenium" text
+#			Verify exists @Notification Bell@id='portal-header-notify'
+#			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+#			Verify exists @Home icon@id='portal-header-home'
+#			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+#			Verify exists @System logo@id='header-logo'
+#			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+#            Verify exists "Travel Questionnaire" text
+#            Verify exists "Name" text
+#			Verify exists "MR Number" text
+#            Verify exists "Please complete the following questions" text
+#            Verify exists "List countries and cities you are traveling to" text
+#			Verify exists "What is the first city and country you will visit?" text
+#			Verify exists "Immunizations" text
+#			Verify exists "Save for later" text
+#			Verify exists "Cancel" text
+#			Verify exists "NEXT" text
+#		@Scroll Add an immunization into View @driver.runJS("document.evaluate(`//li/button[contains(text(),'Add an immunization')]`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView();")
+#		Click the "Add an immunization" button @xpath='//li/button[contains(text(), "Add an immunization")]'
+#		Type "Cortexiphan" in the "injac" input @xpath='//input[@id = "injac"]'
+#		Verify exists @"A matching injection from the autocomplete is required. (hidden)" text@xpath='//div[contains(@class, "d-none") and @id="newInjectionFreeText"]'
+#		Click the save button
+#		Verify exists @"A matching injection from the autocomplete is required. (visible)" text@xpath='//div[not(contains(@class, "d-none")) and @id="newInjectionFreeText"]'
+#		Verify !exists @"Date cannot be in the future (visible)" text@xpath='//div[contains(@class, "d-none") and @id="newInjectionFreeText"]'
+#		@Clear the autocomplete@driver.getElement(id="injac").clear()
+#		Enter "anthrax" in the "injac" autocomplete
+#		Type "01" in the MMI_date_of_immunizationMONTH input
+#		Type "01" in the MMI_date_of_immunizationDAY input
+#		Type "2199" in the MMI_date_of_immunizationYEAR input
+#		Verify exists @"Date cannot be in the future (hidden)" text@xpath='//div[contains(@class, "d-none") and @id="newDateFutureError"]'
+#		Click the save button
+#		Type "2021" in the MMI_date_of_immunizationYEAR input
+#		Verify exists @"Date cannot be in the future (visible)" text@xpath='//div[not(contains(@class, "d-none")) and @id="newDateFutureError"]'
+#		Click the save button
+#		Verify exists @"A matching injection from the autocomplete is required. (hidden)" text@xpath='//div[contains(@class, "d-none") and @id="newInjectionFreeText"]'
+#		Verify exists @"Date cannot be in the future (hidden)" text@xpath='//div[contains(@class, "d-none") and @id="newDateFutureError"]'
+#		Verify exists "anthrax" text
+#		Verify exists "01-01-2021" text
+#		Click the @edit button @xpath='//div[contains(@class, "portal-btn-row")]/button/img[@alt="Edit"]'
+#		Type "2198" in the immunization_date_editYEAR input
+#		Verify exists @"Date cannot be in the future (hidden)" text@xpath='//div[contains(@class, "d-none") and @id="editDateFutureError"]'
+#		Click the save button
+#		Verify exists @"Date cannot be in the future (visible)" text@xpath='//div[not(contains(@class, "d-none")) and @id="editDateFutureError"]'
+#		Type "2020" in the immunization_date_editYEAR input
+#		Click the save button
+#		Verify exists @"Date cannot be in the future (hidden)" text@xpath='//div[contains(@class, "d-none") and @id="editDateFutureError"]'
+#		Verify exists "01-01-2020" text
+#		Click the "Cancel" button
+#		Verify exists @Homepage Image@xpath=//img[@alt='Patient Portal Home Page Banner']

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{pod.title}} Documentation</title>
+<style>
+body {
+    padding: 10px;
+}
+.doc {
+    white-space: pre-wrap;
+}
+.grid {
+    display: grid;
+    grid-auto-columns: auto;
+    margin-top: 50px;
+}
+.header {
+    font-weight: bold;
+}
+li {
+    margin-top: 10px;
+}
+.elements {
+    grid-column: 1;
+}
+.verbs {
+    grid-column: 2;
+}
+.definition {
+    white-space: pre-line;
+    background-color: #ddd;
+}
+</style>
+</head>
+<body>
+<h1>{{pod.title}} Documentation</h1>
+
+<div class="doc">
+    {{pod.docstring}}
+</div>
+
+<div class="grid">
+    <div class="elements"><span class="header">Elements</span>
+    <ul>
+        {% for e in pod.elements %}
+        <li><span class="name">{{e.name}}
+        {% if e.timeout %}
+        (Timeout: {{ e.timeout }})
+        {% endif %}
+        <br>
+        <span class="definition">{{e.definition}}</span></li>
+        {%endfor%}
+    </ul>
+    </div>
+
+    <div class="verbs"><span class="header">Verbs</span>
+    <ul>
+        {% for v in pod.verbs %}
+        <li><span class="name">{{v.name}}<br>
+        <span class="definition">{{v.definition}}</span></li>
+        {%endfor%}
+    </ul>
+    </div>
+</div>
+
+</body>
+</html>

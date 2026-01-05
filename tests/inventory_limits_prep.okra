@@ -1,0 +1,154 @@
+Open the sidemenu
+Click the "Inventory" sidemenu entry
+Click the "Add Inventory" link
+# in the table body in the "Receive General Inventory Items" table
+Begin "Receive more inventory"
+	# in the 1st row
+	Begin "Add more Lisinopril 5mg"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc0']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id0" dropdown
+		Verify "value=1" "inv_stockpile_id0" dropdown
+		# in the "Drug/Item" cell
+		Enter "lisinopril" into the "inv_acval0" autocomplete
+		Blur the "inv_acval0" autocomplete
+		# in the "Form" cell
+		Click the "tablet 5mg" autocomplete choice
+		# in the "Qty" cell
+		Type "35" in the "inv_quantity0" input
+		# in the "Lot Number" cell
+		Type "abc123" in the "inv_lot_id0_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "SomeManu Co" in the "inv_manufacturer0" autocomplete
+		# in the "Expiration Date" cell
+		Type "01-11-2030" in the "inv_exp_date0" date
+	# in the 2nd row
+	Begin "Add a new Lisinopril 10mg lot"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc1']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id1" dropdown
+		Verify "value=1" "inv_stockpile_id1" dropdown
+		# in the "Drug/Item" cell
+		Enter "lisinopril" into the "inv_acval1" autocomplete
+		Blur the "inv_acval1" autocomplete
+		# in the "Form" cell
+		Click the "tablet 10mg" autocomplete choice
+		# in the "Qty" cell
+		Type "125" in the "inv_quantity1" input
+		# in the "Lot Number" cell
+		Type "abc987" in the "inv_lot_id1_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "SomeManu Co" in the "inv_manufacturer1" autocomplete
+		# in the "Expiration Date" cell
+		Type "06-01-2030" in the "inv_exp_date1" date
+	# in the 3rd row
+	Begin "Add Random Item: Amoxicillin"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc2']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id2" dropdown
+		Verify "value=1" "inv_stockpile_id2" dropdown
+		# in the "Drug/Item" cell
+		Enter "amoxicillin" into the "inv_acval2" autocomplete
+		Blur the "inv_acval2" autocomplete
+		# in the "Form" cell
+		Click the "capsule 500mg" autocomplete choice
+		# in the "Qty" cell
+		Type "300" in the "inv_quantity2" input
+		# in the "Lot Number" cell
+		Type "npqd1812" in the "inv_lot_id2_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "AnyMed Inc" in the "inv_manufacturer2" autocomplete
+		# in the "Expiration Date" cell
+		Type "03-15-2030" in the "inv_exp_date2" date
+	# in the 4th row
+	Begin "Add Random Item: Lasix 20mg"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc3']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id3" dropdown
+		Verify "value=1" "inv_stockpile_id3" dropdown
+		# in the "Drug/Item" cell
+		Enter "Lasix oral" into the "inv_acval3" autocomplete
+		Blur the "inv_acval3" autocomplete
+		# in the "Form" cell
+		Click the "tablet 20mg" autocomplete choice
+		# in the "Qty" cell
+		Type "10" in the "inv_quantity3" input
+		# in the "Lot Number" cell
+		Type "988lwlke" in the "inv_lot_id3_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "SomeManu Co" in the "inv_manufacturer3" autocomplete
+		# in the "Expiration Date" cell
+		Type "04-30-2030" in the "inv_exp_date3" date
+	# in the 5th row
+	Begin "Add Random Item: Lasix 80mg"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc4']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id4" dropdown
+		Verify "value=1" "inv_stockpile_id4" dropdown
+		# in the "Drug/Item" cell
+		Enter "Lasix oral" into the "inv_acval4" autocomplete
+		Blur the "inv_acval4" autocomplete
+		# in the "Form" cell
+		Click the "tablet 80mg" autocomplete choice
+		# in the "Qty" cell
+		Type "15" in the "inv_quantity4" input
+		# in the "Lot Number" cell
+		Type "7892oasd" in the "inv_lot_id4_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "AnyMed Inc" in the "inv_manufacturer4" autocomplete
+		# in the "Expiration Date" cell
+		Type "09-01-2030" in the "inv_exp_date4" date
+	# in the 6th row
+	Begin "Add a to-be-barcoded item"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc5']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id5" dropdown
+		Verify "value=1" "inv_stockpile_id5" dropdown
+		# in the "Drug/Item" cell
+		Enter "diphenhydramine HCl" into the "inv_acval5" autocomplete
+		Blur the "inv_acval5" autocomplete
+		# in the "Form" cell
+		Click the "capsule 25mg" autocomplete choice
+		# in the "Qty" cell
+		Type "200" in the "inv_quantity5" input
+		# in the "Lot Number" cell
+		Type "afosidl1198" in the "inv_lot_id5_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "Medique" in the "inv_manufacturer5" autocomplete
+		# in the "Expiration Date" cell
+		Type "05-05-2030" in the "inv_exp_date5" date
+	# in the 7th row
+	Begin "Add an injection to be be barcoded"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc6']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id6" dropdown
+		Verify "value=1" "inv_stockpile_id6" dropdown
+		# in the "Drug/Item" cell
+		Enter "Japanese encephalitis vacc(PF)" into the "inv_acval6" autocomplete
+		Blur the "inv_acval6" autocomplete
+		# in the "Form" cell
+		Click the "syringe 6mcg/0.5 mL" autocomplete choice
+		# in the "Qty" cell
+		Type "12" in the "inv_quantity6" input
+		# in the "Lot Number" cell
+		Type "djf113921" in the "inv_lot_id6_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "Ixiaro" in the "inv_manufacturer6" autocomplete
+		# in the "Expiration Date" cell
+		Type "06-15-2030" in the "inv_exp_date6" date
+Begin "Verify success"
+	Click the "Add to Inventory" button
+	Verify exists the "Receiving lisinopril 5 mg tablet (35) - Success" text
+	Verify exists the "Receiving lisinopril 10 mg tablet (125) - Success" text
+	Verify exists the "Receiving Lasix 20 mg tablet (10) - Success" text
+	Verify exists the "Receiving Amoxicillin 500mg Capsule (300) - Success" text
+	Verify exists the "Receiving Lasix 80 mg tablet (15) - Success" text
+	Verify exists the "Receiving diphenhydramine 25 mg capsule (200) - Success" text
+	Verify exists the "Receiving Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe (12) - Success" text

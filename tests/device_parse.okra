@@ -1,0 +1,109 @@
+"""
+    Test for Titmus V4 device integration
+    @owners: aaronc,dcornewell
+    @filedeps: system/layouts/MIEDevice JSON/*, system/layouts/MIEDevice Config/*, src/devices.c
+"""
+Navigate "?f=layout&module=MIEDevice&name=TestFile"
+@Unhide file input@driver.runJS("document.getElementsByName('file_control')[0].style.display = ''")
+Begin "Test Titmus V4"
+	Select "Titmus V4" from the device dropdown
+	Select "csv" from the "file_type" dropdown
+	Type "titmus_v4.csv" into the file_control input
+	Click the "Upload 1 Device File" button
+	@Wait for the file to upload@driver.wcutils.waitForAJAX(60)
+	Verify exists "success" text
+	Verify exists '"obs_result" : "20/20"' text
+	Verify exists '"obs_result" : "95%"' text
+	Verify exists '"obs_result" : "8 correct"' text
+
+Navigate "?f=layout&module=MIEDevice&name=TestFile"
+@Unhide file input@driver.runJS("document.getElementsByName('file_control')[0].style.display = ''")
+Begin "Test CELLDYN"
+	Select "CELLDYN" from the device dropdown
+	Select "awk" from the "file_type" dropdown
+	Type "celldyn.txt" into the file_control input
+	Click the "Upload 1 Device File" button
+	@Wait for the file to upload@driver.wcutils.waitForAJAX(60)
+	Verify exists "success" text
+#  the upload fails on the test server old chrome and new firefox. turns \r to \n.
+#	Verify exists '"interface": "CELLDYN"' text
+#	Verify exists '"obs_result": "8.0"' text
+#	Verify exists '"obs_result": "16.9"' text
+
+Navigate "?f=layout&module=MIEDevice&name=TestFile"
+@Unhide file input@driver.runJS("document.getElementsByName('file_control')[0].style.display = ''")
+Begin "Test Resonance Audio"
+	Select "Resonance" from the device dropdown
+	Select "json" from the "file_type" dropdown
+	Type "resonance_example.json" into the file_control input
+	Click the "Upload 1 Device File" button
+	@Wait for the file to upload@driver.wcutils.waitForAJAX(60)
+	Verify exists "success" text
+	Verify exists '"pat_id" : "18"' text
+	Verify exists '"right_500" : "25"' text
+	Verify exists '"left_500" : "35"' text
+
+Navigate "?f=layout&module=MIEDevice&name=TestFile"
+@Unhide file input@driver.runJS("document.getElementsByName('file_control')[0].style.display = ''")
+Begin "Test Veripro Hearing Fit"
+	Select "Veripro" from the device dropdown
+	Select "csv" from the "file_type" dropdown
+	Type "veripro_example.csv" into the file_control input
+	Click the "Upload 1 Device File" button
+	@Wait for the file to upload@driver.wcutils.waitForAJAX(60)
+	Verify exists "success" text
+	Verify exists '"pat_id" : "18"' text
+	Verify exists '"pat_id" : "6"' text
+	Verify exists '"obs_name":"Published Attenuation",' text
+	Verify exists '"obs_result":"32.00",' text
+
+Navigate "?f=layout&module=MIEDevice&name=TestFile"
+@Unhide file input@driver.runJS("document.getElementsByName('file_control')[0].style.display = ''")
+Begin "Test Depisteo VT1"
+	Select "Depisteo VT1" from the device dropdown
+	Select "ini" from the "file_type" dropdown
+	Type "depisteo_vt1_iodata.txt" into the file_control input
+	Click the "Upload 1 Device File" button
+	@Wait for the file to upload@driver.wcutils.waitForAJAX(60)
+	Verify exists "success" text
+	Verify exists '"obs_result" : "20/22"' text
+	Verify exists '"obs_result": "Abnormal"' text
+
+Navigate "?f=layout&module=MIEDevice&name=FitProUltra%20Upload"
+@Unhide file input@driver.runJS("document.getElementsByName('file_control')[0].style.display = ''")
+Begin "Test FitProUltra"
+	Enter "01-01-2024" into the "start_date" date
+	Enter "12-31-2024" into the "end_date" date
+	Type "FitProUltraTest.csv" into the file_control input
+	Click the "Upload 2 Tests" button
+	@Wait for the file to upload@driver.wcutils.waitForAJAX(60)
+	Verify exists "Upload Complete as document" text
+
+Navigate "?f=layout&module=MIEDevice&name=TestFile"
+@Unhide file input@driver.runJS("document.getElementsByName('file_control')[0].style.display = ''")
+Begin "Test Luna"
+	Select "Luna" from the device dropdown
+	Select "xml" from the "file_type" dropdown
+	Type "luna_example.xml" into the file_control input
+	Click the "Upload 1 Device File" button
+	@Wait for the file to upload@driver.wcutils.waitForAJAX(60)
+	Verify exists "success" text
+	Verify exists '"pat_id": 18,' text
+	Verify exists '"pat_id": 42,' text
+	Verify exists '"left1":"20"' text
+	Verify exists '"left1":"25"' text
+	Verify exists '"left1":"30"' text
+
+Navigate "?f=layout&module=MIEDevice&name=TestFile"
+@Unhide file input@driver.runJS("document.getElementsByName('file_control')[0].style.display = ''")
+Begin "Test Luna"
+	Select "SibelsoundDuo" from the device dropdown
+	Select "awk" from the "file_type" dropdown
+	Type "sibelsound_test.csv" into the file_control input
+	Click the "Upload 1 Device File" button
+	@Wait for the file to upload@driver.wcutils.waitForAJAX(60)
+	Verify exists "success" text
+	Verify exists '"pat_id": 40,' text
+	Verify exists '"left1":"75"' text
+	Verify exists '"left1":"30"' text
+	Verify exists '"left1":"40"' text

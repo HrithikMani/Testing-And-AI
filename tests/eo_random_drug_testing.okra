@@ -1,0 +1,52 @@
+Begin "Login as Dave"
+	Open the sidemenu
+	Click the Logout sidemenu entry
+	@Dave user WCTestSession@driver.wcutils.insertWCTSession('dave')
+Begin "Configure Random Drug Testing Example Panel and config"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Configuration" charttab subtab
+	Click the @Import link@xpath="//div[contains(@class, 'links_right')]/a[contains(., "Import")]"
+	Select "RandomDrugToolExample" in the "import_configuration" dropdown
+	Click the "Load JSON" button
+	@Verify exists "Charttabs" config list@driver.waitFor(driver, lambda d: d.getElement(xpath='//span[contains(@class,"LVTitle") and contains(., "charttabs")]'), expected_return=True, timeout=60)
+	@Verify exists "Order_list" config list@driver.waitFor(driver, lambda d: d.getElement(xpath='//span[contains(@class,"LVTitle") and contains(., "Order_list")]'), expected_return=True, timeout=60)
+	@Verify exists "System Settings" config list@driver.waitFor(driver, lambda d: d.getElement(xpath='//span[contains(@class,"LVTitle") and contains(., "System Settings")]'), expected_return=True, timeout=60)
+	@Wait for the config to compare@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@id="progressWindow"]'), expected_return=False, timeout=60)
+	Click the "Import Selected" button
+	@Wait for the config to save@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//div[@class='wc_win']"), expected=False, timeout=120)
+	@Verify records are marked successful@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//tr[contains(@class, 'rowsavesuccess')]/td[contains(.,'Breath Alcohol - DOT FMCSA Random')]"), expected=True, timeout=120)
+
+Begin "Add some BetterCorp employees to the panel"
+	Click the "HSP" charttab
+	Click the "Health Surveillance" charttab subtab
+#	@Close any alerts@driver.closeAlert( accept=True )
+	Wait for the PanelList grid
+#	Verify exists "Drug Screen DOT FMCSA" grid entry
+	Click the @Panel membership icon for Drug Screen DOT FMCSA@xpath="//span[contains(., 'Drug Screen DOT FMCSA (Urine/Breath Alcohol)')]/following-sibling::span[contains(@class, 'hs-icon-group')]//a[@title='Panel membership']"
+	@Switch Windows@driver.switchToPopup()
+	Click the "Add Membership Rule" link
+	Type "a.status_code=3" in the additional_criteria input
+	Click the Submit button
+	Verify exists "Implicit members after next evaluation" text
+	Click the "Re-Evaluate Membership" link
+	@Wait 10 seconds@driver.pause(10)
+	@Close the membership window@driver.closePopup()
+	@Close this window@driver.closePopup()
+
+Begin "Employer Organizations Random Drug Testing page"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Employer Organizations" link
+	Type "Better" in the input
+	Click the "Search" button
+	Click the "Better Corp." link
+	Verify !exists @Masked page@xpath=//div[contains(@class, 'masked')]
+	Click the "Surveillance" charttab
+	Click the "Random Drug Tester" charttab subtab
+	Select "DOT FMCSA (Urine/Breath Alcohol)" from the "Drug Screen Group" dropdown
+	Verify exists "DOT Urine - Random" text
+	Verify exists "Breath Alcohol - DOT FMCSA Random" text
+	Type 50 in the percentage input
+	Click the Search button

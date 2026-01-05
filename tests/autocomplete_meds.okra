@@ -1,0 +1,17 @@
+# This test is intended to be run in a loop to test the behavior of linked autocompletes
+Begin "Add a medication"
+	@@@
+	driver.miedb.dbExec("""REPLACE INTO layout (module, name, active, layout_html) VALUES ('SELENIUM', 'ACTEST',
+		1, '<form><WCENCPRESENT>
+			<WCINCLUDE MODULE="MASTER" NAME="Medications Input">
+		</WCENCPRESENT>
+		</form>')""")
+	@@@
+	Navigate "?f=layout&module=SELENIUM&name=ACTEST&pat_id=18"
+	Enter "amoxicillin" in the "le_medlist_ac" autocomplete
+	Begin "Verify user gets drug interaction warning"
+		Verify exists "Warning for amoxicillin" text
+		Close the popup
+	Enter "tablet 500" in the "le_medlist_dosage_value" autocomplete
+	Enter "Oral 1 tablet per" in the "le_medlist_sig_value" autocomplete
+	Click the Add button

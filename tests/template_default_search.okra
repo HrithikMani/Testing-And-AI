@@ -1,0 +1,45 @@
+"""
+	Test to verify Copy Template search input is working
+	@owners: nchoudhry
+	@filedeps: system/layouts/Template/default.html, system/layouts/Template/Libraries.html
+"""
+
+# First add three libraries so the Copy Template search has results
+Begin "Initial setup"
+	Navigate "?f=admin&subfunc=rxlibraryeditor&t=Library&tabmodule=admin&tabselect=Reference&ts_caption=Library"
+	Click the "Add Library" link
+	Type "*First" in the "first_name" input
+	Click the "Add New" button
+	Wait for page
+	Navigate "?f=admin&subfunc=rxlibraryeditor&t=Library&tabmodule=admin&tabselect=Reference&ts_caption=Library"
+	Click the "Add Library" link
+	Type "*Second" in the "first_name" input
+	Click the "Add New" button
+	Wait for page
+	Navigate "?f=admin&subfunc=rxlibraryeditor&t=Library&tabmodule=admin&tabselect=Reference&ts_caption=Library"
+	Click the "Add Library" link
+	Type "*Third" in the "first_name" input
+	Click the "Add New" button
+	Wait for page
+
+Begin "Create an encounter and click the copy button"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the "Add Visit" link
+	Wait for ajax
+	Click the @Copy button@xpath='//div[@id="wc_encnav_buttons"]/a[@title="Copy"]'
+	Wait for page
+
+# At first three library names will be visible
+# After searching in the input, only the first one should be visible
+Begin "Verify everything"
+	Verify exists "Existing Visits" text
+	Verify exists "Patel, Ashish" text
+	Verify exists "Libraries" text
+	Verify exists "*First" text
+	Verify exists "*Second" text
+	Verify exists "*Third" text
+	Type "First" in the "template_search" input
+	@Wait@driver.pause(3)
+	Verify exists "*First" text
+	Verify !exists "*Second" text
+	Verify !exists "*Third" text

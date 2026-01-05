@@ -1,0 +1,286 @@
+Begin Create Encounter
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+
+Begin Set Visit Protocol
+	@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+	Open "Chief complaint" dynamicsection
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Chief complaint)")[0].scrollIntoView()')
+	Enter "Occupational Inj" into the "Protocol" autocomplete
+	Close "Chief complaint" dynamicsection
+	Verify exists @"Protocol: Occupational Injury" text@xpath='//span[contains(., "Protocol:")]/following-sibling::span[contains(., "Occupational Injury")]'
+
+Begin Check HPI Encounter Section
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(HPI)")[0].scrollIntoView()')
+	Open "HPI" dynamicsection
+
+	Verify exists "What was the worker doing immediately prior to the injury/illness?" text
+	Verify exists "How did the injury/illness occur?" text
+	Verify exists "Notes" text
+
+	Type "Working" into obs_result_68_0 input
+	Type "Accident" into obs_result_68_1 input
+	Type "Some Notes" into obs_result_68_2 input
+	Screenshot "HPI"
+	Close "HPI" dynamicsection
+
+	Verify exists @xpath='//div[contains(.,"What was the worker doing immediately prior to the injury/illness?")]/following-sibling::div[contains(.,"Working")]'
+	Verify exists @xpath='//div[contains(.,"How did the injury/illness occur?")]/following-sibling::div[contains(.,"Accident")]'
+	Verify exists @xpath='//div[contains(.,"Notes")]/following-sibling::div[contains(.,"Some Notes")]'
+
+Begin Check Social History Encounter Section
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Social history)")[0].scrollIntoView()')
+	Open "Social history" dynamicsection
+
+	Verify exists "Smoking Status" text
+	Verify exists "Sexually Active" text
+	Verify exists "Alcohol Use" text
+	Verify exists "Caffeine Use" text
+	Verify exists "Drug Use" text
+	Verify exists "Exercise" text
+	Verify exists "Diet" text
+	Verify exists "Non-clinical or patient generated health data recorded" text
+	Verify exists "Hospice Care" text
+	Verify exists "Narrative" text
+
+	Select "Never Smoker" from obs_result_404_0 dropdown
+	Click the @Sexually Active - Yes radio@xpath="//input[@id='obs_result_404_7_0'][@type='radio']"
+	Click the @Alcohol Use - Yes radio@xpath="//input[@id='obs_result_404_8_0']"
+	Type "Moderate Use, once a week" into test_comments_404_8 input
+	Click @xpath="//input[@id='obs_result_404_9_1']"
+	Click @Caffeine Use - Yes radio@xpath="//input[@id='obs_result_404_9_0']"
+	Type "Every day" into test_comments_404_9 input
+	Click @xpath="//input[@id='obs_result_404_10_0']"
+	Click @Drug Use - No radio@xpath="//input[@id='obs_result_404_10_1']"
+	Click @Exercise - Yes radio@xpath="//input[@id='obs_result_404_11_1']"
+	Click @Exercise - Yes radio@xpath="//input[@id='obs_result_404_11_0']"
+	Type "30 mins, twice a week" into test_comments_404_11 input
+	Type "3 meals a day" into obs_result_404_12 input
+	Type "~ 2000 calories daily" into test_comments_404_12 input
+	Click @Non-clinical or patient generated health data recorded - No radio@xpath="//input[@id='obs_result_404_13_1']"
+	Click @xpath="//input[@id='obs_result_404_14_0']"
+	Click @Advance Directive - No radio@xpath="//input[@id='obs_result_404_14_1']"
+	Click @Hospice Care - No radio@xpath="//input[@id='obs_result_404_15_1']"
+	Type "At home" into test_comments_404_15 input
+	Type "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." into obs_result_404_16 input
+	Close "Social history" dynamicsection
+
+	Verify exists @xpath='//div[contains(.,"Smoking Status")]/following-sibling::div[contains(.,"Never smoker")]'
+	Verify exists @xpath='//div[contains(.,"Sexually Active")]/following-sibling::div[contains(.,"Yes")]'
+	Verify exists @xpath='//div[contains(.,"Alcohol Use")]/following-sibling::div/div[contains(.,"Yes")]'
+	Verify exists @xpath='//div[contains(.,"Alcohol Use")]/following-sibling::div/div[contains(.,"Moderate Use, once a week")]'
+	Verify exists @xpath='//div[contains(.,"Caffeine Use")]/following-sibling::div/div[contains(.,"No")]'
+	Verify exists @xpath='//div[contains(.,"Caffeine Use")]/following-sibling::div/div[contains(.,"Every day")]'
+	Verify exists @xpath='//div[contains(.,"Drug Use")]/following-sibling::div[contains(.,"No")]'
+	Verify exists @xpath='//div[contains(.,"Exercise")]/following-sibling::div/div[contains(.,"Yes")]'
+	Verify exists @xpath='//div[contains(.,"Exercise")]/following-sibling::div/div[contains(.,"30 mins, twice a week")]'
+	Verify exists @xpath='//div[contains(.,"Diet")]/following-sibling::div/div[contains(.,"3 meals a day")]'
+	Verify exists @xpath='//div[contains(.,"Diet")]/following-sibling::div/div[contains(.,"~ 2000 calories daily")]'
+	Verify exists @xpath='//div[contains(.,"Non-clinical or patient generated health data recorded")]/following-sibling::div[contains(.,"No")]'
+	Verify exists @xpath='//div[contains(.,"Advance Directive")]/following-sibling::div[contains(.,"No")]'
+	Verify exists @xpath='//div[contains(.,"Hospice Care")]/following-sibling::div/div[contains(.,"No")]'
+	Verify exists @xpath='//div[contains(.,"Hospice Care")]/following-sibling::div/div[contains(.,"At home")]'
+	Verify exists @xpath='//div[contains(.,"Narrative")]/following-sibling::div[contains(.,"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")]' 
+
+Begin Check Review Of Systems Encounter Section
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Review of systems)")[0].scrollIntoView()')
+	Open "Review of systems" dynamicsection
+
+	Verify exists General: text
+	Verify exists Eyes: text
+	Verify exists Ears/Nose/Mouth/Throat: text
+	Verify exists Respiratory: text
+	Verify exists Cardiac: text
+	Verify exists GI: text
+	Verify exists GU: text
+	Verify exists Musculoskeletal: text
+	Verify exists Neurological: text
+	Verify exists Psychiatric: text
+	Verify exists Endocrine: text
+	Verify exists Skin: text
+	Verify exists Notes: text
+
+	Type "Normal activity." in the obs_result_106_0 input
+	Type "No difficulties in vision." in the obs_result_106_1 input
+	Type "Denies hearing difficulties." in the obs_result_106_2 input
+	Type "No cough." in the obs_result_106_3 input
+	Type "No chest discomfort." in the obs_result_106_4 input
+	Type "No complaints of abdominal pain." in the obs_result_106_5 input
+	Type "No hematuria." in the obs_result_106_6 input
+	Type "No muscle weakness or swelling." in the obs_result_106_7 input
+	Type "No complaints of tremor." in the obs_result_106_8 input
+	Type "No abnormalities in mood." in the obs_result_106_9 input
+	Type "No excessive thirst or hunger." in the obs_result_106_10 input
+	Type "No bruising." in the obs_result_106_11 input
+	Type "No complaints." in the obs_result_106_12 input
+	Type "Lorem ipsum dolor sit amet, consectetur adipiscing elit." in the obs_result_106_13 input
+	Close "Review of systems" dynamicsection
+
+	Verify exists @xpath='//div[contains(.,"General:")]/following-sibling::div[contains(.,"Normal activity.")]'
+	Verify exists @xpath='//div[contains(.,"Eyes:")]/following-sibling::div[contains(.,"No difficulties in vision.")]'
+	Verify exists @xpath='//div[contains(.,"Ears/Nose/Mouth/Throat:")]/following-sibling::div[contains(.,"Denies hearing difficulties.")]'
+	Verify exists @xpath='//div[contains(.,"Respiratory:")]/following-sibling::div[contains(.,"No cough.")]'
+	Verify exists @xpath='//div[contains(.,"Cardiac:")]/following-sibling::div[contains(.,"No chest discomfort.")]'
+	Verify exists @xpath='//div[contains(.,"GI:")]/following-sibling::div[contains(.,"No complaints of abdominal pain.")]'
+	Verify exists @xpath='//div[contains(.,"GU:")]/following-sibling::div[contains(.,"No hematuria.")]'
+	Verify exists @xpath='//div[contains(.,"Musculoskeletal:")]/following-sibling::div[contains(.,"No muscle weakness or swelling.")]'
+	Verify exists @xpath='//div[contains(.,"Neurological:")]/following-sibling::div[contains(.,"No complaints of tremor.")]'
+	Verify exists @xpath='//div[contains(.,"Psychiatric:")]/following-sibling::div[contains(.,"No abnormalities in mood.")]'
+	Verify exists @xpath='//div[contains(.,"Endocrine:")]/following-sibling::div[contains(.,"No excessive thirst or hunger.")]'
+	Verify exists @xpath='//div[contains(.,"Hematologic/Lymphatic:")]/following-sibling::div[contains(.,"No bruising.")]'
+	Verify exists @xpath='//div[contains(.,"Skin:")]/following-sibling::div[contains(.,"No complaints.")]'
+	Verify exists @xpath='//div[contains(.,"Notes:")]/following-sibling::div[contains(.,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.")]'
+
+Begin Check Physical Exam Encounter Section
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Physical exam)")[0].scrollIntoView()')
+	Screenshot "PhysExam"
+	Open "Physical exam" dynamicsection
+
+	Verify exists Constitutional text
+	Verify exists General Appearance: text
+	Verify exists Eyes text
+	Verify exists Eyes: text
+	Verify exists ENT/Mouth text
+	Verify exists Ears: text
+	Verify exists Nose: text
+	Verify exists Mouth/Throat text
+	Verify exists Neck text
+	Verify exists "Neck and Thyroid:" text
+	Verify exists Respiratory/Cardiovascular text
+	Verify exists Respiratory: text
+	Verify exists "Auscultation & Palpation:" text
+	Verify exists "Arterial Pulses:" text
+	Verify exists "Edema/Varicosities of Extremities:" text
+	Verify exists Abdomen: text
+	Verify exists Liver/Kidney/Spleen: text
+	Verify exists Genitourinary text
+	Verify exists Genitourinary: text
+	Verify exists "Functional and Cognitive Status:" text
+	Verify exists Head/Face: text
+	Verify exists "Jugular Veins:" text
+	Verify exists Lymphatic text
+	Verify exists Lymph Nodes: text
+	Verify exists Musculoskeletal text
+	Verify exists Gait/Station: text
+	Verify exists Digits/Nails: text
+	Verify exists Back: text
+	Verify exists Extremities: text
+	Verify exists Range of Motion: text
+	Verify exists Muscle Strength/Tone: text
+	Verify exists Skin text
+	Verify exists Skin: text
+	Verify exists Neurologic text
+	Verify exists Neurology: text
+	Verify exists Psychiatric text
+	Verify exists Orientation/Mood/Affect: text
+	Verify exists Physical Exam Notes: text
+
+	Type "Well developed." into the obs_result_107_1 input
+	Type "PERRLA." into the obs_result_107_3 input
+	Type "Denies hearing difficulties." into the obs_result_107_5 input
+	Type "No blockage or congestion." into the obs_result_107_6 input
+	Type "Teeth are in good repair." into the obs_result_107_7 input
+	Type "Trachea is midline and freely movable." into the obs_result_107_9 input
+	Type "Normal respiratory effort with symmetrical lung expansion." into the obs_result_107_11 input
+	Type "No thrills, lifts, or palpable S3 or S4." into the obs_result_107_12 input
+	Type "Normal carotids pulses with no bruits." into the obs_result_107_13 input
+	Type "No edema. No varicosities of the extremities." into the obs_result_107_14 input
+	Type "Soft, non-tender, without masses, or bruits." into the obs_result_107_16 input
+	Type "No hepatomegaly, hepatojugular reflex or pulsations noted." into the obs_result_107_17 input
+	Type "No hematuria." into the obs_result_107_19 input
+	Type "Normal function." into the obs_result_107_20 input
+	Type "Normal facial appearance." into the obs_result_107_21 input
+	Type "No jugular venous distention." into the obs_result_107_22 input
+	Type "No swelling." into the obs_result_107_24 input
+	Type "Normal gait and station." into the obs_result_107_26 input
+	Type "No clubbing, cyanosis, hemorrhages, or ischemia." into the obs_result_107_27 input
+	Type "Normal." into the obs_result_107_28 input
+	Type "Normal." into the obs_result_107_29 input
+	Type "Normal." into the obs_result_107_30 input
+	Type "Muscle strength and tone are normal." into the obs_result_107_31 input
+	Type "No complaints." into the obs_result_107_33 input
+	Type "Normal." into the obs_result_107_35 input
+	Type "Mood and affect appropriate." into the obs_result_107_37 input
+	Type "Lorem ipsum dolor sit amet, consectetur adipiscing elit." into the obs_result_107_38 input
+	Close "Physical exam" dynamicsection
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Physical exam)")[0].scrollIntoView()')
+	Screenshot "PhysExam2"
+
+	Verify exists @xpath='//div[contains(.,"General Appearance:")]/following-sibling::div[contains(.,"Well developed.")]'
+	Verify exists @xpath='//div[contains(.,"Eyes:")]/following-sibling::div[contains(.,"PERRLA.")]'
+	Verify exists @xpath='//div[contains(.,"Ears:")]/following-sibling::div[contains(.,"Denies hearing difficulties.")]'
+	Verify exists @xpath='//div[contains(.,"Nose:")]/following-sibling::div[contains(.,"No blockage or congestion.")]'
+	Verify exists @xpath='//div[contains(.,"Mouth/Throat:")]/following-sibling::div[contains(.,"Teeth are in good repair.")]'
+	Verify exists @xpath='//div[contains(.,"Neck and Thyroid:")]/following-sibling::div[contains(.,"Trachea is midline and freely movable.")]'
+	Verify exists @xpath='//div[contains(.,"Respiratory:")]/following-sibling::div[contains(.,"Normal respiratory effort with symmetrical lung expansion.")]'
+	Verify exists @xpath='//div[contains(.,"Auscultation & Palpation:")]/following-sibling::div[contains(.,"No thrills, lifts, or palpable S3 or S4.")]'
+	Verify exists @xpath='//div[contains(.,"Arterial Pulses:")]/following-sibling::div[contains(.,"Normal carotids pulses with no bruits.")]'
+	Verify exists @xpath='//div[contains(.,"Edema/Varicosities of Extremities:")]/following-sibling::div[contains(.,"No edema. No varicosities of the extremities.")]'
+	Verify exists @xpath='//div[contains(.,"Abdomen:")]/following-sibling::div[contains(.,"Soft, non-tender, without masses, or bruits.")]'
+	Verify exists @xpath='//div[contains(.,"Liver/Kidney/Spleen:")]/following-sibling::div[contains(.,"No hepatomegaly, hepatojugular reflex or pulsations noted.")]'
+	Verify exists @xpath='//div[contains(.,"Genitourinary:")]/following-sibling::div[contains(.,"No hematuria.")]'
+	Verify exists @xpath='//div[contains(.,"Functional and Cognitive Status:")]/following-sibling::div[contains(.,"Normal function.")]'
+	Verify exists @xpath='//div[contains(.,"Head/Face:")]/following-sibling::div[contains(.,"Normal facial appearance.")]'
+	Verify exists @xpath='//div[contains(.,"Jugular Veins:")]/following-sibling::div[contains(.,"No jugular venous distention.")]'
+	Verify exists @xpath='//div[contains(.,"Lymph Nodes:")]/following-sibling::div[contains(.,"No swelling.")]'
+	Verify exists @xpath='//div[contains(.,"Gait/Station:")]/following-sibling::div[contains(.,"Normal gait and station.")]'
+	Verify exists @xpath='//div[contains(.,"Digits/Nails:")]/following-sibling::div[contains(.,"No clubbing, cyanosis, hemorrhages, or ischemia.")]'
+	Verify exists @xpath='//div[contains(.,"Back:")]/following-sibling::div[contains(.,"Normal.")]'
+	Verify exists @xpath='//div[contains(.,"Extremities:")]/following-sibling::div[contains(.,"Normal.")]'
+	Verify exists @xpath='//div[contains(.,"Range of Motion:")]/following-sibling::div[contains(.,"Normal.")]'
+	Verify exists @xpath='//div[contains(.,"Muscle Strength/Tone:")]/following-sibling::div[contains(.,"Muscle strength and tone are normal.")]'
+	Verify exists @xpath='//div[contains(.,"Skin:")]/following-sibling::div[contains(.,"No complaints.")]'
+	Verify exists @xpath='//div[contains(.,"Neurology:")]/following-sibling::div[contains(.,"Normal.")]'
+	Verify exists @xpath='//div[contains(.,"Orientation/Mood/Affect:")]/following-sibling::div[contains(.,"Mood and affect appropriate.")]'
+	Verify exists @xpath='//div[contains(.,"Physical Exam Notes:")]/following-sibling::div[contains(.,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.")]'
+
+Begin Check Visual Exam Encounter Section
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Physical exam)")[0].scrollIntoView()')
+	Click "Visual Exam" button
+	@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Visual exam)")[0].scrollIntoView()')
+	Screenshot "VisExam"
+	Verify exists "Visual Exam Findings" text
+	Type "20/20" into obs_result_416_0 input
+	Close "Visual exam" dynamicsection
+	Verify exists @xpath='//div[contains(.,"Visual Exam Findings")]/following-sibling::div[contains(.,"20/20")]'
+
+Begin Check Symptoms/Diagnosis Encounter Section
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Symptoms / Diagnosis)")[0].scrollIntoView()')
+	Open "Symptoms / Diagnosis" dynamicsection
+	Verify exists "Assessment Narrative:" text
+	Type "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus nisl tincidunt eget nullam non." into ImpressionNotes input
+	Close "Symptoms / Diagnosis" dynamicsection
+	Verify exists "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus nisl tincidunt eget nullam non." text
+
+Begin Check Clinical Education Encounter Section
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Clinical education)")[0].scrollIntoView()')
+	Open "Clinical education" dynamicsection
+
+	Verify exists "Clinical education material given" text
+	Verify exists "Clinical Education Comments" text
+
+	Click "DECB_Patient education material given" checkbox
+	Type "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus nisl tincidunt eget nullam non." into obs_result_419_0 input
+	Close "Clinical education" dynamicsection
+
+	Verify exists "Clinical education material given." text
+	Verify exists @xpath='//div[contains(.,"Clinical Education Comments")]/following-sibling::div[contains(.,"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus nisl tincidunt eget nullam non.")]'
+
+Begin Check Depart Instructions Encounter Section
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Depart instructions)")[0].scrollIntoView()')
+	Open "Depart instructions" dynamicsection
+	Verify exists "Depart Summary" text
+	Type "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus nisl tincidunt eget nullam non." into obs_result_418_0 input
+	Close "Depart instructions" dynamicsection
+	Verify exists @xpath='//div[contains(.,"Depart Summary")]/following-sibling::div[contains(.,"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus nisl tincidunt eget nullam non.")]'
+
+Begin Check Financials Encounter Section
+	@Scroll the section into view@driver.runJS('jQuery("h3:contains(Financials)")[0].scrollIntoView()')
+	Open "Financials" dynamicsection
+	Verify exists @Charges grid@xpath='//div[@class="wcdv_grid"]/div[contains(@class, "wcdv_grid_titlebar")]/strong[contains(., "Charges")]'
+	Close "Financials" dynamicsection

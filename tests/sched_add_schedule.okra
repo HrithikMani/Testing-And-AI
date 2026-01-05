@@ -1,0 +1,57 @@
+Begin Add an example schedule
+	Open the sidemenu
+	Click the "Scheduler" sidemenu entry
+	Click the "Schedules" charttab
+	Click the "Add" link
+	Select "4 Hours" in the "duration" dropdown
+	Enter "Selenium, Selenium" into the "Resource" autocomplete
+	Enter "Office" into the "Location" autocomplete
+	Begin Add an appointment type
+		Enter "Procedure/Test Only" into the sched_appt_types_appttypeac_txt autocomplete
+		Click the "Add" button
+	Click the "Recurrence" button
+	Select "Day(s)" from the recurrence dropdown
+	Type "This is a test schedule" in the "comment" input
+	Click the "Save" button
+	Verify exists "Must enter a start, end, and a resource" text
+	Close the Warning popup
+	Enter "01-01-2023 08:00" in the 1st date
+	Enter "01-01-2023 12:00" in the 2nd date
+	Type 3 in the "Total appointments allowed" input
+	Click the "Save" button
+	@Wait@driver.wcutils.waitForAJAX(10)
+Begin Search for the new schedule
+	#Wait for the ActiveSchedulesGrid grid
+	@pause@driver.pause(5)
+	Click the @Resource filter button@xpath="//div[@id='ActiveSchedulesGrid']//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Resource']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Resource']//p[contains(@class, 'SelectBox')]"
+	Click the 'Selenium, Selenium" label
+	Click the @ok button@xpath="//li[@data-wcdv-field='Resource']//p[@class='btnOk']"
+Begin "Add some appointments to count"
+	@@@
+	driver.miedb.dbExec('''SET @theday='2023-02-02';
+		INSERT INTO appointments SET location='OFFICE',startdate=CONCAT(@theday, ' 12:00:00'),enddate=CONCAT(@theday, ' 12:15:00'),reason='One';
+		SET @apt_id=(SELECT last_insert_id());
+		INSERT INTO multi_resource_apt SET apt_id=@apt_id, res_id=(SELECT user_id FROM users WHERE username='selenium');
+		INSERT INTO appointments SET location='OFFICE',startdate=CONCAT(@theday, ' 11:00:00'),enddate=CONCAT(@theday, ' 11:15:00'),reason='Two';
+		SET @apt_id=(SELECT last_insert_id());
+		INSERT INTO multi_resource_apt SET apt_id=@apt_id, res_id=(SELECT user_id FROM users WHERE username='selenium');
+		INSERT INTO appointments SET location='OFFICE',startdate=CONCAT(@theday, ' 11:15:00'),enddate=CONCAT(@theday, ' 11:30:00'),reason='Three';
+		SET @apt_id=(SELECT last_insert_id());
+		INSERT INTO multi_resource_apt SET apt_id=@apt_id, res_id=(SELECT user_id FROM users WHERE username='selenium');''')
+	@@@
+Begin Edit the example schedule
+	#Wait for the ActiveSchedulesGrid grid
+	@pause@driver.pause(5)
+	Gridclick "Start:01-01-2023" "Edit" grid link
+	Verify exists "Selenium, Selenium" in the "Resource" autocomplete
+	Verify exists "Office" in the "Location" autocomplete
+	Verify exists "This is a test schedule" in the comment input
+	Click the "Save" button
+	click the "Yes" Button
+	Verify exists "This is a test schedule" grid entry
+
+Begin "Verify The schedule counts appointments"
+	Click the "Multi View" charttab
+	Select "Selenium, Selenium" in the "res_id" dropdown
+	Verify exists "This is a test schedule" icon editblock

@@ -1,0 +1,467 @@
+"""
+Pod used to interact with the new encounter UI dynItems contained within the dynamic sectioni.
+
+- Not for use with quicklist items. Those are defined in the quicklist pod.
+- The Add verb does reference quicklist elements for a specific section in order to add a new dynamicitem.
+- Delete and Remove verbs will accept a value corresponding to a dynamic section to ensure interaction with the correct dynamicitem.
+
+Usage examples:
+	Hover "Ryodoraku" dynamicitem delete
+	Add a "Presenting medications" dynamicitem
+	Delete "Past procedures" "Tonsillectomy" dynamicitem
+	Click the "Past procedure" dynamicitem add
+	Click the "Ryodoraku" dynamicitem edit
+	Click the "Ryodoraku" dynamicitem delete
+	Click the "Ryodoraku" dynamicitem remove
+	Verify exists "Miralax" dynamicitem
+	Edit "Ryodoraku" dynamicitem
+	Notate "Ryodoraku" dynamicitem
+	Requisition "Ryodoraku" dynamicitem
+	Delete "Ryodoraku" dynamicitem
+	Remove "Ryodoraku" dynamicitem
+	View "Ryodoraku" dynamicitem
+	Link "Ryodoraku" dynamicitem
+	Unlink "Ryodoraku" dynamicitem
+	Order "Ryodoraku" dynamicitem
+
+
+"""
+
+
+
+dynamicitem://li[contains(@class, "req_order_item")]/div/span[contains(@data-object-name, "order_items")][contains(., "{OKRA_TEXT}")]
+	|//div[contains(@class, "dynContent")]/div[contains(@class, "dyndiv")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}
+	|//div[contains(@class, "dynContent")]/div[contains(@class, "dyndiv")]/div/div[contains(@class, "summary_view")]
+	|//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}
+	|//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]
+
+text://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+link://span[@class="dynItem link"]
+	|//span[@class="ulTitle link"]
+
+druginfo://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Drug Info")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+continue://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Continue")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+add://div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{OKRA_TEXT}")]/following-sibling::div//div[contains(@class, "dynQL")]//div[contains(@class, "dyndiv")]//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")][contains(., "Other") or contains(., "Add New Assessment Item") or contains(., "Add New Presenting Problem")]//*[self::a or self::button][contains(@title, "Add") or contains(@title, "Prescribe")]
+	|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{OKRA_TEXT}")]/following-sibling::div//div[contains(@class, "dynQL")]//div[contains(@class, "dyndiv")]//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+	|//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{OKRA_TEXT}")]/following-sibling::div//div[contains(@class, "dynQL")]//div[contains(@class, "dyndiv")]//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")][contains(., "Other") or contains(., "Add New Assessment Item") or contains(., "Add New Presenting Problem")]
+
+edit://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa-pencil") and contains(@title, "Edit")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+	|//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa-pencil") and contains(@title, "Correct Medication")]
+	|//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa-pencil") and contains(@title, "Change Therapy")]
+
+delete://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Delete")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+	|//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Remove")]
+
+remove://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Remove")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+	|//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Delete")]
+
+move://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Move")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+
+notes://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and @title="Notes"]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+requisition://div[contains(@class, "dynContent")]//div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and @title="Requisition"]
+	|//div[contains(@class, "dynContent")]//div/div[contains(@class, "summary_view")]
+	|//div[@class="nest-header" and strong="Future"]/following-sibling::ul/li/span{OKRA_TEXT_CLS}/following-sibling::span//*[self::a or self::button][contains(@class, "fa") and (@title="Requisition")]
+	|//div[@class="nest-header" and strong="Future"]/following-sibling::ul/li/span{OKRA_TEXT_CLS}/following-sibling::span//*[self::a or self::button][contains(@class, "fa") and @title="Requisition"]
+
+examadd://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and @title="Add to Exam"]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+	|//div[@class="ql-list"]//li{OKRA_TEXT_CLS}/span/*[self::a or self::button][contains(@class, "fa") and @title="Add to Exam"]
+
+task://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and @title="Add Task"]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+assessmentremove://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and @title="Remove from Assessment"]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+prescribe://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Prescribe Med" or @title="Prescribe")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+discontinue://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Discontinue")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+log://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Log Time")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+charge://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Log Time")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+complete://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Complete Order" or @title="Complete")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+clone://div[contains(@class, "dynContent")]/div/ul/li/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//*[self::a or self::button][contains(@class, "fa") and (@title="Clone")]
+	|//div[contains(@class, "dynContent")]/div/div[contains(@class, "summary_view")]
+
+quicklist_toggle://div/*[@class="exam_tab"]{OKRA_TEXT_CLS}/following-sibling::div/a[@class="ql_toggle"]
+	|//a[@class="ql_toggle"]
+
+requisitionitem://li[contains(@class, "req_order_item")]/div/span[contains(@data-object-name, "order_items")][contains(., "{OKRA_TEXT}")]
+
+orderitem://li[contains(@class, "req_order_item")]/div/span[contains(@data-object-name, "order_items")][contains(., "{OKRA_TEXT}")]
+
+order://li[contains(@class, "req_order_item")]/div/span[contains(@data-object-name, "order_items")][contains(., "{OKRA_TEXT}")]
+
+@@@
+def dynopHoverClick():
+	oldtimeout = driver.timeout
+	driver.setTimeout(5)
+	driver.reportCommandStatus('', '', True, 'section xpath', section)
+	driver.reportCommandStatus('', '', True, 'dynitem xpath', dynitem)
+	driver.reportCommandStatus('', '', True, 'dynop xpath', dynop)
+	if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=60,
+		comments='Wait for ajax and layoutInsert operations to complete prior to adding'):
+		driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+	driver.wcutils.waitForAJAX(timeout=60, quiet=5)
+	if driver.getElement(xpath=section):
+		if driver.waitFor(driver, lambda driver: driver.getElement(xpath=dynitem), expected_return=True):
+			driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=section))
+			driver.mouseOver(xpath=dynitem)
+		else:
+			driver.reportCommandStatus('', '', False, '', 'Dynamic dynItem not found')
+	else:
+		driver.reportCommandStatus('', '', False, '', 'Section not found')
+	if driver.waitFor(driver, lambda driver: driver.getElement(xpath=dynitem), expected_return=True):
+		driver.reportCommandStatus('', '', True, '', '1st attempt')
+		driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=section))
+		driver.mouseOver(xpath=dynitem)
+		if driver.waitFor(driver, lambda driver: driver.getElement(xpath=dynop), expected_return=True):
+			driver.clickElement(xpath=dynop)
+		elif not driver.waitFor(driver, lambda driver: driver.getElement(xpath=dynop), expected_return=True):
+			driver.reportCommandStatus('', '', True, '', '2nd attempt')
+			driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=section))
+			driver.mouseOver(xpath=dynitem)
+			if driver.waitFor(driver, lambda driver: driver.getElement(xpath=dynop), expected_return=True):
+				driver.clickElement(xpath=dynop)
+			elif not driver.waitFor(driver, lambda driver: driver.getElement(xpath=dynop), expected_return=True, timeout=60):
+				driver.reportCommandStatus('', '', True, '', '3rd attempt')
+				driver.wcutils.waitForAJAX(timeout=30)
+				driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=section))
+				driver.mouseOver(xpath=dynitem)
+				driver.waitFor(driver, lambda driver: driver.getElement(xpath=dynop), expected_return=True, timeout=60)
+				driver.clickElement(xpath=dynop)
+			else:
+				driver.reportCommandStatus('dynamicitem.pod', 'Edit/Correct Medication/Change Therapy', False, 'Variables given', 'Unable to click DynOps button after 2 attempts')
+		else:
+			driver.reportCommandStatus('dynamicitem.pod', 'Edit/Correct Medication/Change Therapy', False, 'Variables given', 'DynOps button not found')
+	else:
+		driver.reportCommandStatus('dynamicitem.pod', 'Edit/Correct Medication/Change Therapy', False, 'Variables given', 'Quicklist Item not found')
+	if driver.getElement(xpath='//div[@id="miewin_progress"]'):
+		driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@id="miewin_progress"]'), timeout=60, expected=False, comments='Wait for miewin to finish building')
+	if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=60,
+		comments='Wait for ajax and layoutInsert operations to complete after inserting item'):
+		driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+	driver.setTimeout(oldtimeout)
+
+@@@
+
+@Hover
+@@@
+driver.mouseOver(xpath='//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{OKRA_TEXT}")]')
+@@@
+
+
+@ExamAdd
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Add to Exam")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Add to Exam")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Add to Exam', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Notate
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Notes")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Notes")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Notate', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Edit
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa-pencil") and contains(@title, "Edit") or contains(@title, "Correct Medication") or contains(@title, "Change Therapy")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa-pencil") and contains(@title, "Edit") or contains(@title, "Correct Medication") or contains(@title, "Change Therapy")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Edit', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Delete
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Remove" or @title="Delete")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Remove" or @title="Delete")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Delete', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Remove
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Remove" or @title="Delete")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Remove" or @title="Delete")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Remove', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@View
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and ((@title="View") or (@title="View Document"))]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and ((@title="View") or (@title="View Document"))]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'View', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Requisition
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")]/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")]/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Requisition")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")]/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")]/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Requisition")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Requisition', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Complete
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Complete Order" or @title="Complete")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Complete Order" or @title="Complete")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Complete', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Prescribe
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Prescribe Med" or @title="Prescribe")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Prescribe Med" or @title="Prescribe")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Prescribe', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Order
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Add Order")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Add Order")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Order', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Unlink
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Unlink from Encounter")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Unlink from Encounter")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Unlink', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Clone
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li/ul/li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Clone")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li/ul/li[contains(@class, "dynItem")][contains(., "{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Clone")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Clone', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@
+
+@Add
+"""
+def parse(str):
+	if ":" in str:
+		spl = [x.strip() for x in str.split(':')]
+		sec = spl[0]
+		ql = spl[1]
+		return(sec,ql)
+	else:
+		sec = str
+		ql = "None"
+		return(sec,ql)
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"!="None":
+	dynitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header" and contains(., "{1}")]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	dynop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][contains(@title, "Add") or contains(@title, "Prescribe")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"!="None" and "{0}"!="None" and "{1}"=="None":
+	dynitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header"]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]'
+	dynop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][contains(@title, "Add") or contains(@title, "Prescribe")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"!="None" and "{0}"=="None" and "{1}"=="None":
+	dynitem = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{{OKRA_TEXT}}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-header"]/following-sibling::div[@class="ql-list"]//li[contains(@class, "dynItem")][contains(., "Other")]'
+	dynop = '//span[@class="dynOps" and contains(@style, "display: block")]//*[self::a or self::button][contains(@title, "Add") or contains(@title, "Prescribe")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None" and "{1}"=="None":
+	driver.clickElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynQL") and (contains(@style, "display: block") or contains(@class, "forceQL")) and not(contains(., "display: none;"))]//div[@class="ql-group-controls"]//span[contains(@class, "plus") and contains(@title, "Add")]')
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Add', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'Add dynItem failed')
+@@@
+
+@Charge
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+global dynitem, dynop, section
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{0}")]'
+if "{{OKRA_TEXT}}"!="None" and "{0}"!="None":
+	dynitem = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{{OKRA_TEXT}}")]'
+	dynop = '//div/*[@class="exam_tab"][contains(., "{0}")]/following-sibling::div//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{{OKRA_TEXT}}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Add Related Charge")]'
+	dynopHoverClick()
+elif "{{OKRA_TEXT}}"=="None" and "{0}"!="None":
+	dynitem = '//div[contains(@class, "dynContent")]/div//ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"{0}")]'
+	dynop = '//div[contains(@class, "dynContent")]/div//ul/li[contains(@class, "dynItem")][contains(., "{0}")]//span[contains(@class, "dynOps") and (contains(@style, "display: block") or not(contains(@style, "display: none")))]//*[self::a or self::button][contains(@class, "fa") and (@title="Add Related Charge")]'
+	dynopHoverClick()
+else:
+	driver.reportCommandStatus('dynamicitem.pod', 'Add Charge', False, 'parsed="{0}" okra="{{OKRA_TEXT}}"', 'something went wrong')
+@@@

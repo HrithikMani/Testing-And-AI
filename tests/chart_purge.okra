@@ -1,0 +1,65 @@
+"""
+    Testing the Chart Purge screen
+    @owners: dcornewell
+    @filedeps: system/layouts/SystemReport/ChartPurge.html, system/reports/ChartPurge.sql, src/chartpurge.c
+"""
+
+Begin "Add some old applicant charts"
+	@@@
+	pat_ids = driver.miedb.dbQuery('''INSERT INTO patients SET last_name='Applicant', first_name='Example1', birth_date='2001-05-06', edit_date='2006-01-01', create_date='2006-01-01';
+		SET @pi1=(SELECT last_insert_id());
+		INSERT INTO patient_mrns SET pat_id=@pi1, wc_partition='APP', mrnumber=UUID();
+		INSERT INTO patients SET last_name='Applicant', first_name='Example2', birth_date='2000-08-06', edit_date='2006-01-01', create_date='2006-01-01';
+		SET @pi2=(SELECT last_insert_id());
+		INSERT INTO patient_mrns SET pat_id=@pi2, wc_partition='APP', mrnumber=UUID();
+		INSERT INTO patients SET last_name='Applicant', first_name='Example3', birth_date='1999-05-01', edit_date='2006-01-01', create_date='2006-01-01';
+		SET @pi3=(SELECT last_insert_id());
+		INSERT INTO patient_mrns SET pat_id=@pi3, wc_partition='APP', mrnumber=UUID();
+		INSERT INTO encounter_orders SET pat_id=@pi3;
+		INSERT INTO patient_admin SET pat_id=@pi3;
+		SELECT @pi3;''').getRes()[0]
+
+	return {
+		'pat_id': str(pat_ids['@pi3']),
+	}
+	@@@
+
+Begin "Test Chart Purge Datavis and Scriplet"
+	Open the sidemenu
+	Click the "Reports" sidemenu entry
+	Click the "Utilization" charttab
+	Click the "Purge Charts" charttab subtab
+	Verify exists "Example3" text
+	Check the "Example1" grid checkbox
+# Ticket #120461: DataVis and grid.pod button elements and TableTools
+	Click @the "Purge Chart" grid button@xpath='//div[@class="wcdv_grid"]//div[contains(@id,"scriptlet") and not(contains(@id, "tt")) and contains(@style, "inline-block")]//button[@type="button" and not(@disabled)][contains(., "Purge Chart")]'
+	Verify exists "Are you sure you want to permanently delete these charts?" text
+	Click the "Yes" button
+	Verify exists "Warning: Purge Charts permission required" text
+	@Give Purge Charts permission to Selenium@driver.miedb.dbExec("INSERT INTO security_exception SET security_value=1, user_id=8, module_name='Control', category_name='Purge Charts'")
+	Close the popup
+	Wait for the "ChartPurge" grid
+	Check the "Example1" grid checkbox
+	Check the "Example2" grid checkbox
+	Check the "Example3" grid checkbox
+# Ticket #120461: DataVis and grid.pod button elements and TableTools
+	Click @the "Purge Chart" grid button@xpath='//div[@class="wcdv_grid"]//div[contains(@id,"scriptlet") and not(contains(@id, "tt")) and contains(@style, "inline-block")]//button[@type="button" and not(@disabled)][contains(., "Purge Chart")]'
+	Verify exists "Are you sure you want to permanently delete these charts?" text
+	Click the "Yes" button
+	Verify exists "Purged Applicant, Example1" text
+	Verify exists "Purged Applicant, Example2" text
+	Verify exists "Purged Applicant, Example3" text
+	Screenshot "ChartPurgeResults"
+	Close the popup
+	Wait for the "ChartPurge" grid
+	Verify !exists "Example1" text
+	Verify !exists "Example2" text
+	Verify !exists "Example3" text
+	@@@Verify No Rows in encounter_orders, patient_admin, observations
+	pat_id={pat_id}
+	eo_count = driver.miedb.dbQuery("SELECT COUNT(*) FROM encounter_orders WHERE pat_id=%s;", pat_id).getRes()[0]['COUNT(*)']
+	pa_count = driver.miedb.dbQuery("SELECT COUNT(*) FROM patient_admin WHERE pat_id=%s;", pat_id).getRes()[0]['COUNT(*)']
+
+	driver.reportCommandStatus('encounter_orders count', '', eo_count == 0, 'Row Count: {}'.format(eo_count), 'Fail on count > 0')
+	driver.reportCommandStatus('patient_admin count', '', pa_count == 0, 'Row Count: {}'.format(pa_count), 'Fail on count > 0')
+	@@@

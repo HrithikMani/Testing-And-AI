@@ -1,0 +1,122 @@
+"""
+    Registers a patient using the PDQ functionality
+"""
+
+Begin "PDQ Search"
+	Begin System Setup For PDQ Search
+		@Add Refer To Systems PDQ Entry@driver.miedb.dbExec("INSERT INTO refer_to_systems (system_id, system_name, system_address, system_options) VALUES ('PDQ', 'PDQ Test', 'https://{0}/webchart/test_baseline_be_careful/pdqMultiServer.cgi', 128)".format(driver.getUserData('BE_CAREFUL_HOSTNAME')))
+		@Enable The PDQ System Setting@driver.miedb.dbExec("REPLACE INTO system_settings SET module='IHE', section='PDQ', item='Enable PDQ', value='1'")
+
+	Begin Verify That an Empty REG_PARTITION System Setting Does Not Work
+		Open the sidemenu
+		Click the E-Chart sidemenu entry
+		Click the Detailed link
+		Verify exists "PDQ Query" button
+		Click the "PDQ Query" button
+		Verify exists "Unable to import MR numbers: No Mapped partitions were found and system setting" text
+
+	Begin Set A Valid PDQ System Setting
+		@Set PDQ REG_PARTITION System Setting To CCME@driver.miedb.dbExec("REPLACE INTO system_settings SET module='IHE', section='PDQ', item='REG_PARTITION', value='CCME'")
+#		@Change partition restrictions to allow us to view CCHIT partitions@driver.miedb.dbExec("UPDATE patient_partitions SET restricted='1' where wc_partition='CCHIT'")
+#		@Make 'Physician' an allowed department on the CCHIT partition@driver.miedb.dbExec("INSERT INTO patient_partitions_restricted (wc_partition, allowed_id, id_type) VALUES ('CCHIT', 'Physicians', 'realm')")
+		@Set CCHIT Translation@driver.miedb.dbExec("UPDATE translate SET trans_to='CCHIT' WHERE trans_from='1.2.840.114398.1.13.1'")
+		@Set CCME Translation@driver.miedb.dbExec("UPDATE translate SET trans_to='CCME' WHERE trans_from='1.2.840.114398.1.66.1'")
+		@Clear the translation message from 'details' for CCHIT@driver.miedb.dbExec("UPDATE translate SET details='' WHERE trans_from='1.2.840.114398.1.13.1'")
+		@Clear the translation message from 'details' for CCME@driver.miedb.dbExec("UPDATE translate SET details='' WHERE trans_from='1.2.840.114398.1.66.1'")
+
+	Begin Verify that PDQ Search Works Correctly
+		Open the sidemenu
+		Click the E-Chart sidemenu entry
+		Click the Detailed link
+		Verify exists "PDQ Query" button
+		# Fix me, these should be 1st and 2nd after Okra gets updated to ignore type=button for inputs
+		Type Heart into the 2nd input
+		Type William into the 3rd input
+		Click the "PDQ Query" button
+		Verify exists "Heart, William, R" text
+		Verify exists ccMe-19269012 link
+		Verify !exists 20 Matches link
+
+	Begin Verify that PDQ Search Works Correctly With Continuation Pointer
+		@Update Refer To Systems PDQ Entry@driver.miedb.dbExec("UPDATE refer_to_systems SET system_address='https://{0}/webchart/test_baseline_be_careful/pdqMultiResponseServer.cgi' WHERE system_id='PDQ' AND system_name='PDQ Test'".format(driver.getUserData('BE_CAREFUL_HOSTNAME')))
+		Open the sidemenu
+		Click the E-Chart sidemenu entry
+		Click the Detailed link
+		Verify exists "PDQ Query" button
+		# Fix me, these should be 1st and 2nd after Okra gets updated to ignore type=button for inputs
+		Type Heart into the 2nd input
+		Type William into the 3rd input
+		Click the "PDQ Query" button
+		Verify exists "Heart, William, R" text
+		Verify exists ccMe-19269012 link
+		Verify exists 20 Matches link
+		Click the 20 Matches link
+		Verify exists "Heart, William, R" text
+		Verify exists ccMe-19269012 link
+		Verify exists ccMe-19269017 link
+		Verify !exists 20 Matches link
+
+	Begin Register William Heart From The PDQ Search
+		Begin "Verify the MR Alert"
+			@Set MR Partiton to 'Allow Edit (Optional)'@driver.miedb.dbExec("UPDATE patient_partitions SET echart_opts='O' WHERE wc_partition='MR'")
+			Click the ccMe-19269012 link
+			Click the "Save" button
+			Verify exists "Warning" popup
+			Verify exists "Please select a MR Number" popup message
+			Click the "OK" popup button
+		Type "10001110101" in the "EDITMR_mrnumber_MR" input
+		Click the "Save" button
+		Verify exists "William, Heart R" toolbar text
+		Verify exists "10001110101" toolbar text
+		Verify exists "MR-" toolbar text
+		@Set MR Partiton to back to default@driver.miedb.dbExec("UPDATE patient_partitions SET echart_opts='A' WHERE wc_partition='MR'")
+
+
+
+Begin "Health Bridge PDQ Search"
+	Begin "System Setup For Health Bridge PDQ Search"
+		@Grant access to Refer to Systems@driver.miedb.dbExec("INSERT INTO security_exception (user_id, revision_number, module_name, category_name, security_value, admin_user_id, create_datetime, revision_datetime, comment) VALUES ('8', '0', 'Control', 'RefertoSystemsEditor', '1', '8', '2007-02-0209:15:00', '2007-02-0209:15:00', 'rts')")
+		@Refer to Systems Editor revisions@driver.miedb.dbExec("INSERT INTO security_exception_revisions (user_id, revision_number, module_name, category_name, security_value, admin_user_id, create_datetime, revision_datetime, active, comment) VALUES (8, 0, 'Control', 'RefertoSystemsEditor', 1, 8, '2007-02-0209:15:00', '2007-02-0209:15:00', 1, 'rts')")
+		@RTS model_security@driver.miedb.dbExec("INSERT INTO model_security (security_role_id, user_id, object, field, crud_control) VALUES (0, 8, 'refer_to_systems', '', 'CREATE,READ,UPDATE,DELETE')")
+		@RTS model_security_extended@driver.miedb.dbExec("INSERT INTO model_security (security_role_id, user_id, object, field, crud_control) VALUES (0, 8, 'refer_to_systems_extended', '', 'CREATE,READ,UPDATE,DELETE')")
+		@Disable NMC Partition and create a fake@driver.miedb.dbExec("UPDATE refer_to_systems SET system_address='https://{0}/webchart/test_baseline_be_careful/nmcccrpost.cgi' WHERE system_id='NMC_POST'".format(driver.getUserData('BE_CAREFUL_HOSTNAME')))
+		@Create HBRIDGE partition@driver.miedb.dbExec("INSERT INTO patient_partitions (wc_partition, wc_guid, name, description, mr_sequence, echart_opts, required, mtype, active, part_order, restricted, identifier) VALUES ('HBRIDGE', '', 'HB', 'HealthBridge', '80', 'O', '0', '2', '1', '0', '0', 'MR')")
+		@Make CCME's partition view "Allow Edit(Optional)"@driver.miedb.dbExec("UPDATE patient_partitions SET echart_opts='O' WHERE wc_partition='CCME'")
+		@Add Health Bridge to RTS@driver.miedb.dbExec("INSERT INTO refer_to_systems (system_id, system_name, system_address, system_address2, rep_uid, system_user, system_pass, system_partition, external_partition, system_options, active) VALUES ('HBPDQ', 'HB PDQ Test', 'https://{0}/webchart/test_baseline_be_careful/pdqMultiServer2.cgi', '', '', '', '', '', '', 64, 1)".format(driver.getUserData('BE_CAREFUL_HOSTNAME')))
+		@Make a tab to access HIE Search@driver.miedb.dbExec("INSERT INTO tabs (module, name, url, target, tab_order, show_in_pocket, show_in_wc, restricted, parent_id, description) VALUES ('admin', 'HIESearch', '?f=layout&module=HealthBridge&name=HIE+Search', '', 370, 0, 1, 0, 0, '')")
+		@Set CCHIT Translation@driver.miedb.dbExec("UPDATE translate SET trans_to='CCHIT' WHERE trans_from='1.2.840.114398.1.13.1'")
+		@Set CCME Translation@driver.miedb.dbExec("UPDATE translate SET trans_to='CCME' WHERE trans_from='1.2.840.114398.1.66.1'")
+		@Clear the translation message from 'details' for CCHIT@driver.miedb.dbExec("UPDATE translate SET details='' WHERE trans_from='1.2.840.114398.1.13.1'")
+		@Clear the translation message from 'details' for CCME@driver.miedb.dbExec("UPDATE translate SET details='' WHERE trans_from='1.2.840.114398.1.66.1'")
+	Begin "Perform a Local search"
+		Open the sidemenu
+		Click the 'Control Panel' link
+		Click the 'HIE Search' charttab
+		Type 'William' in the 'first_name' input
+		Type 'Hart' in the 'last_name' input
+		Type '11-30-1954' in the 'start_bdate' input
+		Select the 'Male' radio
+		Type '1111' in the 'ssn' input
+		Click the 'Search HIE' button
+		Verify exists "Local Results" text
+		Verify exists "TEST-10019" text
+		Verify exists "Hart, William" text
+	Begin "Perform a remote search"
+		Open the sidemenu
+		Click the 'Control Panel' link
+		Click the 'HIE Search' charttab
+		Type 'Pablo' in the 'first_name' input
+		Type 'Picasso' in the 'last_name' input
+		Type '01-01-2001' in the 'start_bdate' input
+		Select the 'Male' radio
+		Type '1111' in the 'ssn' input
+		Click the 'Search HIE' button
+		Verify exists "Remote Results" text
+		Verify exists "CCME-01010101" text
+		Verify !exists "Hart, William" text
+		Verify exists "Heart, William" text
+# Ignore intentional errors
+@@@
+driver.wcErrorLog.ignore("*New partition system: (ISO) partition: (1.2.840.114398.1.13.1)*")
+driver.wcErrorLog.ignore("*New partition system: (ISO) partition: (1.2.840.114398.1.66.1)*")
+@@@

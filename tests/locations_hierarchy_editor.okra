@@ -1,0 +1,47 @@
+Begin Add Locations Hierarchy
+	Begin "Navigate to Locations Hierarhcy"
+		Open the sidemenu
+		Click the "Control Panel" link
+		Click the System charttab
+		Click the "System Editor" charttab subtab
+		Verify exists "Locations Hierarchy" link
+		Click the "Locations Hierarchy" link
+	Begin "Add to Locations Hierarchy"
+		Begin "Add Parent Locations Hierarchy"
+			Click the "Add Locations Hierarchy" link
+			Type "Fort Wayne" into the name input
+			Type "FW" into the site_id input
+			Click the @Yes radio button@xpath='//input[@value="1"][@type="radio"][@name="active"]'
+			Click the Save button
+			Verify exists "Fort Wayne" grid entry
+			Verify exists "FW" grid entry
+		Begin "Add Child Locations Hierarchy"
+			Click the "Add Locations Hierarchy" link
+			Type "Homestead" into the name input
+			Type "HS" into the site_id input
+			Enter "Fort Wayne" into the parent_id_input autocomplete
+			Click the @Yes radio button@xpath='//input[@value="1"][@type="radio"][@name="active"]'
+			Click the Save button
+			Verify exists "Homestead" grid entry
+			Verify exists "HS" grid entry
+	Begin "Edit Locations Hierarchy"
+		Begin "Edit Parent Locations Hierarchy"
+			Check the "Fort Wayne" grid checkbox
+			Click the "Edit" grid button
+			Click @xpath="//*[@id="locations_hierarchy_form"]/div[1]/div[3]/div/span"
+			Type "Better Corp." in the @Dropdown input search@xpath='//*[@id="locations_hierarchy_form"]/span/span/span[1]/input'
+			Select "Better Corp." into the "chart_id" dropdown
+			Click the @No radio button@xpath='//input[@value="0"][@type="radio"][@name="active"]'
+			Click the Save button
+		Begin "Check Inactive Locations Hierarchy"
+			Select "Inactive" from the grid perspective
+			Verify exists "Fort Wayne" grid entry
+			Verify exists "Better Corp." grid entry
+	Begin "Delete Locations Hierarchy"
+		Select "Active" from the grid perspective
+		Check the "Homestead" grid checkbox
+		Click the "Delete" grid button
+		Verify exists "Homestead" popup text
+		Click the "Yes" popup button
+		@Wait@driver.pause(5)
+		Verify !exists "Homestead" grid entry

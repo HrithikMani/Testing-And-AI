@@ -1,0 +1,15 @@
+Begin WCLabel Test
+	Navigate "?f=layout&module=Test&name=WCLabel&tabmodule=+"
+	Verify exists "Yes is Yes" text
+	Verify exists "No is No" text
+	Verify exists "Yes context is Yes" text
+	Verify exists "Yes long context is Yes" text
+	Verify exists "No long context is No" text
+	Click the "language" icon
+	@Wait for the window to open@driver.wcutils.waitForAJAX(30)
+	Click the @Nederlands text@xpath="//li[contains(., 'Nederlands')]"
+	Verify exists "Yes is Ja" text
+	Verify exists "No is Nee" text
+	Verify exists "Yes context is Ja" text
+	Verify exists "Yes long context is Ja" text
+	Verify exists "No long context is Nee" text

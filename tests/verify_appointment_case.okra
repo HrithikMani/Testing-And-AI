@@ -1,0 +1,12 @@
+Begin "Verify case information in appointment screen"
+	@Update the layout for appointment case information@driver.miedb.dbExec("""INSERT INTO layout SET active = 1, module = 'Scheduler', name = 'AppointmentCaseDetails', layout_html = '{{#each [ SELECT * FROM incidents WHERE inc_id IN (@incident_id%%u) ]}}{{#include wcquery,AppointmentCaseDetails}}{{/each}}'""")
+	@Update the layout for appointment case information@driver.miedb.dbExec("""INSERT INTO layout SET active = 1, module = 'wcquery', name = 'AppointmentCaseDetails', layout_html = '{{#if ^start}}<WCTABLE TYPE="wide" TITLE="Case Related Information"><tr><td class="value"><ul>{{/if}}<li>{{&datetime inc_datetime}} <strong>({{case_type}})</strong></li>{{#if ^end}}</ul></td></tr></WCTABLE>{{/if}}'""")
+	Navigate "?f=sched&s=appointment&pat_id=18"
+	Type "Comments" in the "comment" freetext field
+	Click the @case multi select@id=incident_id_labelelem
+	Click the "incident_id" checkbox
+# Ticket 129720: Temporarily commented out and clicking <body> until the multi-select is fixed.
+#	Click the @case multi select to close@id=incident_id_labelelem
+	Click the "Add Appointment" text
+	Verify exists "Case Related Information" text
+	Verify exists "02-29-2024 07:05 (Injury)" text

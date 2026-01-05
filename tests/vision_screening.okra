@@ -1,0 +1,27 @@
+"""
+	@owner: aaronc
+	@filedep: system/layouts/Exam Orders/Vision Screening.html, system/layouts/MASTER Vision/Automatic.html, system/layouts/MASTER Vision/Manual.html
+"""
+
+Begin "Add Results encounter"
+	Navigate "?f=chart&s=pat&pat_id=40"
+	Open the quicklink list
+	Click the "Add Results" quicklink
+Begin "Add procedure to encounter"
+	@Wait 4 seconds@driver.pause(4)
+	Open "Tests & procedures" dynamicsection
+	Enter "Vision Screening" in the "procedureorderac_txt" autocomplete
+	Click the "Add To Exam" button
+	Close the "Tests & procedures" dynamicsection
+	Open "Vision Screening" dynamicsection
+	Click the "Manual" link
+	Type "25" in the "Acuity/L (near) - corrected" input
+	Type "30" in the "Acuity/R (near) - corrected" input
+	Type "35" in the "Acuity/B (near) - corrected" input
+	Type "Pass" in the "Red/Green/Yellow" input
+	Close "Vision Screening" dynamicsection
+Begin "Verify Results saved"
+	Verify exists "20/25" text
+	Verify exists "20/30" text
+	Verify exists "20/35" text
+	Verify exists "Red/Green/Yellow" text

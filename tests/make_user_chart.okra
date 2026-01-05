@@ -1,0 +1,35 @@
+"""
+    Workflow test for making charts for existing users
+    @owners: dcornewell
+    @filedeps: jsbin/patreg.js, system/layouts/SystemReport/MakeProviderChartForUsers.html, system/layouts/SystemReport/MakeUserChartForUsers.html, system/layouts/Scriptlets/user_id.html
+"""
+Begin "Adding a new User"
+	Open the sidemenu
+	Click the "Reports" sidemenu entry
+	Click the "Utilization" charttab
+	Click the 2nd "Make User Chart For Users" link
+	@wait@driver.pause(5)
+	Click the "Search" button
+	Verify exists "nurse2" text
+	Check the "nurse2" grid checkbox
+	Wait for the MakeUserChartForUsers grid
+# Ticket 120461 grid buttons
+#	Click the "Add User Chart (Self)" grid button
+	Click @the "Add User" grid button@xpath='//div[@class="wcdv_grid"]//div[contains(@id,"scriptlet") and not(contains(@id, "tt")) and contains(@style, "inline-block")]//button[@type="button" and not(@disabled)][contains(., "Add User Chart")]'
+	Verify exists "Added:" Text
+
+Begin "Adding a new Provider"
+	Open the sidemenu
+	Click the "Reports" sidemenu entry
+	Click the "Utilization" charttab
+	Click the 2nd "Make Provider Chart For Users" link
+	@wait@driver.pause(5)
+	Click the "Search" button
+	Verify exists "nurse2" text
+	Check the "nurse2" grid checkbox
+	Wait for the MakeProviderChartForUsers grid
+# Ticket 120461 grid buttons
+#	Click the "Add Provider Chart" grid button
+	Click @the "Add Provider" grid button@xpath='//div[@class="wcdv_grid"]//div[contains(@id,"scriptlet") and not(contains(@id, "tt")) and contains(@style, "inline-block")]//button[@type="button" and not(@disabled)][contains(., "Add Provider Chart")]'
+	Click the Save button
+	Verify exists "Added:" Text

@@ -1,0 +1,13 @@
+Begin Server Side Javascript System Report Test
+	Navigate ?f=layout&module=Test&name=ScriptedReports&pat_id=18
+	# Check that all the labels were put out just so we know that nothing crashed between evaluations
+	Verify exists "ScriptTest_NoParams length" text
+	Verify exists "ScriptTest_NoParams first row id" text
+	Verify exists "ScriptTest_NoParams first row symptom" text
+	Verify exists "ScriptTest_WithParams length" text
+	Verify exists "ScriptTest_WithParams first row name" text
+	Verify exists "ScriptTest_WithParams first row severity" text
+	Verify exists "ScriptTest_WithParams first row pat_id" text
+	# We should see at least one Pass and no Fails
+	Verify exists "Pass" text
+	Verify notexists "Fail" text

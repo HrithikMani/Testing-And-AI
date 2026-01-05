@@ -1,0 +1,22 @@
+Begin Add a New Admin Tab
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Open "System" charttab
+	Open "Menu Editor" charttab subtab
+	Click the "Add Menu Item" link
+	Select "admin" from the "Module" dropdown
+	Type "MenuEditorTest" into the "Name" field
+	Type "?f=admin&t=menueditor&tabselect=MenuEditorTest" into the "URL" field
+	Type "MenuEditorTest Description" into the "Description" field
+	Select "System" from the "Parent Tab" dropdown
+	Select "Last" from the "insert_op" dropdown
+	Click the "show_in_wc" checkbox
+	Click the 3rd "Add" button
+
+Begin Confirm that it worked
+	CLick the "Admin" charttab
+	Verify exists "MenuEditorTest Description" text
+	Open "System" charttab
+	Open "MenuEditorTest" charttab subtab
+	Verify exists "Tabs" listview name
+

@@ -1,0 +1,11 @@
+"""
+Pod used to interact with elements within the security role editor
+
+- "securityrole reason" queries for the Reason textarea
+
+Usage examples:
+	Type "Reason" in the securityrole Reason
+
+"""
+reason://td/textarea[@name="sec_role_comment"]
+

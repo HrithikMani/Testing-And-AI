@@ -1,0 +1,46 @@
+"""
+    Testing the new E-Sign Tab
+    @owners: manorman
+    @filedeps: system/layouts/Inbox/*.html system/reports/InboxESign.sql
+"""
+
+@Set Use DataVis in E-Sign setting to Yes@driver.wcutils.SetPreference('{selenium_username}', 'E-Chart', 'Esign', 'Use DataVis in E-Sign', 1)
+
+Begin "Test Without Proxy Signing Permissions"
+	@Set E-Sign,Proxy Signing permission to No@driver.miedb.dbExec("INSERT INTO security_exception (user_id, module_name, category_name, security_value) VALUES ('8', 'E-Sign', 'Proxy Signing', '0') ON DUPLICATE KEY UPDATE security_value='0'")
+	Open the sidemenu
+	Click the "E-Sign" link
+	Click the "DataVis View" button
+	Verify !exists "Search" button
+	Verify exists "7 records" text
+	Click the 1st "Radiology Report" grid checkbox
+	Click the "Ultrasound Report" grid checkbox
+	Click the "Review Selected E-Sign" button
+	Wait for ajax 
+	Verify exists 2nd "Leave Pending" text
+	Click the "Mark All as Signed" button
+	Click the "Sign Marked Documents" button
+	Wait for ajax
+	Verify !exists @3rd Radiology Report in the Pending Documents DV@xpath='(//div[@id="ibesignGrid"]/div[@class="wcdv_grid_content"]/div[@class="wcdv_grid_table"]//td[contains(@class, "wcdv_pivot_colval_boundary")][contains(., "Radiology Report")])[3]'
+	Verify !exists @Ultrasound Report in the Pending Documents DV@xpath='(//div[@id="ibesignGrid"]/div[@class="wcdv_grid_content"]/div[@class="wcdv_grid_table"]//td[contains(@class, "wcdv_pivot_colval_boundary")][contains(., "Ultrasound Report")])'
+	Verify exists @Radiology Report in the Last Reviewed Documents DV@xpath='(//div[@id="ibsignGrid"]/div[@class="wcdv_grid_content"]/div[@class="wcdv_grid_table"]//td[contains(@class, "wcdv_pivot_colval_boundary")][contains(., "Radiology Report")])'
+	Verify exists @Ultrasound Report in the Last Reviewed Documents DV@xpath='(//div[@id="ibsignGrid"]/div[@class="wcdv_grid_content"]/div[@class="wcdv_grid_table"]//td[contains(@class, "wcdv_pivot_colval_boundary")][contains(., "Ultrasound Report")])'
+
+Begin "Test with Proxy Signing Permissions"
+	@Set E-Sign,Proxy Signing permission to No@driver.miedb.dbExec("INSERT INTO security_exception (user_id, module_name, category_name, security_value) VALUES ('8', 'E-Sign', 'Proxy Signing', '1') ON DUPLICATE KEY UPDATE security_value='1'")
+	Open the sidemenu
+	Click the "E-Sign" link
+	Verify exists "Search" button
+	Enter "Patel, Ashish" into the proxy_sign_for_ac autocomplete
+	Click the "Search" Button
+	Verify exists "3 records" text
+	Click the "Work Status Report" grid checkbox
+	Click the "Visit" grid checkbox
+	Click the "Review Selected E-Sign" button
+	Wait for ajax 
+	Verify exists 2nd "Leave Pending" text
+	Click the "Mark All as Signed" button
+	Click the "Sign Marked Documents" button
+	Wait for ajax
+	Verify !exists @Work Status Report in the Pending Documents DV@xpath='(//div[@id="ibesignGrid"]/div[@class="wcdv_grid_content"]/div[@class="wcdv_grid_table"]//td[contains(@class, "wcdv_pivot_colval_boundary")][contains(., "Work Status Report")])'
+	Verify !exists @Visit in the Pending Documents DV@xpath='(//div[@id="ibesignGrid"]/div[@class="wcdv_grid_content"]/div[@class="wcdv_grid_table"]//td[contains(@class, "wcdv_pivot_colval_boundary")][contains(., "Ultrasound Report")])'

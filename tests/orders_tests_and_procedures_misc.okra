@@ -1,0 +1,18 @@
+Open the sidemenu
+Click the "E-Chart" link
+Type "Hart" in the "sstring" input
+Click the "Search" button
+Click the "TEST-10019" link
+Click the "Add Visit" link
+Open the "Encounter" dynamicsection
+Enter "Selenium, Selen" in the provider_chart_ac_input autocomplete
+Close the "Encounter" dynamicsection
+@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+Unmask dynamicsection
+Open the "Tests & procedures" dynamicsection
+Click the "In House Testing Pick List" icon
+@Wait for the picklist window@driver.wcutils.waitFor(lambda d: d.getElement(xpath="//div[@id='In House Testing_picklists_orderwin0']"))
+Select "Questionnaires" from the "next_set_name" dropdown
+Click the "Animal Allergy Questionnaire" checkbox
+Click the "Add Procedures" button
+Verify exists the "Animal Allergy Questionnaire" dynamicsection

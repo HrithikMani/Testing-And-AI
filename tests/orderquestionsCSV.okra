@@ -1,0 +1,121 @@
+Begin Verify Default Order Compendium Values
+	Navigate "?f=admin&s=wc_data_import"
+	Select "Order Compendium CSV API" in the "opp" dropdown
+	Click the "Go" button
+	Verify "exists" "Order name" text
+	Verify "exists" "CPSA" text
+	Verify "exists" "Order detail description" text
+	Verify "exists" "Complexed PSA (cPSA)" text
+	Verify "exists" "Order code" text
+	Verify "exists" "LAB5725" text
+	Verify "exists" "LOINC code" text
+	Verify "exists" "33667-7" text
+	Verify "exists" "Billing code" text
+	Verify "exists" "84153" text
+	Verify "exists" "Collection instructions" text
+	Verify "exists" "Container: Purple top tube, Storage: Room temperature" text
+	Verify "exists" "Patient instructions" text
+	Verify "exists" "Patient fasting not required" text
+	Verify "exists" "N" text
+	Navigate "?f=admin&s=wc_data_import&opp=OrderItems&template=1"
+	@@@Find and verify the contents of order_list.csv
+		import os
+		import csv
+
+		# Rows to be compared
+		orderListBaseline = [
+			['Order name', 'Order detail description', 'Order code', 'LOINC code', 'Billing code', 'Collection instructions', 'Patient instructions', 'Force separate order'],
+			['-------', '-------', '-------', '-------', '-------', '-------', '-------', '-------'],
+			['CPSA', 'Complexed PSA (cPSA)', 'LAB5725', '33667-7', '84153', 'Container: Purple top tube, Storage: Room temperature', 'Patient fasting not required', 'N']
+		]
+
+		# /home/quality/Downloads
+		downloadsDir = os.path.expanduser(os.path.join(os.getenv('HOME'), 'Downloads'))
+
+		if os.path.exists(downloadsDir):
+			files = os.listdir(downloadsDir)
+			if files and 'order_list.csv' in files:
+				with open(os.path.join(downloadsDir, 'order_list.csv')) as orderList:
+					orderListData = csv.reader(orderList, delimiter=',')
+					for i, row in enumerate(orderListData):
+						# Compare row values
+						if row != orderListBaseline[i]:
+							driver.reportCommandStatus('Row ' + str(i) + ' of order_list.csv did not match baseline data.\nBaseline: ' + str(orderListBaseline[i]) + '\nTest: ' + str(row), '', False, '', '')
+			else:
+				driver.reportCommandStatus('File order_list.csv not found in ' + downloadsDir, '', False, '', '')
+	@@@
+Begin Upload Order Compendium CSV
+	@Focus on the upload UI@driver.getWebDriver().switch_to.frame("di_frame_OrderItems")
+	Type "/home/quality/Downloads/order_list.csv" into the "csv_file" input
+	Select "L" in the "orl_type" dropdown
+	Click the "Upload" button
+	Verify "exists" "Successfully imported file order_list.csv!" text
+	@Focus on the main document@driver.getWebDriver().switch_to.default_content()
+	Verify "exists" "Processing Patient (1 of 1)..." text
+Begin Verify Default Order Questions
+	Select "Order Questions CSV API" in the "opp" dropdown
+	Click the "Go" button
+	Verify "exists" "Order code" text
+	Verify "exists" "LAB5725" text
+	Verify "exists" "Question code" text
+	Verify "exists" "XN1" text
+	Verify "exists" "Question" text
+	Verify "exists" "Type of Urine Collection" text
+	Verify "exists" "Description" text
+	Verify "exists" "Urine Collection Type" text
+	Verify "exists" "Input Type" text
+	Verify "exists" "R" text
+	Verify "exists" "Answer List" text
+	Verify "exists" "24 Hour|Random Specimen" text
+	Verify "exists" "Asking display order" text
+	Verify "exists" "1" text
+	Navigate "?f=admin&s=wc_data_import&opp=OrderQuestions&template=1"
+	@@@Find and verify the contents of order_questions.csv
+		import os
+		import csv
+
+		# Rows to be compared
+		orderQuestionsBaseline = [
+			['Order code', 'Question code', 'Question', 'Description', 'Input Type', 'Answer List', 'Asking display order'],
+			['-------', '-------', '-------', '-------', '-------', '-------', '-------'],
+			['LAB5725', 'XN1', 'Type of Urine Collection', 'Urine Collection Type', 'R', '24 Hour|Random Specimen', '1']
+		]
+
+		# /home/quality/Downloads
+		downloadsDir = os.path.expanduser(os.path.join(os.getenv('HOME'), 'Downloads'))
+
+		if os.path.exists(downloadsDir):
+			files = os.listdir(downloadsDir)
+			if files and 'order_questions.csv' in files:
+				with open(os.path.join(downloadsDir, 'order_questions.csv')) as orderQuestions:
+					orderQuestionsData = csv.reader(orderQuestions, delimiter=',')
+					# Compare every row
+					for i, row in enumerate(orderQuestionsData):
+						if row != orderQuestionsBaseline[i]:
+							driver.reportCommandStatus('Row ' + str(i) + ' of order_questions.csv did not match baseline data.\nBaseline: ' + str(orderQuestionsBaseline[i]) + '\nTest: ' + str(row), '', False, '', '')
+			else:
+				driver.reportCommandStatus('File order_questions.csv not found in ' + downloadsDir, '', False, '', '')
+	@@@
+Begin Upload Order Questions CSV
+	@Focus on the upload UI@driver.getWebDriver().switch_to.frame("di_frame_OrderQuestions")
+	Type "/home/quality/Downloads/order_questions.csv" into the "csv_file" input
+	Select "L" in the "orl_type" dropdown
+	Click the "Upload" button
+	Verify "exists" "Successfully imported file order_questions.csv!" text
+	@Focus on the main document@driver.getWebDriver().switch_to.default_content()
+	Verify "exists" "Processing Patient (1 of 1)..." text
+Begin order item
+	Navigate "?f=orders&s=order_ques_mgr&t=Order+Questions+Manager&tabmodule=admin&tabselect=Orders&ts_caption=Orders-Questions+Manager"
+	Enter "LAB5725" into the "order_desc" autocomplete
+	Click the "Search" button
+	Verify "exists" "Type of Urine Collection|24 Hour=24 Hour|Random Specimen=Random Specimen" text in the listedit textfield
+	Verify "exists" "Radio" text in the listedit textfield
+	Verify "exists" "1" text in the listedit textfield
+	Enter "Are you an Aqu" into the "order_questions_ac" autocomplete
+	Type "3" into the "le_orderquestions_oqi_process_order_value" input
+	Click the "Add" button
+	Verify "exists" "Are you an Aquarius?" text in the listedit textfield
+	Verify "exists" "3" text in the listedit textfield
+	Click the "Submit Changes" button
+	Verify exists "Urine Collection Type" text in the listedit textfield
+	Verify exists "Are you an Aqauarius" text in the listedit textfield

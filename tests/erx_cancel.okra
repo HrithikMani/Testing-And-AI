@@ -1,0 +1,53 @@
+@Set the Cross-Browser EPCS to Mobile@driver.wcutils.SetPreference('physician', 'E-Chart', 'Meds/Allergies', 'Cross-Browser EPCS', 2)
+@Set Surescripts Staging URL@driver.miedb.dbExec('UPDATE system_settings SET value="https://zeus-qa.med-web.com/ssdms/interface.cgi" WHERE item="SureScripts Staging URL"')
+Begin Log in as Patel, Ashish
+	Open the sidemenu
+	Click the Logout sidemenu entry
+	@Setup WCTestSession for physician@driver.wcutils.insertWCTSession('physician')
+Begin "Open E-Meds tab for Perseus"
+	Navigate "?f=chart&s=pat&t=Medical+Record%3AAllergies%2FMedications&v=rxlist&pat_id=18"
+Begin "Send a script to a pharmacy that allows Cancel"
+	Click the Prescribe link
+	Enter levothyroxine in the qp_acval0 autocomplete
+	Enter "capsule 150mcg" in the qp_formacval0 autocomplete
+	Type "1 bid" in @id=qp_sig0
+	Type 30d in @id=qp_duration0
+	Type 60 in @id=qp_total_quantity0
+	Type 0 in @id=qp_refills0
+	Select "Patel, Ashish" from @id=qp_doctor_id0
+	Close the "Warning for levothyroxine" popup
+	Click the 1st Prescribe button
+	Verify exists "levothyroxine 150 mcg capsule" text
+Begin "Transmit the E-prescription"
+	Click the Submit button
+	@Switch to "Print Chart" Window@driver.switchToPopup()
+	Enter "Bannockburn Pharmacy" in the Pharmacy autocomplete
+	Click the "-- Fax/Transmit --" button
+	Verify exists "All scripts sent successfully." text
+	@Close this window@driver.closePopup()
+Begin "Cancel prescription"
+	Verify exists "E-sent: 02-02-2023" text
+	Click the @xpath='//span[contains(@class, "esent-link")]'
+	Click the "Cancel Prescription" button
+	Click the "Yes" button
+Begin "Send a script to a pharmacy that disallows Cancel"
+	Click the Prescribe link
+	Enter "Prozac" in the qp_acval0 autocomplete
+	Enter "capsule 40mg" in the qp_formacval0 autocomplete
+	Type "1 qd" in @id=qp_sig0
+	Type 30d in @id=qp_duration0
+	Type 1 in @id=qp_refills0
+	Select "Patel, Ashish" from @id=qp_doctor_id0
+	Close the "Warning for Prozac" popup
+	Click the 1st Prescribe button
+	Verify exists "Prozac 40 mg capsule" text
+Begin "Transmit the E-prescription"
+	Click the Submit button
+	@Switch to "Print Chart" Window@driver.switchToPopup()
+	Enter "QAINTERFACE" in the Pharmacy autocomplete
+	Click the "-- Fax/Transmit --" button
+	Verify exists "All scripts sent successfully." text
+	@Close this window@driver.closePopup()
+Begin "Cancel prescription"
+	Click the @xpath='(//span[contains(@class, "esent-link")])[2]'
+	Verify exists "Cannot be canceled" text

@@ -1,0 +1,82 @@
+Begin "Modify Active Patients Clause"
+	Navigate "?f=admin&s=system_settings"
+	Type "Active Patients Clause" in the input
+	Click the "Go" button
+	Wait for page
+	Verify exists "Edit" table link
+	Click the "Edit" table link
+	Wait for page
+	Type "AND p.is_tmp=0 AND p.death_indicator=0 AND p.active='1'" in the "Value" input
+	Type "active_patient_check.okra" in the "Reason" input
+	Click the "Change" button
+	Verify exists "Successfully modified system setting with module (WebChart), section (Health Surveillance) and item (Active Patients Clause)" text
+
+Begin "Active Patient Check"
+	Navigate "?f=layout&module=HSP&name=PanelActionList"
+	Click the "Active Patient Check" link
+	Enter "Hart, William" into the "hspat_patac_input" autocomplete
+	Verify exists "Active" text
+
+Begin "Check that bad SQL in Active Patients Clause does not expire panel memberships"
+	Begin "First Add Implicit Rule to Animal Handler Panel"
+		Navigate "?f=admin&s=panels&opp=panel_membership&tabmodule=admin&tabselect=&panel_id=ANIMALHAND"
+		Click the "Add Membership Rule" link
+		Type "p.pat_id=18" in the "Additional Criteria" input
+		Click the "Submit" button
+		Verify exists "Implicit members after next evaluation: 1" text
+		Click the "Re-Evaluate Membership" link
+		@Switch Windows@driver.switchToPopup()
+		Verify exists "Panel Memberships Evaluation (ANIMALHAND): Success" text
+		Click the "Close" button
+		@Switch to main window@driver.returnToMainWindow()
+	Begin "Insert Error in the Active Patients Clause"
+		Navigate "?f=admin&s=system_settings"
+		Type "Active Patients Clause" in the input
+		Click the "Go" button
+		Wait for page
+		Verify exists "Edit" table link
+		Click the "Edit" table link
+		Wait for page
+		Type "AND p.is_tmp=0 AND p.death_indicator=0 AND p.active=" in the "Value" input
+		Type "active_patient_check.okra" in the "Reason" input
+		Click the "Change" button
+	Begin "Verify Broken Active Patient Check"
+		Navigate "?f=layout&module=HSP&name=PanelActionList"
+		Click the "Active Patient Check" link
+		Enter "Hart, William" into the "hspat_patac_input" autocomplete
+		Verify exists "SQL Error in 'Active Patients Clause' setting" text
+	Begin "Reevaluate Panel Membership While Active Patients Clause is Broken"
+		Navigate "?f=admin&s=panels&opp=panel_membership&tabmodule=admin&tabselect=&panel_id=ANIMALHAND"
+		Click the "Re-Evaluate Membership" link
+		@Switch Windows@driver.switchToPopup()
+		Verify exists "Panel Memberships Evaluation (ANIMALHAND): Error" text
+		Click the "Close" button
+		@Switch to main window@driver.returnToMainWindow()
+	Begin "Fix Error in the Active Patients Clause"
+		Navigate "?f=admin&s=system_settings"
+		Type "Active Patients Clause" in the input
+		Click the "Go" button
+		Wait for page
+		Verify exists "Edit" table link
+		Click the "Edit" table link
+		Wait for page
+		Type "AND p.is_tmp=0 AND p.death_indicator=0 AND p.active=1" in the "Value" input
+		Type "active_patient_check.okra" in the "Reason" input
+		Click the "Change" button
+	Begin "Verify Active Patient Check is Fixed"
+		Navigate "?f=layout&module=HSP&name=PanelActionList"
+		Click the "Active Patient Check" link
+		Enter "Hart, William" into the "hspat_patac_input" autocomplete
+		Verify exists "Active" text
+	Begin "Verify Panel Memberships Did Not Actually Expire"
+		Navigate "?f=admin&s=panels&opp=panel_membership&panel_id=ANIMALHAND"
+		Click the "Member Report" link
+		Select "ANIMALHAND" from the "Panel" dropdown
+		Click the "Search" button
+		Verify exists @Hart End Date cell is empty@xpath='//td[contains(@class, "member__report_Last_20Name_cell")][contains(., "Hart, William")]/following-sibling::td[contains(@class, "member__report_End_20Date_cell")][contains(., "")]'
+# Ignore intentional errors
+@@@
+driver.wcErrorLog.ignore("*AND p.is_tmp=0 AND p.death_indicator=0 AND p.active=*")
+driver.wcErrorLog.ignore("*AND p.is_tmp=0 AND p.death_indicator=0 AND p.active=*")
+driver.wcErrorLog.ignore("*Implicit membership query failed:*")
+@@@

@@ -1,0 +1,75 @@
+Begin "Verify No Access"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Interface" link
+	Click the "HL7 Config" link
+	Click the "Create Config" button
+	Verify exists "Your security role does not allow you to edit system layouts" text
+	Click the close icon
+Begin "Gain Access"
+	@Set Manage Layouts to Yes@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=1 WHERE security_role_id=1 AND module_name='Control' AND category_name='Manage Layouts';")
+	@Set Manage System Layouts to Yes@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=1 WHERE security_role_id=1 AND module_name='Control' AND category_name='Manage System Layouts';")
+	@Set Upgrade Webchart to Yes@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=1 WHERE security_role_id=1 AND module_name='Control' AND category_name='Upgrade Webchart';")
+	Navigate "?f=wcversion&s=upgrade&opp=sec"
+	Click the "Reevaluate Security Permissions" link
+	Verify exists "COMPLETE" text
+Begin "Create Config"
+	Navigate "?f=layout&module=Interface+Setup&name=ConfEditor&tabmodule=admin&tabmodule=admin"
+	Click the "Create Config" button
+	Type "Test_Conf" into the "confName" input
+	Type Test_Conf into the NAME_input input
+	Type "selenium@med-web.com" into the "EMAIL_NOTIFY_input" input
+	Type "default.hl7" into the "MESSAGE_LOG_input" input
+	Type "default.log" into the "ERROR_LOG_input" input
+	Type "default.err" into the "MESSAGE_ERR_LOG_input" input	
+	@Hover over the BASE_DIR input@driver.mouseOver(xpath='//input[@id="BASE_DIR_input"]')
+	Click the "BASE_DIR_delBtn" icon
+	@Hover over the MESSAGE_ERR_LOG input@driver.mouseOver(xpath='//input[@id="MESSAGE_ERR_LOG_input"]')
+	Click the "MESSAGE_ERR_LOG_infoBtn" icon
+	Verify exists "Message ERROR log file, if a message could not be processed" text
+	Verify exists "While not strictly required, this should be set, otherwise there is no way to store messages that errored." text
+	Click the 2nd close icon
+	#Click the @2nd Close button@xpath='(//button[@class="xclose"])[2]'
+	Click the first "Add new item" button
+	Select "Base Directory" from the "DIRECTORIES_addSelect" dropdown
+	Verify exists "Base Directory" text
+	Type "/dir/" into the BASE_DIR_input input
+	Select "On" from the DOC_TYPES_input dropdown
+	Select "On" from the DOC_LOCATIONS_input dropdown
+	Select "On" from the PAT_CLASS_input dropdown
+	Select "Master search" from the MASTER_input dropdown
+	Click the "OPTIONS_input" input
+	Verify "checked=true" "multichoice_1" input
+	Verify "checked=false" "multichoice_2" input
+	Verify "checked=true" "multichoice_4" input
+	Click the "multichoice_-1" input
+	Click the 2nd close icon
+	Verify value=-1 OPTIONS_input input
+	Click the Save button
+Begin "Verify Saved Conf"
+	Click the "Test_Conf" link
+	@@@Switch to popup 
+	webdriver = driver.getWebDriver()
+	webdriver.switch_to.window(webdriver.window_handles[1])
+	@@@
+	Verify exists "Properties for Layout (hl7, Test_Conf)" text
+	Verify exists '<interface type="hl7">\n\t<profile name="EMAIL">\n\t\t<item name="EMAIL_SERVER" value="mail.med-web.com"/>\n\t\t<item name="EMAIL_NOTIFY" value="selenium@med-web.com"/>\n\t</profile>\n\t<profile name="PRACTICE">\n\t\t<item name="PRACTICE" value="Selenium"/>\n\t</profile>\n\t<profile name="DIRECTORIES">\n\t\t<item name="MESSAGE_LOG" value="default.hl7"/>\n\t\t<item name="ERROR_LOG" value="default.log"/>\n\t\t<item name="MESSAGE_ERR_LOG" value="default.err"/>\n\t\t<item name="BASE_DIR" value="/dir/"/>\n\t</profile>\n\t<profile name="COMMAND_LINE">\n\t\t<item name="x" value="3"/>\n\t\t<item name="P" value="1"/>\n\t\t<item name="Q" value="1"/>\n\t\t<item name="r" value="1"/>\n\t\t<item name="N" value="1"/>\n\t</profile>\n\t<profile name="AUTHENTICATION">\n\t\t<item name="REQUIRE_SESSION" value="1"/>\n\t</profile>\n\t<profile name="TRANSLATE">\n\t\t<item name="DOC_TYPES" value="1"/>\n\t\t<item name="DOC_LOCATIONS" value="1"/>\n\t\t<item name="APT_TYPES" value="0"/>\n\t\t<item name="APT_ROOMS" value="0"/>\n\t\t<item name="APT_LOCATIONS" value="0"/>\n\t\t<item name="INS_COMPANY_NAME" value="0"/>\n\t\t<item name="PAT_EXT_FIELD" value="0"/>\n\t\t<item name="OBS_CODES" value="1"/>\n\t\t<item name="LAB_TYPES" value="0"/>\n\t\t<item name="PAT_CLASS" value="1"/>\n\t</profile>\n\t<profile name="INTERFACE">\n\t\t<item name="MASTER" value="2"/>\n\t\t<item name="ALLOW_IS_TMP" value="1"/>\n\t\t<item name="NAME" value="Test_Conf"/>\n\t\t<item name="RULES_EXT" value=".v25"/>\n\t\t<item name="PID_FILE" value="./hl7d.pid"/>\n\t\t<item name="FORMAT_XTN_USE_PHONE2" value="0"/>\n\t\t<item name="TXA_DOC_TYPE" value="0"/>\n\t\t<item name="TXA_FIGURE_SERVICE_DATE_OUT" value="1"/>\n\t\t<item name="XCN_REMOVE_LT_ALPHA_FROM_XID" value="0"/>\n\t\t<item name="SKIP_PATIENT_REVISIONS" value="0"/>\n\t\t<item name="BIDIRECTIONAL_INTERFACE" value="1"/>\n\t\t<item name="XCN_NPI_VERIFY_NAME" value="0"/>\n\t\t<item name="LAB_TYPE_BY_OBR4" value="1"/>\n\t\t<item name="LOOKUP_PATIENT_BY_SPECIMEN_ID_IN_OBR2" value=""/>\n\t</profile>\n\t<profile name="INTERNAL_PMR">\n\t\t<item name="PARTITION" value=""/>\n\t\t<item name="FIELD" value="0"/>\n\t\t<item name="TRIM_LEADING_ALPHA" value="0"/>\n\t\t<item name="ADD_LEADING_ZEROS" value="0"/>\n\t\t<item name="ADD_TRAILING_ZEROS" value="0"/>\n\t</profile>\n\t<profile name="EXTERNAL_PMR">\n\t\t<item name="PARTITION" value="DEFAULT"/>\n\t\t<item name="FIELD" value="2"/>\n\t\t<item name="TRIM_LEADING_ALPHA" value="0"/>\n\t\t<item name="ADD_LEADING_ZEROS" value="0"/>\n\t\t<item name="ADD_TRAILING_ZEROS" value="0"/>\n\t</profile>\n\t<profile name="ATTENDING_USER">\n\t\t<item name="DEPT" value="Physicians"/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="-1"/>\n\t</profile>\n\t<profile name="REFERRING_USER">\n\t\t<item name="DEPT" value="Physicians"/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="5"/>\n\t</profile>\n\t<profile name="ORC_ORDERING_USER">\n\t\t<item name="DEPT" value="Originator"/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="5"/>\n\t</profile>\n\t<profile name="OBX_OBSERVER_USER">\n\t\t<item name="DEPT" value="Lab Facilities"/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="5"/>\n\t</profile>\n\t<profile name="ADMITTING_USER">\n\t\t<item name="DEPT" value=""/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="-1"/>\n\t</profile>\n\t<profile name="SCHEDULED_USER">\n\t\t<item name="DEPT" value="Physicians"/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="-1"/>\n\t</profile>\n\t<profile name="AUTHENTICATOR_USER">\n\t\t<item name="DEPT" value="Physicians"/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="5"/>\n\t</profile>\n\t<profile name="ORIGINATOR_USER">\n\t\t<item name="DEPT" value="Originator"/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="5"/>\n\t</profile>\n\t<profile name="TRANSCRIBER_USER">\n\t\t<item name="DEPT" value="Physicians"/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="5"/>\n\t</profile>\n\t<profile name="CC_USER">\n\t\t<item name="DEPT" value=""/>\n\t\t<item name="STATUS" value="2"/>\n\t\t<item name="PASSWD" value=""/>\n\t\t<item name="OPTIONS" value="-1"/>\n\t</profile>\n</interface>' text
+Begin "Edit Config"
+	@@@Switch back to editor
+	webdriver = driver.getWebDriver()
+	webdriver.switch_to.window(webdriver.window_handles[0])
+	@@@
+	Click the "beaumont" grid checkbox
+	Click the "Edit" grid button
+	Verify "value=beaumont" @id="confName"
+	Verify "value=.v25" @id="RULES_EXT_input"
+	Verify "value=5" @id=OPTIONS_input
+	Click the close icon
+Begin "Duplicate Config"
+	Click the "medisys" grid checkbox
+	Click the "Duplicate" grid button
+	Verify "value=" @id=confName
+	Verify "value=" @id=NAME_input
+	Type "med_dup" into the "confName" input
+	Click the Save button
+	Verify exists med_dup link

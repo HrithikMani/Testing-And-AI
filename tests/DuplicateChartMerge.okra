@@ -1,0 +1,30 @@
+@@@
+baseurl = driver.driverOptions.baseurl
+webchart_url = baseurl + '/webchart.cgi'
+query = (
+	f"INSERT IGNORE INTO system_settings (module,section,item,user_id,reason,value) "
+	f"VALUES ('Webchart','Interface','Base URL',12,'test','{webchart_url}')"
+)
+driver.miedb.dbExec(query)
+@@@
+
+Navigate "?f=layout&module=SystemReport&name=DuplicateChartMerge"
+Select "9" from the "Minimum Rating:" dropdown
+Click the "Search" button
+Wait for ajax
+Verify exists "2 records" text
+Click the "Additional Details" link
+Verify exists "Count of Merged From" text
+Close the popup
+Select the 1st grid checkbox
+Click the "Merge" button
+Wait for ajax
+Click the "Select" button
+Click the "Yes" button
+Wait for ajax
+Verify exists "Success: pat_id" text
+Verify exists "Merge process completed" text
+Click @xpath="//button[@class='xclose']"
+@driver.closeAlert()
+wait for ajax
+Verify exists "0 records" text

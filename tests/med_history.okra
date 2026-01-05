@@ -1,0 +1,39 @@
+Begin "Setup Physician"
+	Open the sidemenu
+	Click the "Control Panel" link
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	#Click the 1st Physicians listview link
+	# Click the 1st physician listview link
+	Click the selenium listview link
+	@Switch Windows@driver.switchToPopup()
+	Click the "Edit User" link
+	# Type PatelPhys into the "Last Name" field
+	Select "Physicians" from the "realm" dropdown
+	Type 5883325743 in the "National Provider Id (NPI)" field
+	Click the "Submit" button
+	Verify exists "User (selenium) was updated successfully" text
+	@Switch to main window@driver.returnToMainWindow()
+Begin "Set Attending Physician"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Type "Abingdon" in the sstring input
+	Click the "Search" button
+	Click the "Contacts" icon manageinformation
+	Enter "Selenium, Selenium" into the le_UserPatientsuser__name__display autocomplete
+	Select "Attending Physician" from the "le_UserPatientsuser_up_role_id_value" dropdown
+	Click the 1st Add button
+	Click the Submit button
+	Verify exists "Attending:" text
+Begin "Send Medication History Request"
+	Click the "Medical Record" charttab
+	Click the "Allergies/Medications" charttab subtab
+	Click the "Med History" link
+	@Wait@driver.wcutils.waitForAJAX(30)
+	Click the "Get History" button
+	Verify exists "Not sending request during Test Session" text
+Begin "Validate Medication History XML"
+	Navigate "?f=layout&module=E-Prescribe&name=MedHistoryTest&pat_id=84&start_date=2019-01-01&end_date=2019-12-31&DEBUG"
+	@Validate History Message@driver.saveSourceHTML('med_history_request.html', source=driver.getElement(id='med_history_msg').text)

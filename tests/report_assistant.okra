@@ -1,0 +1,68 @@
+# If these tests start to fail because the LLM isn't returning good queries anymore,
+# adjust the prompt in the layout [ AI / ReportContext ] until it works again.
+
+Begin "Login as Dave"
+	Open the sidemenu
+	Click the Logout sidemenu entry
+	@Dave user WCTestSession@driver.wcutils.insertWCTSession('dave')
+Begin "Observations report"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	# Gotta click the 2nd one because the 1st one is in the menu and I'm not messing with the menu right now.
+	Click the 2nd "System Report" link
+	Click the "Add Report" link
+	Verify exists chatbot open_icon
+	Click the chatbot open_icon
+	Verify exists "Enterprise Health AI Assistant" popup
+	Verify exists "Hi, how can I help you?" popup text
+	# This wait is critical; otherwise you can get an error message saying: "Missing websocketKey"
+	@Wait for response to finish completely@driver.pause(2)
+	# We can't put out all the text at once due to an issue where the text is used as a filename.
+	Type "Write a report to show the MRNs, first name, last name, date of birth, and the values" into the chatbot user_input
+	Type "! of the most recent systolic and diastolic blood pressure observations in separate columns" into the chatbot user_input
+	Type "! for all patients who have such a blood pressure observation. The systolic observation is" into the chatbot user_input
+	Type "! called “Systolic BP” and the diastolic observation is called “Diastolic BP.”" into the chatbot user_input
+	Click the chatbot send_button
+	@Wait for WC Assistant action buttons@driver.wcutils.waitForEle(xpath='//div[@class="wcassistant-action-btn"]', expected=True, timeout=120, comments='The action buttons must be present to indicate that WC Assistant has finished the response')
+	Verify exists ".wc_partition" popup text
+	Verify exists ".mrnumber" popup text
+	Verify exists ".first_name" popup text
+	Verify exists ".last_name" popup text
+	Verify exists ".birth_date" popup text
+	Verify exists ".obs_result" popup text
+	Verify exists ".obs_status" popup text
+	Verify exists ".obs_code" popup text
+	Verify exists "patients" popup text
+	Verify exists "observations_current" popup text
+	Verify exists "observation_codes" popup text
+	Verify exists "observations" popup text
+Begin "Encounters report"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	# Gotta click the 2nd one because the 1st one is in the menu and I'm not messing with the menu right now.
+	Click the 2nd "System Report" link
+	Click the "Add Report" link
+	Verify exists chatbot open_icon
+	Click the chatbot open_icon
+	Verify exists "Enterprise Health AI Assistant" popup
+	Verify exists "Hi, how can I help you?" popup text
+	# This wait is critical; otherwise you can get an error message saying: "Missing websocketKey"
+	@Wait for response to finish completely@driver.pause(2)
+	# We can't put out all the text at once due to an issue where the text is used as a filename.
+	Type "Write a report to show the MRNs, first name, last name, date of birth, the encounter ID," into the chatbot user_input
+	Type "! the encounter date of service, and the encounter visit type for all patients that have an" into the chatbot user_input
+	Type "! open encounter." into the chatbot user_input
+	Click the chatbot send_button
+	@Wait for WC Assistant action buttons@driver.wcutils.waitForEle(xpath='//div[@class="wcassistant-action-btn"]', expected=True, timeout=120, comments='The action buttons must be present to indicate that WC Assistant has finished the response')
+	Verify exists ".wc_partition" popup text
+	Verify exists ".mrnumber" popup text
+	Verify exists ".first_name" popup text
+	Verify exists ".last_name" popup text
+	Verify exists ".birth_date" popup text
+	Verify exists ".encounter_id" popup text
+	Verify exists ".serv_date" popup text
+	Verify exists ".closed" popup text
+	Verify exists ".deleted" popup text
+	Verify exists "patients" popup text
+	Verify exists "encounters" popup text
+	Verify exists "encounter_visit_types" popup text

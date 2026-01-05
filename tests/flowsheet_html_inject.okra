@@ -1,0 +1,437 @@
+# FIXME: Change [[Of'Bad'Characters]] to [[Of"Bad"Characters]] after {OKRA_TEXT_CLS} can correctly
+# handle embedded double quotes in autocomplete pod.
+
+# FIXME: Change [[OfBadCharactersInIt]] to [[Of"Bad"Characters'In'It]] for the order name after the
+# dynamicitem pod is updated to fully escape embedded single and double quotes.
+
+# FIXME: Change [[OfBadCharactersInIt]] to [[Of"Bad"Characters'In'It]] for the obs names after the
+# autocomplete pod is updated to fully escape embedded single and double quotes.
+
+# FIXME: Change [[<b>Alpha</b>&mdash;;,='']] to [[<b>Alpha</b>&mdash;;,=\"''\"]] after verify text
+# has been updated to fully escape double quotes in the XPath it uses.
+
+Begin "Setup Observations"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Observation Codes" charttab subtab
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text_Large" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_Large" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	# FIXME: These discrete values need to have the double-quotes added back in when the
+	# autocomplete pod and {OKRA_TEXT_CLS} can handle them.
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_DiscreteList" in the "obs_name" input
+	Type "<b>Alpha</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "1" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Bravo</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "2" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Charlie</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "3" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Delta</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "4" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Echo</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "5" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Date" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_DateTime" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Time" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_YesNo" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	# FIXME: Want to use double quotes in the discrete values but "verify exists ... text" causes an
+	# XPath syntax error, so even if we can set them in the input, we can't check them in the view.
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Vertical" in the "obs_name" input
+	Type "<b>Alpha</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "1" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Bravo</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "2" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Charlie</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "3" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Delta</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "4" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Echo</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "5" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Horizontal" in the "obs_name" input
+	Type "<b>Alpha</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "1" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Bravo</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "2" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Charlie</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "3" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Delta</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "4" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Echo</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "5" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Dropdown" in the "obs_name" input
+	Type "<b>Alpha</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "1" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Bravo</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "2" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Charlie</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "3" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Delta</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "4" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "<b>Echo</b>&mdash;;,=''" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "5" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" into the "select_text" input
+	Click the "Go" button
+	Verify exists "Displaying 1-12 / 12" text
+
+# Create a flowsheet that uses all the observations from above, with the corresponding input types.
+# They are all marked required, to test that we properly detect when a value has been entered for
+# each input we support.
+
+Begin "Setup Flowsheet"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Observation Codes" charttab subtab
+	Click the "Display Flowsheets" link
+	Click the "Add Flowsheet" link
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" in the "form_name" input
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text" in the "obs_name" autocomplete
+	Select "Text" from the 1st dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text_Large" in the "obs_name" autocomplete
+	Select "Text (large)" from the 3rd dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC" in the "obs_name" autocomplete
+	Select "AutoComplete" from the 5th dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_Large" in the "obs_name" autocomplete
+	Select "AutoComplete (large)" from the 7th dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_DiscreteList" in the "obs_name" autocomplete
+	Select "AutoComplete (Discrete List)" from the 9th dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Date" in the "obs_name" autocomplete
+	Select "Date" from the 11th dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_DateTime" in the "obs_name" autocomplete
+	Select "Datetime" from the 13th dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Time" in the "obs_name" autocomplete
+	Select "Time" from the 15th dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_YesNo" in the "obs_name" autocomplete
+	Select "Yes/No Answer List" from the 17th dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Vertical" in the "obs_name" autocomplete
+	Select "Vertical Structured Answer List" from the 19th dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Horizontal" in the "obs_name" autocomplete
+	Select "Horizontal Structured Answer List" from the 21st dropdown
+
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Dropdown" in the "obs_name" autocomplete
+	Select "Drop Down Structured Answer List" from the 23rd dropdown
+
+	Click the "Mark All Required" button
+	Click the "Yes" button
+	Click the "Submit" button
+
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" into the "select_text" input
+	Click the "Go" button
+	Verify exists "Displaying 1-1 / 1" text
+
+# Create an order that uses the flowsheet, for testing purposes.
+
+Begin "Setup Order"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Orders" charttab
+	Click the "Orders-List Editor" charttab subtab
+	# Click the "Old Order Lists Editor" link
+	
+	Click the "Add Order" button
+	Select "Exams (EXAM)" from the "Order Type" dropdown
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" in the "Order Name" input
+	Select "Flowsheet" from the "Exam Order Layouts" dropdown
+	Click the "Save" button
+	
+	Navigate ?f=layout&module=Orders&name=OrderList&tabmodule=admin&tabselect=Orders&ts_caption=Orders-List+Editor	
+	Wait for the "orderlist" grid
+	Click the @Code filter button@xpath="//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Name']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Name']//p[contains(@class, 'SelectBox')]"
+	Type "Lots=OfBadCharactersInIt" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "Lots=OfBadCharactersInIt" label
+	Click the @ok button@xpath="//li[@data-wcdv-field='Name']//p[@class='btnOk']"
+	Verify exists "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" grid entry
+
+	# Click the "Add An Order" link
+	# Select "Exams (EXAM)" from the "orl_type" dropdown
+	# Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" into the "orl_name" input
+	# Select "Flowsheet" from the "orl_layout_name" dropdown
+	# Click the "Save" button
+
+	# Verify exists "Order List Entry Added" text
+	# Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" into the "srch_text" input
+	# Click the "Search" button
+	# Verify exists "Displaying 1-1 / 1" text
+
+Begin "Find patient, add encounter"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+
+Begin "Add order for FlowsheetTestReq"
+	# Within the Smart Plan, the Visit Orders quicklist starts off hidden (i.e. collapsed).  For
+	# some reason, this doesn't support the colon syntax like [quicklist item] does, so just hope
+	# that there's only one Visit Orders quicklist.
+	Show "Smart Plan" "Visit Orders" quicklist
+	Add "Smart Plan:Visit Orders" "Other" quicklist item
+	Enter "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" in the "order_id" autocomplete
+	# We've got two save buttons: 1st = "Save to Library", 2nd = "Save"
+	Click the 2nd "Save" popup button
+	@Wait for the Smart Plan section to refresh@driver.wcutils.waitForAJAX(10)
+	Examadd "Smart Plan" "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" dynamicitem
+	@Wait for the order section to be added@driver.wcutils.waitForAJAX(10)
+
+# The general loop for the actual test is:
+#
+#   1. Try to close the section.
+#   2. You should get a popup.
+#   3. Make sure the first unfilled item is listed in the popup.
+#   4. Hit "OK" to close the popup.
+#   5. Fill in a value for the first unfilled input.
+#   6. Try to close the section again.
+#   7. If there are more unfilled inputs:
+#      7/1. Make sure the thing we just filled in *isn't* listed in the popup.
+#      7/2. Close the popup and repeat from step 1.
+
+Begin "Test required flowsheet items"
+	Open the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt" dynamicsection
+
+	# Text
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text INPUT VALUE" into the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text" flowsheet textarea
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# Text_Large
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text_Large" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text_Large INPUT VALUE" into the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text_Large" flowsheet textarea
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text_Large" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# AC
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC INPUT VALUE" into the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC" flowsheet autocomplete_input
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# AC_Large
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_Large" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_Large INPUT VALUE" into the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_Large" flowsheet autocomplete_input
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_Large" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# AC_DiscreteList
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_DiscreteList" flowsheet required_popup_item
+	Click the "OK" popup button
+	EnterAutoComplete "<b>Alpha</b>&mdash;;,=''" into the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_DiscreteList" flowsheet
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_DiscreteList" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# Date
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Date" flowsheet required_popup_item
+	Click the "OK" popup button
+	EnterDate "1/1/2020" into the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Date" flowsheet
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Date" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# DateTime
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_DateTime" flowsheet required_popup_item
+	Click the "OK" popup button
+	EnterDate "1/1/2020 12:30" into the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_DateTime" flowsheet
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_DateTime" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# Time
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Time" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "9:30" into the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Time" flowsheet time
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Time" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# YesNo
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_YesNo" flowsheet required_popup_item
+	Click the "OK" popup button
+	Click 1st "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_YesNo" flowsheet radio
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_YesNo" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# SAL_Vertical
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Vertical" flowsheet required_popup_item
+	Click the "OK" popup button
+	Click 2nd "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Vertical" flowsheet radio
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Vertical" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# SAL_Horizontal
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Horizontal" flowsheet required_popup_item
+	Click the "OK" popup button
+	Click 3rd "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Horizontal" flowsheet radio
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Horizontal" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# SAL_Dropdown
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Dropdown" flowsheet required_popup_item
+	Click the "OK" popup button
+	Select "<b>Delta</b>&mdash;;,=''" from the "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_SAL_Dropdown" flowsheet dropdown
+
+	# You can't seem to select without blurring, and since this is the last input in the section,
+	# blurring out of it causes the section to advance.  We should now be able to see the flowsheet
+	# in view mode, and check that everything saved.
+
+	# Check that it all saved
+
+	Verify exists "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text INPUT VALUE" text
+	Verify exists "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_Text_Large INPUT VALUE" text
+	Verify exists "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC INPUT VALUE" text
+	Verify exists "An<b>Evil</b>Name,With;Lots&amp;Lots=OfBadCharactersInIt_AC_Large INPUT VALUE" text
+
+	# FIXME: Want to use double quotes in the discrete values but "verify exists ... text" causes an
+	# XPath syntax error.
+
+	Verify exists "<b>Alpha</b>&mdash;;,=''" text
+	Verify exists "<b>Bravo</b>&mdash;;,=''" text
+	Verify exists "<b>Charlie</b>&mdash;;,=''" text
+	Verify exists "<b>Delta</b>&mdash;;,=''" text

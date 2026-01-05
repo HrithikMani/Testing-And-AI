@@ -1,0 +1,45 @@
+"""
+Pod used for interacting with var trees
+
+- This is a very, very basic pod. Var trees depend on knowing the variable description beforehand; ROS, EXAM, etc
+- This pod will only operate on ROS variables and there is no support for switching contexts
+- This pod could be improved, but for now, this will get wf_default working
+
+Usage:
+	Open the Eyes vartree
+	Append the "No difficulties in vision" to the Eyes vartree	# This won't close the tree
+	Add the "No changes except" to the Eyes vartree # This will close the tree
+
+"""
+
+tree://span[contains(@id, "ROS") and contains(@id, "{OKRA_TEXT}")]
+
+tree_close://div[contains(@id, "ROS") and contains(@id, "{OKRA_TEXT}") and contains(@onmouseover, "MIEMenuSetMoused")]//img[@alt="Close Menu"]
+
+@Open:
+Click the vartree tree
+
+@Close:
+Click the tree_close
+
+@Add:
+"""
+def parse(v):
+	return (v,)
+"""
+# This may or may not be an OKRA issue. If you want to use a parser's return value AND a native OKRA_TEXT
+# you will need to double up the brackets on the native portions. This is because okra first
+# parses the command using your parser's return value and any exceptions raised there are assumed
+# to be an issue with your parser. But since the parser doesn't have access to the native OKRA vars,
+# it fails, but doubleing the braces means when it will ignore OKRAT_TEXT, but then it becomes a single brace
+# to be later parsed by Okra which works just fine
+Click the @Vartree Option@xpath=//div[contains(@id, "ROS") and contains(@id, "{{OKRA_TEXT}}") and contains(@onmouseover, "MIEMenuSetMoused")]//td[contains(., "{0}")]
+
+@Append:
+"""
+def parse(v):
+	return (v,)
+"""
+Click the @Plus Icon@xpath=//div[contains(@id, "ROS") and contains(@id, "{{OKRA_TEXT}}") and contains(@onmouseover, "MIEMenuSetMoused")]//td[contains(., "{0}")]/following-sibling::td/img
+
+

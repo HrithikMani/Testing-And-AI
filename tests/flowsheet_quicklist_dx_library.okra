@@ -1,0 +1,151 @@
+@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{nurse_username}')
+Begin "Find Patient, Add Visit"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+Begin "Encounter Setup"
+	@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	# Open the "Encounter" dynamicsection
+	# Enter "02-02-2007" into the DED_serv_date date
+	# Click the dynamicsection nextbutton
+	# @Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+Begin "Create Dx Libraries"
+	Add "Smart Plan:Problem List" "Anxiety 02-10-2017" quicklist item
+	@Wait for the section to refresh@driver.wcutils.waitForAJAX(30)
+	Add "Smart Plan:Problem List" "Crohn" quicklist item
+	@Wait for the section to refresh@driver.wcutils.waitForAJAX(30)
+	@new zeus slow wait@driver.pause(10)
+	Toggle the "Smart Plan" quicklist
+	@new zeus slow wait@driver.pause(10)
+	# Unfortunately for now you have to open/close the section to update the quicklists to show new assessments
+	Open the "Physical exam" dynamicsection
+	@new zeus slow wait@driver.pause(10)
+	Close the "Physical exam" dynamicsection
+	@new zeus slow wait@driver.pause(10)
+	Toggle the "Physical exam" quicklist
+	#Verify exists "Anxiety" quicklist section
+	#Verify exists "Crohn's disease of small intestine" quicklist section
+	Begin "Make dx library"
+		Add "Physical exam:Anxiety" "Other" quicklist item
+#		@@@Add an "Other" item from the "Anxiety" quicklist
+#		sectionName = 'Anxiety'
+#
+#		titlePath = 'div[contains(@class, "ql-header")]'\
+#			'/div[contains(@class, "dyndiv")]'\
+#			'/div[contains(@class, "dynTitle")]'\
+#			'/span[contains(@class, "dynTitle-text")]'
+#		itemPath = 'div[contains(@class, "ql-list")]'\
+#			'/div[contains(@class, "dyndiv")]'\
+#			'/ul'\
+#			'/li[@class="dynItem"]'
+#		quicklistToplevel = driver.getElement(xpath=\
+#			'//div[contains(@class, "wc-enc-dynamic-section")]'\
+#			'/*[@class="exam_tab"][contains(., "Physical exam")]'\
+#			'/following-sibling::div'\
+#			'//div[contains(@class, "dynQL")]'\
+#			'/div[contains(@class, "dyndiv")]')
+#
+#		if quicklistToplevel is None:
+#			driver.reportCommandStatus('Find quicklist', 'Could not find quicklist', False, '', '')
+#
+#		quicklistContainers = quicklistToplevel.find_elements_by_xpath('div[contains(@class, "ql-container")]')
+#		if len(quicklistContainers) == 0:
+#			driver.reportCommandStatus('Find quicklist containers', 'Could not find any containers', False, '', '')
+#		matchingContainers = [c for c in quicklistContainers if c.find_element_by_xpath(titlePath).text.find(sectionName) >= 0]
+#		if len(matchingContainers) == 0:
+#			driver.reportCommandStatus('Find quicklist section', 'Could not find matching section', False, '', '')
+#		elif len(matchingContainers) > 1:
+#			driver.reportCommandStatus('Find quicklist section', 'Found too many matching sections', False, '', '')
+#
+#		quicklistItems = matchingContainers[0].find_elements_by_xpath(itemPath)
+#		if len(quicklistItems) == 0:
+#			driver.reportCommandStatus('Find quicklist items', 'Could not find any items inside matching section', False, '', '')
+#		matchingItems = [i for i in quicklistItems if i.text.find('Other') >= 0]
+#		if len(matchingItems) == 0:
+#			driver.reportCommandStatus('Find quicklist items', 'Could not find "Other" item inside matching section', False, '', '')
+#		elif len(matchingItems) > 1:
+#			driver.reportCommandStatus('Find quicklist items', 'Found too many "Other" items inside matching section', False, '', '')
+#
+#		driver.runJS('arguments[0].scrollTo(0, arguments[0].scrollHeight)', quicklistToplevel)
+#		driver.mouseOver(ele=matchingItems[0])
+#		matchingItems[0].click()
+#		@@@
+		Verify exists "Flowsheet Observation: Physical Exam" popup
+		Click the "Create Library" popup button
+		Verify exists "Dx Library" popup
+		Type "ANXIETY_LIB" in the "first_name" input
+		Click the "Save" popup button
+		@Wait for the section to refresh@driver.wcutils.waitForAJAX(30)
+		Close the "Flowsheet Observation: Physical Exam" popup
+		# Unfortunately for now you have to open/close the section to update the quicklists to show new dx library names
+		Open the "Physical exam" dynamicsection
+		Close the "Physical exam" dynamicsection
+		@new zeus slow wait@driver.pause(30)
+		Toggle the "Physical exam" quicklist
+		Verify exists "ANXIETY_LIB" text
+	Begin "Make dx library with observation"
+#		Add "Physical exam:Crohn's disease" "Other" quicklist item
+		Add "Physical exam:Crohn" "Other" quicklist item
+#		@@@Add an "Other" item from the "Crohn disease" quicklist
+#		sectionName = "Crohn's disease"
+#
+#		titlePath = 'div[contains(@class, "ql-header")]'\
+#			'/div[contains(@class, "dyndiv")]'\
+#			'/div[contains(@class, "dynTitle")]'\
+#			'/span[contains(@class, "dynTitle-text")]'
+#		itemPath = 'div[contains(@class, "ql-list")]'\
+#			'/div[contains(@class, "dyndiv")]'\
+#			'/ul'\
+#			'/li[@class="dynItem"]'
+#		quicklistToplevel = driver.getElement(xpath=\
+#			'//div[contains(@class, "wc-enc-dynamic-section")]'\
+#			'/*[@class="exam_tab"][contains(., "Physical exam")]'\
+#			'/following-sibling::div'\
+#			'//div[contains(@class, "dynQL")]'\
+#			'/div[contains(@class, "dyndiv")]')
+#
+#		if quicklistToplevel is None:
+#			driver.reportCommandStatus('Find quicklist', 'Could not find quicklist', False, '', '')
+#
+#		quicklistContainers = quicklistToplevel.find_elements_by_xpath('div[contains(@class, "ql-container")]')
+#		if len(quicklistContainers) == 0:
+#			driver.reportCommandStatus('Find quicklist containers', 'Could not find any containers', False, '', '')
+#		matchingContainers = [c for c in quicklistContainers if c.find_element_by_xpath(titlePath).text.find(sectionName) >= 0]
+#		if len(matchingContainers) == 0:
+#			driver.reportCommandStatus('Find quicklist section', 'Could not find matching section', False, '', '')
+#		elif len(matchingContainers) > 1:
+#			driver.reportCommandStatus('Find quicklist section', 'Found too many matching sections', False, '', '')
+#
+#		quicklistItems = matchingContainers[0].find_elements_by_xpath(itemPath)
+#		if len(quicklistItems) == 0:
+#			driver.reportCommandStatus('Find quicklist items', 'Could not find any items inside matching section', False, '', '')
+#		matchingItems = [i for i in quicklistItems if i.text.find('Other') >= 0]
+#		if len(matchingItems) == 0:
+#			driver.reportCommandStatus('Find quicklist items', 'Could not find "Other" item inside matching section', False, '', '')
+#		elif len(matchingItems) > 1:
+#			driver.reportCommandStatus('Find quicklist items', 'Found too many "Other" items inside matching section', False, '', '')
+#
+#		driver.runJS('arguments[0].scrollTo(0, arguments[0].scrollHeight)', quicklistToplevel)
+#		driver.mouseOver(ele=matchingItems[0])
+#		matchingItems[0].click()
+#		@@@
+		Verify exists "Flowsheet Observation: Physical Exam" popup
+		Select "Constitutional - General Appearance:" in the "obs_code" dropdown
+		Type "Test General Appearance Result - CROHNS_LIB Dx Library" in the "obs_result" input
+		Click the "Create Library" popup button
+		Verify exists "Dx Library" popup
+		Type "CROHNS_LIB" in the "first_name" input
+		Click the "Save" popup button
+		@Wait for the quicklist to refresh@driver.wcutils.waitForAJAX(30)
+		Close popup
+		# Unfortunately for now you have to open/close the section to update the quicklists to show new dx library names
+		Open the "Physical exam" dynamicsection
+		Close the "Physical exam" dynamicsection
+		@new zeus slow wait@driver.pause(30)
+		Toggle the "Physical exam" quicklist
+		Verify exists "CROHNS_LIB" text
+		Verify exists "Test General Appearance Result - CROHNS_LIB Dx Library" quicklist item

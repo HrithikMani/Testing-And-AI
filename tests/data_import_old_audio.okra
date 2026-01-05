@@ -1,0 +1,41 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Click the "Legacy Data Import" link
+	Verify exists "Please Choose Data Import type:" text 
+	Select "Audiometric Data CSV API" in the opp dropdown
+	Click the Go button
+	@driver.getWebDriver().switch_to.frame("di_frame_Audio_20Data")
+	Click the "DI_Verbose" checkbox
+	Type 'AudioDataImportSuccess.csv' in the 'csv_file' input
+	Click the "Upload" button
+	Verify exists "Successfully imported file AudioDataImportSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+Begin "Verify Entries"
+	Open the sidemenu
+	Click "E-Chart" sidemenu entry
+	Click the "Name" radio
+	Type "Doe, Jane" in the "sstring" input
+	Click the "Search" button
+	Verify exists "Doe, Jane M" link
+	Click the "Medical Record" charttab
+	Click the Audiogram charttab subtab
+	Verify exists "Displaying 1-2" text
+	Click the "01-01-2014" link
+	Verify exists "01-01-2014 15:42" text
+	Verify exists "Patient well behaved" text
+	Verify exists "Good demeanor" text
+	Verify exists "Pain Present" text
+	Verify !exists "Late start due to equipment failure" text
+	Verify !exists "Picture Available" text
+	Click the "Medical Record" charttab
+	Click the Audiogram charttab subtab
+	Click the "01-02-2014" link
+	Verify exists "01-02-2014 15:43" text
+	Verify !exists "Patient well behaved" text
+	Verify !exists "Good demeanor" text
+	Verify !exists "Pain Present" text
+	Verify exists "Late start due to equipment failure" text
+	Verify exists "Picture Available" text

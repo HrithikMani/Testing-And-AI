@@ -1,0 +1,17 @@
+Begin "Verify 'View Inventory' permission"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	# in the "Username" cell in the "selenium" row in the "WebChart Users" table
+	Click the "selenium" link
+	# in the "Access Control (selenium)" box
+	Verify !exists the "[ View Inventory: No ]" text
+Begin "Verify Bug #12239 is fixed"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Verify exists the "Hide Out Of Stock" link
+	# should not exist in the "General Inventory" table
+	Verify !exists the 2nd "Crutches 48" text

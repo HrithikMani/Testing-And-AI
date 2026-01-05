@@ -1,0 +1,310 @@
+Begin "Remove inventory permissions"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "No" from the "Edit Inventory Mappings" dropdown
+	Select "No" from the "Merge Inventory Items" dropdown
+	Select "No" from the "View Inventory" dropdown
+	Type "inventory_mappings.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" table
+	Verify exists The "[ View Inventory: No ]" text
+	Verify exists The "[ Edit Inventory Mappings: No ]" text
+	Verify exists The "[ Merge Inventory Items: No ]" text
+Begin "With no permission, we can't see anything on the Inventory Mappings page"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Verify exists the "Your current permission of 'No' in the ('Inventory','View Inventory') security setting does not allow access to View Inventory." text
+	Click the "Mappings" charttab
+	Verify exists the "Your current permission of 'No' in the ('Inventory','View Inventory') security setting does not allow access to View Inventory." text
+Begin "Give View permissions"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Yes" from the "View Inventory" dropdown
+	Type "inventory_mappings.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" table
+	Verify !exists The "[ View Inventory: No ]" text
+Begin "Without Edit or Merge permissions, there's no way to edit or merge inventory mappings"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Verify exists The "General Inventory" listview
+	Click the "Mappings" charttab
+	Click the "Legacy Mapping" link
+	Verify exists The "Inventory Mappings" listview
+	# in the "Inventory Mappings" table
+	Verify !exists The "!Edit" link
+	# in the "Inventory Mappings" table
+	Verify !exists The "Delete" link
+	Verify !exists The "Merge Selected" button
+Begin "Grant permision to Edit Inventory Mappings"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Yes" from the "Edit Inventory Mappings" dropdown
+	Type "inventory_mappings.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	#  in the "Access Control (selenium)" table
+	Verify !exists The "[ Edit Inventory Mappings: No ]" text
+Begin "Without Merge permissions, there's no way to merge inventory settings"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Mappings" charttab
+	Click the "Legacy Mapping" link
+	# in the "Inventory Mappings" table
+	Verify exists the @"Edit" link@xpath=//table[@id='lv_root_Inventory_20Mappings']//td/a[text()='Edit']
+	# in the "Inventory Mappings" table
+	Verify exists the @"Delete" link@xpath=//table[@id='lv_root_Inventory_20Mappings']//td/a[text()='Delete']
+	Verify !exists The "Merge Selected" button
+Begin "Grant permission to Merge Inventory Items"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Yes" from the "Merge Inventory Items" dropdown
+	Type "inventory_mappings.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" table
+	Verify !exists The "[ Merge Inventory Items: No ]" text
+Begin "With Merge permission, we should be able to merge inventory"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Mappings" charttab
+	Click the "Legacy Mapping" link
+	Verify exists The "Merge Selected" button
+	Select "Medication" from the dropdown
+Begin "Add a mapping"
+	Click the "Add a Mapping" link
+	Begin "Map 'multivitamin (New)' to 'Multi-Vitamin' in the 1st row in the table body in the 'Map Inventory' box"
+		# in the "Medication" cell
+		Enter "multivitamin oral" in the "medac_txt" autocomplete
+		Blur the "medac_txt" autocomplete
+		# The medication form is guessed for us
+		# in the "Medication Form" cell
+		Enter "tablet" in the "formac_txt" autocomplete
+		#Verify "value=tablet (oral)" in the "Medication Form" autocomplete
+		# in the "Inventory Description" cell
+		Enter "Multi-Vitamin" in the "inv_ac_txt" autocomplete
+	Begin "Verify that the mapping was inserted"
+		Click the "Submit" button
+		Verify exists the "Mapping (150529 - 9) Inserted" text
+		Verify exists the @"Multi-Vitamin" text in the "Inventory Item" cell in the "multivitamin tablet" row in the "Inventory Mappings" table@xpath=//td[contains(.,'multivitamin tablet')]/following-sibling::td[contains(.,'Multi-Vitamin')]
+	Click the @Cancel button@xpath=//input[@id='cancel']
+Begin "Map the vaccines to their CVX codes"
+	Select "Injection" from the dropdown
+	Click the "Add a Mapping" link
+	Begin "Map 'DTaP' to 'DTAP'"
+		Begin "in the 1st row in the table body in the Map Inventory box"
+			# in the "Injection" cell
+			Enter "DTaP" in the "injac_txt" autocomplete
+			# in the "Inventory Description" cell
+			Enter "DTaP" in the "inv_ac_txt" autocomplete
+		Begin "Verify that the mapping was inserted"
+			Click the "Submit" button
+			Verify exists the "Mapping (20 - 13) Inserted" text
+			# in the "Inventory Item" cell in the "DTaP" row in the "Inventory Mappings" table
+			Verify exists the !"DTaP" text
+	Begin "Map 'MMR' to 'MMR'"
+		Begin "in the 1st row in the table body in the Map Inventory box"
+			# in the "Injection" cell
+			Enter "MMR" in the "injac_txt" autocomplete
+			# in the "Inventory Description" cell
+			Enter "MMR" in the "inv_ac_txt" autocomplete
+		Begin "Verify that the mapping was inserted"
+			Click the "Submit" button
+			Verify exists the "Mapping (3 - 12) Inserted" text
+			# in the "Inventory Item" cell in the "MMR" row in the "Inventory Mappings" table
+			Verify exists the !"MMR" text
+	Begin "Map 'Japanese Encephalitis IM' to 'Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe'"
+		Begin "in the 1st row in the table body in the Map Inventory box"
+			# in the "Injection" cell
+			Enter "Japanese Encephalitis IM" int the "injac_txt" autocomplete
+			# in the "Inventory Description" cell
+			Enter "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" in the "inv_ac_txt" autocomplete
+		Begin "Verify that the mapping was inserted"
+			Click the "Submit" button
+			Verify exists the "Mapping (134 - 8) Inserted" text
+			# The "Inventory Item" cell in the "Japanese Encephalitis IM" row in the "Inventory Mappings" table should contain exactly "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe"
+			Verify exists the "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" text
+	Click the @Cancel button@xpath=//input[@id='cancel']
+Begin "Map orders"
+	Begin "Add some orders, so that we can map them"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Orders" charttab
+		Click the "Orders-List Editor" charttab subtab
+		Click the "Legacy Orders List Editor" link
+		Click the "Add An Order" link
+		Select "Add a New Order Type" from the "Order Type" dropdown
+		Type "SUPPLY" in the "Order Type" input
+		Type "Crutches 48" in the "Order Name" input
+		Click the "Save" button
+		Verify exists The "Order List Entry Added" text
+		Click the "Add An Order" link
+		Select "SUPPLY" from the "Order Type" dropdown
+		Type "Crutches 60" in the "Order Name" input
+		Click the "Save" button
+		Verify exists The "Order List Entry Added" text
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Mappings" charttab
+	Click the "Legacy Mapping" link
+	Select "Order" from the dropdown
+	Click the "Add a Mapping" link
+	Begin "Map 'Crutches 48' to 'Crutches 48'"
+		Begin "in the 1st row in the table body in the Map Inventory box"
+			# in the "Order" cell
+			Enter "Crutches 48" in the "orederac_txt" autocomplete
+			# in the "Inventory Description" cell
+			Begin "Enter 'Crutches (Crutches 48)' in the Inventory autocomplete
+				Type "Crutches!" in the "inv_ac_txt" autocomplete
+				@Wait for Ajax@driver.wcutils.waitForAJAX(45)
+				Click the "Crutches (Crutches 48)" autocomplete choice
+		Begin "Verify that the mapping was inserted"
+			Click the "Submit" button
+			Verify exists the "Mapping (3521 - 10) Inserted" text
+			# The "Inventory Item" cell in the 'Crutches 48' row in the "Inventory Mappings" table should contain exactly 'Crutches 48'
+			Verify exists the "Crutches 48" text
+	Begin "Map "Crutches 60" to 'Crutches 60'"
+		Begin "in the 1st row in the table body in the Map Inventory box"
+			# in the "Order" cell
+			Enter "Crutches 60" in the "orederac_txt" autocomplete
+			# in the "Inventory Description" cell
+			Begin "Enter 'Crutches (Crutches 60)' in the Inventory autocomplete"
+				Type "Crutches!" in the "inv_ac_txt" autocomplete
+				@Wait for Ajax@driver.wcutils.waitForAJAX(45)
+				Click the "Crutches (Crutches 60)" autocomplete choice
+		Begin "Verify that the mapping was inserted"
+			Click the "Submit" button
+			Verify exists the "Mapping (3522 - 11) Inserted" text
+			# The "Inventory Item" cell in the 'Crutches 60' row in the "Inventory Mappings" table should contain exactly 'Crutches 60'
+			Verify exists the "Crutches 60" text
+	Click the @Cancel button@xpath=//input[@id='cancel']
+Begin "Map barcodes"
+	Select "Barcode" from the dropdown
+	Click the "Add a Mapping" link
+	Begin "Map '208357236152' to 'Crutches 48'"
+		Begin "in the 1st row in the table body in the Map Inventory box"
+			# in the "Barcode" cell
+			Type "208357236152" in the "barcode_value" input
+			# in the "Inventory Description" cell
+			Begin "Enter 'Crutches (Crutches 48)' in the Inventory autocomplete
+				Type "Crutches!" in the "inv_ac_txt" autocomplete
+				@Wait for Ajax@driver.wcutils.waitForAJAX(45)
+				Click the "Crutches (Crutches 48)" autocomplete choice
+		Begin "Verify that the mapping was inserted"
+			Click the "Submit" button
+			Verify exists the "Mapping (1 - 10) Inserted" text
+			# The "Inventory Item" cell in the "208357236152" row in the "Inventory Mappings" table should contain exactly 'Crutches 48'
+			Verify exists the "Crutches 48" text
+	Begin "Map '347682184476' to 'diphenhydramine 25 mg capsule'"
+		Begin "in the 1st row in the table body in the Map Inventory box"
+			# in the "Barcode" cell
+			Type "347682184476" in the "barcode_value" input
+			# in the "Inventory Description" cell
+			Enter "diphenhydramine 25 mg capsule" in the "inv_ac_txt" autocomplete
+		Begin "Verify that the mapping was inserted"
+			Click the "Submit" button
+			Verify exists the "Mapping (2 - 7) Inserted" text
+			# in the "Inventory Item" cell in the "347682184476" row in the "Inventory Mappings" table
+			Verify exists the !"diphenhydramine 25 mg capsule" text
+	Begin "Map '4251500101001' to 'japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe'"
+		Begin "in the 1st row in the table body in the Map Inventory box"
+			# in the "Barcode" cell
+			Type "4251500101001" in the "barcode_value" input
+			# in the "Inventory Description" cell
+			Enter "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" in the "inv_ac_txt" autocomplete
+		Begin "Verify that the mapping was inserted"
+			Click the "Submit" button
+			Verify exists the "Mapping (3 - 8) Inserted" text
+			# The "Inventory Item" cell in the "4251500101001" row in the "Inventory Mappings" table should contain exactly "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe"
+			Verify exists the "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" text
+	Click the @Cancel button@xpath=//input[@id='cancel']
+Begin "Test Searching"
+	Select "Medication" from the dropdown
+	Click the @"Click for Multi-Search" image@xpath=//img[@alt='Click for Multi-Search']
+	Verify exists the 2nd input
+	Click the "Inventory Name" radio
+	Type "lisinopril" in the 1st "searchVal" input
+	Click the 2nd "Inventory Name" radio
+	Type "lasix" in the 2nd "searchVal" input
+	Click the "Search" button
+	Begin "the Inventory Mappings table"
+		Verify exists the "Displaying 1-5 / 5" text
+		Begin "the table body"
+			Begin "the 1st row"
+				Verify exists the @"Med ID" cell should contain "0268801"@xpath=//td/a[contains(.,'0268801')]
+				Verify exists the @"Medication" cell should contain "lisinopril 5 mg tablet"@xpath=//td/a[contains(.,'0268801')]/../following-sibling::td[contains(.,'lisinopril 5 mg tablet')]
+				Verify exists the @!"2" text in the "Inv ID" cell@xpath=//td/a[contains(.,'0268801')]/../following-sibling::td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td[text()='2']
+				Verify exists the @"Inventory Item" cell should contain "lisinopril 5 mg tablet"@xpath=//td/a[contains(.,'0268801')]/../following-sibling::td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td[text()='2']/following-sibling::td[text()='lisinopril 5 mg tablet']
+			Begin "the 2nd row"
+				Verify exists the @"Med ID" cell should contain "0244899"@xpath=//td/a[contains(.,'0244899')]
+				Verify exists the @"Medication" cell should contain "lisinopril 10 mg tablet"@xpath=//td/a[contains(.,'0244899')]/../following-sibling::td[contains(.,'lisinopril 10 mg tablet')]
+				Verify exists the @!"3" text in the "Inv ID" cell@xpath=//td/a[contains(.,'0244899')]/../following-sibling::td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td[text()='3']
+				Verify exists the @"Inventory Item" cell should contain "lisinopril 10 mg tablet"@xpath=//td/a[contains(.,'0244899')]/../following-sibling::td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td[text()='3']/following-sibling::td[text()='lisinopril 10 mg tablet']
+			Begin "the 3rd row"
+				Verify exists the @"Med ID" cell should contain "0183474"@xpath=//td/a[contains(.,'0183474')]
+				Verify exists the @"Medication" cell should contain "lisinopril 20 mg tablet"@xpath=//td/a[contains(.,'0183474')]/../following-sibling::td[contains(.,'lisinopril 20 mg tablet')]
+				Verify exists the @!"4" text in the "Inv ID" cell@xpath=//td/a[contains(.,'0183474')]/../following-sibling::td[contains(.,'lisinopril 20 mg tablet')]/following-sibling::td[text()='4']
+				Verify exists the @"Inventory Item" cell should contain "lisinopril 20 mg tablet"@xpath=//td/a[contains(.,'0183474')]/../following-sibling::td[contains(.,'lisinopril 20 mg tablet')]/following-sibling::td[text()='4']/following-sibling::td[text()='lisinopril 20 mg tablet']
+			Begin "the 4th row"
+				Verify exists the @"Med ID" cell should contain "0237799"@xpath=//td/a[contains(.,'0237799')]
+				Verify exists the @"Medication" cell should contain "Lasix 20 mg tablet"@xpath=//td/a[contains(.,'0237799')]/../following-sibling::td[contains(.,'Lasix 20 mg tablet')]
+				Verify exists the @!"5" text in the "Inv ID" cell@xpath=//td/a[contains(.,'0237799')]/../following-sibling::td[contains(.,'Lasix 20 mg tablet')]/following-sibling::td[text()='5']
+				Verify exists the @"Inventory Item" cell should contain "Lasix 20 mg tablet"@xpath=//td/a[contains(.,'0237799')]/../following-sibling::td[contains(.,'Lasix 20 mg tablet')]/following-sibling::td[text()='5']/following-sibling::td[text()='Lasix 20 mg tablet']
+			Begin "the 5th row"
+				Verify exists the @"Med ID" cell should contain "0153306"@xpath=//td/a[contains(.,'0153306')]
+				Verify exists the @"Medication" cell should contain "Lasix 80 mg tablet"@xpath=//td/a[contains(.,'0153306')]/../following-sibling::td[contains(.,'Lasix 80 mg tablet')]
+				Verify exists the @!"6" text in the "Inv ID" cell@xpath=//td/a[contains(.,'0153306')]/../following-sibling::td[contains(.,'Lasix 80 mg tablet')]/following-sibling::td[text()='6']
+				Verify exists the @"Inventory Item" cell should contain "Lasix 80 mg tablet"@xpath=//td/a[contains(.,'0153306')]/../following-sibling::td[contains(.,'Lasix 80 mg tablet')]/following-sibling::td[text()='6']/following-sibling::td[text()='Lasix 80 mg tablet']
+	Click the @"Click for Single-Search" image@xpath=//img[@alt='Click for Single-Search']
+	Verify "value=lisinopril" in the "searchVal" input
+	Begin "the Inventory Mappings table"
+		Verify exists the "Displaying 1-3 / 3" text
+		Begin "the table body"
+			Begin "the 1st row"
+				Verify exists the @"Med ID" cell should contain "0268801"@xpath=//td/a[contains(.,'0268801')]
+				Verify exists the @"Medication" cell should contain "lisinopril 5 mg tablet"@xpath=//td/a[contains(.,'0268801')]/../following-sibling::td[contains(.,'lisinopril 5 mg tablet')]
+				Verify exists the @!"2" text in the "Inv ID" cell@xpath=//td/a[contains(.,'0268801')]/../following-sibling::td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td[text()='2']
+				Verify exists the @"Inventory Item" cell should contain "lisinopril 5 mg tablet"@xpath=//td/a[contains(.,'0268801')]/../following-sibling::td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td[text()='2']/following-sibling::td[text()='lisinopril 5 mg tablet']
+			Begin "the 2nd row"
+				Verify exists the @"Med ID" cell should contain "0244899"@xpath=//td/a[contains(.,'0244899')]
+				Verify exists the @"Medication" cell should contain "lisinopril 10 mg tablet"@xpath=//td/a[contains(.,'0244899')]/../following-sibling::td[contains(.,'lisinopril 10 mg tablet')]
+				Verify exists the @!"3" text in the "Inv ID" cell@xpath=//td/a[contains(.,'0244899')]/../following-sibling::td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td[text()='3']
+				Verify exists the @"Inventory Item" cell should contain "lisinopril 10 mg tablet"@xpath=//td/a[contains(.,'0244899')]/../following-sibling::td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td[text()='3']/following-sibling::td[text()='lisinopril 10 mg tablet']
+			Begin "the 3rd row"
+				Verify exists the @"Med ID" cell should contain "0183474"@xpath=//td/a[contains(.,'0183474')]
+				Verify exists the @"Medication" cell should contain "lisinopril 20 mg tablet"@xpath=//td/a[contains(.,'0183474')]/../following-sibling::td[contains(.,'lisinopril 20 mg tablet')]
+				Verify exists the @!"4" text in the "Inv ID" cell@xpath=//td/a[contains(.,'0183474')]/../following-sibling::td[contains(.,'lisinopril 20 mg tablet')]/following-sibling::td[text()='4']
+				Verify exists the @"Inventory Item" cell should contain "lisinopril 20 mg tablet"@xpath=//td/a[contains(.,'0183474')]/../following-sibling::td[contains(.,'lisinopril 20 mg tablet')]/following-sibling::td[text()='4']/following-sibling::td[text()='lisinopril 20 mg tablet']
+	Click the "Inventory ID" radio
+	Type "5" in the "searchVal" input
+	Click the "Search" button
+	Begin the "Inventory Mappings" table
+		Verify exists the "Displaying 1-1 / 1" text
+		Begin "the table body"
+			Begin "the 1st row"
+				Verify exists the @"Med ID" cell should contain "0237799"@xpath=//td/a[contains(.,'0237799')]
+				Verify exists the @"Medication" cell should contain "Lasix 20 mg tablet"@xpath=//td/a[contains(.,'0237799')]/../following-sibling::td[contains(.,'Lasix 20 mg tablet')]
+				Verify exists the @!"5" text in the "Inv ID" cell@xpath=//td/a[contains(.,'0237799')]/../following-sibling::td[contains(.,'Lasix 20 mg tablet')]/following-sibling::td[text()='5']
+				Verify exists the @"Inventory Item" cell should contain "Lasix 20 mg tablet"@xpath=//td/a[contains(.,'0237799')]/../following-sibling::td[contains(.,'Lasix 20 mg tablet')]/following-sibling::td[text()='5']/following-sibling::td[text()='Lasix 20 mg tablet']

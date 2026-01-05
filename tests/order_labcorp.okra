@@ -1,0 +1,55 @@
+@Give Will Haynes a static MR number@driver.miedb.dbExec("INSERT INTO patient_mrns SET wc_partition='MR',pat_id=11,mrnumber='91753'")
+@Create LabCorp Picklist@driver.miedb.dbExec("INSERT INTO order_pick_list SET set_name='LabCorp', group_by='Group A', order_id=388, order_by=1, column_index='1'")
+@Create Refer To Systems Entry@driver.miedb.dbExec("INSERT INTO refer_to_systems SET system_id='LABCORP', system_name='LabCorp', system_options=68")
+@Create Refer To Systems Entry@driver.miedb.dbExec("INSERT INTO refer_to_systems SET system_id='LABCORPTEST', system_name='LabCorp Test', system_options=68")
+@Create Refer To Systems Extended Entries@driver.miedb.dbExec("INSERT INTO refer_to_systems_extended_values SET system_id='LABCORP', ext_id=(SELECT ext_id FROM refer_to_systems_extended_index WHERE name='gt1_rel_type_ids'),value='1'")
+@Create Refer To Systems Extended Entries@driver.miedb.dbExec("INSERT INTO refer_to_systems_extended_values SET system_id='LABCORPTEST', ext_id=(SELECT ext_id FROM refer_to_systems_extended_index WHERE name='gt1_rel_type_ids'),value='1'")
+
+@Add Translation 1@driver.miedb.dbExec("INSERT INTO translate SET name = 'labcorp-sending_facilities',  trans_from = 'OFFICE', trans_to = 'ABC123'")
+@Add Translation 2@driver.miedb.dbExec("INSERT INTO translate SET name = 'labcorp-account_numbers', trans_from = 'MR:Office', trans_to = '123456789'")
+@Add Translation 3@driver.miedb.dbExec("INSERT INTO translate SET name = 'labcorptest-sending_facilities', trans_from = 'OFFICE', trans_to = 'DEF123'")
+@Add Translation 4@driver.miedb.dbExec("INSERT INTO translate SET name = 'labcorptest-account_numbers', trans_from = 'MR:Office', trans_to = '987654321'")
+
+Open the sidemenu
+Click the "E-Chart" link
+Type "Haynes" in the "sstring" input
+Click the "Search" button
+
+Open the quicklink list
+Click the "Add Order" quicklink
+Begin "Order Request"
+	Select "Selenium, Selenium" from the "ordering_physician" dropdown
+	Select "Soon" from the "schedule_comment" dropdown
+	Select "Office" from the "location" dropdown
+	Type "Order comments." in the "comments" input
+	Select "LabCorp" from the "performing_facility" dropdown
+	Select "LabCorp" from the "set_name" dropdown
+	@Wait for the window to update@driver.pause(5); 
+	Click the "BUN" picklist checkbox
+	@Select MR-91753 from the MR number dropdown@driver.enterFormData("MR-91753", id="mrnumber", blur=False)
+	Click the "Submit" button
+@Switch Windows@driver.switchToPopup()
+Verify exists "LabCorp" text
+Verify exists "123456789" text
+Verify exists "Order comments." text
+@Close this window@driver.closePopup()
+
+Click the "Medical Record" charttab
+Click the "OrderRequestsLegacy" charttab subtab
+
+Select "All" from the "location" dropdown
+Select "LabCorp" from the "set_name" dropdown
+Click the "Search" button
+Click the "Edit" link
+
+Begin "Order Request"
+	Select "LabCorp Test" from the "performing_facility" dropdown
+	@Select MR-91753 from the MR number dropdown@driver.enterFormData("MR-91753", id="mrnumber", blur=False)
+	Click the "Submit" button
+@Switch Windows@driver.switchToPopup()
+Verify exists "LabCorp" text
+Verify exists "987654321" text
+@Close this window@driver.closePopup()
+
+@Remove Will Haynes's static MR number@driver.miedb.dbExec("DELETE FROM  patient_mrns WHERE wc_partition='MR' AND pat_id=11 AND mrnumber='91753'")
+

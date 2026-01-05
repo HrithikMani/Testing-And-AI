@@ -1,0 +1,207 @@
+Begin "Setup Observations"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Observation Codes" charttab subtab
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestHdr_One" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "!Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestHdr_Two" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "!Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestHdr_Three" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "!Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestHdr_Four" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "!Successfully added new observation code." text
+
+	Type "FlowsheetTestHdr" into the "select_text" input
+	Click the "Go" button
+	Verify exists "Displaying 1-4 / 4" text
+
+Begin "Setup Flowsheet"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Observation Codes" charttab subtab
+	Click the "Display Flowsheets" link
+	Click the "Add Flowsheet" link
+	Type "FlowsheetTestHdr" in the "form_name" input
+
+	Click the "Add Line Break / Header" button
+	Click the 1st "Edit" icon
+	Verify exists "!Edit Line Break / Header" popup
+	Type "Section Header" into the "Description" input
+	Type "FlowsheetTestHdr_Section" into the "Section" input
+	Click the "Save" popup button
+
+	# This belongs under the previous header.
+
+	Enter "FlowsheetTestHdr_One" in the "obs_name" autocomplete
+	Select "Text" from the 1st dropdown
+	Click the 2nd "Edit" icon
+	Verify exists "!Edit FlowsheetTestHdr_One" popup
+	Type "FlowsheetTestHdr_Section" into the "Section" input
+	Click the "Save" popup button
+
+	# This belongs under the previous header.
+
+	Enter "FlowsheetTestHdr_Two" in the "obs_name" autocomplete
+	Select "Text" from the 2nd dropdown
+	Click the 3rd "Edit" icon
+	Verify exists "!Edit FlowsheetTestHdr_Two" popup
+	Type "FlowsheetTestHdr_Section" into the "Section" input
+	Click the "Save" popup button
+
+	# This will only appear after entering "Alpha" into FlowsheetTestHdr_One.
+
+	Click the "Add Line Break / Header" button
+	Click the 4th "Edit" icon
+	Verify exists "!Edit Line Break / Header" popup
+	Type "Informational Text: FlowsheetTestHdr_One = Alpha" into the "Description" input
+	Type "observationDisplay('FlowsheetTestHdr_One', 'Alpha')" into the "Conditional" input
+	Type "FlowsheetTestHdr_Section" into the "Section" input
+	Click the "Save" popup button
+
+	# This will only appear after entering "Bravo" into FlowsheetTestHdr_One.
+
+	Click the "Add Line Break / Header" button
+	Click the 5th "Edit" icon
+	Verify exists "!Edit Line Break / Header" popup
+	Type "Informational Text: FlowsheetTestHdr_One = Bravo" into the "Description" input
+	Type "observationDisplay('FlowsheetTestHdr_One', 'Bravo')" into the "Conditional" input
+	Type "FlowsheetTestHdr_Section" into the "Section" input
+	Click the "Save" popup button
+
+	# This doesn't belong to a header.  Entering a value for this item
+	# shouldn't cause anything else to appear/disappear.
+
+	Enter "FlowsheetTestHdr_Three" in the "obs_name" autocomplete
+	Select "Text" from the 3rd dropdown
+
+	# We're not actually going to use this, I just don't want to deal with the
+	# section closing automatically after I type into the last input.
+
+	Enter "FlowsheetTestHdr_Four" in the "obs_name" autocomplete
+	Select "Text" from the 4th dropdown
+
+	Click the "Submit" button
+
+	Type "FlowsheetTestHdr" into the "select_text" input
+	Click the "Go" button
+	Verify exists "Displaying 1-1 / 1" text
+
+Begin "Setup Order"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Orders" charttab
+	Click the "Orders-List Editor" charttab subtab
+	# Click the "Old Order Lists Editor" link
+	
+	Click the "Add Order" button
+	Select "Exams (EXAM)" from the "Order Type" dropdown
+	Type "FlowsheetTestHdr" in the "Order Name" input
+	Select "Flowsheet" from the "Exam Order Layouts" dropdown
+	Click the "Save" button
+	
+	Navigate ?f=layout&module=Orders&name=OrderList&tabmodule=admin&tabselect=Orders&ts_caption=Orders-List+Editor	
+	Wait for the "orderlist" grid
+	Click the @Code filter button@xpath="//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Name']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Name']//p[contains(@class, 'SelectBox')]"
+	Type "FlowsheetTestHdr" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "FlowsheetTestHdr" label
+	Click the @ok button@xpath="//li[@data-wcdv-field='Name']//p[@class='btnOk']"
+	Verify exists "FlowsheetTestHdr" grid entry
+
+	# Click the "Add An Order" link
+	# Select "Exams (EXAM)" from the "orl_type" dropdown
+	# Type "FlowsheetTestHdr" into the "orl_name" input
+	# Select "Flowsheet" from the "orl_layout_name" dropdown
+	# Click the "Save" button
+
+	# Verify exists "!Order List Entry Added" text
+	# Type "FlowsheetTestHdr" into the "srch_text" input
+	# Click the "Search" button
+	# Verify exists "Displaying 1-1 / 1" text
+
+Begin "Find patient, add encounter"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+
+Begin "Add order for FlowsheetTestHdr"
+	# Within the Smart Plan, the Visit Orders quicklist starts off hidden (i.e. collapsed).  For
+	# some reason, this doesn't support the colon syntax like [quicklist item] does, so just hope
+	# that there's only one Visit Orders quicklist.
+	Show "Smart Plan" "Visit Orders" quicklist
+	Add "Smart Plan:Visit Orders" "Other" quicklist item
+	Enter "FlowsheetTestHdr" in the "order_id" autocomplete
+	# We've got two save buttons: 1st = "Save to Library", 2nd = "Save"
+	Click the 2nd "Save" popup button
+	Examadd "Smart Plan" "FlowsheetTestHdr" dynamicitem
+
+Begin "Test 1"
+	Open the "FlowsheetTestHdr" dynamicsection
+
+	Clear the "FlowsheetTestHdr_One" flowsheet
+	Clear the "FlowsheetTestHdr_Two" flowsheet
+	Clear the "FlowsheetTestHdr_Three" flowsheet
+
+	Type "Alpha" into the "FlowsheetTestHdr_One" flowsheet textarea
+	Verify exists "!Informational Text: FlowsheetTestHdr_One = Alpha" flowsheet section_header
+	Verify notexists "!Informational Text: FlowsheetTestHdr_One = Bravo" flowsheet section_header
+	Close the "FlowsheetTestHdr" dynamicsection
+
+	Verify exists "!Section Header" text
+	Verify exists "!Alpha" text
+	Verify exists "!Informational Text: FlowsheetTestHdr_One = Alpha" flowsheet section_header
+	Verify notexists "!Informational Text: FlowsheetTestHdr_One = Bravo" flowsheet section_header
+
+Begin "Test 2"
+	Open the "FlowsheetTestHdr" dynamicsection
+
+	Clear the "FlowsheetTestHdr_One" flowsheet
+	Clear the "FlowsheetTestHdr_Two" flowsheet
+	Clear the "FlowsheetTestHdr_Three" flowsheet
+
+	Type "Bravo" into the "FlowsheetTestHdr_One" flowsheet textarea
+	Verify notexists "!Informational Text: FlowsheetTestHdr_One = Alpha" flowsheet section_header
+	Verify exists "!Informational Text: FlowsheetTestHdr_One = Bravo" flowsheet section_header
+	Close the "FlowsheetTestHdr" dynamicsection
+
+	Verify exists "!Section Header" text
+	Verify exists "!Bravo" text
+	Verify notexists "!Informational Text: FlowsheetTestHdr_One = Alpha" flowsheet section_header
+	Verify exists "!Informational Text: FlowsheetTestHdr_One = Bravo" flowsheet section_header
+
+Begin "Test 3"
+	Open the "FlowsheetTestHdr" dynamicsection
+
+	Clear the "FlowsheetTestHdr_One" flowsheet
+	Clear the "FlowsheetTestHdr_Two" flowsheet
+	Clear the "FlowsheetTestHdr_Three" flowsheet
+
+	Type "Charlie" into the "FlowsheetTestHdr_One" flowsheet textarea
+	Verify notexists "!Informational Text: FlowsheetTestHdr_One = Alpha" flowsheet section_header
+	Verify notexists "!Informational Text: FlowsheetTestHdr_One = Bravo" flowsheet section_header
+	Close the "FlowsheetTestHdr" dynamicsection
+
+	Verify exists "!Section Header" text
+	Verify exists "!Charlie" text
+	Verify notexists "!Informational Text: FlowsheetTestHdr_One = Alpha" flowsheet section_header
+	Verify notexists "!Informational Text: FlowsheetTestHdr_One = Bravo" flowsheet section_header

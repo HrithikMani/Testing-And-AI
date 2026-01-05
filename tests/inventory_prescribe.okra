@@ -1,0 +1,70 @@
+Begin "Enable the Inventory tab"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Begin "Show the Inventory Sidemenu Tab"
+		Click the "System" charttab
+		Click the "Menu Editor" charttab subtab
+		Type "Inventory" in the input
+		Click the "Go" button
+		Click the !Edit link
+		Click the show_in_wc checkbox
+		Click the "Change" button
+		Verify exists "Successfully updated tab" text
+Begin "Enable Prescribe from Inventory"
+	@Update System Setting@driver.miedb.dbExec("UPDATE system_settings SET value=1 WHERE module='E-Chart' AND section='Inventory' AND item='Show Quantity In AutoComplete'")
+	@Update System Setting@driver.miedb.dbExec("UPDATE system_settings SET value=1 WHERE module='E-Chart' AND section='Meds' AND item='Use Fill Requests'")
+	Navigate "?f=memcache&flush_it=Flush+All+Values"
+Begin "Map orders"
+	Begin "Add some orders, so that we can map them"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Orders" charttab
+		Click the "Orders-List Editor" charttab subtab
+		Click the "Legacy Orders List Editor" link
+		Click the "Add An Order" link
+		Select "Add a New Order Type" from the "Order Type" dropdown
+		Type "MED" in the "Order Type" input
+		Type "Amoxicillin 500" in the "Order Name" input
+		Type "AMOX500" in the "Order Code" input
+		Type "AMOX500" in the "Order Billing Code" input
+		Type "25" in the Price input"
+		Click the "Save" button
+		Verify exists The "Order List Entry Added" text
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Click the "Mappings" charttab
+		Click the "Legacy Mapping" link
+		Select "Order" from the dropdown
+		Click the "Add a Mapping" link
+		Begin "Map "Amoxicillin" to 'Amoxicillin 500'"
+			Enter "Amoxicillin" in the "orederac_txt" autocomplete
+			Begin "Enter 'Amoxicillin 500mg Capsule' in the Inventory autocomplete"
+				Type "Amoxicillin!" in the "inv_ac_txt" autocomplete
+				@Wait for Ajax@driver.wcutils.waitForAJAX(45)
+				Click the "Amoxicillin 500mg Capsule" autocomplete choice
+		Begin "Verify that the mapping was inserted"
+			Click the "Submit" button
+			Verify exists the "Mapping (3535 - 1) Inserted" text
+			Verify exists the "Amoxicillin 500" text
+Begin "Go to William Hart's Chart"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+Begin "Prescribe a medication from inventory"
+	Click the "Add Visit" link
+	Open "Medication orders" dynamicsection
+	Enter "amoxicillin" in the "medordersle_orderac_txt" autocomplete
+	Verify exists "Warning for amoxicillin" text
+	Close the popup
+	Enter "capsule 500" in the "medordersle_formac_txt" autocomplete
+	Type "Oral 1 capsule per" in the "medordersle_sigac_txt" input
+	Type "30d" in the "le_medordersle_rf_duration_value" input
+	Type "0" in the "le_medordersle_rf_refills_value" input
+	Select "Selenium, Selenium" from the "le_medordersle_rf_doctor_id_value" dropdown
+	Check the "le_medordersle__fill__value" checkbox
+	Click the "Add" button"
+	Advance the dynamicsection
+Begin "Verify the charge was created"
+	Open "Financials" dynamicsection
+	Verify exists "AMOX500" text
+	Verify exists "$25.00" text

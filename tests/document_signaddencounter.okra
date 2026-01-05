@@ -1,0 +1,49 @@
+Begin "Sign and Add Encounter using Links"
+	Open the sidemenu
+	Click the "E-Sign" link
+	Click the "0000485" link
+	Wait for ajax
+	Click @"SIGN and Add Visit"@xpath="//span/font/nobr[contains(., 'SIGN and Add Visit')]"
+	Wait for ajax
+	Verify exists "Pediatric Exam" text
+	Hover the "Pediatric Exam" dynamicitem
+	Click the "View Document" document dynop
+	Click the @Archive and Close button@xpath=//a[@title="Archive & Close"]
+	Click the "Yes" button
+	@Switch to Document Window@driver.switchToPopup()
+	Verify exists "(Final)" text
+
+Begin "Sign and Add Encounter using Quicklinks"
+	Open the sidemenu
+	Click the "E-Sign" link
+	Click the "0000486" link
+	Wait for ajax
+	Hover "0000486" "Pediatric Exam" document header
+	Click the "Quick Links" document dynop
+	Click the "Add Visit" link
+	Wait for ajax
+	Verify exists "Pediatric Exam" text
+	Hover the "Pediatric Exam" dynamicitem
+	Click the "View Document" document dynop
+	Click the @Archive and Close button@xpath=//a[@title="Archive & Close"]
+	Click the "Yes" button
+	@Switch to Document Window@driver.switchToPopup()
+	Verify exists "(Final)" text
+
+Begin "Test Documents Quicklinks don't sign from Chart"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Click the "TEST-10019" link
+	Click the "Documents" charttab
+	Click the "0000688" link
+	Hover "0000688" "Immunization Schedule" document header
+	Click the "Quick Links" document dynop
+	Click the "Add Visit" link
+	Wait for ajax
+	Verify exists "Immunization Schedule" text
+	Hover the "Immunization Schedule" dynamicitem
+	Click the "View Document" document dynop
+	Click the @Archive and Close button@xpath=//a[@title="Archive & Close"]
+	Click the "Yes" button
+	@Switch to Document Window@driver.switchToPopup()
+	Verify !exists "(Final)" text

@@ -1,0 +1,38 @@
+Begin "Employer Organizations Overview page"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Employer Organizations" link
+	Type "Better" in the input
+	Click the "Search" button
+	Click the "Better Corp." link
+	Click the "Overview (EO)" charttab
+	Begin "Employer Organizations"
+		Verify exists "12001 Pacific Coast Highway" text
+		Verify exists "Mountain View, California 94043" text
+	Begin "Contacts"
+		Open the "Contacts" dynamicsection
+		Enter "Selenium"  in the "le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input" autocomplete
+		Select "Contact" in the "le_pat_parent_relations_rt_relation_type_value" dropdown
+		Click the "Add" button
+		Close the "Contacts' dynamicsection
+			Verify exists "Selenium Selenium" text
+			Verify exists "6302 Constitution Drive" text
+	Begin "Encounter Contacts"
+		# Empty/unused (at the moment)
+	Begin "Accounts"
+		Verify exists "Better Corp" text
+		Verify exists "Better Corp Checking" text
+		Verify exists "Better Corp Revenue" text
+	Begin "Other Data" dynamicsection
+		Open the "Other Data" dynamicsection
+		Type "testing!" into the freetext field
+		Verify exists "Employer Organization Data" text
+	Begin "Sub-Employer Organizations"
+		# Empty/unused (at the moment)
+		Advance the dynamicsection
+	Begin "Chart Types"
+		Verify exists "Employer Organization" text
+		Verify exists "Account" text
+		Verify exists "Portal" text
+		Verify exists "Industrial Hygiene" text
+

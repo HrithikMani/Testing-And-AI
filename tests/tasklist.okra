@@ -1,0 +1,108 @@
+"""
+	@owners: tvenable
+	@filedeps: src/wcjson.c,src/api/task.c,jsbin/wcscriptlets.js,system/layouts/Tasklist/*.html,system/layouts/ObjectWin/task_id.html,system/reports/TaskList*.sql
+"""
+Begin "Revoke All Task Permissions"
+	Navigate "?f=admin&t=security&opp=esecuser&user_id=8"
+	Select "No" from the "Add Tasks" dropdown
+	Select "Own" from the "Manage Tasks" dropdown
+	Type "tasklist.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	Verify exists The "[ Add Tasks: No ]" text
+	Verify exists The "[ Manage Tasks: Own ]" text
+Begin "Test Adding Tasks"
+	Begin "Try to Add Task"
+		Open the sidemenu
+		Click the "Task List" sidemenu entry
+		Wait for page
+		Verify !exists "Add New Task" link
+	Begin "Grant Add Task Permission"
+		Navigate "?f=admin&t=security&opp=esecuser&user_id=8"
+		Select "Yes" from the "Add Tasks" dropdown
+		Type "tasklist.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		Verify exists The "[ Manage Tasks: Own ]" text
+	Begin "Try to Add Task"
+		Open the sidemenu
+		Click the "Task List" sidemenu entry
+		Verify exists "Add New Task" link
+		Click "Add New Task" link
+		Verify exists "Add Task" popup
+		Type "test 1" into the description popup textarea
+		Select "Physicians" from the realmDropdown popup dropdown
+		Click the realmAdd popup button
+		Verify exists "Physicians" popup text
+		Click the "Save" popup button
+		Wait for the "TaskListRealm" grid
+		Verify exists "test 1" text
+Begin "Test Editing Tasks"
+	Begin "Edit Task Normally"
+		Click the "test 1" grid checkbox
+		Click the "Edit" grid button
+		Verify exists "Edit Task" popup
+		Type "note 1" into the note popup textarea
+		Click the "Save" popup button
+		Wait for the "TaskListRealm" grid
+		Verify exists "note 1" text
+	Begin "Test Editing a Task You Didn't Make"
+		Begin "Refresh the Page"
+			Open the sidemenu
+			Click the "Task List" sidemenu entry
+			Wait for the "TaskListRealm" grid
+			Verify exists "test 1" text
+		Begin "Mess with Task, Removing Sender"
+			# Removing the sender means I shouldn't be able to edit it.
+			@Pretend I didn't make this task@driver.miedb.dbExec("update tasks set sender_id = 0 where description = 'test 1'")
+		Begin "Edit Task, Not Created by Me"
+			Click the "test 1" grid checkbox
+			Click the "Edit" grid button
+			Verify exists "Edit Task" popup
+			Type "note 1a" into the note popup textarea
+			Click the "Save" popup button
+			Verify exists @error notification@xpath='//div[@class="growl-message"][contains(text(), "Insufficient permission to manage this task")]'
+			Wait for the "TaskListRealm" grid
+			Verify !exists "note 1a" text
+	Begin "Test Editing a Task Not in Your Realm"
+		Begin "Grant Manage Tasks Permission"
+			Navigate "?f=admin&t=security&opp=esecuser&user_id=8"
+			Select "Realm" from the "Manage Tasks" dropdown
+			Type "tasklist.okra" in the securityrole reason
+			Click the "Update Individual Security" button
+		Begin "Refresh the Page"
+			Open the sidemenu
+			Click the "Task List" sidemenu entry
+			Wait for the "TaskListRealm" grid
+			Verify exists "test 1" text
+		Begin "Mess with Task, Removing Realm"
+			@Change the realm@driver.miedb.dbExec("update tasks set realm = '' where description = 'test 1'")
+		Begin "Edit Task, Not in My Realm"
+			Click the "test 1" grid checkbox
+			Click the "Edit" grid button
+			Verify exists "Edit Task" popup
+			Type "note 1a" into the note popup textarea
+			Click the "Save" popup button
+			Verify exists @error notification@xpath='//div[@class="growl-message"][contains(text(), "Insufficient permission to manage this task")]'
+			Wait for the "TaskListRealm" grid
+			Verify !exists "note 1a" text
+	Begin "Put Things Back"
+		@Restore task realm@driver.miedb.dbExec("update tasks set realm = 'Physicians' where description = 'test 1'")
+Begin "Test Grab and Complete Scriptlets"
+	Begin "Refresh the Page"
+		Open the sidemenu
+		Click the "Task List" sidemenu entry
+		Wait for the "TaskListRealm" grid
+		Verify exists "test 1" text
+	Begin "Grab Task"
+		Click the "test 1" grid checkbox
+		Click the "Grab" grid button
+		Wait for the "TaskListUserTasks" grid
+		# ensure the task is listed here
+		Wait for the "TaskListRealm" grid
+		# ensure the task is NOT listed here
+	Begin "Complete Task"
+		Click the "test 1" grid checkbox
+		Click the "Complete" grid button
+		Wait for the "TaskListUserTasks" grid
+		# ensure the task is not listed here
+		Click the "Completed" charttab
+		Verify exists "test 1" text

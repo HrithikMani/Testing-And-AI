@@ -1,0 +1,25 @@
+Begin "Import the test data file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Wait for the "DataImportTypes" grid
+	Click the "Show/Hide Grid Controls" icon
+	Select "Name" from the @Filters dropdown@xpath='//span[contains(., "Filters")]/parent::div/following-sibling::div/select[@class="wcdv_control_addField"]'
+	Sumoselect "Pharmacy Filter CSV API" from the "Name" grid sumoselect
+	Click the "OK" grid sumobutton
+	Wait for ajax
+	Click "Pharmacy Filter CSV API" grid checkbox
+	Click the "Upload Data" button
+	Verify exists @xpath="//div[@class='wc_win']"
+	Verify exists "Pharmacy Filter CSV API" text in @xpath="//div[@class='wc_win']"
+	Screenshot "test"
+	Click the "DI_Verbose" checkbox
+	@Wait@driver.pause(1)
+	Type 'PharmacyFilterTest.csv' in the 'csv_file' input
+	Click the "Upload File" button
+	@driver.getWebDriver().switch_to.frame("di_output_frame")
+	@Wait@driver.pause(1)
+	Verify exists "Successfully imported file PharmacyFilterTest.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+	Click the @Close button@xpath='//button[@class="xclose"]'

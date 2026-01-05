@@ -1,0 +1,53 @@
+Begin "Setup appointment type with a template"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the Printing charttab
+	Click the "Print Definitions" charttab subtab
+	Click the Appointments link
+	Verify exists "Print Sections for: Appointments" text
+	Click the @Edit link @xpath='//td[contains(@class, "printsections_Actions_cell")]/a[contains(., "Edit")]'
+	Verify exists "Conditional Query" text
+	Type "SELECT COUNT(*) FROM multi_type_apt mta WHERE mta.code = 'ANIMAL' AND mta.apt_id = @appt_id" into the @textarea @xpath='//textarea[@name="conditional_query"]'
+	Click the Save button
+Begin "Create animal appointment for William Hart"
+	Navigate "?f=sched&s=appointment&pat_id=18"
+	Verify exists "Add Appointment" text
+	Enter "Selenium, Selen" in the res_idacinp autocomplete
+	Enter "Animal Exposure (Allergy)" in the typeacinp autocomplete
+	enter Office in the locationacinp autocomplete
+	Type "12" in the @startdateMONTH input @xpath='//input[contains(@id, "startdateMONTH")]'
+	Type "31" in the @startdateDAY input @xpath='//input[contains(@id, "startdateDAY")]'
+	Type "2199" in the @startdateYEAR input @xpath='//input[contains(@id, "startdateYEAR")]'
+	Type "9:00" in the @startdateTIME input @xpath='//input[contains(@id, "startdateTIME")]'
+	Click the Save button
+	Click the Force link
+Begin "Verify Printout"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the Admin charttab
+	Click the Appointments charttab subtab
+	Click the "Print Chart" link
+	@Switch Window@driver.switchToPopup()
+	Click the Print button
+	Verify !exists "no need to print!" text
+	Screenshot "Hart Pending Appointments"
+	@Close Window@driver.closePopup()
+Begin "Create non-animal appointment for Jane Doe"
+	Navigate "?f=sched&s=appointment&pat_id=5"
+	Verify exists "Add Appointment" text
+	Enter "Selenium, Selen" in the res_idacinp autocomplete
+	Enter "COVID Monitoring" in the typeacinp autocomplete
+	Enter Office in the locationacinp autocomplete
+	Type "12" in the @startdateMONTH input @xpath='//input[contains(@id, "startdateMONTH")]'
+	Type "31" in the @startdateDAY input @xpath='//input[contains(@id, "startdateDAY")]'
+	Type "2199" in the @startdateYEAR input @xpath='//input[contains(@id, "startdateYEAR")]'
+	Type "9:00" in the @startdateTIME input @xpath='//input[contains(@id, "startdateTIME")]'
+	Click the Save button
+	Click the Force link
+Begin "Test no printout necessary"
+	Navigate "?f=chart&s=pat&pat_id=5"
+	Click the Admin charttab
+	Click the Appointments charttab subtab
+	Click the "Print Chart" link
+	@Switch Window@driver.switchToPopup()
+	Click the Print button
+	Verify exists "no need to print!" text

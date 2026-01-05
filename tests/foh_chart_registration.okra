@@ -1,0 +1,79 @@
+Begin Grant Account and Contact Access for {selenium_username}
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" link
+	Type {selenium_username} into the input
+	Click the "Go!" button
+	Click the !Edit link
+	Click the "Customize User Security" link
+	Select Yes from the "Manage Accounts" dropdown
+	Select Yes from the "Manage Contacts" dropdown
+	Type "Manage Accounts and Contacts" into the sec_role_comment input
+	Click the "Update Individual Security" button
+Begin Add New Employee to Employer Organization
+	Open the sidemenu
+	Click the "Employer Organization" sidemenu entry
+	Type Better into the input
+	Click the Search button
+	Click the "Better Corp" link
+	Click the Employees charttab
+	Click the "Add New Employee" link
+	Type David into the "Last Name" field
+	Type Dave into the "First Name" field
+	Verify exists "!All Matching Charts:" text
+	Type Ben into the "First Name" field
+#	Verify !exists "All Matching Charts" text
+	Enter "05-05-1985" into the birth_date date
+	@Wait 10 seconds@driver.pause(10)
+	Type "ben_david@mieweb.com" into the Email field
+	Click the "Add New" button
+	@Wait 10 seconds@driver.pause(10)
+	Begin Verify Employee was Created
+		Click the !Summary charttab
+		Verify exists "David, Ben" text
+	Begin Verify Employee portlets
+		Begin "Select Portlets for Employee/Patient Chart"
+			Click the "Select Portlets" link
+			Select "No" from the "default" dropdown
+			Select "3" from the "columns" dropdown
+			Check the "Contacts" picklist checkbox
+			Check the "Contacts" picklist checkbox
+			Check the "Demographics" picklist checkbox
+			Check the "Medical Contacts" picklist checkbox
+			Check the "Quick Links" picklist checkbox
+			Check the "Work Status" picklist checkbox
+			Check the "Warnings & Alerts" picklist checkbox
+			Click the "Save" button
+	Begin Verify Employee is Linked to the EO
+		@Wait for the section@driver.wcutils.waitForAJAX(30)
+		Verify exists "Better Corp." text
+		Click the "Better Corp.,  (Better Corp.)" link
+		Click the Employees charttab
+		Verify exists "Ben David" link
+Begin Link Existing Provider to Provider Organization
+	Click the "Overview (PO)" charttab
+	Click the "Add New Provider" link
+	Type David into the "Last Name" field
+	Type Bert into the "First Name" field
+	Begin Verify that the matching chart rows display
+		Verify exists "!All Matching Charts:" text
+		Verify exists "David, Bert" text
+	@MIEDriver needs to be updated to support blur events@driver.reportCommandStatus('blurring is broken', '', None, '', '')
+	@Blur the FirstName field by focusing the LastName field@driver.runJS("arguments[0].focus()", driver.getElement(id='last_name'))
+	@Wait 2 seconds@driver.pause(2)
+	Click the Link link
+	Verify exists "Better Corp." contactcard
+Begin Add New Account to Employer Organization
+	Open the sidemenu
+	Click the "Employer Organizations" sidemenu entry
+	Type Better into the input
+	Click the Search button
+	Click the "Better Corp" link
+	Click the "Overview (EO)" charttab
+	Click the "Add New Account" link
+	Type DailyChecking123 into the Name field
+	Type 100000 into the "Opening Balance" field
+	Enter "05-05-2016" into the accounts_begin_date date
+	Click the "Add New" button
+	Verify exists "Better Corp" contactcard

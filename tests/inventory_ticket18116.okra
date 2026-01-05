@@ -1,0 +1,62 @@
+Begin "Set up the permissions and settings"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Yes" from the "Receive Inventory" dropdown
+	Type "inventory_ticket18116.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify !exists The "[ Receive Inventory: No ]" text
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Type "By Site" in the input
+	Click the "Go" button
+	# in the "Value" cell in the "Inventory" row in the "System Settings" table
+	Verify exists the !"1" listview row
+	Type "Use Lot Numbers" in the input
+	Click the "Go" button
+	# in the "Value" cell in the "Inventory" row in the "System Settings" table
+	Verify exists the !"1" listview row
+	Type "Are Required" in the input
+	Click the "Go" button
+	# in the "Value" cell in the "Lot Numbers" row in the "System Settings" table
+	Verify exists the !"0" listview row
+Begin "Receive a No-Lot instance of an item"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Add Inventory" charttab
+	# in the 1st row in the table body in the "Receive General Inventory Items" table
+	Begin "Add a no-lot batch of children's crutches"
+		# Select "Crutches 48" from the autocomplete in the "Drug/Item" cell
+		Select "Office" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc0']
+		#Select "Lisino" and get "lisinopril (New)" from the autocomplete in the "Drug/Item" cell
+		Verify !exists @the "Stockpile" dropdown in the "Site" cell@xpath=//select[@name='inv_stockpile_id0']
+		Enter "Crutches 48" into the "inv_acval0" autocomplete
+		Blur the "inv_acval0" autocomplete
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Screenshot "inv_supply_add"
+		# in the "Qty" cell
+		Type "5" in the "inv_quantity0" input
+	Click the "Add to Inventory" button
+	Verify exists The 'Receiving Crutches 48" (5) - Success' text
+	# in the 1st row in the table body in the "Receive General Inventory Items" table
+	Begin "Add a no-lot batch of children's crutches"
+		# Select "Crutches 48" from the autocomplete in the "Drug/Item" cell
+		Enter "Crutches 48" into the "inv_acval0" autocomplete
+		Blur the "inv_acval0" autocomplete
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Screenshot "inv_supply_add"
+		# in the "Qty" cell
+		Type "8!" in the "inv_quantity0" input
+	Click the "Add to Inventory" button
+	Verify exists The 'Receiving Crutches 48" (8) - Success' text
+	Click the "Show Inventory" charttab
+Begin "Verify we got the right number of crutches"
+	Screenshot "inv_view"
+	# Verify exists the !"13" text in the @"Qty" cell in the "Crutches 48" row in the "General Inventory" table@xpath=//td
+	Verify exists the @"13" text in the "Qty" cell@xpath=//tr[4]/td[.='13']

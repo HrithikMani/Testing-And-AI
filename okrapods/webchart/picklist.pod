@@ -1,0 +1,27 @@
+"""
+ For the new picklists.
+ FOH has some absolutely enormous picklists, so I've added a timeout to this noun
+
+Usage examples:
+
+	Check the "Lipid Profile" picklist checkbox
+	Click the "In House Testing Pick List" picklist symbol
+
+"""
+
+picklist://div[@class="wc_win"]/div[@class="wc_win_title" and contains(.,{OKRA_TEXT})]/following-sibling::div[contains(@class,"wc_win_body")][contains(@class,"no_searchbar")]
+
+checkbox://div[@class="wc_win"]//label[contains(.,"{OKRA_TEXT}")]/parent::td/preceding-sibling::td/input[@type="checkbox"]
+	|//div[@class="wc_win"]//span{OKRA_TEXT_CLS}/preceding-sibling::input[@type="checkbox"]
+	|//div[@class="wc_win"]//td{OKRA_TEXT_CLS}/parent::tr[@class="picklistItem"]/td/input[@type="checkbox"]
+	|//div[@class="wc_win"]//span{OKRA_TEXT_CLS}/preceding::input[1][@type="checkbox"]
+	|//div[@class="wc_win"]//label{OKRA_TEXT_CLS}/preceding-sibling::input[@type="checkbox"]
+	|//div[@class="wc_win"]//label{OKRA_TEXT_CLS}/input[@type="checkbox"]
+
+symbol://span[substring(@title,string-length(@title) -string-length("Pick List") +1) = "Pick List"][substring(@class,string-length(@class) -string-length("link-icon") +1) = "link-icon"]
+
+link://div[@id="order_pick_list_win"]//a{OKRA_TEXT_CLS}
+
+button://div[@class="wc_win"]/div[@class="wc_win_title"]/following-sibling::div[contains(@class,"wc_win_body")][contains(@class,"no_searchbar")]//input[@type="button"][@value="{OKRA_TEXT}"]
+	|//div[@class="wc_win"]/div[@class="wc_win_title"]/following-sibling::div[contains(@class,"wc_win_body")][contains(@class,"no_searchbar")]//input[@type="button"][contains(@value,"{OKRA_TEXT}")]
+	|//div[@class="wc_win"]/div[@class="wc_win_title"]/following-sibling::div[contains(@class,"wc_win_body")][contains(@class,"no_searchbar")]//input[@type="button"]{OKRA_TEXT_CLS}

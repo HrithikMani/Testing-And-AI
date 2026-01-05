@@ -1,0 +1,53 @@
+"""
+Pod used to interact with date input controls
+
+- The Enter verb takes a single string to be parsed as a "MM-DD-YY TM" value which is then passed to the appropriate inputs
+
+Usage examples:
+	Enter "05-01-2004 1350" into the "Test Date" date
+
+"""
+month://label{OKRA_TEXT_CLS}/following-sibling::div//span//input[contains(@class, "month") and (@type!="hidden" or not (@type))]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//input[contains(@class, "month") and (@type!="hidden" or not (@type))]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//input[contains(@id, "MONTH") and (@type!="hidden" or not (@type))]
+	|//input[contains(@id, '{OKRA_TEXT}') and contains(@id, 'MONTH') and (@type!="hidden" or not (@type))]
+	|//input[contains(@id, "MONTH") and (@type!="hidden" or not (@type))]
+	|//input[contains(@class, "month") and (@type!="hidden" or not (@type))]|@name
+ 
+day://label{OKRA_TEXT_CLS}/following-sibling::div//span//input[contains(@class, "day") and (@type!="hidden" or not (@type))]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//input[contains(@class, "day") and (@type!="hidden" or not (@type))]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//input[contains(@id, "DAY") and (@type!="hidden" or not (@type))]
+	|//input[contains(@id, '{OKRA_TEXT}') and contains(@id, 'DAY') and (@type!="hidden" or not (@type))]
+	|//input[contains(@id, "DAY") and (@type!="hidden" or not (@type))]
+	|//input[contains(@class, "day") and (@type!="hidden" or not (@type))]|@name
+  
+year://label{OKRA_TEXT_CLS}/following-sibling::div//span//input[contains(@class, "year") and (@type!="hidden" or not (@type))]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//input[contains(@class, "year") and (@type!="hidden" or not (@type))]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//input[contains(@id, "YEAR") and (@type!="hidden" or not (@type))]
+	|//input[contains(@id, '{OKRA_TEXT}') and contains(@id, 'YEAR') and (@type!="hidden" or not (@type))]
+	|//input[contains(@id, "YEAR") and (@type!="hidden" or not (@type))]
+	|//input[contains(@class, "year") and (@type!="hidden" or not (@type))]|@name
+
+time://label{OKRA_TEXT_CLS}/following-sibling::div//span//input[contains(@class, "time") and (@type!="hidden" or not (@type))]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//input[contains(@class, "time") and (@type!="hidden" or not (@type))]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//input[contains(@id, "TIME") and (@type!="hidden" or not (@type))]
+	|//input[contains(@id, '{OKRA_TEXT}') and contains(@id, 'TIME') and (@type!="hidden" or not (@type))]
+	|//input[contains(@id, "TIME") and (@type!="hidden" or not (@type))]
+	|//input[contains(@class, "time") and (@type!="hidden" or not (@type))]|@name
+
+@Enter
+"""
+def parse(val):
+	val = val.replace('/', '-')
+	spl = val.split()
+	mm, dd, yy = spl[0].split('-')
+	if len(spl) > 1:
+		return mm, dd, yy, spl[1]
+	else:
+		return mm, dd, yy
+"""
+Type "{0}!" into the date month
+Type "{1}!" into the date day
+Type "{2}" into the date year
+Type "{3}" into the date time
+

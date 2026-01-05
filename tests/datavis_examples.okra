@@ -1,0 +1,9 @@
+"""
+	DataVis Examples
+	@filedeps: system/layouts/UI/DataVis Examples.html
+"""
+Begin Start Inputs Test
+	Navigate "?f=layout&module=UI&name=DataVis+Examples"
+	Verify exists Minimal grid
+	Verify exists "Scriptlet Demo" grid
+	Verify exists "Gantt Chart" grid

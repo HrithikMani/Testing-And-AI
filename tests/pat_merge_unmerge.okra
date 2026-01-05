@@ -1,0 +1,126 @@
+Begin "Initial merge"
+	Begin "Set up chart"
+		@Add a username to pat_id 20@driver.miedb.dbExec("UPDATE patients SET username='williamhart' WHERE pat_id=20")
+		@Clear relflat@driver.miedb.dbExec('DELETE FROM pat_pat_relflat')
+		@@@Add subordinate relationship to pat_id 20
+		driver.miedb.dbExec("INSERT INTO pat_pat_relations SET pat_id=20, relation_type_id=(SELECT relation_type_id FROM relation_types WHERE relation_type='Subordinate'), related_pat_id=(SELECT pat_id FROM patients WHERE last_name='Anderson' AND first_name='Frederick'), start_date='2000-10-31'")
+		@@@
+		@Add patient_admin values to pat_id 20@driver.miedb.dbExec("UPDATE patient_admin SET job_code='Job',company_code='TC',facility_code='TC-1234',building_code='Building 1',clinic_location='OFFICE',hire_datetime='2024-07-30 00:00:00' WHERE pat_id=20")
+		Begin "Enable Unmerge Permission"
+			Navigate "?m=admin&t=security&opp=esecuser&user_id=8"
+			Select "Edit" from the "Control_Manage Patient Merge Log" dropdown
+			Type "Allow unmerges" in "sec_role_comment" input
+			Click "Update Individual Security" button
+	Begin "Merge William Hart 9 Match Using the Doc Queue"
+		Navigate "?f=chart&s=docq"
+		Select "HOSPITAL (UHS (Demo Hospital)) - 3" in the "partition" dropdown
+		@Focus on the left column@d = driver.getWebDriver(); d.switch_to.frame("docq")
+		Click the "HOSPITAL-495653" link
+		@Focus on the right column@d = driver.getWebDriver(); d.switch_to.default_content(); d.switch_to.frame("docq_proc")
+		Click the "Q-Merge" link
+		@Focus on the footer section@d = driver.getWebDriver(); d.switch_to.default_content(); d.switch_to.frame("docq_view")
+		Verify notexists "You currently do not have access to: '' in: 'Patient Records'" text
+		@Focus on the left column@d = driver.getWebDriver(); d.switch_to.default_content(); d.switch_to.frame("docq")
+		Verify notexists "HOSPITAL-495653" text
+		@@@Verify relflat got populated
+		count = driver.miedb.dbQuery("SELECT count(*) AS count FROM pat_pat_relflat WHERE pat_id=18 AND relation_type_id=(SELECT relation_type_id FROM relation_types WHERE relation_type='Subordinate') AND pat_isa=(SELECT pat_id FROM patients WHERE last_name='Anderson' AND first_name='Frederick') AND self=0 AND level=1").getRow(0)['count']
+		driver.reportCommandStatus('Verify relflat is populated', f'Got {count} rows, expected 1', count == 1, '', '')
+		@@@
+Begin "Unmerge failure without permission"
+	Begin "Break the unmerge"
+		@Add a username to pat_id 18@driver.miedb.dbExec("UPDATE patients SET username='williamhart' WHERE pat_id=18")
+	Begin "Try the unmerge"
+		Navigate "?f=admin&s=patient_merge_manager"
+		Enter "Selenium, Selenium" into the user_id_ac_txt autocomplete
+		Click the "Search" button
+		Click the "UnMerge" link
+		Verify exists "Are you sure you want to unmerge all chart items?" text
+		Verify exists "This will re-create the previously merged patient (20)" text
+		Verify exists "and move those associated chart items away from patient (Hart, William S.)" text
+		Click the "Un-Merge" button
+	Begin "Verify error message"
+		Verify exists "There was a failure during the unmerge process between charts 20 and 18. Please contact Technical Support." text
+		Verify notexists "1 queries failed" text
+		Verify notexists "Duplicate entry '20' for key 'PRIMARY'" text
+Begin "Unmerge failure with golden ticket"
+	Begin "Enable Unmerge Error Visibility"
+		Navigate "?m=admin&t=security&opp=esecuser&user_id=8"
+		Select "Yes" from the "Control_View Database Errors" dropdown
+		Type "View unmerge database errors" in "sec_role_comment" input
+		Click "Update Individual Security" button
+	Begin "Attempt unmerge"
+		Navigate "?f=admin&s=patient_merge_manager"
+		Enter "Selenium, Selenium" into the user_id_ac_txt autocomplete
+		Click the "Search" button
+		Click the "UnMerge" link
+		Verify exists "Are you sure you want to unmerge all chart items?" text
+		Verify exists "This will re-create the previously merged patient (20)" text
+		Verify exists "and move those associated chart items away from patient (Hart, William S.)" text
+		Click the "Un-Merge" button
+	Begin "Verify error message"
+		Verify exists "There was a failure during the unmerge process between charts 20 and 18. Please contact Technical Support." text
+		Verify exists "1 queries failed" text
+		Verify exists "Duplicate entry 'williamhart' for key 'username'" text
+		# The line below checks for a bug which should have been fixed
+		Verify notexists "Unknown column 'chart_id' in 'where clause'" text
+Begin "Unmerge failure without golden ticket"
+	Begin "Enable New Login Style"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Type "new login style" into the input
+		Click the "Go" button
+		Click the !Edit link
+		Select "Enabled" from the "Value" dropdown
+		Type "Enable New Login Style" in the freetext field
+		Click the "Change" button
+		Verify exists "Successfully modified system setting" text
+	Begin "Logout and Log Back In As a Normal Login Without Golden Ticket"
+		Open the sidemenu
+		Click the "Logout" sidemenu entry
+		Click the "Standard Login" button
+		Type {selenium_username} into the 'login_user' input
+		Type {selenium_password} into the 'login_passwd' input
+		Click the "Next" button
+		Wait for ajax
+	Begin "Try the unmerge again"
+		Navigate "?f=admin&s=patient_merge_manager"
+		Enter "Selenium, Selenium" into the user_id_ac_txt autocomplete
+		Click the "Search" button
+		Click the "UnMerge" link
+		Verify exists "Are you sure you want to unmerge all chart items?" text
+		Verify exists "This will re-create the previously merged patient (20)" text
+		Verify exists "and move those associated chart items away from patient (Hart, William S.)" text
+		Click the "Un-Merge" button
+	Begin "Verify error message"
+		Verify exists "There was a failure during the unmerge process between charts 20 and 18. Please contact Technical Support." text
+		Verify exists "1 queries failed" text
+		Verify notexists "Duplicate entry '20' for key 'PRIMARY'" text
+		Verify exists "Unmerge error on (patients). From pat_id (20) to pat_id (18)" text
+Begin "Successful Unmerge"
+	@Remove the username from pat_id 18@driver.miedb.dbExec("UPDATE patients SET username='' WHERE pat_id=18")
+	Navigate "?f=admin&s=patient_merge_manager"
+	Enter "Selenium, Selenium" into the user_id_ac_txt autocomplete
+	Click the "Search" button
+	Click the "UnMerge" link
+	Click the "Un-Merge" button
+	Verify exists "Patient (20) was successfully unmerged from patient (18)" text
+	Begin "Verify patient admin values returned to the from_chart"
+		Navigate "?f=chart&s=pat&t=Admin%3ADemographics&v=dashboard&pat_id=20"
+		Verify exists "Building 1" text
+		Verify exists "Job (Job)" text
+		Verify exists "Technology Center (TC)" text	
+		Verify exists "Technology Center / Research and development (TC-1234)" text
+		Verify exists "Office (OFFICE)" text
+Begin "Merge without relflat"
+	@Clear relflat@driver.miedb.dbExec('DELETE FROM pat_pat_relflat')
+	Navigate "?opp=merge&f=chart&s=pat&t=Admin:Demographics&v=dashboard&merge_opts_20=3&submit_merge=Merge+Using+Selected+Options&from_pats_id=20&pat_id=18&skip_relflat=1"
+	Wait for page
+	Verify exists "Merge results for Employee: Hart, William S." text
+	Verify exists "Merging Patient to Patient Relations - Success, records moved" text
+	Verify exists "Merging Patient Admin - Success, records moved" text
+	@@@Verify relflat was NOT populated
+	count = driver.miedb.dbQuery('SELECT count(*) AS count FROM pat_pat_relflat WHERE pat_id=18 AND relation_type_id=(SELECT relation_type_id FROM relation_types WHERE relation_type="Subordinate") AND pat_isa=(SELECT pat_id FROM patients WHERE last_name="Anderson" AND first_name="Frederick") AND self=0 AND level=1').getRow(0)['count']
+	driver.reportCommandStatus('Verify relflat is NOT populated', f'Got {count} rows, expected 0', count == 0, '', '')
+	@@@

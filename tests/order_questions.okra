@@ -1,0 +1,51 @@
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+@Add Order Status@driver.miedb.dbExec("INSERT INTO order_status_list (status, order_by) VALUES ('Needs Information', 3)")
+@Add System Setting@driver.miedb.dbExec("REPLACE INTO system_settings (module, section, item, value, reason) VALUES ('Orders', 'Settings', 'Set Order Requests with Missing Answers to \"Needs Information\"', '1', 'Because')")
+
+Open the sidemenu
+Click the "E-Chart" link
+Type "Acardi" in the "sstring" input
+Click the "Search" button
+Open the quicklink list
+Click the "Add Order" quicklink
+Begin "Order Request MIEWindow"
+	Select "Selenium, Selenium" from the ordering_physician dropdown
+	Click the "Lipid Profile" picklist checkbox
+	Click the "Chloride" picklist checkbox
+	Click the "Magnesium" picklist checkbox
+	Click the "Potassium" picklist checkbox
+	Click the "Sodium" picklist checkbox
+	Click the "Submit" button
+Begin "Finish Order Request MIEWindow"
+	Begin "Lipid Profile dialog"
+	Select "White/Caucasian" from the "Patient Race" field
+	Select "No" from the "Hispanic" field
+	Click the "Save as Pending/Draft" Button
+@Switch Windows@driver.switchToPopup()
+Verify exists @Needs Info text@xpath='//div[@class="document"]/div/div[contains(., "Needs Information")]'
+@Close this window@driver.closePopup()
+Begin "Edit the order, set the status to pending and answer the questions"
+	Click the "Medical Record" charttab
+	Click the "OrderRequestsLegacy" charttab subtab
+	Select "All" from the "location" dropdown
+	Select "Labs" from the "set_name" dropdown
+	Click the "Search" button
+	Click the "Edit" link
+	Begin "Order Request MIEWindow"
+		Click the "Submit" button
+	Begin "Finish Order Request MIEWindow"
+		SELECT "Urine" from the "Blood Lead Type" field
+		SELECT "Repeat" from the "Blood Lead Purpose" field
+		SELECT "90210" from the "Blood Lead County Code(minimum of 2 digits if sent)" field
+		Click the 1st "Yes" labelledradio
+		Type "Nothing at all" in the "What does the fox say?" field
+		Type "Elizabeth! This is the big one!" in the "What does Redd Foxx say?" field
+		Click the "Finish" Button
+	@Switch Windows@driver.switchToPopup()
+	Verify !exists @Needs Info text@xpath='//div[@class="document"]/div/div[contains(., "Needs Information")]'
+@@@Switch Back to New Requisition Screen
+driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@

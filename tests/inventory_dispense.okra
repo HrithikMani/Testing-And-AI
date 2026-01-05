@@ -1,0 +1,202 @@
+Open the sidemenu
+Click the "Control Panel" sidemenu entry
+Begin "Show the Dispense ChartTab"
+	Click the "Chart" charttab
+	Click the "Chart Tabs" charttab subtab
+	Type "Medical Record" in the input
+	Click the "Search" button
+	Click the "!Edit" link
+	Begin "Add the Dispense subtab"
+		# in the "Subtabs of ( Medical Record )" listedit
+		Select "Dispense" in the @"Sub Tab" dropdown@xpath=//select[@name='le_ctabchildren_rel_child_id_value']
+		Select "5" in the @"Display Below" dropdown@xpath=//span[@id='le_ctabchildren_rel_display_order_value_input_span']/select
+		Click the @"Add" button@xpath=//input[@id='le_ctabchildren_button']
+	Click the "Save" button
+	Verify exists The "Successfully saved chart tab (Medical Record)" text
+Begin "Remove permissions"
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "No" from the "Fill Prescriptions" dropdown
+	Select "No" from the "View Inventory" dropdown
+	Type "inventory_dispense.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify exists "[ Fill Prescriptions: No ]" text
+	Verify exists "[ View Inventory: No ]" text
+Begin "Verify No Access"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+	Click the "Medical Record" charttab
+	Click the "Dispense" charttab subtab
+	Verify exists The "ERROR: You Do Not Have Permission To View This" text
+Begin "Grant View Access"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Yes" from the "View Inventory" dropdown
+	Type "inventory_dispense.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify exists The "[ Fill Prescriptions: No ]" text
+Begin "Verify View Access"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+	Click the "Medical Record" charttab
+	Click the "Dispense" charttab subtab
+	Verify exists The "Fill Prescriptions For Hart, William S." listview
+	Verify !exists The "Fill From General" link
+Begin "Grant Fill Access"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Yes" from the "Fill Prescriptions" dropdown
+	Type "inventory_dispense.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify !exists The "[ Fill Prescriptions: No ]" text
+Begin "Verify Fill Access"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+	Click the "Medical Record" charttab
+	Click the "Dispense" charttab subtab
+	Verify exists The "Fill Prescriptions For Hart, William S." listview
+	Verify exists The "Fill From General" link
+Begin "Verify Patient Assistance Program tracking"
+	Begin "Verify initial save"
+		Click the @checkbox in the "Calcium 500mg" row@xpath=//input[@id='pap_51']
+		Click the @checkbox in the "Coumadin 5mg" row@xpath=//input[@id='pap_61']
+		Click the "Update PAP Applications" button
+		Verify "checked=true" @the "Calcium 500mg" checkbox is checked@xpath=//input[@id='pap_51']
+		Verify "checked=true" @the "Coumadin 5mg" row@xpath=//input[@id='pap_61']
+		Verify "checked=false" @the "Lisinopril 10mg" row@xpath=//input[@id='pap_58']
+#		The checkbox should be checked in the "Calcium 500mg" row
+#		The checkbox should be checked in the "Coumadin 5mg" row
+#		The checkbox should not be checked in the "Lisinopril 10mg" row
+	Begin "Update saving"
+		Click the @checkbox in the "Calcium 500mg" row@xpath=//input[@id='pap_51']
+		Click the "Update PAP Applications" button
+		Verify "checked=false" @the "Calcium 500mg" checkbox is checked@xpath=//input[@id='pap_51']
+		Verify "checked=true" @the "Coumadin 5mg" row@xpath=//input[@id='pap_61']
+		Verify "checked=false" @the "Lisinopril 10mg" row@xpath=//input[@id='pap_58']
+#		The checkbox should not be checked in the "Calcium 500mg" row
+#		The checkbox should be checked in the "Coumadin 5mg" row
+#		The checkbox should not be checked in the "Lisinopril 10mg" row
+Begin "Verify the available lots for each location/stockpile"
+	Click the @"Fill From General" link in the "Lisinopril 10mg" row@xpath=//td[contains(.,'Lisinopril 10mg')]/following-sibling::td/a[contains(.,'Fill From General')]
+	Screenshot "fill_dialog"
+	Begin "Office Location"
+		Select "Office" in the dropdown
+		# in the "Drug/Item" cell
+		Click the "lisinopril 5 mg tablet qty: 46" autocomplete choice
+		Close the "Warning" popup
+		Type "50" in the "disp_quantity" input
+		Click the "abc123 (SomeManu Co 01-01-2030) qty: 46" autocomplete choice
+		Verify "value=abc123" the @Lot Number@xpath=//input[@id='disp_lot_number']
+		Begin "Verify the manufacturer and expiration auto-populated by selecting the lot number"
+			Verify "value=SomeManu Co" in the @"Manufacturer" input@xpath=//input[@id='disp_manufacturer']
+			Verify "value=01" in the disp_exp_date date month
+			Verify "value=01" in the disp_exp_date date day
+			Verify "value=2030" in the disp_exp_date date year
+		# make sure it is the correct equivalent quantity
+		Verify "value=25" in the @"Equivalent Quantity" input@xpath=//input[@id='disp_equiv']
+		Click the "Clear" button
+		screenshot "fill_cleared"
+	Begin "Reset the form"
+		@Disable the browse-away confirmation@driver.wcutils.setNeverConfirm('true')
+		Click the "Medical Record" charttab
+		Click the "Dispense" charttab subtab
+		Click the @"Fill From General" link in the "Lisinopril 10mg" row@xpath=//td[contains(.,'Lisinopril 10mg')]/following-sibling::td/a[contains(.,'Fill From General')]
+	Begin "Hospital Location"
+		@Select "Hospital" in the dropdown@driver.enterFormData('Hospital',xpath='//select',blur=False)
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Verify "value=0" "disp_stockpile_id" dropdown
+		Begin "Select n/a in the Stockpile dropdown"
+			Select "0" in the @Stockpile dropdown@xpath=//select[@id='disp_stockpile_id']
+		# in the "Drug/Item" cell
+		Click the "lisinopril 10 mg tablet qty: 30" autocomplete choice
+		Close the "Warning" popup
+		Type "25" in the "disp_quantity" input
+		Click the "987xzy (MediPill Co 06-01-2030) qty: 30" autocomplete choice
+		Click the @Equivalent Quantity input@xpath=//input[@name='disp_equiv']
+		Begin "Verify the manufacturer and expiration auto-populated by selecting the lot number"
+			Verify "value=3" in the @"Lot ID" input@xpath=//input[@name='disp_lot_id']
+			Verify "value=MediPill Co" in the @"Manufacturer" input@xpath=//input[@id='disp_manufacturer']
+			Verify "value=06" in the disp_exp_date date month
+			Verify "value=01" in the disp_exp_date date day
+			Verify "value=2030" in the disp_exp_date date year
+		Verify "value=25" in the @"Equivalent Quantity" input@xpath=//input[@id='disp_equiv']
+		# the stockpile test is broken
+		#Click the "Clear" button is skipped
+	# the .src of the Medication autocomplete does not update when the stockpile changes
+#	Begin "Hospital Stockpile" is skipped
+#		Select "Hospital" in the dropdown
+#		The 2nd dropdown should not contain "Loading..."
+#		Select "Store Room A" in the 2nd dropdown
+#		Select "lisi" and get "lisinopril 20 mg tablet qty: 15" in the 1st autocomplete
+#		The "Warning!" miewindow should exist
+#		Click the "Close" button
+#		Type "12.5" in the 1st input
+#		Select "axy" and get "axy391 (MediPill Co 03-15-2015) qty: 15" in the 2nd autocomplete
+#		Begin "Verify the manufacturer and expiration auto-populated by selecting the lot number"
+#			The 3rd autocomplete should contain "MediPill Co"
+#			The 1st date should contain "03-15-2015"
+#		# it is the correct equivalent quantity
+#		The 3rd input should contain "25"
+	Begin "Submitting a Fill"
+#		# the Stockpile test is broken
+#		Begin "Update the Sig to match the dispensed med" is skipped
+#			Type "0.5 tabs qd" in the "Practitioner Sig" autocomplete
+#			The "Patient Sig" input should contain "One Half tablets Every Day"
+		Begin "Verify the Dispense Date"
+			Verify "value=02" in the "disp_fillDate" date month
+			Verify "value=02" in the "disp_fillDate" date day
+			Verify "value=2023" in the "disp_fillDate" date year
+		Begin "Verify the correct Filled Until date of 2/27/2023"
+			Verify "value=02" in the "disp_nextFillDate" date month
+			Verify "value=27" in the "disp_nextFillDate" date day
+			Verify "value=2023" in the "disp_nextFillDate" date year
+		Type "selenium" in the "Enter User Name" input
+		Type "selenium" in the "Enter Password" input
+		Screenshot "disp_form_filled"
+		@@@Check Form Submission
+		#eles = driver.getElements(xpath="//input[contains(@name,'disp_')]")
+		#for e in eles:
+		#	driver.reportCommandStatus("{0}={1}".format(e.get_attribute('name'),e.get_attribute('value')),"",None,"","")
+
+		eles = driver.getElements(xpath="//select[contains(@id,'disp_')]")
+		for e in eles:
+			driver.reportCommandStatus("{0}={1}".format(e.get_attribute('name'),e.get_attribute('value')),"",None,"","")
+
+		eles = driver.getElements(xpath="//input[@id='disp_lot_id']/ancestor::form//input")
+		for e in eles:
+			driver.reportCommandStatus("{0}={1}".format(e.get_attribute('name'),e.get_attribute('value')),"",None,"","")
+		@@@
+		Click the "Fill Rx" button
+		Verify exists the "Logging lisinopril 10 mg tablet...Success" text
+		#Verify exists the "lisinopril 10 mg tablet: 25" row  in the "Verification Needed Fills" table
+		Verify exists the @"lisinopril 10 mg tablet: 25" row in the "Verification Needed Fills" table@xpath=//table[contains(@class,'lv_root')]//fieldset//span[contains(@class,'LVTitle') and contains(.,'Verification Needed Fills')]/ancestor::tbody//td[contains(text(),'lisinopril 10 mg tablet: 25')]
+	Begin "Verify the Label Printing"
+		@Switch to the "WebChart: Inventory" window@driver.switchToPopup()
+		Click the @"Do not use this drug if you become pregnant." checkbox@xpath=//table[contains(@class,'dlg_root')]//legend/span[contains(.,'Select Warnings to Print')]/ancestor::tbody//td[contains(.,'Do not use this drug if you become pregnant.')]/preceding-sibling::td/input[@type='checkbox']
+		Click the @"Zestril" checkbox@xpath=//table[contains(@class,'dlg_root')]//legend/span[contains(.,'Select AKAs to Print')]/ancestor::tbody//td[text()='Zestril']/preceding-sibling::td/input[@type='checkbox']
+		Screenshot "label_warnings"
+		Click the "Print Label" button
+		Screenshot "label"
+		@Close the window@driver.closePopup()

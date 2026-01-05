@@ -1,0 +1,90 @@
+"""
+	Registers an employee using the standard registration screen
+	Verifies that the entered data saves correctly by checking the demographic view screen
+	@systemtype: EH
+"""
+
+Begin Register Boba Fett
+	@Set the Applicant partition to Edit (Optional) to test manually entering an MR#@driver.miedb.dbExec("UPDATE patient_partitions SET echart_opts='O' WHERE name='APP'")
+	Open the sidemenu
+	Click the E-Chart link
+	Click the "Patient Registration" charttab
+	Type Fett into the "Last Name" input
+	Type Boba into the "First Name" input
+	Enter "03-03-1981" into the birth_date date
+	Click the "Add New" button
+Begin Fill out Remaining Demographic Data
+	Verify exists "Fett, Boba" text
+	Open the "Demographic Information" dynamicsection
+	Select Employee from the "Person Type" dropdown
+	Type Mr. in the Title input
+	Type A in the "Middle Name" input
+	Type Jr. in the Suffix input
+	Type Bob in the "Preferred First Name" input
+	Type Jones in the "Preferred Last Name" input
+	Type "123 Space Street" in the Address input
+	Type "Apt. 2B" in the "Address 2" input
+	Type Bobaland in the City input
+	Select Alabama from the "State / Province" dropdown
+	Enter 46815 in the "Postal Code" autofill
+	Type 5551111 in the "Home Phone" input
+	Type 5552222 in the "Mobile Phone" input
+	Type 5553333 in the "Alternate Phone" input
+	Type 5554444 in the "Fax Number" input
+	Type bobafett@starwars.com in the Email input
+	Type 111221234 in the SSN input
+	Select Male from the Sex dropdown
+	Close the "Demographic Information" dynamicsection
+	Verify exists "Fett Jr., Boba (Bob Jones) A" link
+	Verify exists "123 Space Street" text
+	Verify exists "Fort Wayne, Indiana 46815" text
+	Verify exists "03-03-1981")] text
+	Verify exists "Age")] text
+	Verify exists "25")] text
+	Verify exists "555-1111" text
+	Verify exists "555-2222" text
+	Verify exists "555-3333" text
+	Verify exists "555-4444" text
+	Verify exists bobafett@starwars.com text
+	Verify exists 1234 text
+	Verify exists Male text	
+	Begin "Confirm the zip code autofill updated the city and state"
+		Verify exists "Fort Wayne, Indiana 46815" text
+Begin Fill out Employment Demographic Data
+	Open the "Employment Information" dynamicsection
+	Type "Empire Inc" in the "DPI_employer_name" input
+	Type "154 Space St" in the Address input
+	Type "Apt 12" in the "Address 2" input
+	Type Empireland in the City input
+	Select Arizona from the "State/Province" dropdown
+	Type 5555555 in the Phone input
+	Enter 12345 in the "Postal Code" autofill
+	Select "Regular Full Time" from the "Employee Class" dropdown
+	Select Active from the "Employee Status" dropdown
+	Close the "Employment Information" dynamicsection
+	Verify exists "Empire Inc" text
+	Verify exists "154 Space St" text
+	Verify exists "Apt 12" text
+Begin Fill out "Marital / Contact Information" Data
+	Open the "Marital / Contact Information" dynamicsection
+	Select the @Married Radio@id=DPI_marital_status_M
+	Type "Mrs Fett" in the "Spouse's Name" input
+	Enter "01-01-1985" into the spouse_birthdate date
+	Type "Mrs Fett" in the "Emergency Contact" input
+	Close the "Marital / Contact Information" dynamicsection
+	Verify exists Married text
+	Verify exists "Mrs Fett" text
+Begin Editing "Other Demographic" data
+	Open the "Other Data" dynamicsection
+	Enter "Male" in the "Birth Sex" autocomplete
+	Enter "Identifies as Male" in the "Gender Identity" autocomplete
+	Enter "Straight or heterosexual" in the Sexual Orientation autocomplete
+	Close the "Other Data" dynamicsection
+	Verify exists "Identifies as Male" text
+	Verify exists "Straight or heterosexual" text
+Begin Fill out MR Numbers
+	Open the "Employee Numbers" dynamicsection
+	Type 987789 into the "Applicant" input
+	Check the "C (Contact)" input
+	Close the "Employee Numbers" dynamicsection
+	Verify exists "987789" text

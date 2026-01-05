@@ -1,0 +1,14 @@
+Begin UI Test
+	Screenshot homepage
+	Open the sidemenu
+	Click the E-Chart sidemenu entry
+	Click the Documents link
+	Screenshot documentsearch
+	Click the Simple link
+	Screenshot simplesearch
+	Click the MIE-10019 link
+	Screenshot patsummary
+	Click the "Add Visit" link
+	Screenshot visitencounter
+	Open the HPI dynamicsection
+	Open the "Review of systems" dynamicsection

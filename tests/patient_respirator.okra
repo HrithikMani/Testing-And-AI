@@ -1,0 +1,61 @@
+"""
+    Test for Quick Lists in Respirator Info tab
+    @owners: aaronc
+	@filedep: system/layouts/ObjectWin/RespRecID.html, system/layouts/dynList/Respirator*
+"""
+Begin "Navigate to Chart"
+	@Pause@driver.pause(10)
+	@Setup MaskType autocomplete@driver.miedb.dbExec("INSERT INTO autocomplete_field SET module='respirator', field='mask', use_count=20, data='3M 1860'")
+	Navigate "?f=chart&s=pat&pat_id=40"
+	Click the "Health Surveillance" charttab
+	Click the "Respirator Info" charttab subtab
+Begin "Enter a Respirator Fit Test"
+	Click the "Other" quicklist item
+	Click the 2nd "Save" popup button
+	Verify exists "Mask is required" text
+	Verify exists "Size is required" text
+	Verify exists "Pass/Fail is required" text
+	Click the "OK" button
+	Enter "3M 1860" in the "MaskType" autocomplete
+	Blur the "MaskType" autocomplete
+	Select "Regular" from the "Size" dropdown
+#	@Wait@driver.pause(5)
+#	Screenshot 'Respirator 1'
+# Ticket #115495 - Issues selecting from <select> elements. Commenting out to come back and use to reproduce issue
+#	Select "Quantitative" from the "Type" dropdown
+	Select "Quantitative" from the 2nd popup dropdown
+#	@Wait@driver.pause(5)
+#	Screenshot 'Respirator 2'	
+	Enter "02-05-2007" in the "LastFitTestDate" date
+# Ticket #115495 - Issues selecting from <select> elements. Commenting out to come back and use to reproduce issue
+#	Select "Pass" from the "LastFitPassFail" dropdown
+	Select "Pass" from the 3rd popup dropdown
+#	Verify "value=Pass" LastFitPassFail dropdown
+	Verify "value=05" LastFitExpiresDAY input
+	Verify "value=2008" "LastFitExpiresYEAR" input
+	Type "12345" in the "LastFitFinalFitFactor" input
+	Click the 2nd "Save" popup button
+	Verify exists "Pass - 3M 1860 Regular on 02-05-2007, Expires 02-05-2008 (Quantitative Fit Factor: 12345)" text
+Begin "Verify Respirator Fit Mask obs code works"
+	@Setup Respirator Fit Mask code@driver.miedb.dbExec("INSERT INTO observation_codes SET obs_name='Respirator Fit Mask', interface='WEBCHART'")
+	@Setup Respirator Fit Mask options@driver.miedb.dbExec("SET @obs_code = (SELECT obs_code FROM observation_codes WHERE obs_name = 'Respirator Fit Mask' and interface='WEBCHART'); INSERT INTO observation_codes_list (obs_code, obs_result, obs_result_desc, sort_order) VALUES (@obs_code, '3M 1860', '', 3), (@obs_code, '3M 1870+', '', 2), (@obs_code, 'Moldex 1510', '', 1)")
+	Click the "Other" quicklist item
+# Ticket #115495 - Issues selecting from <select> elements. Commenting out to come back and use to reproduce issue
+#	Select "Moldex 1510" from the "MaskType" dropdown
+	Select "Moldex 1510" from the 1st popup dropdown
+# Ticket #115495 - Issues selecting from <select> elements. Commenting out to come back and use to reproduce issue
+#	Select "Large" from the "Size" dropdown
+	Select "Large" from the 2nd popup dropdown
+# Ticket #115495 - Issues selecting from <select> elements. Commenting out to come back and use to reproduce issue
+#	Select "Qualitative" from the "Type" dropdown
+	Select "Qualitative" from the 3rd popup dropdown
+# Ticket #115495 - Issues selecting from <select> elements. Commenting out to come back and use to reproduce issue
+#	Select "Fail" from the "LastFitPassFail" dropdown
+	Select "Fail" from the 4th popup dropdown
+	Click the 2nd "Save" popup button
+	Verify exists "Fail - Moldex 1510 Large on 02-02-2023" text
+# Ticket #129042 - Document is now created for each patient_respiratordetails entry
+	Navigate "?t=Documents&v=list&pat_id=40&f=chart&s=doc&doc_id=741"
+	Verify exists "Moldex 1510" text
+	Verify exists "Pass/Fail: Fail" text
+	Verify exists "Harris, Christine M." text

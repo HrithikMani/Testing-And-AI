@@ -1,0 +1,37 @@
+Begin "Add a department"
+	Open the sidemenu
+	Click the "Control Panel" link
+	Click the Access charttab
+	Click the "Access Control" charttab subtab
+	Click the "Add Department" link
+	Type "Testing" in the input
+Begin "Add one user to department upon dept creation"
+	Enter "Acardi" in the "le_user_realm_le_ur_user_id_display" autocomplete
+	Click the "Add" listedit button
+	Click the "Submit Dept" button
+	Click the "Show All" link
+	Verify exists "Testing" listview link
+Begin "Add more users to the Testing dept"
+	Click the @Testing "Edit" link@xpath='//td[@class="depts_Department_cell" and contains(., "Testing")]/following-sibling::td/a[contains(., "Edit")]'
+	Enter "Butler" in the "le_user_realm_le_ur_user_id_display" autocomplete
+	Click the "Add" listedit button
+	Enter "Morrison" in the "le_user_realm_le_ur_user_id_display" autocomplete
+	Click the "Add" listedit button
+	Enter "Selenium" in the "le_user_realm_le_ur_user_id_display" autocomplete
+	Click the "Add" listedit button
+	Enter "Garza" in the "le_user_realm_le_ur_user_id_display" autocomplete
+	Click the "Add" listedit button
+	Enter "Thomas, Dave" in the "le_user_realm_le_ur_user_id_display" autocomplete
+	Click the "Add" listedit button
+	Enter "Better Corp." in the "le_user_realm_le_ur_user_id_display" autocomplete
+	Click the "Add" listedit button
+	Click the "Submit Dept" button
+Begin "Verify all users added to the new department"
+	Click the "Testing" listview link
+	Verify exists "Acardi" text
+	Verify exists "Better Corp." text
+	Verify exists "Butler" text
+	Verify exists "Garza" text
+	Verify exists "Morrison" text
+	Verify exists "Selenium" text
+	Verify exists "Thomas" text

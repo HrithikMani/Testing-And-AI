@@ -1,0 +1,35 @@
+Begin "Setup Permissions"
+	Navigate "?m=admin&t=security&opp=esecuser&user_id=8&realm="
+	Select "Yes" from the "Control_Manage Layouts" dropdown
+	Type "Add Manage Layouts permissions" in "sec_role_comment" input
+	Click "Update Individual Security" button
+Navigate "?f=layout&module=SystemEditors&rep_name=Layout+Document+Types"
+Verify exists "Layout Document Types" text
+Begin "Test Add Layout Document Types"
+	Verify exists @Add Layout Document Types link@xpath="//span[contains(@class, 'link') and contains(., 'Add Layout Document Types')]"
+	Click @Add Layout Document Types link@xpath="//span[contains(@class, 'link') and contains(., 'Add Layout Document Types')]"
+	Enter "Billing Question" in the layoutAC autocomplete
+	Select "BILLINGQ" from the "doc_type" dropdown
+	Click the "Save" button
+	Verify exists "Billing Questions" grid row
+Begin "Test Edit Layout Document Types"
+	Click the "Billing Questions" grid checkbox
+	Verify exists "Edit" grid button
+	Click "Edit" grid button
+	Enter "billing charges" in the layoutAC autocomplete
+	Select "BILLING" from the "doc_type" dropdown
+	Click the "Save" button
+	Wait for page
+	Verify !exists "Billing Questions" grid row
+	Verify exists "billing charges" grid row
+Begin "Test Delete Layout Document Types"
+	Click the "billing charges" grid checkbox
+	Verify exists "Delete" grid button
+	Click "Delete" grid button
+	Click the "Yes" button
+	Verify !exists "billing charges" grid row
+Begin "Reset Permissions"
+	Navigate "?m=admin&t=security&opp=esecuser&user_id=8&realm="
+	Select "No" from the "Control_Manage Layouts" dropdown
+	Type "Remove Manage Layouts permissions" in "sec_role_comment" input
+	Click "Update Individual Security" button

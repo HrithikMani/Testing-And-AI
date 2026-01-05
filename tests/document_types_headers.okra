@@ -1,0 +1,16 @@
+Begin "Setup of Document Type Headers"
+	@RTS model_security_extended@driver.miedb.dbExec("INSERT INTO model_security (security_role_id, user_id, object, field, crud_control) VALUES (0, 8, 'document_type_layouts', '', 'CREATE,READ,UPDATE,DELETE')")
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the 'System' charttab
+	Click the "System Editors" charttab subtab
+	Click the 2nd "Document Type Headers" link
+	Click @the "Add Document Type Headers" link@xpath=//span[contains(., "Add Document Type Headers")]
+	Select Visit from the doc_type dropdown
+	Type "1" in the "Page From" popup input
+	Type "1" in the "Page To" popup input
+	Type "Header" in the "Header Layout Module" popup input
+	Type "My Header Layout" in the "Header Layout Name" popup input
+	Click the "Save" popup button 
+Begin "Validation of row"
+	Verify exists @xpath=//div[@id='DocumentTypeHeaders_gridContainer']//td[text()='Visit']

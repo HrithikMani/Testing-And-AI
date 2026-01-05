@@ -1,0 +1,121 @@
+Begin "Add multiple appointments for Butler, Internist"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Type butler into the "sstring" input
+	Click the "Search" button
+	Click the "MIE-10050" link
+	Begin "Make the 1st appointment @ 1000"
+		Open the quicklink list
+		Click the "Add Appt" quicklink
+		@Switch Windows@driver.switchToPopup()
+		Begin "Patient visits table row in the Add Appointment" table
+			Click @button to remove Butler, internist as Resource@id="minus"
+			Enter "Patel, Ashish" in the "res_idacinp" autocomplete
+			Enter "Audiogram" in the "typeacinp" autocomplete
+			Enter "Office" in the "locationacinp" autocomplete
+# Added a working xpath to date.pod for each of these inputs but still won't work. Come back to later, for now doing each individually.
+#				Enter "02-02-2007 1000" in the 3rd date
+			Type "02" in the @Add Appointment-Patient Visits month@xpath=//input[@id="startdateMONTH"]
+			Type "02" in the @Add Appointment-Patient Visits day@xpath=//input[@id="startdateDAY"]
+			Type "2007" in the @Add Appointment-Patient Visits year@xpath=//input[@id="startdateYEAR"]
+			Type "1000" in the @Add Appointment-Patient Visits time@xpath=//input[@id="startdateTIME"]
+		Click the "Save" button
+		Click the "Force" link
+		Verify exists the 1st "Butler, Internist" appt checkin
+		@Close this window@driver.closePopup()
+	Begin "Make the 2nd appointment @ 1400"
+		Click the "Add Appt" quicklink
+		@Switch Windows@driver.switchToPopup()
+		Begin "Patient visits table row in the Add Appointment" table
+			Click @button to remove Butler, internist as Resource@id="minus"
+			Enter "Patel, Ashish" in the "res_idacinp" autocomplete
+			Enter "Blood Pressure Check" in the "typeacinp" autocomplete
+			Enter "Office" in the "locationacinp" autocomplete
+# Added a working xpath to date.pod for each of these inputs but still won't work. Come back to later, for now doing each individually.
+#				Enter "02-02-2007 1400" in the 3rd date
+			Type "02" in the @Add Appointment-Patient Visits month@xpath=//input[@id="startdateMONTH"]
+			Type "02" in the @Add Appointment-Patient Visits day@xpath=//input[@id="startdateDAY"]
+			Type "2007" in the @Add Appointment-Patient Visits year@xpath=//input[@id="startdateYEAR"]
+			Type "1400" in the @Add Appointment-Patient Visits time@xpath=//input[@id="startdateTIME"]
+		Click the "Save" button
+		Click the "Force" link
+		Verify exists the 2nd "Butler, Internist" appt checkin
+		@Close this window@driver.closePopup()
+	Begin "Make 1st Waitlist appointment"
+		Click the "Add Appt" quicklink
+		@Switch Windows@driver.switchToPopup()
+		Begin "Patient visits table row in the Add Appointment" table
+			Enter "Patel, Ashish" in the "res_idacinp" autocomplete
+			Enter "Audiogram" in the "typeacinp" autocomplete
+			Enter "Office" in the "locationacinp" autocomplete
+		Click "Use Waitlist" button
+		Click the "Save" button
+		@Wait for Waiting List@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@id="lv_waitinglist_span" and not(@disabled)]'), timeout=90)
+		Verify exists the @1st Butler, Internist Waitlist entry@xpath="(//td/a[contains(.,'Butler')]/following-sibling::a[contains(.,'Internist')])[1]"
+		@Close this window@driver.closePopup()
+	Begin "Make 2nd Waitlist appointment"
+		Click the "Add Appt" quicklink
+		@Switch Windows@driver.switchToPopup()
+		Begin "Patient visits table row in the Add Appointment" table
+			Enter "Patel, Ashish" in the "res_idacinp" autocomplete
+			Enter "Blood Pressure Check" in the "typeacinp" autocomplete
+			Enter "Office" in the "locationacinp" autocomplete
+		Click "Use Waitlist" button
+		Click the "Save" button
+		@Wait for Waiting List@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@id="lv_waitinglist_span" and not(@disabled)]'), timeout=90)
+		Verify exists the @2nd Butler, Internist Waitlist entry@xpath="(//td/a[contains(.,'Butler')]/following-sibling::a[contains(.,'Internist')])[2]"
+		@Close this window@driver.closePopup()
+Begin Log in as butler
+	Open the sidemenu
+	Click the Logout sidemenu entry
+	#	Type "butler" into the "login_user" input
+	#	Type "selenium" into the "login_passwd" input
+	@Setup WCTestSession for butler@driver.wcutils.insertWCTSession('butler')
+Begin "Access Portal"
+		Click "Better Corp." link
+		Begin "Complete Portal Consent"
+			Click on the "Portal Consent" link
+			Click on the @Acknowledge radio@xpath='//input[@id="obs_result_293_2_0"]/parent::span'
+			Click on the @SMS Opt-In Agreement@xpath='//input[@id="obs_result_293_12_0"]/parent::span'
+			Click on the @Telehealth Consent@xpath='//input[@id="obs_result_293_15_0"]/parent::span'
+			Click on the SUBMIT button
+		Begin "Verify First Visit popup"
+			Wait for ajax
+			Verify exists "Portal Home" text
+			Verify exists "Welcome to your provider's health portal" text
+			Close popup
+Begin "Check Portal"
+	Wait for ajax
+	Click @My Appointments button@xpath="(//span[contains(., 'My Appointments')])[2]"
+	Screenshot "My Appointments"
+	Verify exists @Audiogram Waitlist Appointment@xpath="(//td[contains(., 'Reason(s)')]/following-sibling::td[contains(., 'Audiogram')])[1]"
+	Verify exists @Audiogram Scheduled Appointment@xpath="(//td[contains(., 'Reason(s)')]/following-sibling::td[contains(., 'Audiogram')])[2]"
+	Verify exists @Blood Pressure Check Waitlist Appointment@xpath="(//td[contains(., 'Reason(s)')]/following-sibling::td[contains(., 'Blood Pressure Check')])[1]"
+	Verify exists @Blood Pressure Check Scheduled Appointment@xpath="(//td[contains(., 'Reason(s)')]/following-sibling::td[contains(., 'Blood Pressure Check')])[2]"
+	Screenshot "Portal1"
+Begin Modify "Appointment types excluded from portal" settings
+	Click @Portal Navigation Menu dropdown@id="portal-user-name"
+	Click @Click Return to Enterprise Health@xpath="//a[contains(., 'Return')]"
+	Open the sidemenu
+	Click Control Panel sidemenu entry
+	Click "Employer Organizations" charttab
+	Click the "Search" button
+	@wait for overlay @driver.pause(2)
+	Click the "Better Corp." link
+	@wait for overlay @driver.pause(2)
+	Click "Portal Management" charttab
+	Click "Employee Portal" link
+	@Scroll My Appointment Module settings into view@driver.runJS("document.evaluate(`(//strong[contains(., 'Additional Options')])[1]`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView();")
+	Click @"Appointment types excluded from portal" dropdown@id="appt_exclude_labelelem"
+	Click "appt_exclude" checkbox
+	Click "Submit" button
+Begin Check Portal for Changes
+	Click the @Home icon@id="wc_homeicon"
+	Click "Better Corp." link
+	Click @My Appointments button@xpath="(//span[contains(., 'My Appointments')])[2]"
+	Screenshot "My Appointments"
+	Verify !exists @Audiogram Waitlist Appointment@xpath="(//td[contains(., 'Reason(s)')]/following-sibling::td[contains(., 'Audiogram')])[1]"
+	Verify !exists @Audiogram Scheduled Appointment@xpath="(//td[contains(., 'Reason(s)')]/following-sibling::td[contains(., 'Audiogram')])[2]"
+	Verify exists @Blood Pressure Check Waitlist Appointment@xpath="(//td[contains(., 'Reason(s)')]/following-sibling::td[contains(., 'Blood Pressure Check')])[1]"
+	Verify exists @Blood Pressure Check Scheduled Appointment@xpath="(//td[contains(., 'Reason(s)')]/following-sibling::td[contains(., 'Blood Pressure Check')])[2]"
+	Screenshot "Portal2"

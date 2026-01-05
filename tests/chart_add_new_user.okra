@@ -1,0 +1,44 @@
+Begin "Go to William Hart"s Chart"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+Begin "Adding a new User"
+	Click the "Add New Physician" link
+	Verify exists "Add User" popup
+	Type "Smith" in the "Last Name" popup input
+	Type "John" in the "First Name" popup input
+	Type "Rudolf" in "Middle Name" popup input
+	Type "D.O." in the "Degree" popup input
+	Type "123 Here St" in the "Address1" popup input
+	Type "Suite #5" in the "Address2" popup input
+	Type "Anytown" in the "City" popup input
+	Type "Indiana" into the "State" field
+	Type "46804" in the "Zip" popup input
+	Type "2604596270" in the "Work Phone" popup input
+	Type "2604596271" in the "Fax Number" popup input
+	Type "Fax" into the "Preferred Route" field
+	Click the "Add User" button
+	Verify exists "These users already exist" text
+	Click the "Add as new user" link
+	Verify exists "Warning" popup
+	Close the popup
+Begin "Verify the User"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "Smith, John" in the input
+	Click the "Go!" button
+	Verify exists "Login Disabled" text
+	Click the "(*)" link
+	Verify exists "John Rudolf Smith, D.O." text
+	Verify exists "123 Here St" text
+	Verify exists "Suite #5" text
+	Verify exists "Anytown IN, 46804" text
+	Verify exists "US" text
+	Verify exists "Fax" text
+	Verify exists "View Only" text
+	Verify exists "Referring Physicians" text
+	Verify exists "Referring Physician" text
+	Verify exists "(260) 459-6270" text
+	Verify exists "(260) 459-6271" text

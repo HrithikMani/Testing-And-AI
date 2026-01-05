@@ -1,0 +1,94 @@
+"""
+ Test for testing GET/POST of FHIR Patient Records
+ @owners: dcarlson
+ @filedeps: system/layouts/FHIR*/*
+ @diffdeps: FHIR, Demographic
+"""
+
+@@@
+driver.miedb.dbExec("UPDATE patient_partitions SET wc_guid='1.2.3.4.5.6.7' WHERE wc_partition='MIE'")
+driver.miedb.dbExec("UPDATE patients SET ssn='111-11-1111' WHERE pat_id=18")
+driver.miedb.dbExec("UPDATE system_settings SET value='1' WHERE item='Include Social Security Number'")
+driver.miedb.dbExec("INSERT INTO obs_forms (form_item_desc,obs_form_id,form_item_type,obs_code,position,active) SELECT 'Previous First Name',(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') obs_form_id,        'item',  (SELECT obs_code FROM observation_codes WHERE obs_name='Previous First Name') obs_form_id, 	   4 as position, 1 as active FROM patients p WHERE p.pat_id=18 AND (SELECT obs_form_id FROM obs_forms ofr WHERE ofr.obs_form_id=(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') AND ofr.form_item_desc='Previous First Name') IS NULL LIMIT 1");
+driver.miedb.dbExec("INSERT INTO obs_forms (form_item_desc,obs_form_id,form_item_type,obs_code,position,active) SELECT 'Previous Last Name',(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') obs_form_id,        'item',  (SELECT obs_code FROM observation_codes WHERE obs_name='Previous Last Name') obs_form_id, 	   5 as position, 1 as active FROM patients p WHERE p.pat_id=18 AND (SELECT obs_form_id FROM obs_forms ofr WHERE ofr.obs_form_id=(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') AND ofr.form_item_desc='Previous Last Name') IS NULL LIMIT 1");
+driver.miedb.dbExec("INSERT INTO obs_forms (form_item_desc,obs_form_id,form_item_type,obs_code,position,active) SELECT 'Previous Address',(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') obs_form_id,        'item',  (SELECT obs_code FROM observation_codes WHERE obs_name='Previous Address') obs_form_id, 	   6 as position, 1 as active FROM patients p WHERE p.pat_id=18 AND (SELECT obs_form_id FROM obs_forms ofr WHERE ofr.obs_form_id=(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') AND ofr.form_item_desc='Previous Address') IS NULL LIMIT 1");
+driver.miedb.dbExec("INSERT INTO obs_forms (form_item_desc,obs_form_id,form_item_type,obs_code,position,active) SELECT 'Previous City',(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') obs_form_id,        'item',  (SELECT obs_code FROM observation_codes WHERE obs_name='Previous City') obs_form_id, 	   7 as position, 1 as active FROM patients p WHERE p.pat_id=18 AND (SELECT obs_form_id FROM obs_forms ofr WHERE ofr.obs_form_id=(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') AND ofr.form_item_desc='Previous City') IS NULL LIMIT 1");
+driver.miedb.dbExec("INSERT INTO obs_forms (form_item_desc,obs_form_id,form_item_type,obs_code,position,active) SELECT 'Previous State',(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') obs_form_id,        'item',  (SELECT obs_code FROM observation_codes WHERE obs_name='Previous State') obs_form_id, 	   8 as position, 1 as active FROM patients p WHERE p.pat_id=18 AND (SELECT obs_form_id FROM obs_forms ofr WHERE ofr.obs_form_id=(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') AND ofr.form_item_desc='Previous State') IS NULL LIMIT 1");
+driver.miedb.dbExec("INSERT INTO obs_forms (form_item_desc,obs_form_id,form_item_type,obs_code,position,active) SELECT 'Previous Zip',(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') obs_form_id,        'item',  (SELECT obs_code FROM observation_codes WHERE obs_name='Previous Zip') obs_form_id, 	   9 as position, 1 as active FROM patients p WHERE p.pat_id=18 AND (SELECT obs_form_id FROM obs_forms ofr WHERE ofr.obs_form_id=(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') AND ofr.form_item_desc='Previous Zip') IS NULL LIMIT 1");
+driver.miedb.dbExec("INSERT INTO observation_codes SET obs_name='Tribal Affiliation',obs_type='CWE',obs_group=22")
+driver.miedb.dbExec("INSERT INTO obs_forms (form_item_desc,obs_form_id,form_item_type,obs_code,position,active) SELECT 'Tribal Affiliation',(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') obs_form_id,'aclist',(SELECT obs_code FROM observation_codes WHERE obs_name='Tribal Affiliation') obs_form_id, 	   4 as position, 1 as active FROM patients p WHERE p.pat_id=18 AND (SELECT obs_form_id FROM obs_forms ofr WHERE ofr.obs_form_id=(SELECT obs_form_id FROM obs_forms WHERE form_item_type='form' AND form_item_desc='Demographic Data') AND ofr.form_item_desc='Tribal Affiliation') IS NULL LIMIT 1");
+
+res = driver.miedb.dbQuery("SELECT session_id FROM logins ORDER BY id DESC LIMIT 1")
+if res:
+	res = res.getRes()
+	return{
+		'session_id': res[0]['session_id']
+	}
+@@@
+Begin "Enter Neccesary Info into William Hart"
+	Navigate "?f=chart&s=pat&t=Admin%3ADemographics&v=dashboard&pat_id=18"
+	Open "Demographic Information" dynamicsection
+	Type Mr. in the Title input
+	Type Jr. in the Suffix input
+	Type "Apt 2A" in the "Address 2" input
+	Type "PO Box 123" in the "Address 3" input
+	Type Jr. in the Suffix input
+	Type "(260) 437-1111" in the "Fax Number" input
+	Type 12 in the DPD_death_dateMONTH input
+	Type 31 in the DPD_death_dateDAY input
+	Type 2024 in the DPD_death_dateYEAR input	
+	Select "Yes" from the "Is Deceased" dropdown
+	Save "Demographic Information" dynamicsection
+	Open "Other Data" dynamicsection
+	Screenshot "Other Data"
+	Type "Ho-Chunk Nation of Wisconsin" in the Tribal Affiliation autocomplete
+	Screenshot "Other Data 2"
+	Save "Other Data" dynamicsection
+	Screenshot "Hart info"
+Begin "FHIR Patient GET agyid_type: 2"
+	Navigate "?f=layout&module=FHIRtools&name=JSONPost&tabmodule=admin&t=Admin&tabselect=Interface"
+	Type "{session_id}" into the "Session ID" input
+	Click the "Load example Patient FHIR" button
+Begin "Test FHIR POST for MR existing error"
+	Click the "Post" button
+	Verify exists @Already Exists@xpath="//pre[@id='json_renderer'][contains(text(), 'already exists on a different patient')]"
+@@@
+	eles = driver.getElements(xpath='//textarea[@id="jsonText"]')
+	for e in eles:
+		original_json = e.get_attribute('value')
+		new_json = original_json.replace('"10019"', '"999999"')
+		return {
+			'new_json': new_json
+		}
+@@@
+Begin "Modify FHIR for POST"
+	@Replace the MR number@driver.runJS("document.getElementById('jsonText').value = document.getElementById('jsonText').value.replace(new RegExp('10019','g'), '999999');")
+Begin "FHIR Patient POST and audit check"
+	Click the "Post" button
+	Navigate "?f=chart"
+	Click the "EMP #" radio
+	Type "999999" in the "sstring" input
+	Click the "Search" button
+	Click the 'Admin' charttab
+	Click the 'Demographics' charttab subtab
+	Verify exists "Hart Jr., William S." text
+	Verify exists "2300 Commonwealth Avenue" text
+	Verify exists "Fort Wayne, Indiana 46804" text
+	Verify exists "11-30-1954" text
+	Verify exists "111-11-1111" text
+	Verify exists "Male" text
+	Verify exists "(260) 444-0099" text
+	Verify exists "(260) 437-0001" text
+	Verify exists "White" text
+	Verify exists "Not Hispanic or Latino" text
+	Verify exists "Ho-Chunk" text
+# Testing for death date
+	Verify exists "12-31-2024" text
+# Ignore intentional errors
+@@@
+driver.wcErrorLog.ignore("*mrnumber 'MIE-10019' already exists on a different patient*")
+driver.wcErrorLog.ignore("*mrnumber 'MIE-10019' already exists on a different patient*")
+driver.wcErrorLog.ignore("*New partition system: (ISO) partition: (1.2.840.114398.1.66.1)*")
+driver.wcErrorLog.ignore("*changes were not saved*")
+driver.wcErrorLog.ignore("*Could not post FHIR JSON message, API returned (403)*")
+@@@

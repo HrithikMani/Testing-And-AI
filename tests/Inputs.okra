@@ -1,0 +1,33 @@
+"""
+	UI Inputs Tests
+	@filedeps: system/layouts/Views/*.html, system/layouts/Inputs/*.html, system/layouts/UI/Examples.html
+"""
+Begin Start Inputs Test
+	Navigate "?f=layout&module=UI&name=Examples"
+	Type "Hello world!" in the txtInput input
+	Type "I am in a textarea!" in the @Text Area@xpath=//textarea[@id="txtArea"]
+	Enter "01-01-2020" into the dateInput1 date
+	Enter "01-02-2020" into the dateInput2 date
+	Type "3:30" in the TimeInput1 input
+	Click the "chkBox1" checkbox
+	Click the @Default Radio@xpath=//input[@type="radio" and @id="radio1"]
+	Click the "inline-chkBox1" checkbox
+	Click the @Inline Radio@xpath=//input[@type="radio" and @id="inline-radio1"]
+	Type "555-123-4567" into the phoneInput input
+	Type "Fort Wayne" in the cityAC input
+	Verify exists @City AC Value@xpath=//input[@id="cityAC_val" and @value="Fort Wayne"]
+	Type "Peanuts" in the agyAC input
+	Verify exists @Allergy AC Value@xpath=//input[@id="agyAC_val" and @value="Peanuts"]
+	Select "Indiana" from the select dropdown
+	Select "Custom Value 2" from the custom-select dropdown
+	Verify "exists" "12345" text
+	Verify "exists" "06-02-2021" text
+	Verify "exists" "06-02-2021 14:24" text
+	Verify "exists" "(260) 459-6270" text
+	Verify "exists" "Hart, William S." text
+	Verify "exists" "Yes" text
+	Verify "exists" "No" text
+	Verify "exists" "Custom Bool 1" text
+	Verify "exists" "Active" text
+	Verify "exists" "Inactive" text
+	Verify "exists" "A value that has no label" text

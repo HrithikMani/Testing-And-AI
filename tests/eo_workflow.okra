@@ -1,0 +1,37 @@
+Begin "Add a new EO"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Employer Organizations" link
+	Click the "Add New" link
+	Type "Even Betterer Corp" into the Name input
+	Click the "Add New" button
+	@Wait@driver.wcutils.waitForAJAX(30)
+	Verify exists "Account, Employer Organization" text
+Begin "Enter Other Data"
+	Open the "Other Data" dynamicsection
+	Type "This is a better corp!" into the Details input
+	Advance the dynamicsection
+	Verify exists "This is a better corp" text
+Begin "Add a Sub-EO"
+	Click the "Add New Sub-EO" link
+	Type "Child EO" into the Name input
+	Click the "Add New" button
+	@Wait@driver.wcutils.waitForAJAX(30)
+	Verify exists "Account, Employer Organization" text
+	Unmask dynamicsection
+	Verify exists "Parent EO:" text
+	Click the "Even Betterer Corp" link
+Begin "Unlink Child"
+	Open the "Sub-Employer Organizations" dynamicsection
+	Unmask dynamicsection
+	Click the "End" button
+	Click the @Unlink: checkbox@xpath="//input[@id='le_pat_parent_relations_link_rel_pat_end_value0']"
+	Advance the dynamicsection
+	Verify !exists @Child EO text@xpath="//div[@class='wc-enc-dynamic-section-content']//*[contains(.,'Child EO')]"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Employer Organizations" link
+	Type "Child EO" into the name input
+	Click the "Search" button
+	Click the "Child EO" link
+	Verify !exists "Parent EO:" text

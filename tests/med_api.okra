@@ -1,0 +1,8 @@
+"""
+	Unit test for med API endpoint
+	@owners: gjones
+	@filedeps: src/ecrxdb.c, src/api/med.c, system-dev/layouts/ApiTest/jsonMeds.html
+"""
+Begin meds mieapi Test
+	Navigate ?f=layout&module=UnitTest&name=RunTest&test_module=ApiTest&test_name=jsonMeds
+	Verify exists "No layout unit test failures detected." text

@@ -1,0 +1,41 @@
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+Open the sidemenu
+Click the "E-Chart" link
+Type "Pregnant" in the "sstring" input
+Click the "Search" button
+Open the quicklink list
+Click the "Add Order" quicklink
+Begin "Order Request"
+	Select "Selenium, Selenium" from the "ordering_physician" dropdown
+	#do this twice because we want to check a both Yes and No in the "duplcate orders is this okay" miewin.confirm
+	Enter "ANA" in the "ordersac_txt" autocomplete
+	Type "first" in the 1st "comment_442" input
+	Enter "ANA" in the "ordersac_txt" autocomplete
+	Type "second" in the 2nd "comment_442" input
+	Click the "ANA" picklist checkbox
+	Click the "BUN" picklist checkbox
+
+	#make sure we detect multiples and No takes the user back
+	Click the "Submit" button
+	Verify exists "3 instances of ANA" text
+	Click the "No" button
+
+	Verify exists "Additional Orders" text
+
+	#make sure we detect multiples and Yes lets the user finish
+	#YUCK!!!!
+	Click the "Submit" button
+	Verify exists "3 instances of ANA" text
+	Click the "Yes" button
+
+@Switch Windows@driver.switchToPopup()
+#should be two of these -- how to check?
+Verify exists "ANA (first)" text
+Verify exists "ANA (second)" text
+Verify exists "BUN" text
+@@@Switch Back to New Requisition Screen
+driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@

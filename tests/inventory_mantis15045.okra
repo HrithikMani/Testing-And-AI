@@ -1,0 +1,76 @@
+Begin "Verify 'View Inventory' permission"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	# in the "Username" cell in the "selenium" row in the "WebChart Users" table
+	Click the "selenium" link
+	# in the "Access Control (selenium)" box
+	Verify !exists The "[ View Inventory: No ]" text
+Begin "Verify Bug #15045 is fixed"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Add Inventory" charttab
+	Begin "Add lisinopril 40mg in the 1st row in the table body in the Receive General Inventory Items table"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc0']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id0" dropdown
+		Verify "value=1" "inv_stockpile_id0" dropdown
+		#Select "Lisinopril" and get "lisinopril (New)" from the autocomplete in the "Drug/Item" cell
+		Enter "lisinopril" into the "inv_acval0" autocomplete
+		Blur the "inv_acval0" autocomplete
+		# in the "Form" cell
+		Click the "tablet 40mg" autocomplete choice
+		# in the "Qty" cell
+		Type "25" in the "inv_quantity0" input
+		# leave the "Lot Number" cell blank
+		# in the "Manufacturer" cell
+		Type "Another Manufacturer" in the "inv_manufacturer0" autocomplete
+		# in the "Expiration Date" cell
+		Type "09-23-2032" in the "inv_exp_date0" date
+	Click the "Add to Inventory" button
+	Verify exists the "Receiving lisinopril 40 mg tablet (25) - Success" text
+	Click the "Show Inventory" charttab
+	Select "All" in the @"Site" dropdown@xpath=//select[@name='ib.location']
+	Click the "Search" button
+	# in the "General Inventory" table
+	Verify exists The "Another Manufacturer" text
+	Click the "Add Inventory" charttab
+	# in the 1st row in the table body in the "Receive General Inventory Items" table
+	Begin "Add some more lisinopril"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc0']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id0" dropdown
+		Verify "value=1" "inv_stockpile_id0" dropdown
+		#Select "Lisinopril" and get "lisinopril (New)" from the autocomplete in the "Drug/Item" cell
+		Enter "lisinopril" into the "inv_acval0" autocomplete
+		Blur the "inv_acval0" autocomplete
+		# in the "Form" cell
+		Click the "tablet 40mg" autocomplete choice
+		# in the "Qty" cell
+		Type "5" in the "inv_quantity0" input
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Verify "value=Unknown (Another Manufacturer 09-23-2032) qty: 25" in the @Lot autocomplete@xpath=//input[@id='inv_lot_id0_vis']
+		Begin "Let the system autofill by the lot we just made"
+			# in the "Lot Number" cell
+			@@@ AutoFill and Push "TAB" in the autocomplete in the "Lot" cell
+			from selenium.webdriver.common.keys import Keys
+			driver.enterFormData(Keys.ARROW_DOWN,id='inv_lot_id0_vis',clear=False)
+			driver.wcutils.waitForAJAX(30)
+			driver.enterFormData(Keys.TAB,id='inv_lot_id0_vis',clear=False)
+			@@@
+		Verify "value=Another Manufacturer" in the @autocomplete in the "Manufacturer" cell@xpath=//input[@id='inv_manufacturer0']
+		Begin "The date in the Expiration Date cell should contain 09-23-2032"
+			Verify "value=09" in the "inv_exp_date0MONTH" input
+			Verify "value=23" in the "inv_exp_date0DAY" input
+			Verify "value=2032" in the "inv_exp_date0YEAR" input
+	Click the "Add to Inventory" button
+	Click the "Show Inventory" charttab
+	Select "All" in the @"Site" dropdown@xpath=//select[@name='ib.location']
+	Click the "Search" button
+	# in the "Qty" cell in the "Another Manufacturer" row in the "General Inventory" table
+	Verify exists the @"30" text@xpath=//td[contains(.,'lisinopril 40 mg tablet')]/following-sibling::td[.='30']/following-sibling::td[.='Another Manufacturer']

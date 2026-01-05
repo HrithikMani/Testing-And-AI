@@ -1,0 +1,234 @@
+Open the sidemenu
+Click the "Control Panel" sidemenu entry
+Begin "Start with inventory enabled, but no permission"
+	Begin "Revoke individual access to Manage Inventory"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "No" from the "Edit Master Inventory List" dropdown
+		Select "No" from the "View Inventory" dropdown
+		Select "No" from the "Merge Inventory Items" dropdown
+		Type "inventory_control.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify exists The "[ View Inventory: No ] [ Edit Master Inventory List: No ] [ Merge Inventory Items: No ]" text
+	Begin "Verify lack of access to Add Inventory Tab"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Click the "Control" charttab
+		Verify exists the "Your current permission of 'No' in the ('Inventory','View Inventory') security setting does not allow access to View Inventory." text
+Begin "Grant permission to view inventory"
+	Begin "Grant Individual access to View Inventory"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" from the "View Inventory" dropdown
+		Type "inventory_control.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify exists The "[ Edit Master Inventory List: No ] [ Merge Inventory Items: No ]" text
+	Begin "Verify access to Control Tab"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Click the "Control" charttab
+		Verify !exists The "Add an Item" link
+		Begin "the Inventory Items Master List table"
+			Verify exists The "lisinopril 5 mg tablet" text
+			Verify exists The "Amoxicillin 500mg Capsule" text
+			Verify !exists The "!Edit" link
+			Verify !exists The "!Merge" text
+Begin "Grant manage permission to the master list"
+	Begin "Grant Individual access to Edit Master Inventory List"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" from the "Edit Master Inventory List" dropdown
+		Type "inventory_control.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify exists The "[ Merge Inventory Items: No ]" text
+	Begin "Verify edit access to Control Tab"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Click the "Control" charttab
+		Verify exists The "Add an Item" link
+		Begin "the Inventory Items Master List table"
+			Verify exists The "lisinopril 5 mg tablet" text
+			Verify exists The "Amoxicillin 500mg Capsule" text
+			Verify exists The "!Edit" link
+			Verify !exists The "!Merge" text
+Begin "Grant merge permission to the master list"
+	Begin "Grant Individual access to Merge Inventory Items"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" from the "Merge Inventory Items" dropdown
+		Type "inventory_control.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify !exists The "[ View Inventory: No ]" text
+		# in the "Access Control (selenium)" box
+		Verify !exists The "[ Edit Master Inventory List: No ]" text
+		# in the "Access Control (selenium)" box
+		Verify !exists The "[ Merge Inventory Items: No ]" text
+	Begin "Verify edit access to Control Tab"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Click the "Control" charttab
+		Verify exists The "Add an Item" link
+		Begin "the Inventory Items Master List table"
+			Verify exists The "lisinopril 5 mg tablet" text
+			Verify exists The "Amoxicillin 500mg Capsule" text
+			Verify exists The "!Edit" link
+			Verify exists The "!Merge" text
+Begin "Add a new inventory item"
+	Click the "Add an Item" link
+	Type "Multi-Vitamin" in the "New Name" input
+	Click the "Add Item" button
+	Verify exists The "Inventory Item (0009) Added Successfully" text
+Begin "Add Order Items"
+	Begin "Add small Crutches"
+		Click the "Add an Item" link
+		Type "Crutches 48" in the "New Name" input
+		Type "Crutches" in the "New Alias" input
+		Click the "Add Item" button
+		Verify exists The "Inventory Item (0010) Added Successfully" text
+	Begin "Add large Crutches"
+		Click the "Add an Item" link
+		Type "Crutches 60" in the "New Name" input
+		Type "Crutches" in the "New Alias" input
+		Click the "Add Item" button
+		Verify exists The "Inventory Item (0011) Added Successfully" text
+Begin "Add Injection Items"
+	Begin "Add MMR"
+		Click the "Add an Item" link
+		Type "MMR" in the "New Name" input
+		Click the "Add Item" button
+		Verify exists The "Inventory Item (0012) Added Successfully" text
+	Begin "Add DTaP"
+		Click the "Add an Item" link
+		Type "DTaP" in the "New Name" input
+		Click the "Add Item" button
+		Verify exists The "Inventory Item (0013) Added Successfully" text
+Begin "Add a Random Item"
+	Click the "Add an Item" link
+	Type "My Dog Spot" in the "New Name" input
+	Click the "Add Item" button
+	Verify exists The "Inventory Item (0014) Added Successfully" text
+	Verify exists The "My Dog Spot" text
+Begin "Edit an Item"
+	Click the @"Edit" link in the "My Dog Spot" row@xpath=//td[contains(.,'My Dog Spot')]/following-sibling::td/a[text()='Edit']
+	Type "MicroSpot Dog Remover" in the "New Name" input
+	Click the "Change Name" button
+	Verify exists The "Name Changed Successfully" text
+	Verify !exists The "My Dog Spot" text
+	Verify exists The "MicroSpot Dog Remover" text
+Begin "Delete an Item"
+	Click the @"Delete" link in the "MicroSpot Dog Remover" row@xpath=//td[contains(.,'MicroSpot Dog Remover')]/following-sibling::td/a[text()='Delete']
+	# in the "Confirm Inventory Item Delete" box
+	Verify exists The "0014: MicroSpot Dog Remover" text
+	Click the "Delete" button
+	Verify exists The "Successfully Deleted Inventory Item (0014)" text
+	Verify !exists The "MicroSpot Dog Remover" text
+Begin "Attempt to Delete an In-Use Item"
+	Click the @"Delete" link in the "Lasix 80 mg tablet" row@xpath=//td[contains(.,'Lasix 80 mg tablet')]/following-sibling::td/a[text()='Delete']
+	Verify exists the "Unable to Delete this Inventory Item." text
+	Verify exists the "Unable to Delete this Inventory Item. Lasix 80 mg tablet is currently in stock!" text
+	Begin "the Details table"
+		Begin "the General Inventory row"
+			Verify exists the "15" text
+Begin "Verify Multi-Search ability"
+	Click the @"multi-search" image@xpath=//img[@alt='multi-search']
+	Verify exists the 2nd "Inventory Name" radio
+	Type "lisinopril" in the 1st searchVal input
+	Type "lasix" in the 2nd searchVal input
+	Click the "Search" button
+	Begin "the Inventory Items Master List table"
+		Verify exists the "lisinopril 5 mg tablet" text
+		Verify exists the "lisinopril 10 mg tablet" text
+		Verify exists the "lisinopril 20 mg tablet" text
+		Verify exists the "Lasix 20 mg tablet" text
+		Verify exists the "Lasix 80 mg tablet" text
+		Verify !exists the "Amoxicillin 500mg Capsule" text
+		Verify !exists the "diphenhydramine 25 mg capsule" text
+		Verify !exists the "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" text
+		Verify !exists the "Multi-Vitamin" text
+		Verify !exists the @Crutches 48 text@xpath=//*[text()='Crutches 48']
+		Verify !exists the @Crutches 60 text@xpath=//*[text()='Crutches 60']
+		Verify !exists The "MMR" text
+		Verify !exists The "DTaP" text
+Begin "Verify Clearing the Search"
+	Click the "Clear" button
+	Begin "the Inventory Items Master List table"
+		Verify exists the "lisinopril 5 mg tablet" text
+		Verify exists the "lisinopril 10 mg tablet" text
+		Verify exists the "lisinopril 20 mg tablet" text
+		Verify exists the "Lasix 20 mg tablet" text
+		Verify exists the "Lasix 80 mg tablet" text
+		Verify exists the "Amoxicillin 500mg Capsule" text
+		Verify exists the "diphenhydramine 25 mg capsule" text
+		Verify exists the "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" text
+		Verify exists the "Multi-Vitamin" text
+		Verify exists the @Crutches 48 text@xpath=//*[text()='Crutches 48']
+		Verify exists the @Crutches 60 text@xpath=//*[text()='Crutches 60']
+		Verify exists The "MMR" text
+		Verify exists The "DTaP" text
+Begin "Verify Single-Search ability"
+	Click the @"multi-search" image@xpath=//img[@alt='multi-search']
+	Verify !exists The 2nd "Inventory Name" radio
+Begin "Searching by Inventory ID"
+	Click the "Inventory ID" radio
+	Type "5" in the "searchVal" input
+	Click the "Search" button
+	Begin the "Inventory Items Master List" table
+		Verify !exists the "lisinopril 5 mg tablet" text
+		Verify !exists the "lisinopril 10 mg tablet" text
+		Verify !exists the "lisinopril 20 mg tablet" text
+		Verify exists the "Lasix 20 mg tablet" text
+		Verify !exists the "Lasix 80 mg tablet" text
+		Verify !exists the "Amoxicillin 500mg Capsule" text
+		Verify !exists the "diphenhydramine 25 mg capsule" text
+		Verify !exists the "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" text
+		Verify !exists the "Multi-Vitamin" text
+		Verify !exists the @Crutches 48 text@xpath=//*[text()='Crutches 48']
+		Verify !exists the @Crutches 60 text@xpath=//*[text()='Crutches 60']
+		Verify !exists the "MMR" text
+		Verify !exists the "DTAP" text
+Begin "Searching by Alias"
+	Click the "Alias" radio
+	Type "crutch" in the "searchVal" input
+	Click the "Search" button
+	Begin "the Inventory Items Master List table"
+		Verify !exists The "lisinopril 5 mg tablet" text
+		Verify !exists The "lisinopril 10 mg tablet" text
+		Verify !exists The "lisinopril 20 mg tablet" text
+		Verify !exists The "Lasix 20 mg tablet" text
+		Verify !exists The "Lasix 80 mg tablet" text
+		Verify !exists The "Amoxicillin 500mg Capsule" text
+		Verify !exists The "diphenhydramine 25 mg capsule" text
+		Verify !exists The "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" text
+		Verify !exists The "Multi-Vitamin" text
+		Verify exists the @Crutches 48 text@xpath=//*[text()='Crutches 48']
+		Verify exists the @Crutches 60 text@xpath=//*[text()='Crutches 60']
+		Verify !exists The "MMR" text
+		Verify !exists The "DTaP" text

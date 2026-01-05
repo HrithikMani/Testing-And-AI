@@ -1,0 +1,18 @@
+@Change Insert As Value for an order@driver.miedb.dbExec("UPDATE order_list SET insert_as_ordered=2 WHERE name='ANA'")
+
+Open the sidemenu
+Click the "E-Chart" sidemenu entry
+Type "Harris, Christine" into the sstring input
+Click the Search button
+Open the quicklink list
+Click the "Add Visit" quicklink
+Hover "Objective" jumptab
+Click the "Tests & procedures" jumptab
+Click the @id="InHouseProceduresLink"
+Select "Labs" from the "next_set_name" dropdown
+Click the "ANA" checkbox
+Click the "Add Procedures" button
+Verify exists @ANA@xpath='//span[contains(., "ANA") and contains(., "(Completed)")]'
+
+@Undo the Insert As Completed change@driver.miedb.dbExec("UPDATE order_list SET insert_as_ordered=0 WHERE name='ANA'")
+

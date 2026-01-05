@@ -1,0 +1,60 @@
+Begin "Setup appointment type with a template"
+	Open the sidemenu
+	Click the "Scheduler" sidemenu entry
+	Click the "Appt Types" charttab
+	@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//button[contains(., "Edit")]'), expected_return=True, timeout=15)
+	Gridclick "Appt Code:OFFVISITEST" "Edit" grid link 
+	Verify exists "OFFVISITEST" in the "code" input 
+	@Wait@driver.pause(3)
+	Select "Wellness Visit" from the "Default Encounter Template" dropdown
+	Click the "Submit" button
+
+Begin "Add Appointment with template"
+	Click the "Wizard" charttab
+	Verify !exists the "Filler Status" text
+	@Enable Show filler status input@driver.miedb.dbExec("UPDATE appointments SET filler_status_code='enable' WHERE id=3")
+	Click the "Wizard" charttab
+	Verify exists the "Filler Status" text
+	Enter "Acardi, Sergio" in the "Patient" autocomplete
+	Verify exists "Butler, Internist" text
+	Enter "Office Visit Follow Up" in the "typeacinp" autocomplete
+	Enter "Office" in the "locationacinp" autocomplete
+	Enter "01-01-2024 1400" in the startdate date
+	Type "Test" in the "filler_status_code" input
+#	Click the "Find Time" button
+#	@Wait 4 seconds@driver.pause(4)
+#	Click the "Select" link
+	Click the "Save" button
+Begin "Verify Existing Appointment"
+	Click the "14:00 - 14:15" link
+	Verify exists "Test" in the "filler_status_code" input
+	Click the "Close" button
+Begin "Scheduler Preferences"
+	Click the Preferences button
+	Select Yes from the "Show Linked Encounters" dropdown
+	Select Yes from the "Show Add Encounter" dropdown
+	Select Yes from the "Use One-Click Checkin" dropdown
+	Click the "Save" popup button
+	Wait for page
+	Refresh page
+	Verify exists the "Add Encounter" text
+Begin "Check in Appointment with template"
+	Verify exists the "14:00" text
+	Click the "14:00" appt checkin
+	#Click the @Checkin@xpath=//a[contains(@class,'link') and contains(.,'Checkin')]
+	Click the "Go" button
+	Verify exists the "Add Encounter" text
+	@Enable Only allow one encounter per appointment System Setting@driver.miedb.dbExec("REPLACE INTO system_settings SET module='Encounters', section='Settings', item='Only allow one encounter per appointment', value='1'")
+	Click the "Go" button
+	Verify !exists the "Add Encounter" text
+	Verify exists the "Visit" text
+	Click the "Visit" link
+
+	Wait for page
+	Verify exists the "Subjective" text
+	Verify exists the "Office Visit Follow Up" text
+
+#Begin "Add Appointment without template"
+
+#Begin "Check in Appointment without template"
+

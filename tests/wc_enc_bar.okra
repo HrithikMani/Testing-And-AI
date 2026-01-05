@@ -1,0 +1,24 @@
+Begin "Employee Encounter Tab"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Click the "Harris, Christine" link
+	Click the "Medical Record" charttab
+	Click the "Encounters" charttab subtab
+	Wait for the "Encounters" grid
+	Select "Default" from the grid perspective
+	Wait for the "Encounters" grid
+	Click the "11-07-2018 12:17:01" grid checkbox
+	Click the 3rd "View" grid button
+	@Switch Window@driver.switchToPopup()
+	Verify exists "Harris, Christine M." text
+	Verify exists "Visit" text
+	@Close Window@driver.closePopup()
+	Wait for the "Encounters" grid
+	Click the "Pre-placement exam" grid checkbox
+	Click the "Delete" grid button
+	@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//*[contains(., 'Status')]"), expected_return=True, timeout=15)
+	Click the "Delete" radio
+	Click the "Submit" popup button
+	Verify !exists "Pre-placement exam" text

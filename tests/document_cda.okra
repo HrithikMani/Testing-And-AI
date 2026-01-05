@@ -1,0 +1,91 @@
+"""
+	Test for CDA document validation
+	@owners: dcarlson
+	@filedeps: system/layouts/StructDoc/*.html, system/layouts/StructDocTypes/*.html, system/layouts/StructDocAPI/*.html, system/layouts/StructDocXSL/*.html, system/layouts/StructDocXSLTypes/*.html, src/encounters.c
+   @systemtype: WCNOW
+"""
+Begin "Test StructDocAPI"
+	Navigate "?name=Medications&pat_id=18&f=layout&module=StructDocAPI&XML=1"
+	Navigate "?name=Allergies&pat_id=18&f=layout&module=StructDocAPI&XML=1"
+	Navigate "?name=Problems&pat_id=18&f=layout&module=StructDocAPI&XML=1"
+Begin "Open the Chart and create a visit"
+	Navigate "?"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Close the sidemenu
+	Click the "TEST-10019" link
+	Verify exists "Add Visit" link
+	Click the "Add Visit" link
+	Verify exists "Enc #" text
+Begin "Set Employee portlet"
+	Verify exists Summary charttab
+	Open 'Summary' charttab
+	Verify exists "Select Portlets" link
+	Click the "Select Portlets" link
+	Verify exists "columns" dropdown
+	Select "3" from the "columns" dropdown
+	Check the "Patient Chart File Export" picklist checkbox
+	Click the "Save" button
+Begin "Validate Patient CDA Document"
+	Click the first "Store Document" link
+	@Wait 30 seconds to make sure the spin-off process of validating the CDA in C code fully performs@driver.pause(30)
+	Click the first "Click Here to view the document." link
+#Screenshot PatCDA
+	Click the first "Properties" link
+	Verify notexists "Invalid" text
+	Verify notexists "Not Validated" text
+	Verify exists "View Raw" link
+#Screenshot PatCDA
+Begin "Validate Encounter CDA Document"
+	Open 'Summary' charttab
+	Click the second "Store Document" link
+	@Wait 30 seconds to make sure the spin-off process of validating the CDA in C fully performs@driver.pause(30)
+	Click the first "Click Here to view the document." link
+	Click the first "Properties" link
+	Verify notexists "Invalid" text
+	Verify notexists "Not Validated" text
+	Verify exists "View Raw" link
+#Screenshot EncCDA
+Begin "Create new patient"
+	Navigate "?f=chart"
+	Click "Patient Registration" charttab
+	Type Patient into the "Last Name" field
+	Type Faker into the "First Name" field
+	Enter "07-01-1998" into the birth_date date
+	Click the "Search" button
+	Click the "Save" button
+Begin "Move CDA Document to new chart and import CDA"
+	@Move CDA Document to new chart@driver.miedb.dbExec("UPDATE documents SET pat_id=(SELECT max(pat_id) FROM patients) WHERE pat_id=18 AND storage_type=19 ORDER BY doc_id LIMIT 1")
+	Click "Summary" charttab
+	Verify exists "Add Visit" link
+	Click "Add Visit" link
+	Verify exists "Enc #" text
+	Verify exists "Documents" charttab
+	Open "Documents" charttab
+	Wait for page
+	Select "List View" from the "v" dropdown
+	Verify exists 1st "02-02-2023" listview link
+	Click the 1st "02-02-2023" listview link
+	Verify exists "Request Signature" link
+	Hover "CDA Document:" document header
+	Click the "Link to Encounter" document dynop
+	Click "Properties" link
+	Click "Import CCDA Data" link
+	Wait for page
+Begin "Validate Import Occured"
+	Click "Summary" charttab
+	Verify exists "2300 Commonwealth Avenue" text
+	Verify exists "(260) 437-0001" text
+	Verify exists "11-30-1954" text
+	Verify exists "Identifies as Male" text
+	Verify exists "PENICILLINS" text
+	Verify exists "aspirin 81 mg tablet,delayed releas" text
+	Verify exists "Coumadin 5 mg tablet" text
+	Verify exists "Atrial fibrillation" text
+	Verify exists "I48.91" text
+	Verify exists "Height: 69 in (02-29-2024)" text
+	Verify exists "Doug Hart" text
+Begin "Validate Bug Fix 111481"
+	Click the "Visit" toolbar link
+	Verify exists "Encounter" link
+	Verify !exists "Clinical Office" link

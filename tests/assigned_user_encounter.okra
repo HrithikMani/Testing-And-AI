@@ -1,0 +1,62 @@
+"""
+	Test to verify assign user functionality in an encounter is working as expected
+	@owners: nchoudhry
+	@filedeps: system/layouts/encounter/Assign.html, system/layouts/Inbox/Assigned.html, system/layouts/Header/EncounterBar.html
+"""
+
+Begin "Add VISIT Encounter type as assignable"
+	Navigate "?f=chart&s=encvteditor&t=Encounter+Types&tabmodule=admin&opp=edit&visit_type=VISIT"
+	Click the "assign_user" checkbox
+	Click the "Save" button
+
+# By default encounters are not assignable, verify it isn't
+Begin "Create encounter and see if assignable"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the "Add Visit" link
+	Wait for ajax
+	Verify !exists the "Assign" toolbar link
+
+# We can restrict the assign autocomplete to only show users in certain departments
+Begin "Add Providers to Allowed Assignable users system setting"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Click the "Add System Setting" link
+	Enter "E-Chart, Encounters, Assigned Users Department" in the "settings_query" autocomplete
+	Type "Providers" in the "value" input
+	Type "NC TEST" into "reason" input
+	Click the "Add" button
+
+Begin "Add VISIT Encounter type as assignable"
+	Navigate "?f=chart&s=encvteditor&t=Encounter+Types&tabmodule=admin&opp=edit&visit_type=VISIT"
+	Click the "assign_user" checkbox
+	Click the "Save" button
+
+# Now that the "VISIT" Encounter type is assignable,
+# It should be possible to assign a user to it.
+Begin "Create encounter and see if assignable"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the "Add Visit" link
+	Wait for ajax
+	Click the Yes button
+	Wait for page
+	Verify exists the "Assign" toolbar link
+
+Begin "Assign a user to the encounter"
+	Click the "Assign" toolbar link
+	Wait for ajax
+	Verify exists the "userSearchAC" autocomplete
+	Enter "Patel" in the "userSearchAC" autocomplete
+	Select "High" in the "enc_priority" dropdown
+	Click the Submit button
+	@Wait@driver.pause(10)
+	Verify exists "Patel, Ashish" text
+
+Begin "Reassign user to encounter with button linked to PCP"
+	Click the "Assign" toolbar link
+	Wait for ajax
+	Select "High" in the "enc_priority" dropdown
+	Click the "Family Medicine: Sample, John" button
+	@Wait@driver.pause(10)
+	Verify exists "Sample, John" text

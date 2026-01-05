@@ -1,0 +1,248 @@
+Begin "Login as Dave"
+	Navigate "?f=logout"
+	@Dave superuser WCTestSession@driver.wcutils.insertWCTSession('dave')
+Begin "Remove Security Access"
+	Navigate "?f=admin&subfunc=roleeditor&role=12"
+	Select "No" from the "Control_Refer to Systems Editor" dropdown
+	Type "rts_editor.okra" in the "sec_role_comment" input
+	Click the "Update Role" button
+Begin "Security Access Denied"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Interface" link
+	Click the "Refer to Systems" link
+	Verify exists "Your current permission of 'No' in the (Control, Refer to Systems Editor) security setting does not allow access to Refer to Systems Editor." text
+Begin "Gain Security Access"
+	Navigate "?f=admin&subfunc=roleeditor&role=12"
+	Select "Yes" from the "Control_Refer to Systems Editor" dropdown
+	Type "rts_editor.okra" in the "sec_role_comment" input
+	Click the "Update Role" button
+	Navigate "?f=wcversion&s=upgrade&opp=sec"
+	Click the "Reevaluate Security Permissions" link
+	Verify exists "COMPLETE" text
+Begin "Access Granted"
+	Click the "Interface" link
+	Click the "Refer to Systems" link
+	Verify "exists" "Refer to Systems Editor" text
+	Verify exists "CDC" text
+	Verify exists "DMON" text
+	Verify exists "MIECOMMERCE" text
+	Verify exists "NMC_HL7" text
+	Verify exists "NMC_POST" text
+	Verify exists "SS_ELIG" text
+	Verify exists "MEDISYS" text
+	Verify exists "MIEPUB_API" text
+Begin "Add New Record"
+	Click the "Add Record" link
+	Type "OKRA" into the "system_id" input
+	Type "Okra Test" into the "system_name" input
+	Click the "Show Options" link
+	Click the "wc" checkbox
+	Click the "hl7in" checkbox
+	Click the "hl7out" checkbox
+	Click the "* System Address" label
+	Click the @xpath='//*[@id="socketradio"]'
+	Type "127.0.0.1" into the socketipinput input
+	Type "3006" into the socketport input
+	Type "1" into the ssl input
+	Click the "Submit" button
+	Verify "value=socket|127.0.0.1|3006|1" "system_address" input
+	Click the "System Address 2" label
+	Type "google.com" into the "url" input
+	Type "user" into the username input
+	Type "pass" into the password input
+	Type "message" into the msg input
+	Click the "Submit" button
+	Verify "value=https|google.com|user|pass|message" "system_address2" input
+	Type "OKRA_ID" into the "rep_uid" input
+	Type "me" into the "system_user" input
+	Type "supersecret22" into the "system_pass" input
+	Select "MIE" in the "system_partition" dropdown
+	Type "OAK" into the "external_partition" input
+	@Wait@driver.pause(3)
+	Verify exists popup button
+	Click the "Save" popup button
+Begin "Verify New Record"
+	Verify "exists" "OKRA" text
+	Verify exists "Okra Test" text
+	Verify exists "socket|127.0.0.1|3006|1" text
+	Verify exists "Is WebChart" text
+	Verify exists "Is HL7 Recipient" text
+	Verify exists "Is HL7 Orders Outbound" text
+Begin "Deactivate Records"
+	Wait for the "RTSList" grid
+	Click the "CDC" grid checkbox
+	Click the "DMON" grid checkbox
+	Click the "MIECOMMERCE" grid checkbox
+	Click the "Deactivate" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Verify exists "CAUTION: Please verify that none of the records being deactivated are currently used as routes." text
+	Click the "Yes" button
+	Wait for the RTSList grid
+	Verify notexists "CDC" text
+	Verify notexists "DMON" text
+	Verify notexists "MIECOMMERCE" text
+	Select "Inactive" from the grid perspective
+	Wait for the RTSList grid
+	Verify exists "CDC" text
+	Verify exists "DMON" text
+	Verify exists "MIECOMMERCE" text
+Begin "Activate Records"
+	Wait for the "RTSList" grid
+	Click the "CDC" grid checkbox
+	Click the "DMON" grid checkbox
+	Click the "MIECOMMERCE" grid checkbox
+	Click the "Activate" grid button
+	Wait for the RTSList grid
+	Verify notexists "CDC" text
+	Verify notexists "DMON" text
+	Verify notexists "MIECOMMERCE" text
+	Select "Active" from the grid perspective
+	Wait for the RTSList grid
+	Verify exists "CDC" text
+	Verify exists "DMON" text
+	Verify exists "MIECOMMERCE" text
+Begin "Delete Records"
+	Wait for the "RTSList" grid
+	Click the "NMC_HL7" grid checkbox
+	Click the "NMC_POST" grid checkbox
+	Click the "SS_ELIG" grid checkbox
+	Click the "Delete" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Verify exists "Are you sure that you want to delete these records?" text
+	Click the "Yes" button
+# 5/18/2023 TAB - Attempted waitForToggle but it fails. Just doing a pause for now to come back to.
+	@Wait for grid confirmation growl@driver.pause(10)
+	Select "Show All" from the grid perspective
+	Wait for the RTSList grid
+	Verify notexists "NMC_HL7" text
+	Verify notexists "NMC_POST" text
+	Verify notexists "SS_ELIG" text
+Begin "Edit Record"
+	Wait for the "RTSList" grid
+	Click the "OKRA" grid checkbox
+	Click the "Edit" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	@Wait@driver.pause(2)
+	Verify "value=OKRA" "system_id" input
+	Verify "value=Okra Test" "system_name" input
+	Click the "Show Options" link
+	Verify "checked=1" "wc" checkbox
+	Verify "checked=1" "hl7in" checkbox
+	Verify "checked=1" "hl7out" checkbox
+	Verify "value=socket|127.0.0.1|3006|1" "system_address" input
+	Verify "value=https|google.com|user|pass|message" "system_address2" input
+	Verify "value=OKRA_ID" "rep_uid" input
+	Verify "value=me" "system_user" input
+	Verify "value=MIE" "system_partition" dropdown
+	Verify "value=OAK" "external_partition" input
+	Type "Okra Test 2: The Sequel" into the "system_name" input
+	Click the "xds" checkbox
+	Verify exists "* Repository URL" text
+	Verify exists "* Registry URL" text
+	@Wait@driver.pause(3)
+	Verify exists popup button
+	Click the "Save" popup button
+	Verify exists "Okra Test 2: The Sequel" text
+Begin "Edit Extended"
+	Wait for the RTSList grid
+	Wait for the "RTSList" grid
+	Click the "OKRA" grid checkbox
+	Click the "Extended" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Verify exists popup button
+	@Wait for addExtended autocomplete@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//label[contains(., "addExtended")]/following-sibling::div//input[contains(@class, "autocomplete")]|//td[@class="field"][contains(., "addExtended")]/following-sibling::td[@class="value"]//input[contains(@class, "autocomplete")]|//div[contains(., "addExtended")]/following-sibling::div/span/input[contains(@class, "autocomplete")]|//div/span[contains(., "addExtended")]/following-sibling::span/span/input[contains(@class, "autocomplete")]|//td[contains(., "addExtended")]/following-sibling::td/span/input[@class="autocomplete"]|//td[contains(., "addExtended")]/following-sibling::td/span/input[@class="autocomplete selected"]|//td[contains(., "addExtended")]/following-sibling::td//span/input[@class="autocomplete"]|//td[contains(., "addExtended")]/following-sibling::td[@class="results"]//input[contains(@class, "autocomplete")]|//label[contains(., "addExtended")]/following-sibling::div/div/input[contains(@class, "autocomplete")]|//input[contains(@class, "autocomplete")][contains(@id, "addExtended")]|//input[contains(@class, "autocomplete")][contains(@name, "addExtended")]'), timeout=30)
+	Enter 'hl7_connection_timewait' into the addExtended autocomplete
+	Type '10' into the 'hl7_connection_timewait' input
+	Click the "Show Fields" popup button
+	Click the "ACK_DOM_Tagname" popup link
+	Enter 'hl7_seg' into the addExtended autocomplete
+	Type ".v24" into the @xpath="//input[@id='hl7_segdefs']"
+	Click the "hardcode_visit_type" link
+	Type "EXAM" into the @xpath="//input[@id='hardcode_visit_type']"
+	Click the "hardcode_visit_type" link
+	Select "Kareo Billing" in the "optionsFilter" dropdown
+	Verify "exists" "hl7_connection_timewait" link
+	Verify "exists" "send_icd_version" link
+	Click the "Hide Fields" button
+	@Wait@driver.pause(2)
+	Click the "Save" popup button
+	Wait for the "RTSList" grid
+	Click the "OKRA" grid checkbox
+	Click the "Extended" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Verify "exists" @xpath="//label[@for='hl7_connection_timewait']"
+	Verify "value=10" @xpath="//input[@id='hl7_connection_timewait']"
+	Verify "exists" @xpath="//label[@for='hl7_segdefs']"
+	Verify "value=.v24" @xpath="//input[@id='hl7_segdefs']"
+	Verify "exists" @xpath="//label[@for='hardcode_visit_type']"
+	Verify "value=EXAM" @xpath="//input[@id='hardcode_visit_type']"
+	Type 'VISIT' into the @xpath="//input[@id='hardcode_visit_type']"
+#	@Click the 2nd minus button@driver.getWebDriver().find_element("class", "fa-minus-circle")[1].click()
+	Click the 2nd icon minuscircle
+	Verify notexists @xpath="//input[@id='hl7_connection_timewait']"
+	@Wait@driver.pause(3)
+	Verify exists popup button
+	Click the "Save" popup button
+	Wait for the RTSList grid
+	Wait for the "RTSList" grid
+	Click the "OKRA" grid checkbox
+	Click the "Extended" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Verify "exists" @xpath="//label[@for='hardcode_visit_type']"
+	Verify "value=VISIT" "hardcode_visit_type" input
+	Verify notexists "hl7_connection_timewait" input
+	@Wait@driver.pause(3)
+	Verify exists popup button
+	Click the "Save" popup button
+	Wait for the RTSList grid
+Begin "Duplicate MEDISYS and OKRA"
+	Wait for the RTSList grid
+	Wait for the "RTSList" grid
+	Click the "MEDISYS" grid checkbox
+	Click the "Duplicate" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Type "MEDISYS_DUP" into the "duplicateName" input
+	Verify exists popup button
+	Click the "OK" popup button
+	Wait for page
+	Wait for the "RTSList" grid
+	Click the "OKRA" grid checkbox
+	Click the "Duplicate" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Type "OKRA_DUP" into the "duplicateName" input
+	Verify exists popup button
+	Click the "OK" popup button
+	Wait for page
+	Wait for the RTSList grid
+	Verify exists "MEDISYS_DUP" text
+	Verify exists "OKRA_DUP" text
+	Wait for the "RTSList" grid
+	Click the "!MEDISYS" grid checkbox
+	Click the "Extended" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Verify exists "hl7_segdefs" text
+	Verify "value=.v23" "hl7_segdefs" input
+	@Wait@driver.pause(3)
+	Verify exists popup button
+	Click the "Save" popup button
+	Wait for the RTSList grid
+	Click the "OKRA" grid checkbox
+	Click the "Edit" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Verify "value=OKRA" "system_id" input
+	Verify "value=Okra Test 2: The Sequel" "system_name" input
+	Click the "Show Options" link
+	Verify "checked=1" "wc" checkbox
+	Verify "checked=1" "hl7in" checkbox
+	Verify "checked=1" "hl7out" checkbox
+	Verify "checked=1" "xds" checkbox
+	Verify "value=socket|127.0.0.1|3006|1" "system_address" input
+	Verify "value=https|google.com|user|pass|message" "system_address2" input
+	Verify "value=OKRA_ID" "rep_uid" input
+	Verify "value=me" "system_user" input
+	Verify "value=MIE" "system_partition" dropdown
+	Verify "value=OAK" "external_partition" input
+	@Wait@driver.pause(3)
+	Verify exists popup button
+	Click the "Save" popup button

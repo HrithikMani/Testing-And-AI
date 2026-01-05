@@ -1,0 +1,19 @@
+Begin "Verify 'View Inventory' permission"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	# in the "Username" cell in the "selenium" row in the "WebChart Users" table
+	Click the "selenium" link
+	# in the "Access Control (selenium)" box
+	Verify !exists The "[ View Inventory: No ]" text
+Begin "Verify Bug #11352 is fixed"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Hide Out Of Stock" link
+	Verify exists the "Show Out Of Stock" link
+	Click the "Show Inventory" charttab
+	# Confirm the preference remembered to hide the out of stock items
+	Verify exists the "Show Out Of Stock" link

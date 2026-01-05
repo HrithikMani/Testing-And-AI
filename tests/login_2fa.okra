@@ -1,0 +1,284 @@
+Begin "Login"
+Open the sidemenu
+Click the "Control Panel" sidemenu entry
+Begin "Set the 2FA system settings"
+	Begin "Exercise the Enable 2FA system setting to create it"
+		Open "My Settings" charttab
+		Wait for page
+		Click the @"Setup" text@xpath=//td[text()='2 Step Verification']/following-sibling::td/span[text()='Setup']
+		Verify exists the "Setup 2 Step Verification" popup
+		Close the popup
+	Begin "Enable only HOTP"
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Wait for page
+		Type "Use 2FA" in the input
+		Click the "Go" button
+		Click the @"Edit" link in the "Use 2FA" row@xpath=//td[contains(.,'Use 2FA')]/following-sibling::td//a[text()='Edit']
+		# 1 turns on HOTP only
+		Wait for page
+		Type "1" in the "Value" input
+		Type "login_2fa.okra" in the "Reason" input
+		Click the "Change" button
+		Wait for page
+	Begin "Set the testing OTP URL"
+		# Add this one instead of exercising it - exercising it would polute the production argus DB
+		# (as that is the default for the setting) and we don't want to do that.
+		Click the "Add System Setting" link
+		Type "OTP Validation URL!" in the autocomplete
+		Wait for page
+		Click the "WebChart, Login, OTP Validation URL" autocomplete choice
+		# port 8125 is the test server
+		Wait for page
+		Type "https://argus.med-web.com:8125/" in the "Value" input
+		Type "login_2fa.okra" in the "Reason" input
+		Click the "Add" button
+		Verify exists the "Successfully modified system setting with module (WebChart), section (Login) and item (OTP Validation URL)" text
+		Type "OTP Validation URL" in the "select_text" input
+		Click the "Go" button
+		# in the "Value" cell in the "Show Quantity In AutoComplete" row in the "System Settings" table
+		Verify exists the !"8125" text
+Begin "Verify the User View interface"
+	Open "Access" charttab
+	Click the "Access Control" charttab subtab
+	Wait for page
+	Type "Nurse" in the input
+	Select "Exact" in the 1st dropdown
+	Select "Username" in the 2nd dropdown
+	Click the "Go!" button
+	Wait for page
+	Gridclick "Username:nurse" "nurse" grid link
+	@Switch Windows@driver.switchToPopup()
+	# in the "Two Step Verification" row
+	Verify exists the "Not Enabled" text
+	@Switch Windows@driver.closePopup()
+Begin "Enable 2 Step for the User"
+	Open "My Settings" charttab
+	Begin "the 2 Step Verification row"
+		Verify exists the "Not Enabled Setup" text
+		Wait for page
+		Click the @"Setup" text@xpath=//td[text()='2 Step Verification']/following-sibling::td/span[text()='Setup']
+		Begin "the Setup 2 Step Verification MIEWindow"
+			Verify exists the "Setup 2 Step Verification" popup
+			Verify !exists the "We're sorry, we are currently unable to create your 2-Step Verification key." popup message
+			# The System Setting specifed HOTP only
+			Begin "Verify we skipped the setup screen"
+				Verify !exists the "Time Based" labelledradio
+				Verify !exists the "Counter Based" labelledradio
+				Verify !exists the "Yes" labelledradio
+				Verify !exists the "No" labelledradio
+				Verify !exists the "Create" button
+			Begin "Verify the Key was registered successfully"
+				Verify exists the "Import" text
+				Verify exists the "Or scan the code below with your authentication device." text
+				Verify exists the "Can't scan a barcode?" text
+				# This will show the text version of the key
+				Click the @"Click Here" text@xpath=//span[text()='Click Here']
+				Verify exists The "Counter Based or HOTP" text
+				Begin "Get the key"
+					# Push "Control-A" in the "Key" input
+					# Push "Control-C" in the "Key" input
+					@@@ Get the Key Value
+						eles = driver.getElements(xpath="//input[contains(@id,'2fa_key_hex_input')]")
+						for e in eles:
+							return {
+								'keyvalue': e.get_attribute('value')
+								}
+					@@@
+				Begin "Find the current OTP value"
+					@@@ Open a keygen utility
+					url = "https://{0}/webchart/test_baseline_be_careful/otpgen.cgi".format(driver.getUserData('BE_CAREFUL_HOSTNAME'))
+					driver.runJS('window.open("{}")'.format(url))
+					driver.switchToPopup('OTP Generator')
+					@@@
+					Type "{keyvalue}" in the input
+					# Set the counter value to 1
+					Type 1 in the 2nd input
+					Click the "Generate OTP" button
+					@@@ Get the Key Value
+						eles = driver.getElements(xpath="//input[@id='otp']")
+						for e in eles:
+							return {
+								'otpvalue': e.get_attribute('value')
+								}
+					@@@
+					@Switch back to WebChart@driver.returnToMainWindow()
+				Type "{otpvalue}" in the otp_verify input
+				Click the "Complete Setup" button
+				Verify exists The "2 Step Verification setup is now complete." text 
+				Close the popup
+Begin "Check the OTP Verify Code"
+	Open "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the search input
+	Click the "Go!" button
+	Wait for page
+	Gridclick "Username:selenium" "selenium" grid link
+	@Switch Windows@driver.switchToPopup()
+	# in the "Two Step Verification" row
+	Verify exists @Enabled (when appropriate) Verify@xpath='//span[contains(normalize-space(.), "Enabled (when appropriate) Verify")]'
+	Click the "Verify" link
+	Verify exists the "Verification Code" text
+	@Switch Windows@driver.closePopup()
+#Begin "Make sure the Super-User portlet works"
+#	Begin "Generate an OTP"
+#		# This is the window we popped earlier to hold the OTP Generator
+#		@Switch back to the OTP Generator@driver.switchToPopup('OTP Generator')
+#		Click the "Generate OTP" button
+#		@@@ Get the Key Value
+#			eles = driver.getElements(xpath="//input[@id='otp']")
+#			for e in eles:
+#				return {
+#					'otpvalue': e.get_attribute('value')
+#					}
+#		@@@
+#		@Switch back to WebChart@driver.returnToMainWindow()
+#	Begin "Use the OTP"
+#		Open the sidemenu
+#		Click the "Quick View" sidemenu entry
+#		Click the "Unlock for this Session" button
+#		Begin the "Super User Session" MIEWindow
+#			Type "{otpvalue}" in the input
+#			Click the "Enable" button
+#		Verify exists The "Super user access enabled." button in the "Super User" portlet
+Begin "Remove 2FA"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Open "My Settings" charttab
+	# in the "2 Step Verification" row
+	Click the @"Change" text@xpath=//td[text()='2 Step Verification']/following-sibling::td/span[text()='Change']
+	Begin "the Change 2 Step Verification MIEWindow"
+		Verify exists the "Change 2 Step Verification" popup
+		Verify !exists the "We're sorry, we are currently unable to create your 2-Step Verification key." popup message
+		Verify exists The "Disable" button 
+		Verify exists The "Setup New Device" button 
+		Click the "Disable" button
+		Verify exists the "2 Step Verification is now disabled" text 
+		Close the popup
+Begin "Functionality options"
+	Begin "Re-enable HOTP/TOTP"
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Wait for page
+		Type "Login" in the input
+		Click the "Go" button
+		Wait for page
+		Verify exists listview name
+		Type "Use 2FA" in the input
+		Click the "Go" button
+		Click the @"Edit" link in the "Use 2FA" row@xpath=//td[contains(.,'Use 2FA')]/following-sibling::td//a[text()='Edit']
+		@Wait for popup@driver.pause(2)
+		# 3 is for HOTP and TOTP
+		Wait for page
+		Type "3" in the "Value" input
+		Type "login_2fa.okra" in the "Reason" input
+		Click the "Change" button
+		Wait for page
+		Open "My Settings" charttab
+		Begin "the 2 Step Verification row"
+			Begin "Make sure the Barcode display makes sense"
+				Wait for page
+				Click the @"Setup" text@xpath=//td[text()='2 Step Verification']/following-sibling::td/span[text()='Setup']
+				Wait for page
+				Verify exists the "Setup 2 Step Verification" popup
+				Verify !exists the "We're sorry, we are currently unable to create your 2-Step Verification key." popup message
+				Begin "the Setup 2 Step Verification MIEWindow"
+					# clicking a 'clicked' radio button now unclicks it... make sure we click something else
+					# so that clicking it won't undo the click.
+					Click the "No" labelledradio
+					# it will show the barcode
+					Click the "Yes" labelledradio
+					Click the "Counter Based" labelledradio
+					Click the "Create" button
+					Wait for page
+					# we chose to display the barcode
+					Verify exists the "Or scan the code below with your authentication device" text
+					# we chose to display the barcode
+					Verify exists the "Can't scan a barcode?" text
+					# we chose the barcode instead of the textual key
+					#Verify !exists the "Please enter the following information into your authentication device" text
+					# we chose to display the barcode
+					#Verify !exists the "Counter Based or HOTP" text
+					# it displays the textual version
+					Click the @"Click Here" text@xpath=//span[text()='Click Here']
+					# we are now displaying the textual key as well as the barcode
+					Verify exists the "Please enter the following information into your authentication device" text
+					# we are now displaying the text as well as the barcode
+					Verify exists the "Counter Based or HOTP" text
+					Close the popup
+			Begin "Make sure the Textual display makes sense"
+				Open "My Settings" charttab
+				Wait for page
+				Click the @"Setup" text@xpath=//td[text()='2 Step Verification']/following-sibling::td/span[text()='Setup']
+				Wait for page
+				Verify exists the "Setup 2 Step Verification" popup
+				Verify !exists the "We're sorry, we are currently unable to create your 2-Step Verification key." popup message
+				Begin "the Setup 2 Step Verification MIEWindow"
+					# it will hide the barcode
+					Click the "No" labelledradio
+					# force Time Based to not be clicked
+					Click the "Counter Based" labelledradio
+					# Now click the Time based so it doesn't unclick.
+					Click the "Time Based" labelledradio
+					Click the "Create" button
+					Wait for page
+					# we chose to hide the barcode
+					#Verify !exists the "Or scan the code below with your authentication device" text
+					# we chose to hide the barcode
+					#Verify !exists the "Can't scan a barcode?" text
+					# we chose to display the key as text instead of the barcode
+					Verify exists the "Please enter the following information into your authentication device" text
+					# we chose Time Based
+					Verify exists the "Time Based or TOTP" text
+					Close the popup
+Begin "Verify turning off 2FA functions correctly"
+	Begin "Disable the 2FA system setting"
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Wait for page
+		Type "Login" in the input
+		Click the "Go" button
+		Wait for page
+		Verify exists listview name
+		Type "Use 2FA" in the input
+		Click the "Go" button
+		Click the @"Edit" link in the "Use 2FA" row@xpath=//td[contains(.,'Use 2FA')]/following-sibling::td//a[text()='Edit']
+		Verify exists the "Edit System Setting" text
+		Wait for page
+		Type "0" in the "Value" input
+		Type "login_2fa.okra" in the "Reason" input
+		Click the "Change" button
+		Wait for page
+	Begin "Verify the 2 Step Verification row is not displayed"
+		Open "My Settings" charttab
+		Verify !exists the "2 Step Verification" table row
+		Verify !exists the "Not Enabled Setup" text
+		Verify !exists @Enabled (when appropriate) Verify@xpath='//span[contains(normalize-space(.), "Enabled (when appropriate) Verify")]'
+# This will be in a different patch
+#Begin "Verify the login functionality" is skipped
+#	Open the sidemenu
+#	Click the "Logout" sidemenu entry
+#	Begin "Generate an OTP to get back in"
+#		Switch to the "OTP Generator" window
+#		Push "Control-V" in the "Key" input
+#		Click the "Generate OTP" button
+#		Push "Control-A" in the "OTP" input
+#		Push "Control-C" in the "OTP" input
+#	Begin "Log In with 2 Step"
+#		Switch to the "WebChart: WebChart Testing System Log On" window
+#		Type "selenium" in the "Username" input
+#		Type "selenium" in the "Password" input
+#		Click the "Log On" button
+#		Verify exists The "Verification Code" input 
+#		Push "Control-V" in the "Verification Code" input
+#		Click the "Verify" button
+#	Begin "Verify the login"
+#		Switch to the "mainwindow" frame
+#		Verify exists The "Administrator Welcome" portlet 
+#		Click the "Control Panel" link
+#		Click the "System Settings" charttab
+#		Verify exists The "System Settings" table 
+#		# this session was created with 2 factor authentication
+#		Verify !exists The "Super user access required." text 
+
+

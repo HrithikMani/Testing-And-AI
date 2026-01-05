@@ -1,0 +1,24 @@
+Begin "Verify 'View Inventory' permission"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	# in the "Username" cell in the "selenium" row in the "WebChart Users" table
+	Click the "selenium" link
+	# in the "Access Control (selenium)" box
+	Verify !exists the "[ View Inventory: No ]" text
+Begin "Set setting to Show Drug Classes"
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Type "Show Drug Classes" in the "select_text" input
+	Click the "Go" button
+	# in the "Value" cell in the "Show Drug Classes" row in the "System Settings" table
+	Verify exists the !"Enabled" text
+Begin "Verify Bug #16204 is fixed"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Weekly Review" charttab
+	Verify exists The "General Inventory Review" text
+	Verify exists The "Patient Assistance Inventory Review" text

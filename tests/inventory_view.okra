@@ -1,0 +1,193 @@
+Begin "Start with no inventory permissions"
+	Begin "Revoke general inventory permissions"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "No" in the "View Inventory" dropdown
+		Select "No" in the "Transfer Inventory" dropdown
+		Select "No" in the "Expire Inventory" dropdown
+		Select "No" in the "Edit Inventory" dropdown
+		Type "inventory_view.vision" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify exists the "[ View Inventory: No ]" text
+		Verify exists the "[ Transfer Inventory: No ]" text
+		Verify exists the "[ Expire Inventory: No ]" text
+		Verify exists the "[ Edit Inventory: No ]" text
+	Begin "Verify the complete lack of permission"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Verify exists the "Your current permission of 'No' in the ('Inventory','View Inventory') security setting does not allow access to View Inventory." text
+		Verify !exists the "General Inventory" table
+Begin "Regain View Inventory permissions"
+	Begin "Grant inventory View access"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" in the "View Inventory" dropdown
+		Type "inventory_view.vision" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify !exists the "[ View Inventory: No ]" text
+		Verify exists the "[ Transfer Inventory: No ]" text
+		Verify exists the "[ Expire Inventory: No ]" text
+		Verify exists the "[ Edit Inventory: No ]" text
+	Begin "Verify permission level"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		# in the "General Inventory" table
+		Verify !exists the "!Edit" link
+		Verify !exists the "Expire" link
+		Verify !exists the "Transfer" link
+Begin "Regain Transfer Inventory permissions"
+	Begin "Grant inventory Transfer access"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" in the "Transfer Inventory" dropdown
+		Type "inventory_view.vision" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify !exists the "[ View Inventory: No ]" text
+		Verify !exists the "[ Transfer Inventory: No ]" text
+		Verify exists the "[ Expire Inventory: No ]" text
+		Verify exists the "[ Edit Inventory: No ]" text
+	Begin "Verify permission level"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		# in the "General Inventory" table
+		Verify !exists the "!Edit" link
+		Verify !exists the "Expire" link
+		Verify exists the "Transfer" link
+Begin "Regain Expire Inventory permissions"
+	Begin "Grant inventory Expire access"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" in the "Expire Inventory" dropdown
+		Type "inventory_view.vision" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify !exists the "[ View Inventory: No ]" text
+		Verify !exists the "[ Transfer Inventory: No ]" text
+		Verify !exists the "[ Expire Inventory: No ]" text
+		Verify exists the "[ Edit Inventory: No ]" text
+	Begin "Verify permission level"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		# in the "General Inventory" table
+		Verify !exists the "!Edit" link
+		Verify exists the "Expire" link
+		Verify exists the "Transfer" link
+		Screenshot "inventory_view"
+Begin "Regain Edit Inventory permissions"
+	Begin "Grant inventory Edit access"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" in the "Edit Inventory" dropdown
+		Type "inventory_view.vision" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify !exists the "[ View Inventory: No ]" text
+		Verify !exists the "[ Transfer Inventory: No ]" text
+		Verify !exists the "[ Expire Inventory: No ]" text
+		Verify !exists the "[ Edit Inventory: No ]" text
+	Begin "Verify permission level"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		# in the "General Inventory" table
+		Verify exists the "Edit" link
+		Verify exists the "Expire" link
+		Verify exists the "Transfer" link
+Begin "Search for a specific item"
+	Type "Lisinopril 5" in the @"Inventory Name" input@xpath=//input[@name='display_name']
+	Select "All" in the @"Site" dropdown@xpath=//select[@name='ib.location']
+	Click the "Search" button
+	# in the "General Inventory" table
+	Begin "Verify the filtering"
+		# in the table body
+		Begin "Verify the rows"
+			# in the 1st row
+			Begin "Verify the Hospital Store Room B"
+				# "Item Name" cell
+				Verify exists the "lisinopril 5 mg tablet" text
+				# The "Qty" cell should contain "20"
+				Verify exists the "20" text
+				# The "Site" cell should contain "Hospital: Store Room B"
+				Verify exists the "Hospital: Store Room B" text
+				# The "Lot" cell should contain "abc123"
+				Verify exists the "abc123" text
+			# in the 2nd row
+			Begin "Verify the Office"
+				# The "Item Name" cell should contain "lisinopril 5 mg tablet"
+				Verify exists the "lisinopril 5 mg tablet" text
+				# The "Qty" cell should contain "50"
+				Verify exists the "50" text
+				#The "Site" cell should contain "Office"
+				Verify exists the "Office" text
+				#The "Lot" cell should contain "abc123"
+				Verify exists the "abc123" text
+		#The "Displaying" row should contain "1-2 / 2"
+		Verify exists the "Displaying 1-2 / 2" text
+Begin "Search for a specific lot number"
+	@Clear the "Inventory Name" input@driver.enterFormData('', name='display_name', clear=True)
+	Type "axy" in the @"Lot Number" input@xpath=//input[@name='il.lot_number']
+	Select "All" in the "Site" dropdown
+	Click the "Search" button
+	# in the "General Inventory" table
+	Begin "Verify the filtering"
+		# The "Displaying" row should contain "1-1 / 1"
+		Verify exists the "Displaying 1-1 / 1" text
+		# in the 1st row in the table body
+		Begin "Verify the filtering"
+			#The "Item Name" cell should contain "lisinopril 20 mg tablet"
+			Verify exists the "lisinopril 20 mg table" text
+			# in the "Qty" cell
+			Verify exists the !"15" text
+			# The "Site" cell should contain "Hospital: Store Room A"
+			Verify exists the "Hospital: Store Room A" text
+			# The "Lot" cell should contain "axy391"
+			Verify exists the "axy391" text
+Begin "Search for a specific site"
+	@Clear the "Lot Number" input@driver.enterFormData('', name='il.lot_number', clear=True)
+	Select "Hospital" from the @"Site" dropdown@xpath=//select[@name='ib.location']
+	Click the "Search" button
+	# in the "General Inventory" table
+	Begin "Verify the filtering"
+		Verify exists the "Displaying 1-1 / 1" text
+		# in the 1st row in the table body
+		Begin "Verify the Filtering"
+			# The "Item Name" cell should contain "lisinopril 10 mg tablet"
+			Verify exists the "lisinopril 10 mg tablet" text
+			# in the "Qty" cell
+			Verify exists the !"30" text
+			# The "Site" cell should contain "Hospital"
+			Verify exists the "Hospital" text
+			# The "Lot" cell should contain "987xzy"
+			Verify exists the "987xzy" text

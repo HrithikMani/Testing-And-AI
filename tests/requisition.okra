@@ -1,0 +1,71 @@
+Begin "Turn on the needed settings"
+	@Set the ICD10Calculator preference to Icon@driver.wcutils.SetPreference('{selenium_username}', 'E-Chart', 'Conditions', 'ICD10 Calculator', 1)
+	@Set the ICD10Calculator preference to Icon@driver.wcutils.SetPreference('{nurse_username}', 'E-Chart', 'Conditions', 'ICD10 Calculator', 1)
+	@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{nurse_username}')
+Begin "Nurse adds Visit encounter on Christine Harris"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	Begin "Encounter"
+		@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+		@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+		Open the "Encounter" dynamicsection
+		Enter "02-02-2007" into the DED_serv_date date
+		Click the dynamicsection nextbutton
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+	Begin "Add Rectal bleeding condition to Smart Plan"
+		Unmask dynamicsection
+		Add "Smart Plan" quicklist item
+		Verify exists "Add Assessment" popup
+		Enter "Rectal bleeding" in the "Name" autocomplete
+		Enter "08-08-2010" in the "Onset Date" date
+		Enter "Selenium, Selenium" in the "Managed By" autocomplete
+		Click the 1st "Save" popup button
+	Begin "Add Order on Rectal bleeding Smart Plan quicklist"
+		Order "Smart Plan" "Rectal bleeding" dynamicitem
+		Begin "Add Multiple encounter orders"
+		Verify exists "Add Encounter Order" popup
+		Verify exists @encounter information@xpath=//div[@class = "dynItem" and contains(., "Visit: 02-02-2007")]
+		Enter "Basic Metabolic Panel" in the "order_id_ac_txt" autocomplete
+		Enter "Decrease Pain" in the "order_id_ac_txt" autocomplete
+		Verify exists "Save" popup button
+		Click the 2nd "Save" popup button
+		Verify notexists popup
+		Verify exists "Basic Metabolic Panel" dynamicitem
+	Begin "Requisition"
+		Requisition "Smart Plan" "Basic Metabolic Panel" dynamicitem
+		Verify exists "Create Requisition" popup
+		Select "" from the "Provider" dropdown
+		Click the "Add new provider" button
+		Verify exists "Add Provider" popup
+		Type "Bob" in the "first_name" input
+		Type "Newton" in the "last_name" input
+		Enter "Enterprise Orthopedics" in the "Organization" autocomplete
+		Click the "Save" popup button
+		Verify notexists "Add Provider" popup
+		Enter "Newton, Bob" in the referring_physician autocomplete
+		@Scroll page to Pick List icon@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath="//input[@id='enc_ord']"))
+		Click the 2nd "Pick List" icon
+		Verify exists "Choose Orders" popup
+		Check the "Magnesium" picklist checkbox
+		# Save the picklist window
+		Click the "Add" popup button
+		Verify notexists "Choose Orders" popup
+		Verify exists "Magnesium" dynamicitem
+		# Now we need to save the Requisition window
+		Click the "Save" popup button
+		Verify exists "Attention" popup
+		Close the "Attention" popup
+		Verify notexists "Attention" popup
+		Select "Simmons, Nicole" from the "Provider" dropdown
+		Click the "Save" popup button
+		Verify exists @added requisition@xpath=//div[@class = "nest-header" and strong = "Requisitions"]/following-sibling::ul/li/span[contains(., "Basic Metabolic Panel")]
+	Begin "Clone Requisition"
+		Clone "Smart Plan" "Basic Metabolic Panel" dynamicitem
+		Verify exists "Clone Requisition" popup
+		Select "in 1 month" from the "schedule_comment" dropdown
+		Click the "Save" popup button
+		Verify exists @added requisition@xpath=//div[@class = "nest-header" and strong = "Requisitions"]/following-sibling::ul/li/span[contains(., "Enterprise Orthopedics on")]

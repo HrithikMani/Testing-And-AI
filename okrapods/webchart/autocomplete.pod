@@ -1,0 +1,85 @@
+"""
+Pod used to interact with autocomplete objects
+
+* The autocomplete pod parses the value given and enters it into the autocomplete input then selects the autocomplete option from the div
+
+Usage examples:
+	Enter "Office" into the "Location" autocomplete
+	Verify exists "Office" in the "Location" autocomplete
+	Verify exists "Location" autocomplete
+"""
+
+acinput://label{OKRA_TEXT_CLS}/following-sibling::div//input[contains(@class, "autocomplete")]
+	|//td[@class="field"]{OKRA_TEXT_CLS}/following-sibling::td[@class="value"]//input[contains(@class, "autocomplete")]
+	|//div{OKRA_TEXT_CLS}/following-sibling::div/span/input[contains(@class, "autocomplete")]
+	|//div/span{OKRA_TEXT_CLS}/following-sibling::span/span/input[contains(@class, "autocomplete")]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td/span/input[@class="autocomplete"]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td/span/input[@class="autocomplete selected"]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//span/input[@class="autocomplete"]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td[@class="results"]//input[contains(@class, "autocomplete")]
+	|//input[contains(@class, "autocomplete")]|@name|@id
+	|//label{OKRA_TEXT_CLS}/following-sibling::div/div/input[contains(@class, "autocomplete")]
+
+choice://div[contains(@class, "defaultacdiv")]//div[contains(@id, "choices")]
+
+@@@
+def executeAutocomplete():
+	oldtimeout = driver.timeout
+	driver.setTimeout(10)
+	if driver.wcutils.waitForEle(xpath=acxpath, timeout=30):
+		driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath=acxpath))
+	else:
+		driver.reportCommandStatus('autocomplete.pod', '', False, '', 'Autocomplete not present, not scrolled into view')
+	if driver.wcutils.waitForEle(xpath=acxpath, timeout=30):
+		driver.wcutils.waitForAJAX(timeout=60, quiet=10)
+		driver.enterFormData(shortstr, xpath=acxpath, clear=True, blur=False)
+		if not driver.wcutils.waitFor(lambda d: d.getElement(xpath=pending), expected=False, timeout=30):
+			driver.reportCommandStatus('autocomplete.pod', '', False, '', 'Autocomplete options pending after 30s')
+		if driver.getElement(xpath=full):
+			driver.clickElement(xpath=full)
+		elif not driver.getElement(xpath=full):
+			driver.enterFormData(fullstr, xpath=acxpath, clear=True, blur=False)
+			if not driver.wcutils.waitFor(lambda d: d.getElement(xpath=pending), expected=False, timeout=30):
+				driver.reportCommandStatus('autocomplete.pod', '', False, '', 'Autocomplete options pending after 30s')
+			driver.wcutils.waitFor(lambda d: d.getElement(xpath=full))
+			if driver.getElement(xpath=full):
+				driver.clickElement(xpath=full)
+			else:
+				driver.reportCommandStatus('autocomplete.pod', '', False, '', 'Autocomplete options not found when using the full string')
+		else:
+			driver.reportCommandStatus('autocomplete.pod', '', False, '', 'Autocomplete options not found when using the short string')
+	else:
+		driver.reportCommandStatus('autocomplete.pod', '', False, '', 'Autocomplete input not found')
+	driver.setTimeout(oldtimeout)
+@@@
+
+
+@Enter
+"""
+def parse(v):
+	if len(v) >= 3:
+		return (v[:int(round(len(v) * .66))], v)
+		return (v[:int(round(len(v) * 1.00))], v)
+	elif len(v) == 2:
+		return (v[1], v)
+	else:
+		driver.reportCommandStatus("Autocomplete", "", False, "Values must be at least 2 characters", "")
+"""
+@@@
+global full, acxpath, pending, shortstr, fullstr
+full = '//div[contains(@class, "defaultacdiv")]/div[contains(., "{1}")]'
+acxpath = '//label[contains(., "{{OKRA_TEXT}}")]/following-sibling::div//input[contains(@class, "autocomplete")]|//td[@class="field"][contains(., "{{OKRA_TEXT}}")]/following-sibling::td[@class="value"]//input[contains(@class, "autocomplete")]|//div[contains(., "{{OKRA_TEXT}}")]/following-sibling::div/span/input[contains(@class, "autocomplete")]|//div/span[contains(., "{{OKRA_TEXT}}")]/following-sibling::span/span/input[contains(@class, "autocomplete")]|//td[contains(., "{{OKRA_TEXT}}")]/following-sibling::td/span/input[@class="autocomplete"]|//td[contains(., "{{OKRA_TEXT}}")]/following-sibling::td/span/input[@class="autocomplete selected"]|//td[contains(., "{{OKRA_TEXT}}")]/following-sibling::td//span/input[@class="autocomplete"]|//td[contains(., "{{OKRA_TEXT}}")]/following-sibling::td[@class="results"]//input[contains(@class, "autocomplete")]|//label[contains(., "{{OKRA_TEXT}}")]/following-sibling::div/div/input[contains(@class, "autocomplete")]|//input[contains(@class, "autocomplete")][contains(@id, "{{OKRA_TEXT}}")]|//input[contains(@class, "autocomplete")][contains(@name, "{{OKRA_TEXT}}")]'
+pending = '//input[contains(@class, "autocomplete pending")]'
+shortstr = '{0}'
+fullstr = '{1}'
+executeAutocomplete()
+@@@
+
+
+@Blur
+@@@
+from selenium.webdriver.common.keys import Keys
+#Press Tab
+ele = driver.getElement(name='{OKRA_TEXT}');
+ele.send_keys(Keys.TAB)
+@@@

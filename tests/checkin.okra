@@ -1,0 +1,204 @@
+Begin "One-click mode operation"
+	Begin "Add multiple appointments for William Hart"
+		Open the sidemenu
+		Click the "E-Chart" link
+		Click the "TEST-10019" link
+		Open the quicklink list
+		Click the "Add Appt" quicklink
+		@Switch Windows@driver.switchToPopup()
+		Begin "Make the 1st appointment @ 1000"
+			Begin "Patient visits table row in the Add Appointment" table
+				Enter "Audiogram" in the "typeacinp" autocomplete
+				Enter "Office" in the "locationacinp" autocomplete
+# Added a working xpath to date.pod for each of these inputs but still won't work. Come back to later, for now doing each individually.
+#				Enter "02-02-2007 1000" in the 3rd date
+				Type "02" in the @Add Appointment-Patient Visits month@xpath=//input[@id="startdateMONTH"]
+				Type "02" in the @Add Appointment-Patient Visits day@xpath=//input[@id="startdateDAY"]
+				Type "2007" in the @Add Appointment-Patient Visits year@xpath=//input[@id="startdateYEAR"]
+				Type "1000" in the @Add Appointment-Patient Visits time@xpath=//input[@id="startdateTIME"]
+			Click the "Save" button
+			Click the "Force" link
+			Verify exists the 1st "Hart, William" appt checkin
+		@Close this window@driver.closePopup()
+		Click the "Add Appt" quicklink
+		@Switch Windows@driver.switchToPopup()
+		Begin "Make the 2nd appointment @ 1400"
+			Begin "Patient visits table row in the Add Appointment" table
+				Enter "Drug Screen" in the "typeacinp" autocomplete
+				Enter "Office" in the "locationacinp" autocomplete
+# Added a working xpath to date.pod for each of these inputs but still won't work. Come back to later, for now doing each individually.
+#				Enter "02-02-2007 1400" in the 3rd date
+				Type "02" in the @Add Appointment-Patient Visits month@xpath=//input[@id="startdateMONTH"]
+				Type "02" in the @Add Appointment-Patient Visits day@xpath=//input[@id="startdateDAY"]
+				Type "2007" in the @Add Appointment-Patient Visits year@xpath=//input[@id="startdateYEAR"]
+				Type "1400" in the @Add Appointment-Patient Visits time@xpath=//input[@id="startdateTIME"]
+			Click the "Save" button
+			Click the "Force" link
+			Verify exists the 2nd "Hart, William" appt checkin
+		Begin "William Hart can not check into two appts"
+			Click the "Hart, William" appt checkin
+			Click the "OK" popup button
+			Verify exists "10:00" appt waitingroom
+			Click the -1st "Hart, William" appt checkin
+			Begin "ALERT"
+				Verify exists "Patient was already checked-in by another user" text
+				Click to @Close the ALERT@xpath=//div[@class="wc_win_title"][contains(.,"ALERT")]/preceding-sibling::button[@class="xclose"]
+				Wait for page
+		Begin "Move William Hart to a different station"
+			Click the "10:00" appt waitingroom
+			Begin "Enter New Station Details"
+				Verify exists "Enter New Station Details" popup
+				@Wait for the New Station popup@driver.waitFor(driver, lambda d: d.getElement(xpath='//select[@id="station_id"]/option[contains(., "Exam Room 1")]'), expected_return=True, timeout=30)
+				Select "Exam Room 1" from the "New Station" popup dropdown
+				Type "Moving to Exam Room 1" in the "Comment" freetext field
+				Click the "Save" popup button
+				Wait for page
+			Verify exists "10:00" appt examroom
+		@Close this window@driver.closePopup()
+	Begin "Add new appointment for Jennifer Pregnant"
+		Open the sidemenu
+		Click the "E-Chart" link
+		Type "Pregnant" in the "sstring" input
+		Click the "Search" button
+		Open the quicklink list
+		Click the "Add Appt" quicklink
+		@Switch Windows@driver.switchToPopup()
+		Begin "Make her appointment @ 1600"
+			Begin "Patient visits table row in the Add Appointment" table
+#				Enter "Patel, Ashish" in the "res_idacinp" autocomplete
+				Enter "Office Visit Initial" in the "typeacinp" autocomplete
+				Enter "Office" in the "locationacinp" autocomplete
+# Added a working xpath to date.pod for each of these inputs but still won't work. Come back to later, for now doing each individually.
+#				Enter "02-02-2007 1600" in the 3rd date
+				Type "02" in the @Add Appointment-Patient Visits month@xpath=//input[@id="startdateMONTH"]
+				Type "02" in the @Add Appointment-Patient Visits day@xpath=//input[@id="startdateDAY"]
+				Type "2007" in the @Add Appointment-Patient Visits year@xpath=//input[@id="startdateYEAR"]
+				Type "1600" in the @Add Appointment-Patient Visits time@xpath=//input[@id="startdateTIME"]
+			Click the "Save" button
+			Click the "Force" link
+			Verify exists "Pregnant, Jennifer" appt checkin
+	Begin "Check Jennifer in and attempt to move her to Exam Room 1"
+		Click the "Pregnant, Jennifer" appt checkin
+		Verify exists "16:00" appt waitingroom
+		Click the "16:00" appt waitingroom
+		Begin "Enter New Station Details"
+			Verify exists "Enter New Station Details" popup
+			@Wait for the New Station popup@driver.waitFor(driver, lambda d: d.getElement(xpath='//select[@id="station_id"]/option[contains(., "Exam Room 2")]'), expected_return=True, timeout=30)
+			Select "Exam Room 2" from the "New Station" popup dropdown
+			Verify exists "Exam Room 2" text
+			Close popup
+	Begin "Check William Hart out from the 10:00 appointment"
+		Click the "10:00" appt examroom
+		Begin "Enter New Station Details"
+			Verify exists "Enter New Station Details" popup
+			@Wait for the New Station popup@driver.waitFor(driver, lambda d: d.getElement(xpath='//select[@id="station_id"]/option[contains(., "Checkout")]'), expected_return=True, timeout=30)
+			Select "Checkout" from the "New Station" popup dropdown
+			Type "William Hart is checked out" in the "Comment" freetext field
+			Click the "Save" popup button
+			Wait for page
+	Begin "Check William Hart into 14:00 appt and then try to check him back into 10:00 appt"
+		Click the "14:00" appt checkin
+		Click the "OK" popup button
+		Verify exists "14:00" appt waitingroom
+		Click the "10:00" appt checkedout
+		Begin "Enter New Station Details"
+			Verify exists "Enter New Station Details" popup
+			@Wait for the New Station popup@driver.waitFor(driver, lambda d: d.getElement(xpath='//select[@id="station_id"]/option[contains(., "Waiting Room")]'), expected_return=True, timeout=30)
+			Select "Waiting Room" from the "New Station" popup dropdown
+			Click the "Save" popup button
+			Wait for page
+			Begin "ALERT"
+				Verify exists "Patient is currently checked into another encounter!" text
+				Close popup
+	Begin "Check William Hart in from demographics page to verify checkin link"
+		Navigate "?f=chart&pat_id=18"
+		Open "Admin" charttab
+		Click the "Demographics" link
+	Begin "Move William Hart to Exam Room 3 from his demographics page"
+		Wait for page
+		Verify exists "Waiting Room" link
+		Click the "Waiting Room" link
+		Begin "Enter New Station Details"
+			Wait for page
+			Verify exists "Enter New Station Details" popup
+			@Wait for the New Station popup@driver.waitFor(driver, lambda d: d.getElement(xpath='//select[@id="station_id"]/option[contains(., "Exam Room 3")]'), expected_return=True, timeout=30)
+			Select "Exam Room 3" from the "New Station" popup dropdown
+			Type "Moving to Exam Room 3" in the "Comment" freetext field
+			Click the "Save" popup button
+			Wait for page
+Begin "Add/Edit a new station from Station Manager"
+	Begin "Add a new station"
+		Open the sidemenu
+		Click the "Checkin" link
+		Click the "Station Manager" charttab
+		Click the "Add Station" link
+		Type "NEWSTATION" in the "station_id" input
+		Type "New Station" in the "station_name" input
+		Click the "Save" button
+		Verify exists "NEWSTATION" text
+		Verify exists "New Station" text
+		Verify exists "Station was successfully inserted" text
+		Verify exists "Displaying 1-6 / 6" text
+	Begin "Edit the new station"
+		Click the @New Station Edit link@xpath=//tr/td[contains(.,"New Station")]/following-sibling::td/a[contains(.,"Edit")]
+		Type "TEST" in the "station_id" input
+		Type "Test Station" in the "station_name" input
+		Click the "Change" button
+		Verify exists "TEST" text
+		Verify exists "Test Station" text
+		Verify exists "Station was successfully edited" text
+		Verify exists "Displaying 1-6 / 6" text
+Begin "Non one-click mode operation"
+	Open the sidemenu
+	Click the "Scheduler" link
+	Click the "Preferences" button
+	Begin "Scheduler Preferences"
+		Select "No" from the "Use One-Click Checkin" dropdown
+		Click the "Save" popup button
+		Wait for page
+	Open the sidemenu
+	Click the "E-Chart" link
+	Type "Harris" into the "sstring" input
+	Click the "Search" button
+	Click the "Checkin" quicklink portletlink
+	@Switch Windows@driver.switchToPopup()
+	Begin "Encounter (new)" table
+		Verify !exists "Exam Room 3" text
+		Enter "02-02-2007 0800" in the date
+		Select "Checkin" from the "patient_type" dropdown
+		Type "Butler" in the "perf_search" input
+		Click the "Search" button
+	Click the "butler" link
+	Click the "Save" button
+	Verify exists "You have successfully entered patient into a station!" text
+	Begin "Patients In Waiting Room for (Office)" table
+		Verify exists "Patients In Waiting Room" text
+	Begin "Checked In Patients -- All Stations for (Office)" table
+		Verify exists "Checked In Patients -- All Stations" text
+		Verify exists "TEST-10008" grid entry
+	@Close this window@driver.closePopup()
+	Open the sidemenu
+	Click the "E-Chart" link
+	Type "Harris" into the "sstring" input
+	Click the "Search" button
+	Open "Admin" charttab
+	Click the "Demographics" link
+	Verify exists "Waiting Room" text
+	Click the "Waiting Room" link
+	Begin "Enter New Station Details"
+		Verify !exists "Exam Room 3" text
+		Select "Test Station" from the "Station" dropdown
+		Type "Moving to Test Station" in the "Comment" freetext field
+		Click the "Save" button
+	Verify exists "Test Station" link
+	Begin "Check Christine Harris out from the encounter"
+		Gridclick "Name:Harris, Christine" "Test Station" grid link
+		Begin "Enter New Station Details"
+			@Wait for the New Station popup@driver.waitFor(driver, lambda d: d.getElement(xpath='//select[@id="station_id"]/option[contains(., "Checkout")]'), expected_return=True, timeout=30)
+			Select "Checkout" from the "New Station" popup dropdown
+			Type "Outta here!" in the "Comment" freetext field
+			Click the "Save" popup button
+			Wait for page
+		Begin "Verify Harris is no longer listed in Checkin"
+			Navigate "?f=chart&s=checkin"
+			Verify !exists "Harris, Christine" text

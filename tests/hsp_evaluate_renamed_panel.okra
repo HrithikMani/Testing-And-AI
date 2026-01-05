@@ -1,0 +1,126 @@
+"""
+@filedeps: system/layouts/E-Chart/View Due List.html, system/layouts/Orders/OrderList.html
+"""
+
+Begin "Enable OSHA Benzene panel"
+	Navigate "?f=admin&t=panels&tabmodule=admin&tabselect="
+	Type "OSHA Ben" into @id='search_text'
+	Click the  "show_inactive" checkbox
+	Click the "Search" button
+	Click the "Set Active" link
+Begin "Activate OSHA Benzene order"
+	Navigate "?f=layout&module=Orders&name=OrderList&tabmodule=admin&tabselect=Orders"
+	Wait for the "orderlist" grid
+	Select "All Orders" from the grid perspective
+	Wait for the "orderlist" grid
+	Click the "Order List" grid gear
+	Select "Name" from the "Order List" grid add_filter_dropdown
+	Click the @Name filter search input@xpath="//li[@data-wcdv-field='Name']//p[contains(@class, 'SelectBox')]"
+	Type "OSHA Benzene Routine with Membership" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "OSHA Benzene Routine with Membership" label
+	Click the "OK" grid sumobutton
+	Verify exists "OSHA Benzene Routine with Membership" grid entry
+	Click the "OSHA Benzene Routine with Membership" grid checkbox
+	Click the "Status" button
+	Verify exists "Edit Status for Order(s)" popup
+	Click the "Active" radio
+	Click the "Save" popup button
+Begin "Add to Due List for Patient #1"
+	Navigate "?f=chart"
+	Type "Growing" into @name='sstring'
+	Click "Search" button
+	Click the "Health Surveillance" charttab
+	Click the "Due List" charttab subtab
+	Wait for the "EncounterOrdersGridDV" grid
+	Click the @xpath="//input[@id='addOrderControl']"	
+	Enter "OSHA Benzene Routine with Membership" in the 'ordersle_orderac_txt' autocomplete
+	Click "Submit" button
+	Click the @xpath="//td[@class='wcdv_group_col_spacer wcdv_pivot_colval_boundary']//input"
+	Click "Evaluate" button
+	Verify exists "Panel Status" popup
+	Verify exists "OSHA Benzene Routine with Membership: ok" text
+Begin "Edit Panel"
+	Begin "Uncheck all boxes"
+		Navigate "?f=admin&t=panels&tabmodule=admin&tabselect=&search_criteria=Name&search_type=begins&search_text=osha+ben&search_panels=Search&opp=panel&job=edit&panel_id=OSHABEN"
+		Click the @xpath="//body[contains(@class,'')]/div[@id='wc_pagewrap']/div[@id='wc_body_container']/div[@id='wc_body']/div[@id='wc_main']/form/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr/td[contains(@class,'value')]/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr[1]/td[1]/input[1]"
+		Click the @xpath="//body[contains(@class,'')]/div[@id='wc_pagewrap']/div[@id='wc_body_container']/div[@id='wc_body']/div[@id='wc_main']/form/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr/td[contains(@class,'value')]/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr[2]/td[1]/input[1]"
+		Click the @xpath="//body[contains(@class,'')]/div[@id='wc_pagewrap']/div[@id='wc_body_container']/div[@id='wc_body']/div[@id='wc_main']/form/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr/td[contains(@class,'value')]/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr[1]/td[2]/input[1]"
+		Click the @xpath="//body[contains(@class,'')]/div[@id='wc_pagewrap']/div[@id='wc_body_container']/div[@id='wc_body']/div[@id='wc_main']/form/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr/td[contains(@class,'value')]/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr[2]/td[2]/input[1]"
+		Click the @xpath="//body[contains(@class,'')]/div[@id='wc_pagewrap']/div[@id='wc_body_container']/div[@id='wc_body']/div[@id='wc_main']/form/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr/td[contains(@class,'value')]/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr[3]/td[2]/input[1]"
+		Type "Testing" into @id='change_reason'
+		Click "Submit" button
+	Begin "Change Panel Name"
+		Navigate "?f=admin&t=panels&tabmodule=admin&tabselect=&search_criteria=Name&search_type=begins&search_text=osha+ben&search_panels=Search&opp=panel&job=edit&panel_id=OSHABEN"
+		Type "OSHA Benzene Long Term Job Exposure" into @id='name'
+		Type "Testing" into @id='change_reason'
+		Click "Submit" button
+	Begin "Check w/ membership boxes"
+		Navigate "?f=admin&t=panels&tabmodule=admin&tabselect=&search_criteria=Name&search_type=begins&search_text=osha+ben&search_panels=Search&opp=panel&job=edit&panel_id=OSHABEN"
+		Click the @xpath="//body[contains(@class,'')]/div[@id='wc_pagewrap']/div[@id='wc_body_container']/div[@id='wc_body']/div[@id='wc_main']/form/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr/td[contains(@class,'value')]/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr[1]/td[1]/input[1]"
+		Click the @xpath="//body[contains(@class,'')]/div[@id='wc_pagewrap']/div[@id='wc_body_container']/div[@id='wc_body']/div[@id='wc_main']/form/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr/td[contains(@class,'value')]/table[contains(@class,'dlg_root')]/tbody/tr/td/fieldset/table/tbody/tr[2]/td[1]/input[1]"
+		Type "Testing" into @id='change_reason'
+		Click "Submit" button
+Begin "Activate new OSHA Benzene orders"
+	Navigate "?f=layout&module=Orders&name=OrderList&tabmodule=admin&tabselect=Orders"
+	Wait for the "orderlist" grid
+	Select "All Orders" from the grid perspective
+	Wait for the "orderlist" grid
+	Click the "Order List" grid gear
+	Select "Name" from the "Order List" grid add_filter_dropdown
+	Click the @Name filter search input@xpath="//li[@data-wcdv-field='Name']//p[contains(@class, 'SelectBox')]"
+	Type "OSHA Benzene Long Term Job Exposure Entry with Membership" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "OSHA Benzene Long Term Job Exposure Entry with Membership" label
+	Click the "OK" grid sumobutton
+	Verify exists "OSHA Benzene Long Term Job Exposure Entry with Membership" grid entry
+	Click the "OSHA Benzene Long Term Job Exposure Entry with Membership" grid checkbox
+	Click the "Status" button
+	Verify exists "Edit Status for Order(s)" popup
+	Click the "Active" radio
+	Click the "Save" popup button
+Begin "Add to Due List for Patient #2"
+	Navigate "?f=chart"
+	Type "Haynes" into @name='sstring'
+	Click "Search" button
+	Click the "Health Surveillance" charttab
+	Click the "Due List" charttab subtab
+	Wait for the "EncounterOrdersGridDV" grid
+	Click the @xpath="//input[@id='addOrderControl']"
+	Enter "OSHA Benzene Long Term Job Exposure Entry with Membership" in the 'ordersle_orderac_txt' autocomplete
+	Click "Submit" button
+	Click the @xpath="//td[@class='wcdv_group_col_spacer wcdv_pivot_colval_boundary']//input"
+	Click "Evaluate" button
+	Verify exists "Panel Status" popup
+	Verify exists "OSHA Benzene Long Term Job Exposure Entry with Membership: ok" text
+Begin "Activate Fire Brigade order"
+	Navigate "?f=layout&module=Orders&name=OrderList&tabmodule=admin&tabselect=Orders"
+	Wait for the "orderlist" grid
+	Select "All Orders" from the grid perspective
+	Wait for the "orderlist" grid
+	Click the "Order List" grid gear
+	Select "Name" from the "Order List" grid add_filter_dropdown
+	Click the @Name filter search input@xpath="//li[@data-wcdv-field='Name']//p[contains(@class, 'SelectBox')]"
+	Type "Fire Brigade Routine with Membership" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "Fire Brigade Routine with Membership" label
+	Click the "OK" grid sumobutton
+	Verify exists "Fire Brigade Routine with Membership" grid entry
+	Click the "Fire Brigade Routine with Membership" grid checkbox
+	Click the "Status" button
+	Verify exists "Edit Status for Order(s)" popup
+	Click the "Active" radio
+	Click the "Save" popup button
+Begin "Verify Invalid Panels don't Evaluate"
+	Navigate "?f=chart"
+	Type "Haynes" into @name='sstring'
+	Click "Search" button
+	Click the "Health Surveillance" charttab
+	Click the "Due List" charttab subtab
+	Wait for the "EncounterOrdersGridDV" grid
+	Click the @xpath="//input[@id='addOrderControl']"
+	Enter "Fire Brigade Routine with Membership" in the 'ordersle_orderac_txt' autocomplete
+	Click "Submit" button
+	Wait for the "EncounterOrdersGridDV" grid
+	Verify exists "Fire Brigade Routine with Membership" grid entry
+	Click the "Fire Brigade Routine with Membership" grid checkbox
+	Verify !exists "None of the orders selected needed to be evaluated" text
+	Click "Evaluate" button
+	Verify exists "None of the orders selected needed to be evaluated" text

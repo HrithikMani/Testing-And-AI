@@ -1,0 +1,188 @@
+Begin "Find patient, add encounter"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+
+Begin "Fill in Physical exam section"
+	Open the "Physical exam" dynamicsection
+
+	Type "flowsheet_obs_one" into the "General Appearance" flowsheet textarea
+	Type "flowsheet_obs_two" into the "Eyes" flowsheet textarea
+	Type "flowsheet_obs_three" into the "Ears" flowsheet textarea
+	Type "flowsheet_obs_four" into the "Nose" flowsheet textarea
+	Type "flowsheet_obs_five" into the "Mouth/Throat" flowsheet textarea
+	Type "flowsheet_obs_six" into the "Neck and Thyroid" flowsheet textarea
+	Type "flowsheet_obs_seven" into the "Respiratory" flowsheet textarea
+
+	Close the "Physical exam" dynamicsection
+
+	Verify exists "flowsheet_obs_one" text
+	Verify exists "flowsheet_obs_two" text
+	Verify exists "flowsheet_obs_three" text
+	Verify exists "flowsheet_obs_four" text
+	Verify exists "flowsheet_obs_five" text
+	Verify exists "flowsheet_obs_six" text
+	Verify exists "flowsheet_obs_seven" text
+
+Begin "Add another encounter"
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	Click the "Yes" popup button
+	@Wait for the new page to load@driver.pause(10)
+
+Begin "Copy from previous exam"
+	Click the "Physical exam" icon copy_from_prev
+	Verify exists "Physical exam" popup
+	Verify exists "Encounter #" text
+
+	# Check off the items to copy.
+	Click "General Appearance" checkbox
+	Click "Eyes" checkbox
+	Click "Ears" checkbox
+	Click "Nose" checkbox
+	Click "Mouth/Throat" checkbox
+	Click "Neck and Thyroid" checkbox
+	Click "Respiratory" checkbox
+	Click "Copy" popup button
+	
+	# Confirm the copy.
+	Verify exists "Copying 7 observations." popup text
+	Click "Yes" popup button
+
+	# Make sure popup window disappears.
+	Verify notexists "Physical exam" popup
+
+	# Make sure the things we copied are there.
+	Verify exists "flowsheet_obs_one" text
+	Verify exists "flowsheet_obs_two" text
+	Verify exists "flowsheet_obs_three" text
+	Verify exists "flowsheet_obs_four" text
+	Verify exists "flowsheet_obs_five" text
+	Verify exists "flowsheet_obs_six" text
+	Verify exists "flowsheet_obs_seven" text
+
+Begin "Test Delete Copied dialog"
+	Click the "Physical exam" icon delete_copied
+	Verify exists "Physical exam" popup
+
+	# None of them should be checked yet.
+	Verify exists checked=false "Select all" checkbox
+
+	Verify exists checked=false "General Appearance" flowsheet delete_copied_checkbox
+	Verify exists checked=false "Eyes"               flowsheet delete_copied_checkbox
+	Verify exists checked=false "Ears"               flowsheet delete_copied_checkbox
+	Verify exists checked=false "Nose"               flowsheet delete_copied_checkbox
+	Verify exists checked=false "Mouth/Throat"       flowsheet delete_copied_checkbox
+	Verify exists checked=false "Neck and Thyroid"   flowsheet delete_copied_checkbox
+	Verify exists checked=false "Respiratory"        flowsheet delete_copied_checkbox
+
+	Begin "Select all"
+		Click the "Select all" checkbox
+
+		Verify exists checked=true "Select all" checkbox
+		Verify exists indeterminate=false "Select all" checkbox
+
+		Verify exists checked=true "General Appearance" flowsheet delete_copied_checkbox
+		Verify exists checked=true "Eyes"               flowsheet delete_copied_checkbox
+		Verify exists checked=true "Ears"               flowsheet delete_copied_checkbox
+		Verify exists checked=true "Nose"               flowsheet delete_copied_checkbox
+		Verify exists checked=true "Mouth/Throat"       flowsheet delete_copied_checkbox
+		Verify exists checked=true "Neck and Thyroid"   flowsheet delete_copied_checkbox
+		Verify exists checked=true "Respiratory"        flowsheet delete_copied_checkbox
+	
+	Begin "Unselect all"
+		Click the "Select all" checkbox
+		
+		Verify exists       checked=false "Select all" checkbox
+		Verify exists indeterminate=false "Select all" checkbox
+
+		Verify exists checked=false "General Appearance" flowsheet delete_copied_checkbox
+		Verify exists checked=false "Eyes"               flowsheet delete_copied_checkbox
+		Verify exists checked=false "Ears"               flowsheet delete_copied_checkbox
+		Verify exists checked=false "Nose"               flowsheet delete_copied_checkbox
+		Verify exists checked=false "Mouth/Throat"       flowsheet delete_copied_checkbox
+		Verify exists checked=false "Neck and Thyroid"   flowsheet delete_copied_checkbox
+		Verify exists checked=false "Respiratory"        flowsheet delete_copied_checkbox
+
+	Begin "Search"
+		Type "gen" into the "Observation" popup input
+		
+		Verify    exists "General Appearance" flowsheet delete_copied_checkbox
+		Verify notexists "Eyes"               flowsheet delete_copied_checkbox
+		Verify notexists "Ears"               flowsheet delete_copied_checkbox
+		Verify notexists "Nose"               flowsheet delete_copied_checkbox
+		Verify notexists "Mouth/Throat"       flowsheet delete_copied_checkbox
+		Verify notexists "Neck and Thyroid"   flowsheet delete_copied_checkbox
+		Verify notexists "Respiratory"        flowsheet delete_copied_checkbox
+
+	Begin "Unsearch"
+		# Things I already tried that didn't work:
+		#
+		#   - driver.enterFormData('')
+		#   - driver.enterFormData(Keys.DELETE, clear=True)
+		#
+		# These methods do not trigger the "input" event on the element. This overly complicated
+		# approach is the only thing I've found that works.
+
+		@@@Clear the "Observation" popup input
+		from selenium.webdriver.common.keys import Keys
+		from selenium.webdriver.common.action_chains import ActionChains
+		wd = driver.getWebDriver()
+		elt = driver.getElement(xpath='//div[@id="delete-copied"]//input[@placeholder="Observation"]')
+		ac = ActionChains(wd)
+		ac.click(elt)
+		ac.send_keys(Keys.HOME)
+		ac.key_down(Keys.SHIFT).send_keys(Keys.END).key_up(Keys.SHIFT)
+		ac.send_keys(Keys.DELETE)
+		ac.perform()
+		@@@
+
+		Verify exists "General Appearance" flowsheet delete_copied_checkbox
+		Verify exists "Eyes"               flowsheet delete_copied_checkbox
+		Verify exists "Ears"               flowsheet delete_copied_checkbox
+		Verify exists "Nose"               flowsheet delete_copied_checkbox
+		Verify exists "Mouth/Throat"       flowsheet delete_copied_checkbox
+		Verify exists "Neck and Thyroid"   flowsheet delete_copied_checkbox
+		Verify exists "Respiratory"        flowsheet delete_copied_checkbox
+
+	Begin "Search and select"
+		Type "gen" into the "Observation" popup input
+		
+		Verify exists checked=false "General Appearance" flowsheet delete_copied_checkbox
+		
+		Click "General Appearance" flowsheet delete_copied_checkbox
+
+		Verify exists       checked=true  "General Appearance" flowsheet delete_copied_checkbox
+		Verify exists       checked=true  "Select all" checkbox
+		Verify exists indeterminate=false "Select all" checkbox
+
+	Begin "Unsearch after selecting"
+		@@@Clear the "Observation" popup input
+		from selenium.webdriver.common.keys import Keys
+		from selenium.webdriver.common.action_chains import ActionChains
+		wd = driver.getWebDriver()
+		elt = driver.getElement(xpath='//div[@id="delete-copied"]//input[@placeholder="Observation"]')
+		ac = ActionChains(wd)
+		ac.click(elt)
+		ac.send_keys(Keys.HOME)
+		ac.key_down(Keys.SHIFT).send_keys(Keys.END).key_up(Keys.SHIFT)
+		ac.send_keys(Keys.DELETE)
+		ac.perform()
+		@@@
+		
+		Verify exists       checked=false "Select all" checkbox
+		Verify exists indeterminate=true  "Select all" checkbox
+
+		Verify exists checked=true  "General Appearance" flowsheet delete_copied_checkbox
+		Verify exists checked=false "Eyes"               flowsheet delete_copied_checkbox
+		Verify exists checked=false "Ears"               flowsheet delete_copied_checkbox
+		Verify exists checked=false "Nose"               flowsheet delete_copied_checkbox
+		Verify exists checked=false "Mouth/Throat"       flowsheet delete_copied_checkbox
+		Verify exists checked=false "Neck and Thyroid"   flowsheet delete_copied_checkbox
+		Verify exists checked=false "Respiratory"        flowsheet delete_copied_checkbox

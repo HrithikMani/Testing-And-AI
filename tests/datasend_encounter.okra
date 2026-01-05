@@ -1,0 +1,152 @@
+Begin "Test Send Patient Data Permissions"
+	Begin "Set no send permission"
+		@Set 'Send Patient Data' permission to no@driver.miedb.dbExec("INSERT INTO security_role_acl SET security_role_id=1, module_name='E-Chart', category_name='Send Patient Data', security_value='0' ON DUPLICATE KEY UPDATE security_value='0'")
+		Begin "Check that user has no permission to send patient encounters"
+			Navigate "?f=chart&v=encounter&pat_id=18&"
+			Verify !exists "Send" link
+	Begin "Grant send permission"
+		@Set 'Send Patient Data' permission to no@driver.miedb.dbExec("INSERT INTO security_role_acl SET security_role_id=1, module_name='E-Chart', category_name='Send Patient Data', security_value='0' ON DUPLICATE KEY UPDATE security_value='1'")
+		Begin "Check that user has permission to send patient encounters"
+			Navigate "?f=chart&v=encounter&pat_id=18&"
+			Verify exists "Send" link
+Begin "Send Encounter"
+	Navigate "?f=chart&v=encounter&pat_id=18&"
+	Gridclick "Enc ID:82" "Send" grid link
+	Begin "Send Methods"
+		Begin "Print"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Print" from the dropdown
+			Click the "!Add" button
+		Begin "Fax"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Fax" from the dropdown
+			Click the "!Add" button
+		Begin "HL7 Send"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "HL7 Send" from the dropdown
+			Click the "!Add" button
+		Begin "Text Export"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Text Export" from the dropdown
+			Click the "!Add" button
+		Begin "Dictaphone HL7"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Dictaphone HL7" from the dropdown
+			Click the "!Add" button
+		Begin "NMC - Cannot send (per physician)"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "NMC - Cannot send (per physician)" from the dropdown
+			Click the "!Add" button
+		Begin "NMC - MedAccess"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "NMC - MedAccess" from the dropdown
+			Click the "!Add" button
+		Begin "Word2TIFF FTP"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Word2TIFF FTP" from the dropdown
+			Click the "!Add" button
+		Begin "ORDER RESULTS HL7"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "ORDER RESULTS HL7" from the dropdown
+			Click the "!Add" button
+		Begin "OSHA"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "OSHA" from the dropdown
+			Click the "!Add" button
+		Begin "Work Comp"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Work Comp" from the dropdown
+			Click the "!Add" button
+		Begin "Incident"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Incident" from the dropdown
+			Click the "!Add" button
+		Begin "Webchart Post"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Webchart Post" from the dropdown
+			Click the "!Add" button
+		Begin "Esign Request"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Esign Request" from the dropdown
+			Click the "!Add" button
+		Begin "Remote IFQ Batch"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Remote IFQ Batch" from the dropdown
+			Click the "!Add" button
+		Begin "Scripted Export"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Scripted Export" from the dropdown
+			Click the "!Add" button
+		Begin "MDM Reports HL7"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "MDM Reports HL7" from the dropdown
+			Click the "!Add" button
+		Begin "Immunization Export"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Immunization Export" from the dropdown
+			Click the "!Add" button
+		Begin "Kareo Billing"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Kareo Billing" from the dropdown
+			Click the "!Add" button
+		Begin "Direct Email"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Direct Email" from the dropdown
+			Click the "!Add" button
+		Begin "Syndromic Surveillance"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Syndromic Surveillance" from the dropdown
+			Click the "!Add" button
+		Begin "837 Professional Claims"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "837 Professional Claims" from the dropdown
+			Click the "!Add" button
+	Begin "Verify all entries listed in the 'To' listedit"
+		Verify exists "Print" listedit row
+		Verify exists "Fax" listedit row
+		Verify exists "HL7 Send" listedit row
+		Verify exists "Text Export" listedit row
+		Verify exists "Dictaphone HL7" listedit row
+		Verify exists "NMC - Cannot send (per physician)" listedit row
+		Verify exists "NMC - MedAccess" listedit row
+		Verify exists "Word2TIFF FTP" listedit row
+		Verify exists "ORDER RESULTS HL7" listedit row
+		Verify exists "OSHA" listedit row
+		Verify exists "Work Comp" listedit row
+		Verify exists "Incident" listedit row
+		Verify exists "Webchart Post" listedit row
+		Verify exists "Esign Request" listedit row
+		Verify exists "Remote IFQ Batch" listedit row
+		Verify exists "Scripted Export" listedit row
+		Verify exists "MDM Reports HL7" listedit row
+		Verify exists "Immunization Export" listedit row
+		Verify exists "Kareo Billing" listedit row
+		Verify exists "Direct Email" listedit row
+		Verify exists "Syndromic Surveillance" listedit row
+		Verify exists "837 Professional Claims" listedit row
+		Click the "Update Routes" button
+	Begin "Verify all routes listed in document properties"
+		Navigate "?f=chart&v=encounter&pat_id=18&"
+		Gridclick "Enc ID:82" "Properties" grid link
+		Verify exists "Print" grid entry
+		Verify exists "Fax" grid entry
+		Verify exists "HL7 Send" grid entry
+		Verify exists "Text Export" grid entry
+		Verify exists "Dictaphone HL7" grid entry
+		Verify exists "NMC - Cannot send (per physician)" grid entry
+		Verify exists "NMC - MedAccess" grid entry
+		Verify exists "Word2TIFF FTP" grid entry
+		Verify exists "ORDER RESULTS HL7" grid entry
+		Verify exists "OSHA" grid entry
+		Verify exists "Work Comp" grid entry
+		Verify exists "Incident" grid entry
+		Verify exists "Webchart Post" grid entry
+		Verify exists "Esign Request" grid entry
+		Verify exists "Remote IFQ Batch" grid entry
+		Verify exists "Scripted Export" grid entry
+		Verify exists "MDM Reports HL7" grid entry
+		Verify exists "Immunization Export" grid entry
+		Verify exists "Kareo Billing" grid entry
+		Verify exists "Direct Email" grid entry
+		Verify exists "Syndromic Surveillance" grid entry
+		Verify exists "837 Professional Claims" grid entry

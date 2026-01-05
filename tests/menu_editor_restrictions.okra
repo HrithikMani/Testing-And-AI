@@ -1,0 +1,54 @@
+Begin "Restrict menu tabs"
+	@Setup WCTestSession for Selenium@driver.wcutils.insertWCTSession('{selenium_username}')
+Begin "Selenium updates Locations Manager menu tab"
+	Open the sidemenu
+	Click the "Control" sidemenu entry
+	Verify exists "Locations Manager" link
+	Click the "System" charttab
+	Click the "Menu Editor" charttab subtab
+	Type "Locations Manager" in the "select_text" input
+	Click the "Go" button
+	Verify exists "Locations Manager" listview row
+	Click the "Edit" listview link
+	Verify exists @Edit dialog@xpath='//legend[@class="dlgtitle"]/span[contains(., "Edit Menu Item")]'
+	Click the "restricted" checkbox
+	Verify exists @Allowed Departments listedit@xpath='//legend[@class="dlgtitle"]/span[contains(., "Allowed Departments")]'
+	Select "MIE" from the "le_tabs_allowed_realms_allowed_id_value" dropdown
+	Click the "Change" button
+Begin "Selenium rename realm"
+	Open the sidemenu
+	Click the "Control" sidemenu entry
+	Click the "System" charttab
+	Click the "Menu Editor" charttab subtab
+	Type "Locations Manager" in the "select_text" input
+	Click the "Go" button
+	Verify exists "Locations Manager" listview row
+	Click the "Edit" listview link
+	Verify exists @Edit dialog@xpath='//legend[@class="dlgtitle"]/span[contains(., "Edit Menu Item")]'
+	Verify exists @Allowed Departments listedit@xpath='//legend[@class="dlgtitle"]/span[contains(., "Allowed Departments")]'
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Click the @"SHOW ALL" link@xpath='//a[@class="link" and text()="Show All"]'
+	Verify exists "MIE" listview row
+	#Click the "Edit" listview link 
+	#Toby is going to change the listview pod to accept 2 values.
+	#https://pm.mieweb.com/issues/95276
+	Click @MIE edit link @xpath='//td[@class="depts_Department_cell" and contains(., "MIE")]/following-sibling::td/a[contains(., "Edit")]'
+	Verify exists @Edit dialog@xpath='//legend[@class="dlgtitle"]/span[contains(., "Edit Department")]'
+	Type "MIE Testing" in the input
+	Click the "Submit Dept" button
+	Open the sidemenu
+	Click the "Control" sidemenu entry
+	Verify exists "Locations Manager" link
+	Click the "System" charttab
+	Click the "Menu Editor" charttab subtab
+	Type "Locations Manager" in the "select_text" input
+	Click the "Go" button
+	Verify exists "Locations Manager" listview row
+	Click the "Edit" listview link
+	Verify exists @Edit dialog@xpath='//legend[@class="dlgtitle"]/span[contains(., "Edit Menu Item")]'
+	Verify exists "MIE Testing" text
+Begin "Navigate to Control page"
+	Open the sidemenu
+	Click the "Control sidemenu entry
+	Verify notexists "Locations Manager" table row

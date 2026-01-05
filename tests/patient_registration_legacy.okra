@@ -1,0 +1,68 @@
+"""
+	Registers a patient using the legacy Patient Registration screen
+	Verifies that the entered data saves correctly by checking the demographic view screen
+	@systemtype: WCNOW
+"""
+
+Begin legacy patient registration page
+	Navigate "?f=chart&s=pat&opp=add&tabmodule=patsearch&tabselect=Patient+Registration"
+	Type Zero into the "Last Name" field
+	Type Absolute into the "First Name" field
+	Enter "04-02-1967" into the birth_date date
+	Click the "Search" button
+Begin Fill out Remaining Demographic Data
+	Type Mr. in the Title field
+	Type A in the "Middle Name" field
+	Type Jr. in the Suffix field
+	Type Bob in the "Preferred First Name" field
+	Type "123 Space Street" in the Address field
+	Type "Apt. 2B" in the "Address 2" field
+	Enter "46815" in the "Postal Code" autofill
+	Type 5551111 in the "Home Phone" field
+	Type 5552222 in the "Mobile Phone" field
+	Type 5553333 in the "Alternate Phone" field
+	Type 5554444 in the "Fax Number" field
+	Type bobafett@starwars.com in the Email field
+	Type 111221234 in the SSN field
+	Select Male from the Sex field
+Begin Fill out Spouse Demographic Data
+	Click the "Married" radio
+	Type "Mrs Fett" in the "Spouse's Name" field
+	Enter "01-01-1985" into the spouse_birthdate date
+	Type "Mrs Fett" in the "Emergency Contact" field
+	Type 5550987 in the "Emergency Phone" field
+Begin Fill out Employment Demographic Data
+	Type "Empire Inc" in the "Employer Name" field
+	Type "154 Space St" in the 4th Address field
+	Type "Apt 12" in the "Address Line 2" field
+	Type 5555555 in the 4th Phone field
+	Enter "12345" in the 2nd "Postal Code" autofill
+Begin Fill out MR Numbers
+	Type 987789 into the "Applicant" field
+	Check the "C (Contact)" field
+Click the Save button
+Begin Verify Saved Data On Demographic View
+	Open "Admin" charttab
+	Click the 'Demographics' charttab subtab
+	@Wait for demo page to fully render@driver.waitFor(driver, lambda d: d.getElement(xpath="//a[contains(.,'Fett Jr., Boba (Bob) A')]"))
+	Verify exists "Zero Jr., Absolute (Bob) A" link
+	Verify exists "123 Space Street" text
+	Verify exists "Fort Wayne, Indiana 46815" text
+	Verify exists "04-02-1967" text
+	Verify exists "Age" text
+	Verify exists "25" text
+	Verify exists "555-1111" text
+	Verify exists "555-2222" text
+	Verify exists "555-3333" text
+	Verify exists "555-4444" text
+	Verify exists bobafett@starwars.com text
+	Verify exists 12345 text
+	Verify exists Male text
+	Verify exists Married text
+	Verify exists "Mrs Fett" text
+	Verify exists 555-5555 text
+	Verify exists "Empire Inc" text
+	Verify exists "154 Space St" text
+	Verify exists "Apt 12" text
+	Begin "Verify the zip code autofill correctly populated the city and state"
+		Verify exists "Schenectady, NY 12345" text

@@ -1,0 +1,16 @@
+@Set restricted flag on OVWS doc type@driver.miedb.dbExec("UPDATE document_types SET restricted = 1 WHERE doc_type = 'OVWS'")
+@Set restrictions on OVWS doc type@driver.miedb.dbExec("REPLACE INTO document_types_restricted SET doc_type='OVWS', allowed_id=40, id_type='user'")
+Open the sidemenu
+Click the E-Chart sidemenu entry
+Click the TEST-10019 link
+Open the sidechart
+Click the "Hart, William S" sidechart section
+Verify exists @Insurance: Medicare@xpath=//li[contains(., 'Insurance') and contains(., 'Medicare')]
+Click the "Notes" sidechart subsection
+# @Notes subsection@xpath=//div[@id='wc_sidechart']//div[contains(@class, 'treeTitle')]/span[contains(., 'Notes')]
+Verify notexists @Office Visit Worksheet@xpath=//div[@id='wc_sidechart']//div[contains(@class, 'treeTitle')]/span[contains(., 'Notes')]/parent::div/following-sibling::div//td[contains(.,'Office Visit Worksheet')]
+Click the "Comments" sidechart section
+Verify exists @Comment in listview@xpath=//td[contains(., 'Do not release info to siblings')]
+Close the sidechart
+@Clear restrictions on OVWS doc type@driver.miedb.dbExec("DELETE FROM document_types_restricted WHERE doc_type='OVWS' AND allowed_id=40 AND id_type='user'")
+@Clear restricted flag on OVWS doc type@driver.miedb.dbExec("UPDATE document_types SET restricted = 0 WHERE doc_type = 'OVWS'")

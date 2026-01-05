@@ -1,0 +1,17 @@
+"""
+	Test to verify adding a patient mask in mass works
+	@owners: nchoudhry
+	@filedeps: system/layouts/RespFit/RespFit.html, system/layouts/ObjectWin/RespRecID.html
+"""
+Begin "Navigate and open the Mask entry popup"
+	Navigate "?f=layout&module=RespFit&name=RespFit&tabmodule=patsearch&tabselect=Resp%20Fit%20Program"
+	Enter "Hart, William" into the "patacsearch_patac_input" autocomplete
+	Wait for page
+Begin "Add a mask"
+	Enter "3M 6100 Half Face" into the "mask" autocomplete
+	Select "Medium" in the "size" dropdown
+	Select "Pass" in the "passFail" dropdown
+	Click the Save button
+Begin "Verify the page reloads after mask is added"
+	Wait for page
+	Verify exists "Patient" text

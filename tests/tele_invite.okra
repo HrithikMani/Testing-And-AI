@@ -1,0 +1,54 @@
+"""
+	This test checks the UI of the SMS feature
+	@owners: levij, dcornewell
+	@filedeps: src/ec_patemail.c, jsbin/ec_patemail.js, system/layouts/E-Chart/SendSMSWin.html
+"""
+
+Begin "Check SMS Feature"
+	@Refresh all layout cache@driver.miedb.dbExec("DELETE FROM system_settings WHERE module='System' AND section='WebChart' AND item='All Layouts Table Update Time'")
+	Navigate "?f=chart&s=pat&pat_id=18&t=Demographics&v=dashboard"
+	Open the "Demographic Information" dynamicsection
+	Verify exists "DPI_cell_phone" input
+	Wait for ajax
+	@Pause@driver.pause(3)
+	Type "(500) 555-0006" in the "DPI_cell_phone" input
+	@Pause@driver.pause(10)
+	Wait for ajax
+	Click the "Demographic Information" dynamicsection
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the "Send Invite via SMS & Email" icon
+	Wait for ajax
+	Verify "value=(500) 555-0006" "cell_phone" input
+	# Commented until we can improve stability of screenshots https://pm.mieweb.com/issues/112865
+	# Screenshot SMSWin
+	Click the "Send Invite" button
+	Verify exists "Successfully sent SMS. Stored as document ID" text
+	Navigate "?f=chart&s=pat&t=Documents&v=list&pat_id=18&lv_lv_wc_order=`Doc+ID`&lv_lv_wc_dir=DESC&lv_lv_wc_dir2=ASC&lv_lv_wc_dir3=ASC"
+	Click the "Show All" link
+	Verify exists "Telehealth Video Visit Invite" listview row
+	Verify exists "Text Message" listview row
+	Click the "Telehealth Video Visit Invite" listview link 
+	Verify exists "You have been invited to a telehealth visit by WebChart Testing System." text
+	Navigate "?f=chart&s=pat&t=Documents&v=list&pat_id=18&lv_lv_wc_order=`Doc+ID`&lv_lv_wc_dir=DESC&lv_lv_wc_dir2=ASC&lv_lv_wc_dir3=ASC"
+	Click the "Text Message" listview link 
+	Verify exists "To: 5005550006" text
+	Verify exists "You have been invited to a telehealth visit by WebChart Testing System." text
+	@Edit the email invite template@driver.miedb.dbExec("INSERT INTO layout (active, module, name, layout_html) VALUES (1, 'Email', 'Pat TeleHealth Invite', '<h1>Updated Template Layout<h1>')")
+	@Edit the SMS invite template@driver.miedb.dbExec("INSERT INTO layout (active, module, name, layout_html) VALUES (1, 'SMS', 'telehealthinvite', 'Updated SMS Layout')")
+	@Update the doctype of the email template@driver.miedb.dbExec("INSERT INTO layout_document_types (module, name, doc_type) VALUES ('Email', 'Pat TeleHealth Invite', 'VISIT') ON DUPLICATE KEY UPDATE doc_type='VISIT'")
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Click the "Send Invite via SMS & Email" icon
+	Type "I typed this SMS message" into the "sms_message_edit" input
+	# Commented until we can improve stability of screenshots https://pm.mieweb.com/issues/112865
+	# Screenshot SMSWinNewTemplate
+	Click the "Send Invite" button
+	Verify exists "Successfully sent SMS. Stored as document ID" text
+	Navigate "?f=chart&s=pat&t=Documents&v=list&pat_id=18&lv_lv_wc_order=`Doc+ID`&lv_lv_wc_dir=DESC&lv_lv_wc_dir2=ASC&lv_lv_wc_dir3=ASC"
+	# Make sure new documents are sorted to the top
+	Click the 1st "Text Message" listview link 
+	Verify exists "To: 5005550006" text
+	Verify exists "Updated SMS Layout" text
+	Navigate "?f=chart&s=pat&t=Documents&v=list&pat_id=18&lv_lv_wc_order=`Doc+ID`&lv_lv_wc_dir=DESC&lv_lv_wc_dir2=ASC&lv_lv_wc_dir3=ASC"
+	Verify exists "Visit" text
+	Click the 1st "Telehealth Video Visit Invite" listview link 
+	Verify exists "Updated Template Layout" text

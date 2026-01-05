@@ -1,0 +1,21 @@
+Begin Open and Close Provider Demographics
+	Navigate "?f=chart&s=pat&pat_id=82"
+	Open the "Provider" dynamicsection
+	Close the "Provider" dynamicsection
+	Open the "Provider" dynamicsection
+	Verify exists @0 in Revision # column@xpath="//tr[1]/td[1][text()='0']"
+	Verify exists @text in Revised By column@xpath="//tr[1]/td[2][. !='']"
+	Verify exists @text in NPI column@xpath="//tr[1]/td[4][. !='']"
+	Verify exists @Butler in Last Name column@xpath="//tr[1]/td[5][text()='Butler']"
+	Verify exists @Internist in First Name column@xpath="//tr[1]/td[6][text()='Internist']"
+	Verify exists @E. in Middle Name column@xpath="//tr[1]/td[7][text()='E.']"
+	Verify !exists @text in Suffix column@xpath="//tr[1]/td[8][. !='']"
+	Verify exists @M.D. in Degree column@xpath="//tr[1]/td[9][text()='M.D.']"
+	Verify !exists @text in Gender column@xpath="//tr[1]/td[10][. !='']"
+	Verify !exists @text in Birth Date column@xpath="//tr[1]/td[11][. !='']"
+	Verify exists @text in Email column@xpath="//tr[1]/td[12][. !='']"
+	Verify !exists @text in License Number column@xpath="//tr[1]/td[13][. !='']"
+	Verify !exists @text in Tax ID Number column@xpath="//tr[1]/td[14][. !='']"
+	Verify !exists @text in DEA Number column@xpath="//tr[1]/td[15][. !=' ']"
+	Verify !exists @text in Date Deactivated column@xpath="//tr[1]/td[16][. !='']"
+	Close the "Provider" dynamicsection

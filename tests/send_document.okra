@@ -1,0 +1,79 @@
+Begin "Go to Harris, Christine"
+	Navigate "?f=chart&s=pat&t=Documents&v=detail&pat_id=40"
+Begin "Send Document on first document"
+	Hover "03-21-2022" "Test Results for Review" document header
+	Click the "Send Document" document dynop
+	Verify exists "Send Document" popup
+	Enter "Patel, Ashish" in the "Recipient" autocomplete
+	Wait for page
+	Verify exists the "Send" popup button
+	Click the "Send" popup button
+	Wait for page
+	@Wait for selenium email to appear@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[contains(@class, "wc_win")]//a[contains(., "selenium@mieweb.com")]'), timeout=300)
+Begin "Create new contact and try to send document"
+	Click the @Add New button@xpath=//button[contains(@class, "btn-outline-secondary") and @title = "Add New"]
+	Verify exists "Add Contact" popup
+	Type "Ted" in the "first_name" input
+	Type "Jones" in the "last_name" input
+	Type "tjones2123@gmail.com" in the "email" input
+	Click the "Save" popup button
+	Verify notexists "Add Contact" popup
+	Verify exists "Jones, Ted" in the "Recipient" autocomplete
+	Wait for page
+	Verify exists the "Send" popup button
+	Click the "Send" popup button
+	Wait for page
+	@Wait for Jones, Ted to appear on the list@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[contains(@class, "wc_win")]//a[contains(., "Jones, Ted")]'), timeout=300)
+Begin "Create a new contact with valid email and matching charts then send the document"
+	Click the @Add New button@xpath=//button[contains(@class, "btn-outline-secondary") and @title = "Add New"]
+	Verify exists "Add Contact" popup
+	Type "Mary" in the "first_name" input
+	Type "Smith" in the "last_name" input
+	Type "msmith@mieweb.com" in the "email" input
+	Wait for page
+	Click the "Save" popup button
+	Verify notexists "Add Contact" popup
+	Verify exists "Smith, Mary" in the "Recipient" autocomplete
+	Wait for page
+	Verify exists the "Send" popup button
+	Click the "Send" popup button
+	Wait for page
+	@Wait for msmith email address to be listed@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[contains(@class, "wc_win")]//a[contains(., "msmith@mieweb.com")]'), timeout=300)
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=15)
+	Close the "Send Document" popup
+	Verify notexists "Send Document" popup
+Begin "Add active users as contacts on Better Corp"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Employer Organizations" link
+	Wait for page
+	Type "Better Corp" in the input
+	Verify exists "Search" button
+	Click the "Search" button
+	Wait for page
+	Click the "Better Corp." link
+	Open the "Contacts" dynamicsection
+	Enter "Selenium"  in the "le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input" autocomplete
+	Select "Primary Contact" in the "le_pat_parent_relations_rt_relation_type_value" dropdown
+	Click the "Add" button
+	Enter "Butler"  in the "le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input" autocomplete
+	Select "Contact" in the "le_pat_parent_relations_rt_relation_type_value" dropdown
+	Click the "Add" button
+	Close the "Contacts' dynamicsection
+	Verify exists "Selenium Selenium" text
+	Verify exists "Internist E. Butler" text
+Begin "Send document to employer contacts"
+	Navigate "?f=chart&s=pat&t=Documents&v=detail&pat_id=40"
+	Hover "11-07-2018" "Injection" document header
+	Click the "Send Document" document dynop
+	Verify exists "Send Document" popup
+	Enter "Better Corp." in the emp_pat_id autocomplete
+	Verify exists "Selenium, Selenium (Primary Contact)" text
+	Verify exists "Butler, Internist E. (Contact)" text
+	Click the "Selenium, Selenium (Primary Contact)" checkbox
+	Click the "Butler, Internist E. (Contact)" checkbox
+	Wait for page
+	Verify exists the "Send" popup button
+	Click the "Send" popup button
+	Wait for page
+	@Wait for selenium email to appear@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[contains(@class, "wc_win")]//a[contains(., "selenium@mieweb.com")]'), timeout=300)

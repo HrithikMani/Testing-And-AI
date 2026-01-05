@@ -1,0 +1,224 @@
+"""
+    Workflow test for pregnancy
+    @owners: josterman
+    @filedeps: system/layouts/Common/PregnancyJavascript.html
+"""
+Begin "Start Jennifer Pregnancy pregnancy."
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Pregnant, Jennifer" into the sstring input
+	Click the Search button
+	Click the "Medical Record" charttab
+	Click the "ACOG" charttab subtab
+	Begin "Pregnancy"
+		Begin "Click here to start pregnancy"
+		Open the "Click here to start pregnancy" dynamicsection
+		Type "0" in the "Total Pregnancies" input
+		Type "0" in the "Full Term Pregnancies" input
+		Type "0" in the "Pre Term Pregnancies" input
+		Type "0" in the "Abortions Induced" input
+		Type "0" in the "Living Children" input
+		# Type "Lutheran" in the "DPREGI_hospital0_txt" input
+		Type "Dr. Lee" in the "DPREGI_pediatrician" input
+		Type "Bill" in the "DPREGI_father" input
+		Enter "02-02-2007" into the DPREGD_onset_date date
+		Click the Calculate button
+		Click the dynamicsection nextbutton
+# the page reload to display the ACOG encounter
+	Begin "Fill Out Dynamic Sections"
+		Begin "Encounter"
+			@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+			@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=15)
+			Open the "Encounter" dynamicsection
+			Enter "02-02-2007" into the DED_serv_date date
+			Enter "Selenium, Selen" in the provider_chart_ac_input autocomplete
+			Click the dynamicsection nextbutton
+			@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+		Begin "Pregnancy"
+			Open the "Pregnancy" dynamicsection
+			Advance the dynamicsection
+		Begin "Pregnancy Info"
+			Begin "Pregnancy Details"
+				# Empty/unused (at the moment) Preventive care - add content
+				Advance the dynamicsection
+			Begin "Pregnancy Problems"
+				# Empty/unused (at the moment) Preventive care - add content
+				Advance the dynamicsection
+			Begin "EDD Confirmation"
+				# Empty/unused (at the moment) Preventive care - add content
+				Advance the dynamicsection
+			Begin "OB Flow Entry"
+				# Empty/unused (at the moment) Preventive care - add content
+				Advance the dynamicsection
+			Begin "Menstrual History"
+				# Empty/unused (at the moment) Preventive care - add content
+				Advance the dynamicsection
+			Begin "Past Pregnancies (last five)"
+				Close the "Past Pregnancies (last five)" dynamicsection
+				Toggle the "Past Pregnancies (last five)" quicklist
+				@Scroll the section into view@driver.runJS('jQuery("h3:contains(Past Pregnancies)")[0].scrollIntoView()')
+				Add "Past Pregnancies (last five)" "Add Past Pregnancy" quicklist item
+				Verify exists 'Past Pregnancy' popup
+				Verify exists "Date Month/Year" date
+				Type "05/2005" in the "Date Month/Year" date
+				Type "41" in the "GA Weeks" freetext field
+				Click the "Save" popup button
+				Verify exists @GA Weeks 41 text@xpath='//div[@class="flowsheet_label" and contains(., "GA Weeks")]/following-sibling::div[contains(., "41")]'
+				Open the "Past Pregnancies (last five)" dynamicsection
+				Advance the dynamicsection
+			Begin "Medical History Screening Questionnaire"
+				# Empty/unused (at the moment) Preventive care - add content
+				Close the "Medical History Screening Questionnaire" dynamicsection
+			Begin "Past medical history"
+				Begin "Add a New Condition"
+					Toggle "Past medical history" quicklist
+					Add "Past medical history:Make New PMH Item" "Other" quicklist item
+					Enter "Acute bronchitis due to rhinovi" in the "Condition Name" autocomplete
+					Click the 1st "Save" popup button
+				Begin "Edit a Condition"
+					Edit "Past medical history" "Acute bronchitis due to rhinovirus" dynamicitem
+					Type "08-08-1980" in the "Onset Date" date
+					Type "Ongoing" in the "Comments" freetext field
+					Click the "Save" popup button
+				Begin "Verify changes"
+					Verify exists "Ongoing" text
+					Verify exists "Acute bronchitis" text
+			Begin "Presenting medications"
+				Open the "Presenting medications" dynamicsection
+				Begin "Add a medication"
+					Enter "amoxicillin" in the "le_medlist_ac" autocomplete
+					Begin "Verify user gets drug interaction warning"
+						Verify exists "Warning for amoxicil" text
+						Close the popup
+					Enter "tablet 500" in the "le_medlist_dosage_value" autocomplete
+					Enter "Oral 1 tablet per" in the "le_medlist_sig_value" autocomplete
+					Enter "Acute bronchitis due to rhino" in the "le_medlist_indication_value" autocomplete
+					Click the "Add" button
+				Begin "Edit a medication"
+					Click the "amoxicillin" listedit editbutton
+					Type "08-08-1980" in the "le_medlist_start_date_fuzzy_value" input
+					Click the "OK" button
+				Advance the dynamicsection
+				Begin "Verify changes to Presenting medications section"
+					Verify exists "08-08-1980" text
+					Verify exists "amoxicillin" text
+			Begin "Genetic History"
+				Enter "Hypercementosis (K03" in the "le_family_condlist_ac" autocomplete
+				Select "Mother" from the dropdown
+				Type "Testing the comments." in the "le_family_condlist_notes_value" input
+				Click the "Add" button
+				Advance the dynamicsection
+				Begin "Verify changes to Genetic History"
+					Verify exists "Hypercementosis" text
+					Verify exists "Mother" text
+			Begin "Teratogen Exposures Since LMP/Pregnancy"
+				Click the 1st radio
+				Advance the dynamicsection
+				Verify exists "Prescription Medications" text
+			Begin "Injections"
+				Enter "botulinum antitoxin" in the "le_immunizations_i_description_value" autocomplete
+				Enter "06-03-1985" in the date
+				Click the "Add" button
+				Advance the dynamicsection
+				Begin "Verify changes to Injections"
+					Verify exists "botulinum" text
+					Verify exists "06-03-1985" text
+			Begin "Initial Physical Examination"
+				Click the 1st radio
+				Click the 3rd radio
+				Click the 5th radio
+				Click the 7th radio
+				Advance the dynamicsection
+				Begin "Verify changes to Injections"
+					Verify exists "HEENT" text
+					Verify exists "Teeth" text
+					Verify exists "Thyroid" text
+		Begin "Laboratory and Screening Tests"
+			Begin "Labs"
+				# Empty/unused
+				Advance the dynamicsection
+			Begin "Initial Labs"
+				Begin "Blood Type row"
+					Click the "A+" labelledradio
+				Begin "D (Rh) Type row"
+					Type "Negative" in the "D (Rh) Type" freetext field
+				Advance the dynamicsection
+				Begin "Verify changes to Initial Labs"
+					Verify exists "A+" text
+					Verify exists "Negative" text
+			Begin "Supplemental Labs"
+				Begin "Hemoglobin Electrophoresis row"
+					Check the 1st radio
+				Begin "Early Diabetes Screen row"
+					Check the 1st radio
+				Advance the dynamicsection
+				Begin "Verify changes to Supplemental Labs"
+					Verify exists "AA" text
+					Verify exists "Positive" text
+			Begin "8-20-Week Aneuploidy Screening"
+				Begin "Aneuploidy Screening Offered row"
+					Click the 1st radio
+				Begin "First Trimester Aneuploidy Screening row"
+					Click the 4th radio
+				Advance the dynamicsection
+				Begin "Verify changes to 8-20-Week Aneuploidy Screening"
+					Verify exists "Accepted" text
+					Verify exists "Positive" text
+			Begin "Late Pregnancy Labs and Screening"
+				Begin "HCT row"
+					Type "Postive" in the "HCT" freetext field
+				Begin "HGB row"
+					Type "Postive" in the "HGB" freetext field
+				Advance the dynamicsection
+				Begin "Verify changes to Late Pregnancy Labs and Screening"
+					Verify exists "Postive" text
+					Verify exists "Postive" text
+		Begin "Plan/Education/Screening"
+			Begin "First Trimester"
+				Begin "Zika Assessment, Testing (When Indicated), And Counseling row"
+					Type "Postive" in the "Zika Assessment, Testing (When Indicated), And Counseling" freetext field
+				Begin "Desire For Pregnancy row"
+					Type "Postive" in the "Desire For Pregnancy" freetext field
+				Advance the dynamicsection
+				Begin "Verify changes to First Trimester"
+					Verify exists "Postive" text
+					Verify exists "Postive" text
+			Begin "Second Trimester"
+				Begin "Zika Assessment, Testing (When Indicated), And Counseling row"
+					Type "Postive" in the "Zika Assessment, Testing (When Indicated), And Counseling" freetext field
+				Begin "Signs And Symptoms Of Preterm Labor row"
+					Click the 1st radio
+				Advance the dynamicsection
+				Begin "Verify changes to Second Trimester"
+					Verify exists "Postive" text
+					Verify exists "Completed" text
+			Begin "Third Trimester"
+				Begin "Zika Assessment, Testing (When Indicated), And Counseling row"
+					Type "Postive" in the "Zika Assessment, Testing (When Indicated), And Counseling" freetext field
+				Begin "Pain Management Plans row"
+					Click the 1st radio
+				Advance the dynamicsection
+				Begin "Verify changes to Third Trimester"
+					Verify exists "Postive" text
+					Verify exists "Completed" text
+			Begin "Postpartum"
+				Begin "Infant Feeding Problems row"
+					Type "No" in the "Infant Feeding Problems" freetext field
+				Begin "Birth Experience row"
+					Type "Scarry" in the "Birth Experience" freetext field
+				Advance the dynamicsection
+				Begin "Verify changes to Postpartum Trimester"
+					Verify exists "No" text
+					Verify exists "Scarry" text
+			Begin "Requests"
+				Begin "History And Physical Have Been Sent To Hospital, If Applicable row"
+					Enter "02-03-2007" in the date
+				Advance the dynamicsection
+				Begin "Verify changes to Requests"
+					Verify exists "02-03-2007" text
+	Begin "Conclude Pregnancy"
+				Type "10-03-2007" in the "Date Month/Year" date
+				#pod needs Archive and Close per Toby.
+				#Close the "Conclude Pregnancy" dynamicsection
+				Click the dynamicsection savebutton
+				Verify exists "Encounter has been closed and Archived successfully" text

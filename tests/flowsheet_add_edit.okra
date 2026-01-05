@@ -1,0 +1,28 @@
+Begin "Add a new flowsheet"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Flowsheets" charttab subtab
+	Click the "Add Flowsheet" link
+Begin "Add observations to the flowsheet"
+	Type "Account Data" in the "Flowsheet Name" input
+	Verify exists "That Flowsheet Name is already in use." text
+	Close the popup
+	Type "My Fancy Flowsheet" in the "Flowsheet Name" input
+	Enter "Date of last eye examination" in the "obs_name" autocomplete
+	Enter "p.last_name" in the "obs_name" autocomplete
+	Enter "pev.license_issue_state" in the "obs_name" autocomplete
+	Verify exists "Date of last eye examination" text
+	Verify exists "p.last_name" text
+	Verify exists "pev.license_issue_state" text
+	Click the "Submit" button
+	Type "My Fancy" in the "select_text" input
+	Click the "Go" button
+	Verify exists "My Fancy Flowsheet" text
+Begin "Edit a flowsheet"
+	Click the !Edit link
+	@Scroll and click@driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath='//span[contains(@class, "fa")][contains(@title, "Edit")]'))
+	Click the 2nd "Edit" icon
+	Type "Last Name" in the "desc_text" input
+	Click the "Save" button
+	Click the "Submit" button

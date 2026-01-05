@@ -1,0 +1,39 @@
+#@@@
+#res = driver.miedb.dbQuery('SELECT * FROM logins')
+#recFound = False
+#
+#for r in res.getRows():
+#	driver.reportCommandStatus('Login records:', r, None, '', '')
+#	recFound = True # getRows returns a generator function and is hard to debug, update recFound to True
+#
+#if not recFound:
+#	driver.reportCommandStatus('Login records:', 'No login records found', None, '', '')
+#	driver.reportCommandStatus('Active WebDriver Windows', len(driver.getWebDriver().window_handles), None, '', 'If there are more than 1 windows, its possible a window is sending out ajax, screwing up our session')
+#
+#driver.miedb.dbExec("UPDATE system_settings SET value = 0 WHERE module = 'E-Chart' AND section = 'Injections' AND item = 'Allow Free Text in Autocomplete';")
+#
+#@@@
+#
+Begin "Set Security Role to Employee"
+	@Update Selenium user security role to Employee@driver.miedb.dbExec("UPDATE users SET security_role_id = (SELECT security_role_id FROM security_roles WHERE security_role_name='Employees') WHERE username = 'selenium'")
+
+Begin "Report an Injury/Illness"
+	Begin "Make sure a consent is on file"
+		@Insert consent if one is not there@driver.miedb.dbExec("INSERT INTO documents (doc_type,storage_type,pat_id) SELECT 'PCONSENT',13,up.pat_id FROM user_patients up LEFT JOIN documents d ON d.pat_id=up.pat_id AND d.doc_type='PCONSENT' WHERE up.id_type='user' AND up.role_id=501 ANd up.id=(SELECT user_id FROM users WHERE username='selenium') AND d.doc_id IS NULL;")
+		@Sign the consent@driver.miedb.dbExec("INSERT IGNORE INTO document_sign (doc_id,status,signer_id) SELECT d.doc_id,1,up.id FROM user_patients up INNER JOIN documents d ON d.pat_id=up.pat_id AND d.doc_type='PCONSENT' WHERE up.id_type='user' AND up.role_id=501 ANd up.id=(SELECT user_id FROM users WHERE username='selenium');")
+	Click the "Better Corp." link
+	close popup
+	wait for page
+	Click the @id='portal-user-menu-top'
+	@Wait for menu@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//a/span[contains(text(), "Report an Injury/Illness")]'), expected=True, timeout=30)
+	Click the 1st "Report an Injury/Illness" link
+	Wait for page
+	Screenshot "Report an Injury/Illness"
+	Click @"The employee involved in the incident"@xpath="//label[contains(.,'The employee involved in the incident')]"
+	Click @Next button@xpath='//button/span[contains(., "SUBMIT")]'
+	Wait for page
+	Click the @id='portal-user-menu-top'
+	Click the @xpath='//a/span[contains(text(), "Report an Injury/Illness")]'
+	Wait for page
+	Verify !exists "UNDEFINED" text
+	Screenshot "New Report an Injury/Illness"

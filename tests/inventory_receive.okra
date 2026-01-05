@@ -1,0 +1,134 @@
+Begin "Start with inventory enabled, but no permission"
+	Begin "Revoke individual access to Add Inventory"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "No" from the "Receive Inventory" dropdown
+		Type "inventory_receive.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		Verify exists The "[ Receive Inventory: No ]" text
+	Begin "Verify lack of access to Add Inventory Tab"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Click the "Add Inventory" charttab
+		Verify exists the "Your current permission of 'No' in the ('Inventory','Receive Inventory') security setting does not allow access to Receive Inventory." text
+Begin "Grant permission to receive inventory"
+	Begin "Grant Individual access to Add Inventory"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" from the "Receive Inventory" dropdown
+		Type "inventory_receive.vision" in the securityrole reason
+		Click the "Update Individual Security" button
+		Verify !exists The "[ Receive Inventory: No ]" text
+	Begin "Verify access to Add Inventory Tab"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Click the "Add Inventory" charttab
+		Verify exists The "Receive General Inventory" table
+#  in the table body in the "Receive General Inventory" table
+Begin "Receive some inventory"
+	# in the 1st row
+	Begin "Receive at a site without a stock pile for the first row"
+		Select "Office" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc0']
+		#Select "Lisino" and get "lisinopril (New)" from the autocomplete in the "Drug/Item" cell
+		Verify !exists @the "Stockpile" dropdown in the "Site" cell@xpath=//select[@name='inv_stockpile_id0']
+		Enter "lisinopril" into the "inv_acval0" autocomplete
+		# The default dose is 5mg tablets
+		#The autocomplete in the "Form" cell should contain "tablet 5mg"
+		#Push "TAB" in the autocomplete in the "Form" cell
+		Blur the "inv_acval0" autocomplete
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Click the "tablet 5mg" autocomplete choice
+		Screenshot "inv_random_fail"
+		# in the "Qty" cell
+		Type "50" in the "inv_quantity0" input
+		# in the "Lot Number" cell
+		Type "abc123" in the "inv_lot_id0_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "SomeManu Co" in the "inv_manufacturer0" autocomplete
+		# in the "Expiration Date" cell
+		Type "01-01-2030" in the "inv_exp_date0" date
+	# in the 2nd row
+	Begin "Receive at a site with a stock pile for the second row, but leave the stockpile n/a"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc1']
+		#The "Stockpile" dropdown in the "Site" cell should contain "n/a"
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Verify "value=0" "inv_stockpile_id1" dropdown
+		#Select "lisino" and get "lisinopril (New)" from the autocomplete in the "Drug/Item" cell
+		Enter "lisinopril" into the "inv_acval1" autocomplete
+		Blur the "inv_acval1" autocomplete
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Form" cell
+		Click the "tablet 10mg" autocomplete choice
+		Screenshot "inv_random_fail10"
+		# in the "Qty" cell
+		Type "30" in the "inv_quantity1" input
+		# in the "Lot Number" cell
+		Type "987xzy" in the "inv_lot_id1_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "MediPill Co" in the "inv_manufacturer1" autocomplete
+		# in the "Expiration Date" cell
+		Type "06-01-2030" in the "inv_exp_date1" date
+	# in the 3rd row
+	Begin "Receive at a site with a stock pile for the third row, and select a stockpile"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc2']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room A" from the "inv_stockpile_id2" dropdown
+		Verify "value=1" "inv_stockpile_id2" dropdown
+		# in the "Drug/Item" cell
+		Enter "lisinopril" into the "inv_acval2" autocomplete
+		Blur the "inv_acval2" autocomplete
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Form" cell
+		Click the "tablet 20mg" autocomplete choice
+		Screenshot "inv_random_fail20"
+		# in the "Qty" cell
+		Type "15" in the "inv_quantity2" input
+		# in the "Lot Number" cell
+		Type "axy391" in the "inv_lot_id2_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "MediPill Co" in the "inv_manufacturer2" autocomplete
+		# in the "Expiration Date" cell
+		Type "03-15-2030" in the "inv_exp_date2" date
+	# in the 4th row
+	Begin "Receive at a site with a stock pile for the fourth row, and select the other stockpile"
+		Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc3']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Site" cell
+		Select "Store Room B" from the "inv_stockpile_id3" dropdown
+		Verify "value=2" "inv_stockpile_id3" dropdown
+		# in the "Drug/Item" cell
+		Enter "lisinopril" into the "inv_acval3" autocomplete
+		Blur the "inv_acval3" autocomplete
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# in the "Form" cell
+		Click the "tablet 5mg" autocomplete choice
+		Screenshot "inv_random_fail5"
+		# in the "Qty" cell
+		Type "20" in the "inv_quantity3" input
+		# in the "Lot Number" cell
+		Type "abc123" in the "inv_lot_id3_vis" autocomplete
+		# in the "Manufacturer" cell
+		Type "SomeManu Co" in the "inv_manufacturer3" autocomplete
+		# in the "Expiration Date" cell
+		Type "01-01-2030" in the "inv_exp_date3" date
+Begin "Verify success"
+	Screenshot "inventory_entered"
+	Click the "Add to Inventory" button
+	Verify exists the "Receiving lisinopril 5 mg tablet (50) - Success" text
+	Verify exists the "Receiving lisinopril 10 mg tablet (30) - Success" text
+	Verify exists the "Receiving lisinopril 20 mg tablet (15) - Success" text
+	Verify exists the "Receiving lisinopril 5 mg tablet (20) - Success" text
+	Screenshot "inventory_receive"

@@ -1,0 +1,343 @@
+"""
+	Test for File Upload Tests
+	@owners: dcarlson
+	@filedeps: system/layouts/StructDoc/*.html system/layouts/StructDocTypes/*.html
+"""
+
+# Ignore intentional error 'Unable to upload document'
+@@@
+driver.wcErrorLog.ignore("*Unable to upload document, because OIDs given are identified with more than one patient in our system*")
+@@@
+
+@Update system setting for Froozhie @driver.miedb.dbExec("UPDATE system_settings SET value='https://www.froozhie.com/froo.cgi?client=mie' WHERE (module,section,item)=('E-Chart','FroozHIE','URL Location')")
+
+@@@Give MIE partition an OID for testing purposes
+driver.miedb.dbExec("UPDATE patient_partitions SET wc_guid='1.2.840.114398.1.668.2' WHERE wc_partition='MIE';")
+@@@
+
+@@@Give David Butler and Emily Jones their MR partitions back for testing purposes
+driver.miedb.dbExec("INSERT INTO patient_mrns SET wc_partition='MR', pat_id=14,mrnumber='10011';")
+driver.miedb.dbExec("INSERT INTO patient_mrns SET wc_partition='MR', pat_id=10,mrnumber='10016';")
+@@@
+
+@@@Create new partition for testing purposes on not having access
+driver.miedb.dbExec("INSERT INTO patient_partitions SET wc_guid='1.2.840.114398.1.668.3',wc_partition='MIE2',name='MIE2',description='No Access',mr_sequence=10000,echart_opts='A',active=1,restricted=1;")
+driver.miedb.dbExec("INSERT INTO patient_partitions_restricted SET wc_partition='MIE2',allowed_id='Scheduling Resources',id_type='realm';")
+@@@
+
+@@@Insert a dummy document to make sure the auto_increment is set correctly
+driver.miedb.dbExec("INSERT INTO documents SET pat_id=3, storage_type=0;")
+@@@
+
+Begin "Check upload by pat_id, exists"
+	@@@Get expected next doc_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&pat_id=18&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that the document went to chart pat_id=18
+	res = driver.miedb.dbQuery("SELECT d.pat_id AS pat_id FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that pat_id is 18',
+			'Pat_id: {0}'.format(res[0]['pat_id']), res[0]['pat_id'] == 18, '', '')
+	@@@
+Begin "Check upload by pat_id, not exists, reject document"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	res = driver.miedb.dbQuery("SELECT max(pat_id) AS pat_id FROM patients")
+	if res:
+		res = res.getRes()
+		driver.setUserData('pat_id', res[0]['pat_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&pat_id=1000000018&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that we rejected the document and didn't create a new document
+	res = driver.miedb.dbQuery("SELECT count(*) AS docs FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of documents rows as doc_id = '+ str(driver.getUserData('doc_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['docs']), res[0]['docs'] == 0, '', '')
+	@@@
+
+	@@@Validate that we rejected the document and didn't create a new patient
+	res = driver.miedb.dbQuery("SELECT count(*) AS p FROM patients p WHERE pat_id="+str(driver.getUserData('pat_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of patient rows as pat_id = '+ str(driver.getUserData('pat_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['p']), res[0]['p'] == 0, '', '')
+	@@@
+Begin "Upload by Partition/MR Number as separate CGIs, exists"
+	@@@Get expected next doc_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCCCR&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=IIMC+Office+Summary&partition=MIE&mrnumber=10026&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that the document went to chart pat_id=45 (MIE-10026)
+	res = driver.miedb.dbQuery("SELECT d.pat_id AS pat_id FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that pat_id is 45',
+			'Pat_id: {0}'.format(res[0]['pat_id']), res[0]['pat_id'] == 45, '', '')
+	@@@
+Begin "Upload by Partition/MR Number as separate CGIs, not exists, create new chart"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	res = driver.miedb.dbQuery("SELECT max(pat_id) AS pat_id FROM patients")
+	if res:
+		res = res.getRes()
+		driver.setUserData('pat_id', res[0]['pat_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&partition=MIE&mrnumber=9999990026&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that the document went to the next pat_id (newly created patient)
+	res = driver.miedb.dbQuery("SELECT d.pat_id AS pat_id FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that pat_id is ' + str(driver.getUserData('pat_id')),
+			'Pat_id: {0}'.format(res[0]['pat_id']), res[0]['pat_id'] == driver.getUserData('pat_id'), '', '')
+	@@@
+Begin "Upload by Partition/MR Number as combined CGI, exists"
+	@@@Get expected next doc_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCCCR&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=IIMC+Office+Summary&mrnumber=MIE-10026&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that the document went to chart pat_id=45 (MIE-10026)
+	res = driver.miedb.dbQuery("SELECT d.pat_id AS pat_id FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that pat_id is 45',
+			'Pat_id: {0}'.format(res[0]['pat_id']), res[0]['pat_id'] == 45, '', '')
+	@@@
+Begin "Upload by Partition/MR Number as combined CGI, not exists, can't create new chart because register_patient isn't set"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&mrnumber=MIE2-9999990027&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that there is not a new document created
+	res = driver.miedb.dbQuery("SELECT count(*) AS docs FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of documents rows as doc_id = '+ str(driver.getUserData('doc_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['docs']), res[0]['docs'] == 0, '', '')
+	@@@
+Begin "Upload by Partition/MR Number as combined CGI, not exists, create new chart, this chart will be used later on for dave/dave no access by partition"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	res = driver.miedb.dbQuery("SELECT max(pat_id) AS pat_id FROM patients")
+	if res:
+		res = res.getRes()
+		driver.setUserData('pat_id', res[0]['pat_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&mrnumber=MIE2-9999990027&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that the document went to the next pat_id (newly created patient)
+	res = driver.miedb.dbQuery("SELECT d.pat_id AS pat_id FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that pat_id is ' + str(driver.getUserData('pat_id')),
+			'Pat_id: {0}'.format(res[0]['pat_id']), res[0]['pat_id'] == driver.getUserData('pat_id'), '', '')
+	@@@
+Begin "Upload with multiple mrOIDs given, both match one chart"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&mrOID=1.2.840.114398.1.668.1-10011&mrOID=1.2.840.114398.1.668.2-10054&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that the document went to pat_id 14
+	res = driver.miedb.dbQuery("SELECT d.pat_id AS pat_id FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that pat_id is 14',
+			'Pat_id: {0}'.format(res[0]['pat_id']), res[0]['pat_id'] == 14, '', '')
+	@@@
+Begin "Upload with multiple mrOIDs given, match different chart, reject the upload"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&mrOID=1.2.840.114398.1.668.1-10016&mrOID=1.2.840.114398.1.668.2-10054&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that there is not a new document created
+	res = driver.miedb.dbQuery("SELECT count(*) AS docs FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of documents rows as doc_id = '+ str(driver.getUserData('doc_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['docs']), res[0]['docs'] == 0, '', '')
+	@@@
+Begin "Upload with multiple mrOIDs given, one matches, other doesn't, puts the new MR# on chart"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&mrOID=1.2.840.114398.1.668.1-990016&mrOID=1.2.840.114398.1.668.2-10028&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that the document went to pat_id 47
+	res = driver.miedb.dbQuery("SELECT d.pat_id AS pat_id FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that pat_id is 47',
+			'Pat_id: {0}'.format(res[0]['pat_id']), res[0]['pat_id'] == 47, '', '')
+	@@@
+
+	@@@Validate that MR Number MR-990016 exists on pat_id 47
+	res = driver.miedb.dbQuery("SELECT count(*) AS mrns FROM patient_mrns pm WHERE pat_id=47 AND wc_partition='MR' AND mrnumber='990016'")
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that row count is 1',
+			'Rows: {0}'.format(res[0]['mrns']), res[0]['mrns'] == 1, '', '')
+	@@@
+Begin "Upload by multiple mrOIDs given, none match, creates new chart"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	res = driver.miedb.dbQuery("SELECT max(pat_id) AS pat_id FROM patients")
+	if res:
+		res = res.getRes()
+		driver.setUserData('pat_id', res[0]['pat_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&mrOID=1.2.840.114398.1.668.1-999916&mrOID=1.2.840.114398.1.668.2-99928&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that the document went to the next pat_id (newly created patient)
+	res = driver.miedb.dbQuery("SELECT d.pat_id AS pat_id FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that pat_id is ' + str(driver.getUserData('pat_id')),
+			'Pat_id: {0}'.format(res[0]['pat_id']), res[0]['pat_id'] == driver.getUserData('pat_id'), '', '')
+	@@@	
+Begin "Upload by multiple mrOIDs given, webchart doesn't recognize any of the OIDs as partitions, rejects document"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	res = driver.miedb.dbQuery("SELECT max(pat_id) AS pat_id FROM patients")
+	if res:
+		res = res.getRes()
+		driver.setUserData('pat_id', res[0]['pat_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&mrOID=1.2.840.114398.1.668.91-999916&mrOID=1.2.840.114398.1.668.92-99928&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that we rejected the document and didn't create a new document
+	res = driver.miedb.dbQuery("SELECT count(*) AS docs FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of documents rows as doc_id = '+ str(driver.getUserData('doc_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['docs']), res[0]['docs'] == 0, '', '')
+	@@@
+
+	@@@Validate that we rejected the document and didn't create a new patient
+	res = driver.miedb.dbQuery("SELECT count(*) AS p FROM patients p WHERE pat_id="+str(driver.getUserData('pat_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of patient rows as pat_id = '+ str(driver.getUserData('pat_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['p']), res[0]['p'] == 0, '', '')
+	@@@
+
+Begin "Logout and Log Back In As dave/dave, who doesn't have rights to certain charts
+	Begin "Enable New Login Style"
+		@@@Enable New Login Style
+		driver.miedb.dbExec("UPDATE system_settings SET value='1' WHERE module='System' AND section='Login' AND item='New login style'")
+		@@@
+	Navigate "?f=logout"
+	Click the "Standard Login" button
+	Type 'dave' into the 'login_user' input
+	Type 'dave' into the 'login_passwd' input
+	Click the "Next" button
+	Verify exists "Latest news" text
+
+@@@Set Dave account's security_role_id to be 'Restrict Access By Partition'=yes, for test uploading a new patient to a restricted chart it doesn't have access to
+driver.miedb.dbExec("UPDATE security_role_acl SET security_value=1 WHERE security_role_id=12 and category_name='Restrict Access By Partition';")
+@@@
+
+Begin "Check upload by pat_id, exists, but dave doesn't have access to pat_id 8"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	res = driver.miedb.dbQuery("SELECT max(pat_id) AS pat_id FROM patients")
+	if res:
+		res = res.getRes()
+		driver.setUserData('pat_id', res[0]['pat_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&pat_id=8&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that we rejected the document and didn't create a new document
+	res = driver.miedb.dbQuery("SELECT count(*) AS docs FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of documents rows as doc_id = '+ str(driver.getUserData('doc_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['docs']), res[0]['docs'] == 0, '', '')
+	@@@
+
+	@@@Validate that we rejected the document and didn't create a new patient
+	res = driver.miedb.dbQuery("SELECT count(*) AS p FROM patients p WHERE pat_id="+str(driver.getUserData('pat_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of patient rows as pat_id = '+ str(driver.getUserData('pat_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['p']), res[0]['p'] == 0, '', '')
+	@@@
+
+Begin "Upload by Partition/MR Number as combined CGI, exists from previous creation, but for dave/dave no access by partition restriction"
+	@@@Get expected next doc_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&mrnumber=MIE2-9999990027&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that we rejected the document and didn't create a new document
+	res = driver.miedb.dbQuery("SELECT count(*) AS docs FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of documents rows as doc_id = '+ str(driver.getUserData('doc_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['docs']), res[0]['docs'] == 0, '', '')
+	@@@
+
+Begin "Upload by mrOID given, no match, reject creation because no access to partition"
+	@@@Get expected next doc_id and pat_id
+	res = driver.miedb.dbQuery("SELECT max(doc_id) AS doc_id FROM documents")
+	if res:
+		res = res.getRes()
+		driver.setUserData('doc_id', res[0]['doc_id']+1)
+	res = driver.miedb.dbQuery("SELECT max(pat_id) AS pat_id FROM patients")
+	if res:
+		res = res.getRes()
+		driver.setUserData('pat_id', res[0]['pat_id']+1)
+	@@@
+	Navigate "?f=chart&s=upload&storage_type=19&register_patient=1&doc_type=WCDOCNOT&service_date=2021-01-28+09%3A48%3A25&show_xheaders=0&subject_txt=Test Document&mrOID=1.2.840.114398.1.668.3-999916&file=%3CClinicalDocument%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema-instance%22%20xmlns%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Acda%3D%22urn%3Ahl7-org%3Av3%22%20xmlns%3Asdtc%3D%22urn%3Ahl7-org%3Asdtc%22%20classCode%3D%22DOCCLIN%22%20moodCode%3D%22EVN%22%3E%3CrecordTarget%3E%3CpatientRole%3E%3Cid+extension%3D%2210019%22+root%3D%221.2.840.114398.1.668.5%22%3E%3C%2Fid%3E%3Cpatient%3E%3Cname+use%3D%22L%22%3E%3Cgiven%3EWilliam%3C%2Fgiven%3E%3Cgiven%3ES.%3C%2Fgiven%3E%3Cfamily%3ETester%3C%2Ffamily%3E%3C%2Fname%3E%3C%2Fpatient%3E%3CadministrativeGenderCode+code%3D%22M%22+codeSystem%3D%222.16.840.1.113883.5.1%22+displayName%3D%22Male%22%3E%3C%2FadministrativeGenderCode%3E%3CbirthTime+value%3D%2219541130%22%3E%3C%2FbirthTime%3E%3C%2FpatientRole%3E%3C%2FrecordTarget%3E%3C%2FClinicalDocument%3E"
+	@@@Validate that we rejected the document and didn't create a new document
+	res = driver.miedb.dbQuery("SELECT count(*) AS docs FROM documents d WHERE doc_id="+str(driver.getUserData('doc_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of documents rows as doc_id = '+ str(driver.getUserData('doc_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['docs']), res[0]['docs'] == 0, '', '')
+	@@@
+
+	@@@Validate that we rejected the document and didn't create a new patient
+	res = driver.miedb.dbQuery("SELECT count(*) AS p FROM patients p WHERE pat_id="+str(driver.getUserData('pat_id')))
+	if res:
+		res = res.getRes()
+		driver.reportCommandStatus('Verify that number of patient rows as pat_id = '+ str(driver.getUserData('pat_id')) +' is 0',
+			'Rows: {0}'.format(res[0]['p']), res[0]['p'] == 0, '', '')
+	@@@

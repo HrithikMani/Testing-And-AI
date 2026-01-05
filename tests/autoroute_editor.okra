@@ -1,0 +1,53 @@
+Begin "Set and verify No Access to Auto Route Editor then restore access"
+	@Set User's Security Access for 'Send Patient Data' to No@driver.miedb.dbExec("INSERT INTO security_exception (user_id, module_name, category_name, security_value) VALUES ('8', 'E-Chart', 'Send Patient Data', '0')")
+	Navigate "?f=chart&s=dar_editor&t=Auto+Routes&tabmodule=admin&tabselect=Auto+Routes"
+	Verify exists "Your current permission of 'No' in the ('E-Chart','Send Patient Data') security setting does not allow access to Edit Document Auto Routes" text
+	Verify exists "A permission level of 'Yes' is required." text
+	@Restore User's Security Access for 'Send Patient Data'@driver.miedb.dbExec("UPDATE security_exception SET security_value='1' WHERE user_id='8' AND category_name='Send Patient Data'")
+Begin "Add a New Route"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Interface" charttab
+	Click the "Auto Routes" charttab subtab
+	Click the "Add Auto Route" button
+	Begin "Check the warning for missing fields"
+		Click the "Save" button
+		Verify exists "Text Boxes not filled in" text
+	Type "Okra Test Route" in the "description" input
+	Type "d.doc_type='WCDOCNOT'" in the "where_clause" input
+	Select "Family Physician" from the "recipient_type" dropdown
+	Click the "Save" button
+	Verify exists "Okra Test Route" grid entry
+Begin "Edit the Auto Route"
+	Click the "Okra Test Route" grid checkbox
+	Click the "Edit" grid button
+	Type "Edited Okra Test Route" in the "description" input
+	Type "test join" in the "custom_join" input
+	Type "test clause" in the "where_clause" input
+	Select "User" from the "recipient_type" dropdown
+	Enter "Butler, Internist" in the "Recipient" autocomplete
+	Begin "Make sure that the method is changed based on the user"
+		Verify exists "Fax" in the "method" dropdown
+		Verify exists "Fax number" text
+		Verify exists "Coversheet" text
+		Verify exists "Fax without document header" text
+	Select "Final Signed Only" from the "send_criteria" dropdown
+	@Scroll the "Automatically Resend on Item Revision" checkbox into view@driver.runJS('arguments[0].scrollIntoView({block: "center"})', driver.getElement(xpath='//div[@class="wc_win"]//label[contains(., "Automatically Resend")]/preceding-sibling::input[@type="checkbox"]'))
+	Click the "Automatically Resend on Item Revision" checkbox
+	Click the "Save" button
+	Begin "Make sure all all changes saved"
+		Verify exists "Edited Okra Test Route" grid entry
+		Verify exists "test clause" grid entry
+		Verify exists "Butler, Internist" grid entry
+		Verify exists "Fax" grid entry
+		Verify exists "2604596271" grid entry
+		Verify exists "Final Signed Only" grid entry
+Begin "Delete the Auto Route"
+	Click the "Okra Test Route" grid checkbox
+	Click the "Delete" grid button
+	Verify exists "test join" text
+	Verify exists "test clause" text
+	Verify exists "Butler, Internist" text
+	Click the "Yes" popup button
+	Begin "Make sure all the Auto Route is no longer listed"
+		Verify !exists "Edited Okra Test Route" grid entry

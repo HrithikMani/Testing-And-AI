@@ -1,0 +1,32 @@
+
+"""
+ docq merging test
+ @owners: levij dcornewell dcarlson
+ @filedeps: src/docq.c, include/docq.h
+"""
+Begin "Merge William Hart 9 Match"
+	Navigate "?f=chart&s=docq"
+	Select "HOSPITAL (UHS (Demo Hospital)) - 3" in the "partition" dropdown
+	@Focus on the left column@d = driver.getWebDriver(); d.switch_to.frame("docq")
+	Click the "HOSPITAL-495653" link
+	@Focus on the right column@d = driver.getWebDriver(); d.switch_to.default_content(); d.switch_to.frame("docq_proc")
+	Click the "Q-Merge" link
+	@Focus on the footer section@d = driver.getWebDriver(); d.switch_to.default_content(); d.switch_to.frame("docq_view")
+	Verify notexists "You currently do not have access to: '' in: 'Patient Records'" text
+	@Focus on the left column@d = driver.getWebDriver(); d.switch_to.default_content(); d.switch_to.frame("docq")
+	Verify notexists "HOSPITAL-495653" text
+Begin "Test no Part-MR merging"
+	@driver.miedb.dbExec("UPDATE patients SET first_name='Big' WHERE last_name='Test Asset';")
+	@driver.miedb.dbExec("INSERT INTO patients SET last_name='Test Asset', first_name='Bigg';")
+	@driver.miedb.dbExec("INSERT INTO patient_mrns SET wc_partition='MIE',mrnumber='1234567',pat_id=(SELECT pat_id FROM patients WHERE first_name='Bigg');")
+	Navigate "?f=chart&s=docq"
+	Select "No Part-MR - 1" in the "partition" dropdown
+	@Focus on the left column@d = driver.getWebDriver(); d.switch_to.frame("docq")
+	Click the "No Part-MR!" link
+	@Focus on the right column@d = driver.getWebDriver(); d.switch_to.default_content(); d.switch_to.frame("docq_proc")
+	Click @to_pat_id_0 radio@xpath="//input[@id='to_pat_id_0']"
+	Click the "Merge to Selected" button
+	Verify exists "Bigg" text
+	@driver.miedb.dbExec("INSERT INTO security_exception SET user_id=(SELECT user_id FROM users WHERE username='selenium'),module_name='E-Chart',category_name='Limited to Restricted Items',security_value=1;")
+	Navigate "?f=chart&s=docq"
+	Verify notexists @dropdown option "No Part-MR - 1"@xpath=//select[@id|name|title="partition"]/option[@value="No Part-MR - 1"] 

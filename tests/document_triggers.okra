@@ -1,0 +1,172 @@
+@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Document Add Task',description='Document Add Task',notes='A document has been added.',type='document'")
+@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Document Add Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('389F9347FBA511EBA7C0B82A72DD83F3'), evt_type='on_doc_add',template_name='Document Add Task',skip_is_tmp=1,where_clause='1',perform_url='',priority=1")
+
+@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Document Edit Task',description='Document Edit Task',notes='A document has been edited',type='document'")
+@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Document Edit Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('49A7B4E0FBA511EBA7C0B82A72DD83F3'), evt_type='on_doc_update',template_name='Document Edit Task',skip_is_tmp=1,where_clause='1',perform_url='',priority=1")
+
+@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Document Sign Task',description='Document Sign Task',notes='A document has been signed.',type='document'")
+@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Document Sign Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('6E31276CFC4411EBA7C0B82A72DD83F3'), evt_type='on_doc_sign',template_name='Document Sign Task',skip_is_tmp=1,where_clause='1',perform_url='',priority=1")
+
+@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Document Reject Task',description='Document Reject Task',notes='A document has been rejected.',type='document'")
+@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Document Reject Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('5504C100FC4D11EBA7C0B82A72DD83F3'), evt_type='on_doc_reject',template_name='Document Reject Task',skip_is_tmp=1,where_clause='1',perform_url='',priority=1")
+
+@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Document Sign Preliminary Task',description='Document Sign Preliminary Task',notes='A document has preliminarily signed.',type='document'")
+@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Document Sign Preliminary Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('867A1849FC5711EBA7C0B82A72DD83F3'), evt_type='on_doc_sign_prelim',template_name='Document Sign Preliminary Task',skip_is_tmp=1,where_clause='1',perform_url='',priority=1")
+
+Open the sidemenu
+Click the "E-Chart" link
+Type "Haynes" in the "sstring" input
+Click the "Search" button
+
+Begin Add Document
+	Click the "Add Document" Link
+	Click the 2nd "Text" link
+	Click the "Show" link
+	Click the 3nd "Text" Link
+	Type "We shouldn't need this for at least a year or two" in the "Subject:" field
+	Type "Take no heroic measures" in the @Text Area@xpath=//textarea[@id="file"]
+	Click the "Add Document" button
+
+Begin Check for document add task creation
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Task Search" charttab
+	Select "Document Add Task" from the "Task Template" dropdown
+	Click the "Submit" button
+	Verify exists "Document Add Task" listview link
+	Click the "Document Add Task" listview link
+	@Switch Windows@driver.switchToPopup()
+	Click the "Mark Done w/o Note" button
+	@Switch to main window@driver.returnToMainWindow()
+
+Open the sidemenu
+Click the "E-Chart" link
+Click the "Haynes" listview link
+
+Begin Edit Document
+	Click the "Documents" charttab
+	Click the "Alert Comment" listview link
+	Click the 1st "Edit" link
+	Type "Take no heroic measures at all." in the @Text Area@xpath=//textarea[@id="file"]
+	Click the "Edit Document" button
+
+Begin Check for document edit task creation
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Task Search" charttab
+	Select "Document Edit Task" from the "Task Template" dropdown
+	Click the "Submit" button
+	Verify exists "Document Edit Task" listview link
+	Click the "Document Edit Task" listview link
+	@Switch Windows@driver.switchToPopup()
+	Click the "Mark Done w/o Note" button
+	@Switch to main window@driver.returnToMainWindow()
+
+Open the sidemenu
+Click the "E-Chart" link
+Click the "Haynes" listview link
+
+#yes, this is kinda stupid, but I'd rather not have to do a logout and log back in as another user.
+Begin Sign Document
+	Click the "Documents" charttab
+	Click the 1st "Pediatric Exam" listview link
+	Click the "Request Signature" link
+	Click the "Me" button
+	@Wait@driver.pause(30)
+	Click the "Request signature" button
+	@Wait@driver.pause(30)
+	Click the "Sign Doc Per Request" link
+	@Wait@driver.pause(30)
+
+Begin Check for document sign task creation
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Task Search" charttab
+	Select "Document Sign Task" from the "Task Template" dropdown
+	Click the "Submit" button
+	Verify exists "Document Sign Task" listview link
+	Click the "Document Sign Task" listview link
+	@Switch Windows@driver.switchToPopup()
+	Click the "Mark Done w/o Note" button
+	@Switch to main window@driver.returnToMainWindow()
+
+Open the sidemenu
+Click the "E-Chart" link
+Click the "Haynes" listview link
+
+Begin Request Document signature
+	Click the "Documents" charttab
+	Click the 1st "Pediatric Exam" listview link
+	Click the "Request Signature" link
+	Click the "Me" button
+	@Wait@driver.pause(15)
+	Click the "Request signature" button
+	@Wait@driver.pause(15)
+
+Begin Reject document
+	Open the sidemenu
+	Click the "E-Sign" link
+	Click the "0000385" listview link
+	Click the "Reject and Add Task" link
+	Type "I'm not signing this!!" in the @Text Area@xpath=//textarea[@id="notes"]
+	Click the "Submit Reject" button
+
+Begin Check for document sign task creation
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Task Search" charttab
+	Select "Document Reject Task" from the "Task Template" dropdown
+	Click the "Submit" button
+	Verify exists "Document Reject Task" listview link
+	Click the "Document Reject Task" listview link
+	@Switch Windows@driver.switchToPopup()
+	Click the "Mark Done w/o Note" button
+	@Switch to main window@driver.returnToMainWindow()
+
+Open the sidemenu
+Click the "E-Chart" link
+Click the "Haynes" listview link
+
+Begin Request Document signature from selenium
+	Click the "Documents" charttab
+	Click the 1st "Pediatric Exam" listview link
+	Click the "Request Signature" link
+	Click the "Me" button
+	@Wait@driver.pause(15)
+	Click the "Request signature" button
+	@Wait@driver.pause(15)
+	Verify exists "Requested signature for" text
+
+Begin Request Document signature from Butler Internist
+	Click the "Request Signature" link
+	Select "Butler, Internist E." from the "selected_origin_id" dropdown
+	@Wait@driver.pause(30)
+	Click the "Request signature" button
+	@Wait@driver.pause(30)
+	Verify exists "Requested signature for" text
+
+Begin preliminarily sign document
+	Open the sidemenu
+	Click the "E-Sign" link
+	Click the "0000385" listview link
+	Click the "SIGN DOCUMENT" link
+
+Begin Check for document sign preliminary task creation
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Task Search" charttab
+	Select "Document Sign Preliminary Task" from the "Task Template" dropdown
+	Click the "Submit" button
+	Verify exists "Document Sign Preliminary Task" listview link
+	Click the "Document Sign Preliminary Task" listview link
+	@Switch Windows@driver.switchToPopup()
+	Click the "Mark Done w/o Note" button
+	@Switch to main window@driver.returnToMainWindow()
+
+@Sweep up@driver.miedb.dbExec("DELETE tt.*, ttu.*, te.* FROM tasklist_events te LEFT JOIN task_template tt ON te.template_name=tt.name LEFT JOIN task_template_users ttu ON tt.task_template_id=ttu.task_template_id WHERE te.template_name IN ('Document Add Task','Document Edit Task','Document Sign Task','Document Reject Task','Document Sign Preliminary Task')")
+

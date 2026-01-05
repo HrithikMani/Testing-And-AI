@@ -1,0 +1,8 @@
+Navigate "?f=layout&module=User+Portlet&name=Due+List&tabmodule=+"
+Wait for the "GlobalDueListGridUserPortletDV" grid
+Verify exists the "Audiogram" grid checkbox
+Click the "Audiogram" grid checkbox
+Verify exists "Requisition" grid button
+Unmask grid
+Click the "Requisition" grid button
+Verify exists "Audiogram" text

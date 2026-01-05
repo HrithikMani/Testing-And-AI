@@ -1,0 +1,74 @@
+Open the sidemenu
+Click the 'Control Panel' sidemenu entry
+Begin "Show the Inventory Sidemenu Tab"
+	Click the "System" charttab
+	Click the "Menu Editor" charttab subtab
+	Type "Inventory" in the input
+	Click the "Go" button
+	Click the !Edit link
+	Click the show_in_wc checkbox
+	Click the "Change" button
+	Verify exists "Successfully updated tab" text
+Begin "Ensure memcache has the correct rxdb"
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Type "RXDB" in the input
+	Click the "Go" button
+	Click the 2nd !Edit link
+	@@@ Get the current value
+	e = driver.getElement(xpath="//textarea[@id='value']")
+	return {
+		'rxdb_dbname': e.get_attribute('value')
+	}
+	@@@
+	Type '{rxdb_dbname}' in the !reason input
+	Type "ugh_memcache" in the !value input
+	Begin "Ignore log errors from the invalid rxdb database name"
+		Begin "Ignore intrusion_flags"
+			Begin "Ignore intrusion_flags 1st 10"
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+			Begin "Ignore intrusion_flags 2nd 10"
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+			Begin "Ignore intrusion_flags 3rd 10"
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+			Begin "Ignore intrusion_flags 4th set"
+				@driver.wcErrorLog.ignore('*DB Error: QUERY|zeus-db2.med-web.com|SELECT varname,blacklist FROM ugh_memcache.intrusion_flags|(1142)-SELECT command denied to user*')
+		Begin "Ignore language_code x4"
+			@driver.wcErrorLog.ignore("*Error querying 'language_code' table: QUERY|*SELECT command denied to user*")
+			@driver.wcErrorLog.ignore("*Error querying 'language_code' table: QUERY|*SELECT command denied to user*")
+			@driver.wcErrorLog.ignore("*Error querying 'language_code' table: QUERY|*SELECT command denied to user*")
+			@driver.wcErrorLog.ignore("*Error querying 'language_code' table: QUERY|*SELECT command denied to user*")
+	Click the "Change" button
+	Click the 2nd !Edit link
+	#Click the @Edit link@xpath=//table//a[contains(., 'Edit')]
+	Type '{rxdb_dbname}' in the !value input
+	Type 'inventory_tab_create.okra' in the !reason input
+	Click the "Change" button
+	Verify exists the "{rxdb_dbname}" text

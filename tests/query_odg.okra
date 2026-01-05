@@ -1,0 +1,52 @@
+# TODO once these creds go inactive again after a year, this test will fail
+Begin "Setup Queries"
+	@driver.miedb.dbExec("INSERT IGNORE INTO refer_to_systems (system_id, system_name, system_address, system_address2, rep_uid, system_user, system_pass, system_partition, external_partition, system_options, active) VALUES ('ODG', 'ODG', 'https://login-sso-stage.mcg.com/connect/token', '', '', 'enterprisehealthstage', '0903e23e-f960-4c6c-87f8-94be6662d66c', '', '', 0, 1);")
+Begin "Setup Encounter"
+	Navigate "?f=chart&s=pat&t=Patient+Summary&v=dashboard&pat_id=18"
+	Click the "Add Case Management" link
+	Open the "Chief complaint" dynamicsection
+	Enter "Case Management" into the "Visit_20Protocol_textinput" autocomplete
+	Close the "Chief complaint" dynamicsection
+	Add "Symptoms / Diagnosis:Problem List" "Hypertension" quicklist item
+	Open the "Plan narrative" dynamicsection
+	Click the "Work Related" labelledradio
+	Click the "Surgery" labelledradio
+	Enter "01-01-2050" into the "Surgery Date" date
+	Select "Very Heavy" in the "Job Physical Strength" dropdown
+	# Add/Refine results for confounding factors for ODG query?
+	Click the 5th "Yes" labelledradio 
+	# -Depression/PTSD/Psychosocial:
+	Click the 6th "Yes" labelledradio 
+	# -Legal Representation:
+	Click the 7th "Yes" labelledradio 
+	# -Opioids:
+	Click the 8th "Yes" labelledradio 
+	# -Opioids:
+	Click the "more than 30 days" labelledradio 
+	# -Same/Similar Pre-Existing Condition:
+	Click the 9th "Yes" labelledradio 
+	# -Diabetes:
+	Click the 10th "Yes" labelledradio 
+	# -Obesity:
+	Click the 11th "Yes" labelledradio 
+	# -Substance Abuse:
+	Click the 12th "Yes" labelledradio 
+	# -Hypertension:
+	Click the 13th "Yes" labelledradio
+	# -Smoker: 
+	Click the 14th "Yes" labelledradio 
+Begin "Query ODG"
+	Click the "Query ODG" button
+	Wait for ajax
+	Close the "Plan narrative" dynamicsection
+	# Uncomment these three when the snapshot is updated
+	Verify exists "279" text
+	Verify exists "24" text
+	Verify exists "110" text
+	Verify exists "82.63" text
+	# TODO this will change to prod when we are done with staging env
+	Verify exists "https://stage.odgbymcg.com/odg-link?" text
+Begin "Check Monitor"
+	Navigate "?f=layout&module=SystemReport&name=Case%20Management%20Enc%20Details&tabmodule=reports&tabselect=WR%20Case%20Mgmt&ts_caption=Case%20Management%20Enc%20Details"
+	Click the Search button
+	Verify exists "Hart, William" text

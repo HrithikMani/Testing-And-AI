@@ -1,0 +1,54 @@
+Open the sidemenu
+Click the "Control Panel" sidemenu entry
+Begin "Revoke permissions"
+	Begin "Revoke individual access to View Inventory"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "No" from the "View Inventory" dropdown
+		Type "inventory_review.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify exists The "[ View Inventory: No ]" text
+	Begin "Verify lack of access to Add Inventory Tab"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Click the "Weekly Review" charttab
+		Verify exists the "Your current permission of 'No' in the ('Inventory','View Inventory') security setting does not allow access to View Inventory." text
+Begin "Grant permission to view inventory"
+	Begin "Grant Individual access to View Inventory"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" from the "View Inventory" dropdown
+		Type "inventory_review.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		# in the "Access Control (selenium)" box
+		Verify !exists The "[ View Inventory: No ]" text
+	Begin "Verify access to Weekly Review Tab"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Click the "Weekly Review" charttab
+		Verify exists The "General Inventory Review" text
+	Begin "Verify Items outside of their Limits are flagged for review in the General Inventory Review table"
+		Select "All" from the "Location" dropdown
+		Click the "Filter" button
+		Begin "the Amoxicillin 500mg Capsule row"
+			# that is the current quantity on hand
+			Verify exists the @"300" text@xpath=//td[contains(.,'Amoxicillin 500mg Capsule')]/following-sibling::td/span[text()='300']
+			Verify exists the @"0/250" text because those are the established limits for this item@xpath=//td[contains(.,'Amoxicillin 500mg Capsule')]/following-sibling::td[text()='0/250']
+		Begin "the lisinopril 10 mg tablet row"
+			# that is the current quantity on hand
+			Verify exists the @"0" text@xpath=//td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td/span[text()='0']
+			# that is the established lower limit for this item
+			Verify exists the @"10" text@xpath=//td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td[text()='10']

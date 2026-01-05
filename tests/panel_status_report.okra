@@ -1,0 +1,18 @@
+Begin "Test Panel Status Report"
+	Begin "Get results for panel members"
+		Navigate "?f=layout&s=pat&module=SystemReport&name=PanelStatus&tabmodule=reports&t=Health+Surveillance"
+		Select "Current members only" from the "Panel Membership" dropdown
+		Click the "Search" button
+		Verify exists "OSHA Noise" text
+	Begin "Get results for non-members"
+		Select "Non-members only" from the "Panel Membership" dropdown
+		Select "Current" from the "Record Status" dropdown
+		Click the "Search" button
+		Verify exists "Harris, Christine" link
+	# TODO: Scrolling a grid to make a link visible isn't working
+	#Begin "Delete a status record"
+	#	@Scroll delete link into view@driver.runJS('jQuery("#panel__stat_gridContainer div.tabletool div.outer.tbody")[0].scrollTo(2000,0)')
+	#	Gridclick "Options:Delete" "Delete" grid link
+	#	Verify exists "0 records" text
+	#Begin "Undelete status record through database"
+	#	@Reset to current@driver.miedb.dbExec("UPDATE patient_panel_status SET rec_status='current' WHERE pat_id=40 AND rec_status='deleted'")

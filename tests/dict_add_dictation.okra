@@ -1,0 +1,11 @@
+Begin"Verify that the dictation controls are present and editable"
+	Navigate "?f=dictation"
+	Click the "Add Dictation" link
+	@Switch to popup window@driver.switchToPopup()
+#rm?	Click the "OK" popup button
+	Type 03031981 in the "D.O.B." field
+	Select Office from the Location field
+	Select 3 from the Priority field
+	Select "No Job Type" from the "Job Type" field
+	@Close this window@driver.closePopup()
+

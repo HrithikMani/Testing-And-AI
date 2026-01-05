@@ -1,0 +1,10 @@
+@@@Schedule two events, show a popup, then close it
+driver.runJS("setTimeout(function() { window.ligma = miewin.alert('Ligma') }, 5000)")
+driver.runJS("setTimeout(function() { window.ligma.closeWin()}, 10000)")
+@@@
+@Wait for an alert to toggle@driver.wcutils.waitForToggle(lambda d: d.getElement(xpath="//div[text()='Ligma']"), expected=False, comments='This should pass')
+@Wait for a failed toggle@driver.wcutils.waitForToggle(lambda d: d.getElement(xpath="//div[text()='Ligma']"), expected=False, comments='This should fail')
+@Wait for a failed toggle@driver.wcutils.waitForToggle(lambda d: d.getElement(xpath="//div[text()='Ligma']"), expected=True, comments='This should fail')
+@Wait for a body tag to be present@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//body'), comments='This should pass')
+@Wait for a a failed condition@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//ligma'), comments='This should fail')
+@Wait for a bad callable@driver.wcutils.waitFor(lambda d: d.fuckit(), comments='This should exception')

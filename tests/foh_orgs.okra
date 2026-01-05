@@ -1,0 +1,124 @@
+Begin "Validate that the Better Corp. EO exists"
+	Open the sidemenu
+	Click the "Employer Organizations" sidemenu entry
+	Type "Better Corp" in the "name" input
+	Click the "Search" button
+	Click the "Better Corp" link
+	Click the "Overview (EO)" charttab
+	Begin "Test the Employer Organization - Overview (EO) page"
+		Verify exists "Better Corp" contactcard
+		Verify exists "Search Name" text
+		Verify exists @xpath='//span[text()="Search Name:"]/following-sibling::span[text()="Better Corp."]'
+		Begin "Editing Employer Organization Dynamic Section"
+			Open the "Employer Organization" dynamicsection
+			Verify exists "Better Corp" text
+			Verify exists "Employer Organization" in the "Chart Types" dynamicsection
+Begin "Validate Department of Defense EO"
+	Open the sidemenu
+	Click the "Employer Organizations" sidemenu entry
+	Type "Department of Defense" in the "name" input
+	Click the "Search" button
+	Click the "Department of Defense" link
+	Begin "Test the Employer Organization - Overview (EO) page"
+		Verify exists "Department of Defense" contactcard
+		Verify exists "Search Name" text
+		Verify exists @xpath='//span[text()="Search Name:"]/following-sibling::span[text()="Department of Defense (DOD)"]'
+		Begin "Editing Employer Organization Dynamic Section"
+			Open the "Employer Organization" dynamicsection
+			Verify exists "Department of Defense" text
+			Verify exists "DOD" text
+			Verify exists "Employer Organization" in the "Chart Types" dynamicsection
+		Begin "Verify Department of Defense Sub-Employer Organizations"
+			Verify exists "910 AW - Youngstown ARB" text in the "Chart Types" dynamicsection
+			Verify exists "Army National Guard" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Commissary Agency" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Contract Audit Agency" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Contract Management Agency" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Finance and Accounting Service" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Information Systems Agency" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Intelligence Agency" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Logistics Agency" text in the "Chart Types" dynamicsection
+			Verify exists "Department of Defense-Office of the Inspector General" text in the "Chart Types" dynamicsection
+			Verify exists "Department of the Air Force" text in the "Chart Types" dynamicsection
+			Verify exists "Department of the Army" text in the "Chart Types" dynamicsection
+			Verify exists "Department of the Navy" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Health Agency" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Microelectronics Activity" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Security Assistance Development Center" text in the "Chart Types" dynamicsection
+			Verify exists "Naval Criminal Investigations Service" text in the "Chart Types" dynamicsection
+			Verify exists "Defense Media Activity" text in the "Chart Types" dynamicsection
+			Verify exists "Missile Defense Agency" text in the "Chart Types" dynamicsection
+			Verify exists "National Geospatial-Intelligence Agency" text in the "Chart Types" dynamicsection
+			Verify exists "National Security Agency-Central Security Service" text in the "Chart Types" dynamicsection
+			Verify exists "Naval Air Warfare Center Aircraft Division" text in the "Chart Types" dynamicsection
+			Verify exists "Naval Air Warfare Center Weapons Division" text in the "Chart Types" dynamicsection
+			Verify exists "NAVSUP Weapons Systems Support" text in the "Chart Types" dynamicsection
+			Verify exists "North American Aerospace Defense Command - U.S. Northern Command" text in the "Chart Types" dynamicsection
+			Verify exists "Pentagon Force Protection Agency" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Air Force Air National Guard" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Air Force Materiel Command" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers - Detroit District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers - Southwestern Division" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers (USACE)" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Albuquerque District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Baltimore District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Chicago District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Fort Worth District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Galveston District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Headquarters" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Huntington District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Huntsville District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Kansas City District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Logistics Activity" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Middle East District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Missouri River Regional Headquarters" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-New England District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-New York District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Northwestern Division" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Omaha District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Philadelphia District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Pittsburgh District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Portland District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Sacramento District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-San Francisco District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Seattle District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-South Atlantic Division" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-South Pacific Division" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-St Paul District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Corps of Engineers-Walla Walla District" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Research Office" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Reserve" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Army Space & Missile Defense Command / Army Forces Strategic Command" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Navy - Office of Civilian Human Resources" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Navy-Military Sealift Command" text in the "Chart Types" dynamicsection
+			Verify exists "United States Air Force Academy" text in the "Chart Types" dynamicsection
+			Verify exists "United States Military Entrance Processing Command" text in the "Chart Types" dynamicsection
+			Verify exists "US Army Corps of Engineers-Little Rock District" text in the "Chart Types" dynamicsection
+			Verify exists "Employer Organization" in the "Chart Types" dynamicsection
+Begin "Validate Department of Homeland Security EO"
+	Open the sidemenu
+	Click the "Employer Organizations" sidemenu entry
+	Type "Department of Homeland Security" in the "name" input
+	Click the "Search" button
+	Click the "Department of Homeland Security" link
+	Begin "Test the Employer Organization - Overview (EO) page"
+		Verify exists "Department of Homeland Security" contactcard
+		Verify exists "Search Name" text
+		Verify exists @xpath='//span[text()="Search Name:"]/following-sibling::span[text()="Department of Homeland Security (DHS)"]'
+		Begin "Editing Employer Organization Dynamic Section"
+			Open the "Employer Organization" dynamicsection
+			Verify exists "Department of Homeland Security" text
+			Verify exists "DHS" text
+			Verify exists "Employer Organization" in the "Chart Types" dynamicsection
+		Begin "Verify Department of Defense Sub-Employer Organizations"
+			Verify exists "Federal Emergency Management Agency" text in the "Chart Types" dynamicsection
+			Verify exists "Federal Law Enforcement Training Center" text in the "Chart Types" dynamicsection
+			Verify exists "Transportation Security Administration" text in the "Chart Types" dynamicsection
+			Verify exists "Federal Protective Service" text in the "Chart Types" dynamicsection
+			Verify exists "Immigration and Customs Enforcement" text in the "Chart Types" dynamicsection
+			Verify exists "Plum Island Animal Disease Center" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Citizenship and Immigration Services" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Customs and Border Protection" text in the "Chart Types" dynamicsection
+			Verify exists "U.S. Secret Service" text in the "Chart Types" dynamicsection
+			Verify exists "United States Coast Guard" text in the "Chart Types" dynamicsection
+			Verify exists "Employer Organization" in the "Chart Types" dynamicsection

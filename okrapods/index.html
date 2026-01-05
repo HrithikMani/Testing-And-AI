@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WebChart Okra Pods</title>
+<style>
+body {
+    padding: 10px;
+}
+a {
+    color: #333;
+}
+a:visited {
+    color: #aaa;
+}
+</style>
+</head>
+<body>
+<h1>WebChart OkraPods Documentation</h1>
+
+<ul>
+{% for title, pod in pods.items()|sort %}
+    <li><a href="{{title}}.html">{{title}}</a>
+    {% if pod.description %}
+    - {{pod.description}}
+    {% endif %}
+    </li>
+{% endfor %}
+</ul>
+</body>
+</html>

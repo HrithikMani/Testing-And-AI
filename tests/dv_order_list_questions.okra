@@ -1,0 +1,93 @@
+Click the sidemenu
+Click the "Control Panel" sidemenu entry
+Click the "Orders" charttab
+Click the "Orders-List Editor" charttab subtab
+
+Begin "Add radio question"
+	Wait for the "orderlist" grid
+	Click the 1st grid checkbox
+	Click the "Show Questions" grid button
+	Click the "Create a New Question" button		
+	Type "New Question 1" into the "new-question-description" input
+	Select "Multiple Choice" from the "new-question-type" dropdown
+	Click the "Create New Choice" button
+	Type "Choice 1" into 1st "choice-title" input
+	Type "1" into the 1st "choice-code" input
+	Click the "@id=new-question-submit"
+	10:Verify exists "New Question 1" text
+
+Begin "Add text question"
+	Click the "Create a New Question" button		
+	Type "New Question 2" into the "new-question-description" input
+	Select "Text Answer" from the "new-question-type" dropdown
+	Type "Open Ended Question" into "new-question-text" input
+	Click the "@id=new-question-submit"
+	10:Verify exists "New Question 2" text
+
+Begin "Add yes/no question"
+	Click the "Create a New Question" button		
+	Type "New Question 3" into the "new-question-description" input
+	Select "Yes or No" from the "new-question-type" dropdown
+	Type "Yes/No Question" into "new-question-yes-no" input
+	Click the "@id=new-question-submit"
+	10:Verify exists "New Question 3" text
+
+Begin "Add an existing question to an order"
+	Click the "Add Existing Question" button
+	Enter "Are you an Aquarius?" into the "Existing Question Description" autocomplete
+	Click the "@id=existing-question-submit"
+	10:Verify exists "Are you an Aquarius?" text
+
+Begin "Edit a question's generic data"
+	Click the @xpath="//button[contains(@class, 'list-group-item') and contains(., 'Are you an Aquarius?')]"
+	10:Type "Are you an Aquarius???" into the "edit-question-description" input
+	Type "50" into the "edit-question-process-order" input
+	Type "asdf" into the "edit-question-code" input
+	Check the "edit-question-internal" checkbox
+	Click the "@id=edit-question-submit"
+	10:Verify exists "Are you an Aquarius???" text
+	Verify exists "Question Code: asdf" text
+	Verify exists "50." text
+
+Begin "Edit a radio question"
+	Click the @xpath="//button[contains(@class, 'list-group-item') and contains(., 'New Question 1')]"
+	10:Click the "New Choice" button
+	Type "Edited Choice 1" into 1st "choice-title" input
+	Type "1000" into 1st "choice-code" input
+	Type "Choice 2" into 2nd "choice-title" input
+	Type "2002" into 2nd "choice-code" input
+	@driver.sleep(3)
+	Click the "@id=edit-question-submit"
+	@driver.sleep(3)
+	10:Click the @xpath="//button[contains(@class, 'list-group-item') and contains(., 'New Question 1')]"
+	10:Verify exists @xpath="//input[@name='choice-title' and @value='Edited Choice 1']"
+	Verify exists @xpath="//input[@name='choice-code' and @value='1000']"
+	Verify exists @xpath="//input[@name='choice-title' and @value='Choice 2']"
+	Verify exists @xpath="//input[@name='choice-code' and @value='2002']"
+	@driver.sleep(3)
+	Click the "@id=edit-question-close"
+	@driver.sleep(3)
+
+Begin "Edit a text question"
+	Click the @xpath="//button[contains(@class, 'list-group-item') and contains(., 'New Question 2')]"
+	10:Type "Edited text question" into "edit-question-text" input
+	@driver.sleep(3)
+	Click the "@id=edit-question-submit"
+	@driver.sleep(3)
+	10:Click the @xpath="//button[contains(@class, 'list-group-item') and contains(., 'New Question 2')]"
+	10:Verify exists @xpath="//input[@id='edit-question-text' and @value='Edited text question']"
+	@driver.sleep(3)
+	Click the "@id=edit-question-close"
+	@driver.sleep(3)
+
+Begin "Edit a yes/no question"
+	10:Click the @xpath="//button[contains(@class, 'list-group-item') and contains(., 'New Question 3')]"
+	10:Type "Edited yes/no question" into "edit-question-yes-no" input
+	@driver.sleep(3)
+	Click the "@id=edit-question-submit"
+	@driver.sleep(3)
+	10:Click the @xpath="//button[contains(@class, 'list-group-item') and contains(., 'New Question 3')]"
+	10:Verify exists @xpath="//input[@id='edit-question-yes-no' and @value='Edited yes/no question']"
+	@driver.sleep(3)
+	Click the "@id=edit-question-close"
+	@driver.sleep(3)

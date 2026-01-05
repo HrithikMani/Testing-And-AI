@@ -1,0 +1,46 @@
+"""
+Pod used to interact with WebChart chart tabs and sub tabs
+
+Usage examples:
+	Click the "Overview (EO)" charttab
+	Click the "Layout Manager" charttab subtab
+	Click the "Injection Program" charttab tab
+	Verify exists "Layout Manager" charttab
+
+"""
+
+tab://ul[@id="wc_tabwrapper"]//span[contains(@class, "wc_tab")]/a[contains(@class, "wc_tab_title")]|
+	//ul[@id="wc_tabwrapper"]//span[contains(@class, "wc_tab")]/span[contains(@class, "wc_tab_title")]
+
+subtab://ul[@class="wc_tab_submenu"]//a
+
+popout://ul[@id="wc_tabwrapper"]//span[@class="wc_tab"]/a[contains(@class, "wc_tab_title")]{OKRA_TEXT_CLS}/following-sibling::a[@class="wc_tab_extlink"]
+
+@Open
+"""
+def parse(v):
+	return (v,)
+"""
+@@@
+expanded = '//div[@id="wc_tabbar"]//div[@id="wc_tabwrapper_mask" and @style="display: block;"]/following-sibling::ul[@id="wc_tabwrapper" and contains(@class, "submenusOpen")]'
+collapsed = '//div[@id="wc_tabbar"]//div[@id="wc_tabwrapper_mask" and @style="display: none;"]/following-sibling::ul[@id="wc_tabwrapper" and not(contains(@class, "submenusOpen"))]'
+charttab = '//span[contains(@class, "wc_tab")]/*[contains(@class, "wc_tab_title")][contains(., "{0}")]'
+subtab = '//ul[@class="wc_tab_submenu"]//a[contains(., "{0}")]'
+parenttab = '//ul[@class="wc_tab_submenu"]//a[contains(., "{0}")]/parent::ul/preceding-sibling::span[contains(@class, "wc_tab")]/*[contains(@class, "wc_tab_title")]'
+if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'),
+	comments='Wait for ajax and layoutInsert operations to complete'):
+	driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+driver.wcutils.waitForAJAX(quiet=5)
+if driver.waitFor(driver, lambda driver: driver.getElement(xpath=charttab), expected_return=True):
+	driver.clickElement(xpath=charttab)
+elif driver.waitFor(driver, lambda driver: driver.getElement(xpath=subtab), expected_return=True):
+	if driver.waitFor(driver, lambda driver: driver.getElement(xpath=expanded + subtab), expected_return=True):
+		driver.clickElement(xpath=subtab)
+	elif driver.waitFor(driver, lambda driver: driver.getElement(xpath=collapsed + subtab), expected_return=True):
+		driver.clickElement(xpath=parenttab)
+		driver.clickElement(xpath=subtab)
+	else:
+		driver.reportCommandStatus('charttab.pod', 'Open verb', False, '', 'subtab not found')
+else:
+	driver.reportCommandStatus('charttab.pod', 'Open verb', False, '', 'Chart tab not found')	
+@@@

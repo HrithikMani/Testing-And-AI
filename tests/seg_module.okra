@@ -1,0 +1,21 @@
+Begin "Create Similar Exposure Group"
+	Open the sidemenu
+	Click the "Control Panel" link
+	Verify exists "Similar Exposure Groups (SEGs)" link
+	Click the "Similar Exposure Groups (SEGs)" link
+	Click the "Add New Similar Exposure Group (SEG)" link
+	Type "Testing" in the input
+	Click the "Add New" button
+Begin "Add SEG Panel"
+	Verify exists "SEG Panels" charttab
+	Click the "SEG Panels" charttab
+	Verify exists @SEG Panels Datavis@xpath='//strong[@class = "wcdv_title" and contains(., "SEG Panels")]'
+	Verify exists "Add New Panel" link
+	Click the "Add New Panel" link
+	Click @the Today Button@xpath=//button[@id='start_dateTODAY']
+	Enter "OSHA Noise" in the "panel_id_ac" autocomplete
+	Screenshot "Filled out"
+	Click the "Save" button
+	Click the "SEG Panels" charttab
+	Screenshot "final"
+	Verify exists "OSHANOISE" text

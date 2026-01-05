@@ -1,0 +1,37 @@
+"""
+	This test checks the UI of the Conversations feature
+	@owners: aaronc
+	@filedeps: system/layouts/E-Chart/Conversations.html, system/layouts/Conversations/Home.html, src/api/documents.c
+"""
+
+Begin "Set up conversation data"
+	@Refresh all layout cache@driver.miedb.dbExec("DELETE FROM system_settings WHERE module='System' AND section='WebChart' AND item='All Layouts Table Update Time'")
+	@Refresh all layout cache@driver.miedb.dbExec("UPDATE charttabs set force_display=1 where tabname='Conversations';")
+	Navigate "?f=chart&s=pat&pat_id=42&t=Demographics&v=dashboard"
+	Open the "Demographic Information" dynamicsection
+	Verify exists "DPI_cell_phone" input
+	Wait for ajax
+	@Pause@driver.pause(3)
+	Type "(500) 555-0006" in the "DPI_cell_phone" input
+	@Pause@driver.pause(10)
+	Wait for ajax
+	Click the "Demographic Information" dynamicsection
+	Navigate "?f=chart&s=pat&pat_id=42"
+	Click the "Conversations" charttab
+Begin "Start conversation"
+	Type "Test message" in the "Outgoing Message" input
+	Click the @Send Messagebutton@xpath="//button[@id='send-msg']"
+	Verify exists "Test message" text
+	Click the "End Conversation" button
+	Click the "Yes" popup button
+	Verify exists "Conversation ended" text
+	Type "Starting a new conversation" in the "Outgoing Message" input
+	Click the @Send Messagebutton@xpath="//button[@id='send-msg']"
+	Verify exists "Starting a new conversation" text
+Begin "Verify conversation documents"
+	Navigate "?f=chart&s=pat&t=Documents&v=list&pat_id=42"
+	Click the "Show All" link
+	Verify exists "Text Message" listview row
+	Verify exists 2nd "Text Message" listview row
+	Click the 1st "Text Message" listview link
+	Verify exists "Starting a new conversation" text

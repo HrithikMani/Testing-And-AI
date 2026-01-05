@@ -1,0 +1,174 @@
+Open the sidemenu
+Click the "Inventory" sidemenu entry
+Begin "Expire some medication"
+	Click the @"Expire" link in the "lisinpril" 50 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td/a[contains(.,"Expire")]
+	Screenshot "expiredlg"
+	Type "2" in the "Quantity" input
+	Type "Dropped on the Floor" in the "Comment" input
+	Click the "Save" button
+Begin "Transferring Items"
+	Begin "Transferring between stockpiles"
+			Begin "Reset View to show all Inventory"
+				Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+				Click the "Search" button
+		Screenshot "inventory_all_sites_begin"
+		Begin "Transferring from a Location w/o a stockpile to the general inventory at a Location with stockpiles"
+			Click the @"Transfer" link in the "lisinpril" 48 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td[.="48"]/following-sibling::td/a[contains(.,"Transfer")]
+			Screenshot "transferdlg"
+			Type "12" in the "Quantity" input
+			Select "Hospital" in the 1st "Destination" dropdown
+			Select "n/a" in the 2nd "Destination" dropdown
+			Type "Gave to Sue" in the "Comment" input
+			Click the "Save" button
+			Verify exists The "12 of Inventory Lot (abc123) Successfully Transferred from Office to Hospital." text
+		Begin "Transferring between Stockpiles at a location"
+			Begin "Reset View to show all Inventory"
+				Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+				Click the "Search" button
+			Click the @"Transfer" link in the "lisinpril" 20 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td[.="20"]/following-sibling::td/a[contains(.,"Transfer")]
+			# verifying that we clicked the correct row
+			Verify "value=20" the "Quantity" input
+			#Verify the "Quantity" input should contain "20"
+			Type "6" in the "Quantity" input
+			Select "Hospital" in the "Destination" dropdown
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Select "Store Room A" in the @"Stockpile" dropdown@xpath=//select[@name='stockpile_id']
+			Type "Gave to Jen" in the "Comment" input
+			Click the "Save" button
+			Verify exists The "6 of Inventory Lot (abc123) Successfully Transferred from Hospital:Store Room B to Hospital:Store Room A." text
+		Begin "Transferring between a Location and another Location's stockpile"
+			Begin "Reset View to show all Inventory"
+				Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+				Click the "Search" button
+			Click the @"Transfer" link in the "lisinpril" 36 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td[.="36"]/following-sibling::td/a[contains(.,"Transfer")]
+			Type "8" in the "Quantity" input
+			Select "Hospital" in the 1st "Destination" dropdown
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Select "Store Room B" in the 2nd "Destination" dropdown
+			Type "Gave to Bob" in the "Comment" input
+			Click the "Save" button
+			Verify exists The "8 of Inventory Lot (abc123) Successfully Transferred from Office to Hospital:Store Room B." text
+		Begin "Transferring between the general inventory at a location and one of the location's stockpiles"
+			Begin "Reset View to show all Inventory"
+				Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+				Click the "Search" button
+			Click the @"Transfer" link in the "lisinpril" 30 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td[.="30"]/following-sibling::td/a[contains(.,"Transfer")]
+			Type "14" in the "Quantity" input
+			Select "Hospital" in the "Destination" dropdown
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Select "Store Room A" in the @"Stockpile" dropdown@xpath=//select[@name='stockpile_id']
+			Type "Gave to Alice" in the "Comment" input
+			Click the "Save" button
+			Verify exists The "14 of Inventory Lot (987xzy) Successfully Transferred from Hospital to Hospital:Store Room A." text
+		Begin "Verify the current counts are correct"
+			Screenshot "transferred"
+	Begin "Returning the quantities to their original locations"
+			Begin "Reset View to show all Inventory"
+				Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+				Click the "Search" button
+		Begin "Transferring from a Location with stockpiles to a Location w/o a stockpile"
+			Click the @"Transfer" link in the "lisinpril" 12 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td[.="12"]/following-sibling::td/a[contains(.,"Transfer")]
+			Type "12" in the "Quantity" input
+			Select "Office" in the "Destination" dropdown
+			Type "Gave to Mike" in the "Comment" input
+			Click the "Save" button
+			Verify exists The "12 of Inventory Lot (abc123) Successfully Transferred from Hospital to Office." text
+		Begin "Transferring between Stockpiles at a location"
+			Begin "Reset View to show all Inventory"
+				Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+				Click the "Search" button
+			Click the @"Transfer" link in the "lisinpril" 6 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td[.="6"]/following-sibling::td/a[contains(.,"Transfer")]
+			# verifying that we clicked the correct row
+			Verify "value=6" the "Quantity" input
+			Type "6" in the "Quantity" input
+			Select "Hospital" in the "Destination" dropdown
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Select "Store Room B" in the @"Stockpile" dropdown@xpath=//select[@name='stockpile_id']
+			Type "Gave to Bob" in the "Comment" input
+			Click the "Save" button
+			Verify exists The "6 of Inventory Lot (abc123) Successfully Transferred from Hospital:Store Room A to Hospital:Store Room B." text
+		Begin "Transferring between a location's stockpile and a location w/o stockpiles"
+			Begin "Reset View to show all Inventory"
+				Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+				Click the "Search" button
+			Click the @"Transfer" link in the "lisinpril" 28 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td[.="28"]/following-sibling::td/a[contains(.,"Transfer")]
+			Type "8" in the "Quantity" input
+			Select "Office" in the "Destination" dropdown
+			Type "Gave to Mike" in the "Comment" input
+			Click the "Save" button
+			Verify exists The "8 of Inventory Lot (abc123) Successfully Transferred from Hospital:Store Room B to Office." text
+		Begin "Transferring between a stockpile and the general inventory at that location"
+			Begin "Reset View to show all Inventory"
+				Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+				Click the "Search" button
+			Click the @"Transfer" link in the "lisinpril" 14 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td[.="14"]/following-sibling::td/a[contains(.,"Transfer")]
+			Type "14" in the "Quantity" input
+			Select "Hospital" in the "Destination" dropdown
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Select "n/a" in the @"Stockpile" dropdown@xpath=//select[@name='stockpile_id']
+			Type "Gave to Sue" in the "Comment" input
+			Click the "Save" button
+			Verify exists The "14 of Inventory Lot (987xzy) Successfully Transferred from Hospital:Store Room A to Hospital." text
+		Begin "Verify the current counts are correct"
+			Screenshot "returned"
+Begin "Verify Editing a Quantity"
+	Click the @"Edit" link in the "lisinpril" 48 row@xpath=//td[contains(.,"lisinopril")]/following-sibling::td[.="48"]/following-sibling::td/a[contains(.,"Edit")]
+	Type "46" in the "New Quantity" input
+	Type "miscounted" in the "Comment" input
+	Click the "Save" button
+	Verify exists the "Successfully Updated Inventory Item (0002)" text
+Begin "Verify hiding out of stock items"
+	Begin "Reset View to show all Inventory"
+		Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+		Click the "Search" button
+	Click the "Hide Out Of Stock" link
+	Screenshot "hideoos"
+	Begin "Verify showing out of stock items"
+		Click the "Show Inventory" charttab
+		Begin "Reset View to show all Inventory"
+			Select "All" from the @"Sites" dropdown@xpath=//select[@name='ib.location']
+			Click the "Search" button
+		Click the "Show Out Of Stock" link
+		Begin "the table body in the 'General Inventory' table"
+			# in the 2nd row
+			Begin "Verify counts"
+				Verify exists the @"lisinopril 10 mg tablet" text in the "Item Name" cell@xpath=//tr[2]/td/a[contains(.,'lisinopril 10 mg tablet')]
+				Verify exists the @"30" text in the "Qty" cell@xpath=//tr[2]/td[.='30']
+				Verify exists the @"Hospital" text in the "Site" cell"@xpath=//tr[2]/td[.='Hospital']
+				Verify exists the @"987xzy" text in the "Lot" cell@xpath=//tr[2]/td[contains(.,'987xzy')]
+			# in the 3rd row
+			Begin "Verify counts"
+				Verify exists the @"lisinopril 10 mg tablet" text in the "Item Name" cell@xpath=//tr[3]/td/a[contains(.,'lisinopril 10 mg tablet')]
+				Verify exists the @"0" text in the "Qty" cell@xpath=//tr[3]/td[.='0']
+				Verify exists the @"Hospital: Store Room A" text in the "Site" cell"@xpath=//tr[3]/td[.='Hospital: Store Room A']
+				Verify exists the @"987xzy" text in the "Lot" cell@xpath=//tr[3]/td[contains(.,'987xzy')]
+			# in the 4th row
+			Begin "Verify counts"
+				Verify exists the @"lisinopril 20 mg tablet" text in the "Item Name" cell@xpath=//tr[4]/td/a[contains(.,'lisinopril 20 mg tablet')]
+				Verify exists the @"0" text in the "Qty" cell@xpath=//tr[4]/td[.='15']
+				Verify exists the @"Hospital: Store Room A" text in the "Site" cell"@xpath=//tr[4]/td[.='Hospital: Store Room A']
+				Verify exists the @"axy391" text in the "Lot" cell@xpath=//tr[4]/td[contains(.,'axy391')]
+			# in the 5th row
+			Begin "Verify counts"
+				Verify exists the @"lisinopril 5 mg tablet" text in the "Item Name" cell@xpath=//tr[5]/td/a[contains(.,'lisinopril 5 mg tablet')]
+				Verify exists the @"0" text in the "Qty" cell@xpath=//tr[5]/td[.='0']
+				Verify exists the @"Hospital" text in the "Site" cell"@xpath=//tr[5]/td[.='Hospital']
+				Verify exists the @"abc123" text in the "Lot" cell@xpath=//tr[5]/td[contains(.,'abc123')]
+			# in the 6th row
+			Begin "Verify counts"
+				Verify exists the @"lisinopril 5 mg tablet" text in the "Item Name" cell@xpath=//tr[6]/td/a[contains(.,'lisinopril 5 mg tablet')]
+				Verify exists the @"0" text in the "Qty" cell@xpath=//tr[6]/td[.='0']
+				Verify exists the @"Hospital: Store Room A" text in the "Site" cell"@xpath=//tr[6]/td[.='Hospital: Store Room A']
+				Verify exists the @"abc123" text in the "Lot" cell@xpath=//tr[6]/td[contains(.,'abc123')]
+			# in the 7th row
+			Begin "Verify counts"
+				Verify exists the @"lisinopril 5 mg tablet" text in the "Item Name" cell@xpath=//tr[7]/td/a[contains(.,'lisinopril 5 mg tablet')]
+				Verify exists the @"20" text in the "Qty" cell@xpath=//tr[7]/td[.='20']
+				Verify exists the @"Hospital: Store Room B" text in the "Site" cell"@xpath=//tr[7]/td[.='Hospital: Store Room B']
+				Verify exists the @"abc123" text in the "Lot" cell@xpath=//tr[7]/td[contains(.,'abc123')]
+			# in the 8th row
+			Begin "Verify counts"
+				Verify exists the @"lisinopril 5 mg tablet" text in the "Item Name" cell@xpath=//tr[8]/td/a[contains(.,'lisinopril 5 mg tablet')]
+				Verify exists the @"46" text in the "Qty" cell@xpath=//tr[8]/td[.='46']
+				Verify exists the @"Office" text in the "Site" cell"@xpath=//tr[8]/td[.='Office']
+				Verify exists the @"abc123" text in the "Lot" cell@xpath=//tr[8]/td[contains(.,'abc123')]

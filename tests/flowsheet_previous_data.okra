@@ -1,0 +1,50 @@
+Begin "Enter data in Past Medical History chart tab"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Begin "Enter Social History data"
+		Click the "Medical Record" charttab
+		Click the "Social History" charttab subtab
+		Open the "Social History" dynamicsection
+		Select "Never smoker" from the "Smoking Status" flowsheet dropdown
+		# Hidden radios get in the way so we have to do this magical reference
+		Click the 11th radio
+		Click the 14th radio
+		Close the "Social History" dynamicsection
+	Begin "Verify Social History data"
+		Verify exists "Never smoker" text
+		Verify exists "Sexually Active" text
+		Verify exists "Yes" text
+		Verify exists "Alcohol Use" text
+		Verify exists "No" text
+	Begin "Enter Gynecology History data"
+		Click the "Medical Record" charttab
+		Click the "Past Medical History" charttab subtab
+		Open the "Gynecology History" dynamicsection
+		Enter '02-02-2007' in the date
+		Click the 1st radio
+		Close the "Gynecology History" dynamicsection
+	Begin "Verify Gynecology History data"
+		Verify exists "02-02-2007" text
+		Verify exists "Menstrual Period Regularity:" text
+		Verify exists "Regular" text
+	Begin "Add Visit encounter to see previous data"
+		Click the "Summary" charttab
+		Click the "Add Visit" link
+		@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+		@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=15)
+		Begin "Un-hide Gynecology history"
+					Click the @Tools button@xpath='//div[@id="wc_encnav_buttons"]/a[@title="Tools"]'
+					Click the "!Gynecology History" text
+					Click the @Close button@xpath='//button[@class="xclose"]'
+	Begin "Verify previous Social History data"
+		Scroll "Social History" dynamicsection
+		Verify exists "Never smoker" text
+		Verify exists "Sexually Active" text
+		Verify exists "Alcohol Use" text
+	Begin "Verify previous Gynecology History data"
+		Scroll "Social History" dynamicsection
+		Verify exists "02-02-2023" text
+		Verify exists "Menstrual Period Regularity:" text
+		Verify exists "Regular" text

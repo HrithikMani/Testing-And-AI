@@ -1,0 +1,36 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Click the "Legacy Data Import" link
+	Verify exists "Please Choose Data Import type:" text 
+	Select "Respirator Fit Test Data CSV API" in the opp dropdown
+	Click the Go button
+	@driver.getWebDriver().switch_to.frame("di_frame_Respirator_20Fit_20Test")
+	Click the "DI_Verbose" checkbox
+	Type 'RespFitImportSuccess.csv' in the 'csv_file' input
+	Click the "Upload" button
+	Verify exists "Successfully imported file RespFitImportSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+Begin "Validate Respirator Fit values"
+	Begin "Check values for William Hart"
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Click the " EMP #" radio
+		Type "10019" in the "sstring" input
+		Click the "Search" button
+		Verify exists "TEST-10019" text
+		Click the "Health Surveillance" charttab
+		Click the "Respirator Info" charttab subtab
+		Verify exists "Pass - Full Face large on 03-14-2006" text
+	Begin "Check values for Jennifer Pregnant"
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Click the " EMP #" radio
+		Type "10021" in the "sstring" input
+		Click the "Search" button
+		Verify exists "TEST-10021" text
+		Click the "Health Surveillance" charttab
+		Click the "Respirator Info" charttab subtab
+		Verify exists "Pass - Full Face medium on 02-14-2005" text

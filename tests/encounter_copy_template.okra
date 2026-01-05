@@ -1,0 +1,63 @@
+"""
+@filedeps: system/layouts/Template/default.html,system/layouts/Template/CopyTemplate.html,system/layouts/Common/DynamicButtons.html,system/layouts/encounters/Visit.html,system/layouts/WCENCSECTION/Smart Plan.html
+@owners: aris
+@systemType: EH
+"""
+Begin "Turn on the needed settings"
+	@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{nurse_username}')
+Begin "Nurse adds Visit encounter on Christine Harris"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	Begin "Encounter"
+		@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+		@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+		Open the "Encounter" dynamicsection
+		Enter "02-02-2007" into the DED_serv_date date
+		Enter "Selenium, Selenium" in the provider_chart_ac_input autocomplete
+		Click the dynamicsection nextbutton
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+	Begin "Add Anxiety condition to Smart Plan"
+		Unmask dynamicsection
+		Add "Smart Plan" quicklist item
+		Verify exists "Add Assessment" popup
+		Enter "Anxiety" in the "Name" autocomplete
+		Enter "08-08-2010" in the "Onset Date" date
+		Enter "Selenium, Selenium" in the "Managed By" autocomplete
+		Click the 1st "Save" popup button
+		Verify exists "Anxiety" dynamicitem
+	Begin "Add Review of Systems items"
+		Open the "Review of systems" dynamicsection
+		Begin "General row"
+			Verify exists "Normal activity" button
+			Click the "Normal activity." button
+		Begin "Eyes row"
+			Type "Patient experiences dry eyes." in the "Eyes" freetext field
+		Close the "Review of systems" dynamicsection
+		Begin "Verify changes to Review of Systems"
+			Verify exists "General" text
+			Verify exists "Normal activity" text
+			Verify exists "Eyes:" text
+			Verify exists "Patient experiences dry eyes" text
+	Begin "Closing out the patient's encounter"
+		Click the "Archive & Close" button
+		Verify exists "Encounter has been closed and Archived successfully as Document" text
+	Begin "Nurse adds new Visit encounter"
+		Click the "Summary" charttab
+		Open the quicklink list
+		Click the "Add Visit" quicklink
+		30:Verify exists "Copy" button
+		Click the "Copy" button
+		Verify exists "Copy" popup
+		Verify exists "Selenium, Selenium VISIT" link
+		Verify exists "Anxiety" text
+		Click the 2nd "COPY" link
+		@Wait for the page to reload@driver.sleep(5)
+		60:Verify exists "Anxiety" text
+		Hover "Subjective" jumptab
+		Click the "Review of systems" jumptab
+		Verify exists "Normal activity" text
+		Verify exists "Patient experiences dry eyes" text

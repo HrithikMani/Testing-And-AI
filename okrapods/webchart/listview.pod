@@ -1,0 +1,39 @@
+"""
+Pod used to interact with elements within MIE listviews
+
+- "listview name" queries for the given string contained within a span that is a child within a fieldset
+- "listview row" queries for the given string contained within any cell in any row of a table's body
+- "listview header" queries for the given string contained within a row that is a child of the table header
+- "listview footer" queries for the given string contained within a row that is a child of the table footer
+- "listview link" queries for the given string within an <a> tag, within any cell, in any row, of the body of the table.
+
+row is kind of misleading because it actually queries for a cell containing the given {OKRA_TEXT_CLS}. For the purposes of the tests I want it to query for the given string contained within any of the cells within a row. May change this later.
+
+Usage examples:
+	Verify exists "Executed Agreement" listview row
+	Verify exists "Doc ID" listview header
+	Verify exists "Displaying" listview footer
+	Verify exists "Angina bullosa" listview item
+
+	Click the "Hide" listview name
+	Click the "Serv Date" listview header
+	Click the "Show All" listview footer
+	Click the "Agreement" listview link
+	Click the "Angina bullosa" listview item
+"""
+
+name://table[contains(@class,"lv_root")]//fieldset//span{OKRA_TEXT_CLS}
+
+row://table[contains(@class,"lv_root")]/tbody//tr//td{OKRA_TEXT_CLS}
+
+header://table[contains(@class,"lv_root")]//thead//tr/th{OKRA_TEXT_CLS}
+	|//table[contains(@class,"lv_root")]//thead//tr/th/a{OKRA_TEXT_CLS}
+
+footer://table[contains(@class,"lv_root")]//tfoot//tr/td{OKRA_TEXT_CLS}
+	|//table[contains(@class,"lv_root")]//tfoot//tr/td/a{OKRA_TEXT_CLS}
+
+link://table[contains(@class,"lv_root")]/tbody//*[not(self::th)]//tr//td//a{OKRA_TEXT_CLS}
+	|//table[contains(@class,"zebra")]/tbody//*[not(self::th)]//td//a{OKRA_TEXT_CLS}
+
+item://table[contains(@class,"lv_root")]/tbody//td//*[contains(text(), "{OKRA_TEXT}")]
+

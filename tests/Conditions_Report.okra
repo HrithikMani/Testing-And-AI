@@ -1,0 +1,20 @@
+"""
+    Testing the Conditions Report screen
+    @owners: dcarlson
+    @filedeps: system/layouts/SystemReport/Conditions.html, system/reports/Conditions.sql
+"""
+
+Begin "Test Conditions Report"
+	Open the sidemenu
+	Click the "Reports" sidemenu entry
+	Click the "Visits" charttab
+	Click the "Conditions Report" charttab subtab
+	Verify exists "Clinical Status" text
+	Verify exists "Verification Status" text
+	Verify exists "Problem List" text
+	Verify exists "PMH" text
+	Verify exists "Deleted" text
+	Select "Active" in the "Clinical Status" dropdown
+	Select "Confirmed" in the "Verification Status" dropdown
+	Click the "Search" button
+	Verify exists "Conditions Report - DataVis" text

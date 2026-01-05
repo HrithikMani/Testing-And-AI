@@ -1,0 +1,67 @@
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+Open the sidemenu
+Click the "E-Chart" link
+Type "Rogers" in the "sstring" input
+Click the "Search" button
+Click the "Add Visit" link
+Begin "Add Conditions"
+	Verify exists "Smart Plan" "Congestive heart failure" quicklist item
+	Add "Smart Plan:Make New Assessment" "Congestive heart failure" quicklist item
+	Verify exists "Congestive heart failure" dynamicitem
+	Verify exists "Smart Plan" "Hypertension" quicklist item
+	Add "Smart Plan:Make New Assessment" "Hypertension" quicklist item
+	Verify exists "Hypertension" dynamicitem
+	Verify exists "Smart Plan" "Type 2 diabetes mellitus without complications" quicklist item
+	Add "Smart Plan:Make New Assessment" "Type 2 diabetes mellitus without complications" quicklist item
+	Verify exists "Type 2 diabetes mellitus without complications" dynamicitem
+Begin "Visit orders section"
+	Open the "Visit orders" dynamicsection
+	Click the "Make Labs Order" link
+	Begin "Verify Conditions"
+		@Scroll conditions into view@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath="//div[@id='conditionac_div']"))
+		Verify exists @Type 2 diabetes mellitus without complications @xpath="//div[contains(@id,'conditionac_div')]/div/span[contains(text(), 'Type 2 diabetes mellitus without complications')]"
+		Verify exists @Hypertension@xpath="//div[contains(@id,'conditionac_div')]/div/span[contains(text(), 'Hypertension')]"
+		Verify exists @CHF - Congestive heart failure@xpath="//div[contains(@id,'conditionac_div')]/div/span[contains(text(), 'CHF - Congestive heart failure')]"
+	Begin "Order Request MIEWindow"
+		Select "Selenium, Selenium" from the ordering_physician dropdown
+		Click the "RA Factor" picklist checkbox
+		Click the "Chloride" picklist checkbox
+		Click the "Magnesium" picklist checkbox
+		Click the "Potassium" picklist checkbox
+		Click the "Sodium" picklist checkbox
+		Click the "Submit" button
+	Begin "Finish Order Request MIEWindow"
+		Begin "RA Factor dialog"
+		Select "White/Caucasian" from the "Patient Race" field
+		Select "No" from the "Hispanic" field
+		Click the "Finish" Button
+		Close the "Visit orders" dynamicsection
+Open the "Lab Order" dynamicsection
+	Click the "Edit Order" link
+	Begin "Order Request MIEWindow (Edit)"
+		Click the "BUN" picklist checkbox
+		Click the "Urinalysis" picklist checkbox
+		Click the "Submit" button
+	Begin "Finish Order Request MIEWindow (Edit)"
+		Begin "RA Factor dialog"
+		Select "White/Caucasian" from the "Patient Race" field
+		Select "Yes" from the "Hispanic" field
+		Click the "Finish" button
+Begin "Lab Order MIESection"
+	Verify exists "Urinalysis" text
+Begin "Add new visit"
+	Click the "Summary" link
+	Click the "Add Visit" link
+	Click the "Yes" button
+	@ Click the "Type 1 diabetes mellitus without complications" button @ driver.clickElement(xpath="//li[contains(text(), 'Type 1 diabetes mellitus without complications')]")
+Begin "Verify only one condition shows for this encounter"
+	Open the "Visit orders" dynamicsection
+	Click the "Make Labs Order" link
+	@Scroll conditions into view@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath="//div[@id='conditionac_div']"))
+	Verify exists @Type 1 diabetes mellitus without complications @xpath="//div[contains(@id,'conditionac_div')]/div/span[contains(text(), 'Type 1 diabetes mellitus without complications')]"
+@@@Switch Back to New Requisition Screen
+driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@

@@ -1,0 +1,5 @@
+Click the @Learn more about these features link@xpath="//a[@id='getstartedlink']"
+Click the "Request setup with Quest Diagnostics" link
+Verify exists "Quest has been installed successfully" text
+Click the "Click here to return to the Administrator's page." link
+Verify exists "Quest Diagnostics setup has already been completed." text

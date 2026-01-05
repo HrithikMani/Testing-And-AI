@@ -1,0 +1,21 @@
+"""
+ Legacy observation 
+ Add @ to filedeps below and update the ###
+ @filedeps: src/observe.c
+"""
+
+Begin "Go to Simmons, Nicole's Chart"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "Name" radio
+	Type "Simmons" in the "sstring" input
+	Click the "Search" button
+	Verify exists "TEST-10030" link
+	Click the "TEST-10030" link
+Begin "Test observations"
+	Click the "Medical Record" charttab
+	Click the "Observations/Flowsheets" charttab subtab
+	Click the "Search" button
+	Click the 2nd "Current some day smoker" link
+@Switch Windows@driver.switchToPopup()
+	Verify exists "428041000124106" link

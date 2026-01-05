@@ -1,0 +1,19 @@
+@@@
+driver.miedb.dbExec('INSERT INTO security_exception (user_id, module_name, category_name, security_value) VALUES(8, \'E-Chart\', \'Manage SSN\', 0)')
+@@@
+Begin "Check No SSN Permissions"
+	Navigate '?f=chart'
+	Verify exists "XXX-XX-XXXX" text
+@@@
+driver.miedb.dbExec('UPDATE security_exception SET security_value = 1 WHERE user_id=8 AND module_name=\'E-Chart\' AND category_name=\'Manage SSN\'')
+@@@
+Begin "Check Partial SSN Permissions"
+	Navigate '?f=chart'
+	Verify exists "1111" text
+	Verify notexists "111-11-1111" text
+@@@
+driver.miedb.dbExec('UPDATE security_exception SET security_value = 2 WHERE user_id=8 AND module_name=\'E-Chart\' AND category_name=\'Manage SSN\'')
+@@@
+Begin "Check Full SSN Permissions"
+	Navigate '?f=chart'
+	Verify exists "111-11-1111" text

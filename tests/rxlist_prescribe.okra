@@ -1,0 +1,39 @@
+# Get to William Hart
+Open the sidemenu
+Click the "Control Panel" link
+Click the "My Settings" charttab
+Select Show from the "E-ChartMeds/AllergiesUnsent Scripts in Alert Bar" dropdown
+Click the "Submit Settings" button
+Open the sidemenu
+Click the E-Chart link
+Click the TEST-10019 link
+Click the "Medical Record" charttab
+Click the Allergies/Medications link
+Click the Prescribe link
+# Begin prescribing amoxicillin
+Enter amoxicil in the qp_acval0 autocomplete
+# Type "tablet 500" in the qp_formacval0 autocomplete
+# @Wait for select and blur events to finish@driver.sleep(5)
+# Close the "Warning for amoxicillin" popup
+# Enter "tablet 500" in the qp_formacval0 autocomplete
+Click the "tablet 500mg" autocomplete choice
+# @Wait for select and blur events to finish@driver.sleep(5)
+Close the "Warning for amoxicillin" popup
+# Prescribe Keflex instead
+Click the 1st "Clear" button
+Enter Kefle in the qp_acval0 autocomplete
+#Type "capsule 500" in the qp_formacval0 autocomplete
+#@Wait for select and blur events to finish@driver.sleep(5)
+#Close the "Warning for Keflex" popup
+Click the "capsule 500mg" autocomplete choice
+#Enter "capsule 500" in the qp_formacval0 autocomplete
+Close the "Warning for Keflex" popup
+Type "1 bid po" in @id=qp_sig0
+@Blur sig@driver.runJS("jQuery('#qp_sig0').blur()")
+Type 7d in @id=qp_duration0
+@Blur duration@driver.runJS("jQuery('#qp_duration0').blur()")
+Type 0 in @id=qp_refills0
+Select "Selenium, Selenium" from @id=qp_doctor_id0
+Click the 1st "Prescribe" button
+Verify exists "Keflex 500 mg capsule" text
+Verify exists @Unsent prescriptions alert item@xpath='//span[@id="unsent_span"]/a[contains(text(),"Unsent prescriptions")]'

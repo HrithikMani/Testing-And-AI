@@ -1,0 +1,59 @@
+"""
+    Unit Test for Send Claim to TPA row in Case Section
+    @owners: ccartwright
+    @filedeps: system/layouts/WCENCSECTION/EditIncidentInputs.html
+"""
+Click the "TEST-10019" link
+Open the quicklink list
+Click the "Add Visit" quicklink
+Begin "Case"
+	# Lifted from dynamic_encounter_workflow.okra since I didnt want to add this to that test.
+	Open the "Case" dynamicsection
+	#Click the "Injury (OSHA Standard)" radio
+	Click the 1st radio
+	@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath='//input[not(@disabled) and @type="radio"][contains(following-sibling::text(), "result of a single event")]'), timeout=30)
+	Click the "result of a single event" radio
+	#Click the 8th radio
+	Enter "08-08-1980 1314" in the 1st date
+	Type "0900" in the "DID_employee_starttime" input
+	Enter "08-08-1980 1500" in the 2nd date
+	Enter "08-08-1980" in the 4th date
+	Click the "Yes" radio
+	Click the "Injury" radio
+	Click the 3rd "Yes" radio
+	Click the "Not Denied" radio
+	Select "Major contributing cause" from the "Early Investigation Unit" dropdown
+	Enter "08-11-1980" in the "DID_osha_completed_dt" date
+	Enter "08-11-1980 0900" in the "DID_ca_dwc1_form" date
+	Click the "onsite location" radio
+	Enter "Better Corp" in the "incident_location_acinp" autocomplete
+	Type "Secondary fertilizer tank" in the "Where the event occurred" freetext field
+	Type "Cleaning the walkway around the top of the tank with a pushbroom" in the "What was the employee doing just before the incident occurred?" freetext field
+	Type "The employee's hat fell into the septic system, and he fell in trying to retrieve it." in the "What happened? Tell us how the injury occurred." freetext field
+	Type "septic chemicals caused a rash and the fall twisted his ankle" in the "What object or substance directly harmed the employee?" freetext field
+	Select "Chemicals" from the "Cause of Injury" dropdown
+	Click the 5th "Yes" radio
+	Type "The employee went in the chemical shower and packed ice around his ankle" in the "Please describe the treatment provided" freetext field
+	Click the "Onsite Health Services" radio
+	Select "Office" from the "DII_ohs_location" dropdown
+	@Scroll Authorized providers into View@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath="//div[contains(text(),'Authorized providers')]"))
+	Enter "Selenium, Selenium" in the "le_incusers_le_iu_id_value_ac_field" autocomplete
+	Select "Occupational Medicine" from the "Authorized providers" table dropdown
+	Click the 1st "Add" button
+	Select "Sprain/Strain" from the "Nature of injury" table dropdown
+	Select "Ankle - Left" from the 2nd "Nature of injury" table dropdown
+	Type "The sprain is quite severe" in the "Nature of injury" table textarea
+	Click the 2nd "Add" button
+	Select "Burn" from the "Nature of injury" table dropdown
+	Select "General Body" from the 2nd "Nature of injury" table dropdown
+	Type "This is a chemical burn caused by the septic tank chemicals Mr. Hart fell in" in the "Nature of injury" table textarea
+	Verify !exists "Send claim to" text
+	Click the 2nd "Add" button
+	Close the "Case" dynamicsection
+@Add the "Send claim to TPA obs_code@driver.miedb.dbExec("INSERT INTO observation_codes SET obs_name='Send claim to TPA', obs_type='LIST'")
+@Add a value to this obs_code@driver.miedb.dbExec("INSERT INTO observation_codes_list (obs_code, obs_result, obs_result_desc, sort_order) SELECT oc.obs_code, 'CorVel', 'CorVel', 1 FROM observation_codes oc ORDER BY oc.obs_code DESC LIMIT 1")
+Begin "Confirm the 'Send Claim to' row is visible"
+	Open the "Case" dynamicsection
+	Verify exists "Send claim to" text
+	Close the "Case" dynamicsection
+@Sweep up@driver.miedb.dbExec("DELETE oc, ocl FROM observation_codes oc INNER JOIN observation_codes_list ocl USING(obs_code) WHERE oc.obs_name='Send claim to TPA'")

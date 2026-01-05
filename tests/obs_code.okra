@@ -1,0 +1,37 @@
+Open the sidemenu
+Click the "Control Panel" sidemenu entry
+Click the "Chart" charttab
+Click the "Observation Codes" charttab subtab
+Begin "Add a New Observation Code"
+	Click the "Add Observation Code" link
+	Type "Kessel" in the "obs_name" input
+	Enter "ns " in the "obs_units_txt" autocomplete
+	Click the @Save button@xpath=//input[@name="obs_submit"]
+	Verify exists "Successfully added new observation code." text
+	Verify exists "No Translations Processed." text
+	Verify exists "No Discrete Values Processed." text
+	Type 'kessel' in the 'select_text' input
+	Click the 'Go' button
+	Verify exists "Kessel" listview row
+Begin "Edit the Observation"
+	Click the @Kessel observation Edit link@xpath=//td/a[contains(.,"Kessel")]/following::a[contains(.,"Edit")][1]
+	Type "Kesselrun" in the "obs_name" input
+	Type "0-12, >12" in the "obs_range" input
+	Click the @Save button@xpath=//input[@name="obs_submit"]
+	Verify exists "Successfully updated observation code." text
+	Verify exists "Kesselrun" listview row
+Begin "Delete the Observation"
+	Click the @Kessel observation Delete link@xpath=//td/a[contains(.,"Kessel")]/following::a[contains(.,"Delete")][1]
+	Click the @Delete button@xpath=//input[@type="SUBMIT"][@name="obs_submit"][@value="Delete"]
+	Verify exists "was successfully deleted." text
+Begin "Test the alerts"
+	Begin "Add without a name"
+		Click the "Add Observation Code" link
+		Click the @Save button@xpath=//input[@name="obs_submit"]
+		Verify exists "Observation Name is required" text
+	Begin "Invalid unit of measure alert"
+		Click the "Add Observation Code" link
+		Type "Alert" in the "obs_name" input
+		Type "parsec" in the "obs_units_txt" autocomplete
+		Verify exists "WARNING: You have chosen an invalid UCUM unit." text
+		Verify exists "This unit structure may not conform to CCDA document creation validation standards." text

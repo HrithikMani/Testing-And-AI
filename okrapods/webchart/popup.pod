@@ -1,0 +1,100 @@
+"""
+Pod used for interacting with miewin modals
+
+Usage examples:
+	Close popup
+	Close the "Warning for Topamax" popup
+	Verify exists "An STS (Standard Threshold Shift) has been detected" popup message
+	Click the "Submit" popup button
+	Type "500" into the 2nd popup input
+	Verify exists "Attention" popup
+	Verify exists "Document Add/Edit" window
+
+"""
+
+popup:(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//div[contains(@class, "wc_win_title")]
+	|//div[@class="wc_win"]//div[contains(@class, "wc_win_title")]
+	|//div[@class="wc_win"]//div{OKRA_TEXT_CLS}
+	|//div[@class="wc_win"]//div[@class="wc_win_title"]
+	|//div{OKRA_TEXT_CLS}/following-sibling::div[@class="modal-body"]
+	|//div[@class="modal-body"]
+	|//div[@class="modal-dialog"]
+	|//div[contains(@class, "modal")]
+	|//div[@class="wc_win"]
+
+window://head/title{OKRA_TEXT_CLS}
+
+textarea:(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//label{OKRA_TEXT_CLS}/following-sibling::div//textarea
+	|(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//tr{OKRA_TEXT_CLS}//textarea
+	|//div[@class="wc_win"]//label{OKRA_TEXT_CLS}/following-sibling::div//textarea
+	|//div[@class="wc_win"]//div{OKRA_TEXT_CLS}/following-sibling::div/textarea
+	|//div[@class="wc_win"]//tr{OKRA_TEXT_CLS}//textarea
+	|//div[@class="wc_win_title"]{OKRA_TEXT_CLS}/ancestor::div[@class="wc_win"]//div//textarea
+	|//div[@class="wc_win"]//textarea|@id|@name
+
+input:(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//table//tr/td{OKRA_TEXT_CLS}/following-sibling::td//input[@type!="hidden" and @type!="submit"]
+	|(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//table//tr/td{OKRA_TEXT_CLS}/following-sibling::td//input
+	|//div[@class="wc_win"]//table//tr/td{OKRA_TEXT_CLS}/following-sibling::td//input[@type!="hidden" and @type!="submit"]
+	|//div[@class="wc_win"]//label{OKRA_TEXT_CLS}/following-sibling::div//input[@type!="hidden" and @type!="submit"]
+	|//div[@class="wc_win"]//table//tr/td{OKRA_TEXT_CLS}/following-sibling::td//input
+	|//div[@class="wc_win"]//center{OKRA_TEXT_CLS}/input[@type!="hidden" and @type!="submit"]
+	|//div[@class="wc_win"]//input[@type!="hidden" and @type!="submit" and contains(@placeholder, "{OKRA_TEXT}")]
+	|//div[@class="wc_win"]//input[@type!="hidden" and @type!="submit"]|@id|@name
+	|//div[@class="wc_win"]//textarea|@id|@name
+
+button:(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//button[@type="button" and contains(.,"{OKRA_TEXT}")]
+	|(//div[@class="wc_win"])[last()]//button[(@type="button" or not(@type)) and contains(.,"{OKRA_TEXT}")]
+	|(//div[@class="wc_win"])[last()]//button[(@type="button" or not(@type)) and contains(@title,"{OKRA_TEXT}")]
+	|(//div[@class="wc_win"])[last()]//input[@type="button" and contains(@value,"{OKRA_TEXT}")]
+	|(//div[@class="wc_win"])[last()]//input[@type="submit" and contains(@value,"{OKRA_TEXT}")]
+	|//div[@class="modal-content"]//button[contains(., "{OKRA_TEXT}")]
+	|(//div[@class="wc_win"])[last()]//button|@id|@name|@title
+	|//div[@class="wc_win"]//span[last()]{OKRA_TEXT_CLS}|@id|@name|@title
+
+link:(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//a[last()]{OKRA_TEXT_CLS}
+	|//div[@class="wc_win"]//a[last()]{OKRA_TEXT_CLS}|@id|@name|@title
+	|//div[@class="wc_win"]//span[last()]{OKRA_TEXT_CLS}|@id|@name|@title
+	|//div[@class="wc_win"]//span|@id|@name|@title
+	|//div[@class="wc_win"]//a|@id|@name|@title
+
+message:(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//div[contains(@class,"wc_win_body")]{OKRA_TEXT_CLS}
+	|//div[@class="wc_win"]//div[contains(@class,"wc_win_body")]{OKRA_TEXT_CLS}
+
+dropdown://div[@class="wc_win"]//*[self::h2 or self::h3][contains(., "{OKRA_TEXT}")]/following-sibling::div//select[not(@type="hidden") and not(@disabled)]
+	|(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//div[contains(., "{OKRA_TEXT}")]/following-sibling::div//select[not(@disabled)]
+	|//div[@class="wc_win"]//div/span[contains(., "{OKRA_TEXT}")]/parent::div/parent::div/following-sibling::div//select[not(@type="hidden") and not(@disabled)]
+	|//div[@class="wc_win"]//td[contains(., "{OKRA_TEXT}")]/following-sibling::td//select[not(@disabled)]
+	|//div[@class="wc_win"]//*[contains(., "{OKRA_TEXT}")]/following-sibling::div//select[not(@disabled)]
+	|//div[@class="wc_win"]//div//select[not(@disabled)]|@id|@name
+
+text:(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//div[contains(@class, "wc_win_body")]{OKRA_TEXT_CLS}
+	|(//div[@class="wc_win"]/following::div[@class="wc_win"])[last()]//div[contains(@class, "wc_win_body")]
+	|//div[@class="wc_win"]//div[contains(@class, "wc_win_body")]//tbody//td{OKRA_TEXT_CLS}
+	|//div[@class="wc_win"]//div[contains(@class, "wc_win_body")]//div/div{OKRA_TEXT_CLS}
+	|//div[@class="wc_win"]//div[contains(@class, "wc_win_body")]{OKRA_TEXT_CLS}
+	|//div[@class="wc_win"]//div{OKRA_TEXT_CLS}
+	|//div[@class="wc_win"]{OKRA_TEXT_CLS}
+
+radio://div[@class="wc_win"]//label{OKRA_TEXT_CLS}/preceding-sibling::input[not(@type="hidden") and @type="radio"]
+	|//div[@class="wc_win"]//label{OKRA_TEXT_CLS}/input[not(@type="hidden") and @type="radio"]
+	|//div[@class="wc_win"]//input[not(@disabled) and @type="radio"]|following-sibling::text()
+
+@Close
+@@@
+cmd = 'Close Popup'
+if OKRA_TEXT:
+	# Try to find the miewin by title
+	driver.clickElement(xpath='''//div[@class="wc_win"][last()]//div[contains(@class, 'wc_win_title') and contains(., '{OKRA_TEXT}')]/parent::div/*[self::input or self::button][contains(@class, 'xclose')]|//div[contains(@class, "modal")]//div[contains(., "{OKRA_TEXT}")]''')
+else:
+	# Just close the most recent one by hitting ESCAPE
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	from selenium.webdriver.common.keys import Keys
+	modal = '//div[contains(@class, "wc_win") or contains(@class, "modal") or contains(@class, "miewin") or contains(@class, "growl")]'
+	if driver.waitFor(driver, lambda d: d.getElement(xpath=modal), expected_return=True, timeout=60):
+		driver.pause(10)
+		ActionChains(wd).send_keys(Keys.ESCAPE).perform()
+		driver.reportCommandStatus(cmd, 'Escape key sent', True, '', '')
+	else:
+		driver.reportCommandStatus(cmd, 'Modal element not found', False, '', '')
+@@@

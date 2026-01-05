@@ -1,0 +1,27 @@
+"""
+ Negations Section Tests
+ @owners: dcarlson nrichardson 
+ @filedeps: jsbin/wcscriptlets.js, system/layouts/Autocomplete/negations.html, system/layouts/Common/NegsQuickList.html, system/layouts/ObjectWin/negationId.html, system/layouts/WCENCSECTION/Negations.html, system/layouts/dynList/NegationsCurrent.html, system/layouts/dynList/NegsQuickList.html
+"""
+Begin "Nurse adds Visit encounter on Christine Harris"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+Begin "Un-hide Negations"
+	Click the @Tools button@xpath='//div[@id="wc_encnav_buttons"]/a[@title="Tools"]'
+	Click the "!Negations" text
+	Click the @Close button@xpath='//button[@class="xclose"]'	
+Begin "Test Negations" items
+	Wait for ajax
+	Unmask dynamicsection
+	Toggle the "Negations" quicklist
+	Add "Negations" "Other" dynamicitem
+	Select "Intervention Performed" from the "Negation Type" dropdown
+	Enter "Medications for Above Normal BMI" in the "Negation of" autocomplete
+	Enter "Patient dissatisfied with result" in the "Reason" autocomplete
+	Click the "Save" popup button
+	Verify exists "Negation of Medications for Above Normal BMI" text	
+	Verify exists "Reason: Patient dissatisfied with result" text

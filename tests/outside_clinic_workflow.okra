@@ -1,0 +1,93 @@
+@Enable event logging for order_requests@driver.miedb.dbExec("REPLACE INTO system_settings SET module='System', section='DB Triggers - DML Log Event', item='order_requests', value='1'")
+@Set New Login Style@driver.miedb.dbExec("UPDATE system_settings SET value=1 WHERE item='New login style'")
+Begin "Add referral order for Christine Harris"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Verify exists sstring input
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Click the "Add Order" link
+	Begin "Order Request MIEWindow"
+		Enter "Outside Clinic" in the "referring_physician_pat_ac_input" autocomplete
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Select "Patel, Ashish" from the "ordering_physician" dropdown
+		Click the "Audiogram" picklist checkbox
+		Click the "Submit" popup button
+Begin "Add referral order for William Hart"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Verify exists sstring input
+	Type "Hart, William" into the sstring input
+	Click the Search button
+	Click the "TEST-10019" link
+	Click the "Add Order" link
+	Begin "Order Request MIEWindow"
+		Enter "Outside Clinic" in the "referring_physician_pat_ac_input" autocomplete
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Select "Patel, Ashish" from the "ordering_physician" dropdown
+		Click the "PFT" picklist checkbox
+		Click the "Submit" popup button
+Begin "Review referrals on Outiside Clinic chart"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Provider Management" link
+	Type "Outside Clinic" into the "name" input
+	Click the "Search" button
+	Wait for the EPMProviders grid
+	Click the "Outside Clinic" link
+	Verify !exists @Masked page@xpath=//div[contains(@class, 'masked')]
+	Click the "Portal Management" charttab
+	Click the "Outside Clinic View" charttab subtab
+	Verify exists @William Hart row in Routine Referrals@xpath=//div[contains(@class, 'portlet-header') and contains(.,'Routine Referrals')]/following-sibling::div//td[contains(.,'Hart')]/a[contains(@href, 'pat_id=18')]
+	Verify exists @Christine Harris row in Routine Referrals@xpath=//div[contains(@class, 'portlet-header') and contains(.,'Routine Referrals')]/following-sibling::div//td[contains(.,'Harris')]/a[contains(@href, 'pat_id=40')]
+	Open the sidemenu
+	Click the Logout sidemenu entry
+Begin "Login as Outside to update referrals"
+	Click the "Standard Login" button
+	Type "outside" into the "login_user" input
+	Type "selenium" into the "login_passwd" input
+	Click the "Next" button
+	Begin "Outside user updates referrals"
+		Click the @Edit link on William Hart row in Routine Referrals@xpath=//span[contains(@class, 'head') and contains(.,'Routine Referrals')]/following-sibling::div//a[contains(@onclick,'OCSched_OrdersWin(18')]
+		Begin "William Hart Request MIEWindow"
+			Enter "02-10-2027 1000" in the "requested_dt" date
+			Select "Submit for Acceptance" from the "status" dropdown
+			Click the "Submit" popup button
+			Verify !exists "Request" popup
+		Click the @Edit link for Christine Harris row in Routine Referrals@xpath=//span[contains(@class, 'head') and contains(.,'Routine Referrals')]/following-sibling::div//a[contains(@onclick,'OCSched_OrdersWin(40')]
+		Begin "Cristine Harris Request MIEWindow"
+			Enter "02-12-2027 1000" in the "requested_dt" date
+			Select "Submit for Acceptance" from the "status" dropdown
+			Click the "Submit" popup button
+		Navigate "?f=logout"
+Begin "Login as selenium to update referrals"
+	@Setup WCTestSession for Outside@driver.wcutils.insertWCTSession('selenium')
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Provider Management" link
+	Type "Outside Clinic" into the "name" input
+	Click the "Search" button
+	Wait for the EPMProviders grid
+	Click the "Outside Clinic" link
+	Verify !exists @Masked page@xpath=//div[contains(@class, 'masked')]
+	Click the "Portal Management" charttab
+	Click the "Outside Clinic View" charttab subtab
+	Click the @Edit link on William Hart row in Submitted for Acceptance@xpath=//div[contains(@class, 'portlet-header') and contains(.,'Submitted for Acceptance')]/following-sibling::div//a[contains(@onclick,'OCSched_OrdersWin(18')]
+	Verify exists "Request" popup
+	Begin "William Hart Request MIEWindow"
+		Verify exists "Status" popup dropdown
+		Select "Accepted" from the "Status" popup dropdown
+		Click the "Submit" popup button
+	Verify !exists "Request" popup
+	Click the @Edit link on Christine Harris row in Submitted for Acceptance@xpath=//div[contains(@class, 'portlet-header') and contains(.,'Submitted for Acceptance')]/following-sibling::div//a[contains(@onclick,'OCSched_OrdersWin(40')]
+	Verify exists "Request" popup
+	Begin "William Hart Request MIEWindow"
+		Verify exists "Status" popup dropdown
+		Select "Accepted" from the "Status" popup dropdown
+		Click the "Submit" popup button
+		Verify !exists "Request" popup
+Begin "Check if the referrals made it to Historical Data"
+	Click the "Portal Management" charttab
+	Click the "Outside Clinic Historical Data" charttab subtab
+	Verify exists @William Hart row in Historical Data@xpath=//td[contains(@class, 'OutsideClinicHistoricalData_Last_20Name_cell') and contains(.,'Hart')]
+	Verify exists @Christine Harris row in Historical Data@xpath=//td[contains(@class, 'OutsideClinicHistoricalData_Last_20Name_cell') and contains(.,'Harris')]

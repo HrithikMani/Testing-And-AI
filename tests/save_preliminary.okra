@@ -1,0 +1,27 @@
+Begin "Turn on the needed settings"
+	@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{nurse_username}')
+	@Add System Setting@driver.miedb.dbExec("REPLACE INTO system_settings (module, section, item, value, reason) VALUES ('E-Chart', 'Encounters', 'Show Save Preliminary Button', '1', 'Test saving preliminary encounter documents')")
+Begin "Nurse adds Visit encounter on Christine Harris"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	Begin "Chief complaint"
+		Open the "Chief complaint" dynamicsection
+		Type "Patient here for back pain " in the "enc_ccomplaint" input
+		Click the dynamicsection savebutton
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Verify exists "Patient here for back pain" text
+	Begin "Chief complaint"
+		Open the "Chief complaint" dynamicsection
+		Type "Correction: Patient here for pain in the back" in the "enc_ccomplaint" input
+		Close the "Chief complaint" dynamicsection
+	Begin "Save Preliminary"
+		Verify exists @Save Preliminary button in alert mode@xpath='//a[contains(@id, "save_prelim") and contains(@class, "alert")]'
+		@Get the max doc_id for this chart@driver.setUserData('mydocid', driver.miedb.dbQuery('SELECT MAX(d.doc_id) as max FROM documents AS d INNER JOIN patients AS p ON p.pat_id = d.pat_id WHERE p.last_name = "Harris" AND p.first_name = "Christine"').getRow(0)['max'])
+		Click the @Save Preliminary button@xpath='//a[contains(@id, "save_prelim")]'
+		Verify !exists @Save Preliminary button in alert mode@xpath='//a[contains(@id, "save_prelim") and contains(@class, "alert")]'
+		@Get the max doc_id for this chart after saving preliminary@driver.setUserData('mynewerdocid', driver.miedb.dbQuery('SELECT MAX(d.doc_id) as max FROM documents AS d INNER JOIN patients AS p ON p.pat_id = d.pat_id WHERE p.last_name = "Harris" AND p.first_name = "Christine"').getRow(0)['max'])
+		@Compare that my new doc_id is bigger than the old one@driver.reportCommandStatus('Comparing doc_ids', '', lambda d: (d.getUserData('mynewerdocid') if d.getUserData('mynewerdocid') is not None else 0) > (d.getUserData('mynewdocid') if d.getUserData('mynewdocid') is not None else 0), driver.getUserData('mynewerdocid'), driver.getUserData('mynewdocid'))

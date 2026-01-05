@@ -1,0 +1,8 @@
+Begin "Going to Interface link"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Interface" charttab
+	Click the "Inbound Demographics" link
+	Verify exists "Your current permission of 'No' in the ('Control','Manage Inbound Demographics') security setting does not allow access to the Inbound Demographics editor." text
+	Verify exists "A permission level of 'Yes' is required." text
+	Verify exists "Please see your administrator with any questions." text

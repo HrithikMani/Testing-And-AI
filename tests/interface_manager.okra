@@ -1,0 +1,168 @@
+Begin "Security and Permissions"
+	@Set 'Control, Manage External Interfaces' permission to no@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=0 WHERE security_role_id=1 AND module_name='Control' AND category_name='Manage External Interfaces';")
+	Begin "Navigate to page"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Wait for page
+		Click the "Interface" charttab
+		Click the "Interface Manager" charttab subtab
+		Wait for page
+	Begin "Verify No Access"
+		Refresh page
+		Verify exists "Your current permission in the (Control, Manage External Interfaces) security setting does not allow access to the Interface Manager" text
+		Verify notexists "Add Interface" button
+	Begin "Get access"
+		@Set 'Control, Manage External Interfaces' permission to yes@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=1 WHERE security_role_id=1 AND module_name='Control' AND category_name='Manage External Interfaces';")
+		@Set Upgrade Webchart to Yes@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=1 WHERE security_role_id=1 AND module_name='Control' AND category_name='Upgrade Webchart';")
+		@Flush memcache@driver.wcutils.flushMemcache()
+		Navigate "?f=wcversion&s=upgrade&opp=sec"
+		Click the "Reevaluate Security Permissions" link
+		Wait for ajax
+		Verify exists "upgrade process complete" text
+	Begin "Verify access"
+		Navigate "?f=layout&module=AdminConsole&name=InterfaceManager&tabmodule=admin&tabselect=Interface&ts_caption=Interface+Manager&tabmodule=admin&tabselect=Interface&ts_caption=Interface Manager"
+		Verify notexists "You do not have permission to manage external interfaces" text
+		Verify exists "No interfaces found" text
+
+Begin "Create Datafeed Interface"
+	Begin "Create New Datafeed Interface"
+		Click the "Add Interface" button
+		@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]//div[@class="wc_win_title" and text()="Add Interface"]'), timeout=30)
+		Type "Test Datafeed" into the "interface-name" popup input
+		Select "DataFeedTemplate" from the "interface-template" popup dropdown
+		Click the "Save" button
+		Wait for page
+		Verify exists "Test Datafeed" text
+		Verify exists "Datafeed" text
+
+	Begin "Verify Database After Creation"
+		@@@Get interface pat_id
+			return {
+				'df_pat_id': str(driver.miedb.dbQuery("SELECT pat_id FROM patients WHERE last_name='Test Datafeed' AND active=1").getRow(0)['pat_id']),
+				'props_obs_code': str(driver.miedb.dbQuery("SELECT obs_code from observation_codes WHERE obs_name='Interface Properties'").getRow(0)['obs_code']),
+				'cols_obs_code': str(driver.miedb.dbQuery("SELECT obs_code from observation_codes WHERE obs_name='Interface Columns'").getRow(0)['obs_code'])
+			}
+		@@@
+		@@@Verify necessary records were created
+			res = driver.miedb.dbQuery(f"SELECT chart_type_id FROM pat_chart_types WHERE pat_id={df_pat_id}")
+			driver.reportCommandStatus('Verify chart type is Interface', '', res.getRow(0)['chart_type_id'] == 15, '', '')
+			res = driver.miedb.dbQuery(f"SELECT count(*) AS obs FROM observations WHERE pat_id={df_pat_id} AND obs_code={props_obs_code}")
+			driver.reportCommandStatus('Verify properties observation exists', '', res.getRow(0)['obs'] == 1, '', '')
+			res = driver.miedb.dbQuery(f"SELECT count(*) AS obs FROM observations WHERE pat_id={df_pat_id} AND obs_code={cols_obs_code}")
+			driver.reportCommandStatus('Verify columns observation exists', '', res.getRow(0)['obs'] == 1, '', '')
+			res = driver.miedb.dbQuery(f"SELECT name FROM datafeed_interface WHERE pat_id={df_pat_id}")
+			driver.reportCommandStatus('Verify datafeed_interface record created', '', res.getRow(0)['name'] == 'Test Datafeed', '', '')
+		@@@
+
+	Begin "Update Interface Properties"
+		Click the Properties button
+		@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]//div[@class="wc_win_title" and text()="Edit Properties"]'), timeout=30)
+		Type "A new description for testing" into the "interface_description" popup input
+		Type "/sftp/datafeed" into the "file_path" popup input
+		Select "csv" from the "file_format" popup dropdown
+		Click the "Save" button
+		Wait for page
+		Verify exists "A new description for testing" text
+
+	Begin "Update Interface Columns"
+		Click the Fields button
+		@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]//div[@class="wc_win_title" and text()="Edit Columns"]'), timeout=30)
+		Click the "Add Field" button
+		Type "EmployeeID" into the "file_header" autocomplete
+		Type "patients_ext_id" into the "map_to" popup input
+		Select "Database" from the "map_as" popup dropdown
+		Select "Required" from the "req" popup dropdown
+		Click the "Add Field" button
+		Type "DOB" into the 2nd "file_header" autocomplete
+		Type "birth_date" into the 2nd "map_to" popup input
+		Select "Database" from the 2nd "map_as" popup dropdown
+		Click the "Save" button
+		Wait for page
+		@@@Verify new column in the datafeed config
+		res = driver.miedb.dbQuery(f"SELECT count(*) AS df FROM datafeed_interface WHERE pat_id={df_pat_id} AND config LIKE '%EmployeeID%' AND config LIKE '%patients_ext_id%' AND config LIKE '%DOB%' AND config LIKE '%birth_date%'")
+		driver.reportCommandStatus('Verify datafeed_interface updated', '', res.getRow(0)['df'] == 1, '', '')
+		@@@
+
+		# Delete the column
+		Click the Fields button
+		@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]//div[@class="wc_win_title" and text()="Edit Columns"]'), timeout=30)
+		Click the 1st "Delete row" icon
+		Click the "Save" button
+		Wait for page
+		@@@Verify column deleted in DB
+		res = driver.miedb.dbQuery("SELECT count(*) AS df FROM datafeed_interface WHERE pat_id={df_pat_id} AND config LIKE '%EmployeeID-Edited%'")
+		driver.reportCommandStatus('Verify datafeed_interface was deleted', '', res.getRow(0)['df'] == 0, '', '')
+		@@@
+
+Begin "Export Interface"
+	Click the "Export" button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]//div[@class="wc_win_title" and text()="Export Interfaces"]'), timeout=30)
+	Click the @export popup button@xpath=//div[contains(@class, "wc_win_body")]//button[contains(., "Export")]
+	Verify exists "Please select at least one interface" popup text
+	Click the "OK" button
+	Click the "Test Datafeed" checkbox
+	Click the @export popup button@xpath=//div[contains(@class, "wc_win_body")]//button[contains(., "Export")]
+
+Begin "Delete Interface"
+	Click the Delete button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]//div[@class="wc_win_title" and text()="Confirm Delete"]'), timeout=30)
+	Verify exists "Are you sure you want to delete the Test Datafeed interface?" text
+	Click the "Yes" button
+	Wait for page
+	Verify notexists "Test Datafeed" text
+	# Uncomment below when we actually uninstall the datafeed config on interface delete
+	#@@@Verify datafeed_interface record was deleted
+	#res = driver.miedb.dbQuery("SELECT count(*) AS dfs FROM datafeed_interface WHERE name = 'Test Datafeed'")
+	#driver.reportCommandStatus('Verify datafeed_interface record was deleted', '', res.getRow(0)['dfs'] == 0, '', '')
+	#@@@
+
+Begin "Import Interface From File"
+	@@@Create file to import
+		import json
+		import os
+		import_data = [{
+			"last_name": "Test Datafeed",
+			"interface": "DataFeedTemplate",
+			"properties": {
+				"interface_description": "A new description for testing",
+				"file_frequency_1inp": "Daily",
+				"file_frequency": "Daily",
+				"file_delimiter": ",",
+				"file_name": "*.csv.pgp",
+				"file_path": "/sftp/datafeed",
+				"file_format": "csv"
+			},
+			"properties_obs_id": "4965",
+			"columns": [
+				{
+					"data_source": "-1",
+					"file_header": "DOB",
+					"map_to": "birth_date",
+					"map_as": "db",
+					"req": "-1",
+					"type": "-1",
+					"length": ""
+				}
+			],
+			"columns_obs_id": "4966"
+		}]
+		filename = 'InterfaceExport.json'
+		filepath = ''
+		with open(os.path.join(driver.driverOptions.uploadDir, filename), 'w') as f:
+			json.dump(import_data, f)
+			filepath = os.path.realpath(f.name)
+		# Set the input to visible so we can interact with it
+		file_input = driver.getElement(id='import_file')
+		driver.runJS("arguments[0].style.display = 'block';", file_input)
+		return { 'export_filepath': filepath }
+	@@@
+	Type {export_filepath} into the import_file input
+	
+	Begin "Verify the interface was recreated"
+		Wait for page
+		Verify exists "Test Datafeed" text
+		Verify exists "Datafeed" text
+		@@@Verify datafeed_interface record re-created
+		res = driver.miedb.dbQuery("SELECT count(*) AS dfs FROM datafeed_interface WHERE name = 'Test Datafeed'")
+		driver.reportCommandStatus('Verify datafeed_interface record re-created', '', res.getRow(0)['dfs'] == 1, '', '')
+		@@@

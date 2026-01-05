@@ -1,0 +1,71 @@
+"""
+    Test patient patient relations
+    @owners: adiers
+    @filedep: system/upgrade/dbroutines/wc_pat_pat_relflat.sql, src/patient_relations.c
+"""
+@driver.miedb.dbExec("INSERT INTO security_exception (user_id, module_name, category_name, security_value, admin_user_id) VALUES(8, 'Control', 'Manage Relationship Types', 1, 8)")
+@driver.miedb.dbExec("INSERT INTO model_security (security_role_id, user_id, object, crud_control) VALUES(0, 8, 'relation_types', 'CREATE,READ,UPDATE,DELETE')")
+Begin "Verifying add functionality"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Editors" charttab subtab
+	Click the "Relation Types" charttab
+	Click the "Add Relation Type" link
+	Type "A New Relation Type" in the relation_type input
+	Type 7 in the level input
+	Type 86 in the snomed_conceptid input
+	Click the flatten checkbox
+	Click the Save button
+	Verify exists @xpath=//tr[contains(., "A New Relation Type") and contains(., "7") and contains(., "86") and contains(., "1")]
+Begin "Verifying add with inverse"
+	Click the "Add Relation Type" link
+	Type "A Second New Relation Type" in the relation_type input
+	Select "A New Relation Type" from the inverse_relation_type_id dropdown
+	Click the Save button
+	Verify exists @xpath=//tr[contains(., "A Second New Relation Type") and contains(., 0)]
+Begin "Verifying add does not allow inverses that are taken or have pat_pat_relations"
+	Click the "Add Relation Type" link
+	Type "A Third New Relation Type" in the relation_type input
+	Verify !exists @xpath=//option[@innerText="A New Relation Type"]
+	Verify !exists @xpath=//option[@innerText="Account"]
+	Click the Save button
+	Verify exists @xpath=//tr[contains(., "A Third New Relation Type") and contains(., 0)]
+Begin "Verifying single-row edit"
+	Click the "A Third New Relation Type" grid checkbox
+	Click the "Edit" grid button
+	Type "A 3rd New Relation Type" in the relation_type input
+	Type 9 in the level input
+	Type 87 in the snomed_conceptid input
+	Click the flatten checkbox
+	Verify !exists @xpath=//option[@innerText="A New Relation Type"]
+	Verify !exists @xpath=//option[@innerText="Account"]
+	Click the Save button
+	Verify exists @xpath=//tr[contains(., "A 3rd New Relation Type") and contains(., 9) and contains(., 87) and contains(., 1)]
+Begin "Verifying mulit-row edit"
+	Click the "A New Relation Type" grid checkbox
+	Click the "A Second New Relation Type" grid checkbox
+	Click the "A 3rd New Relation Type" grid checkbox
+	Click the "Edit" grid button
+	Click the Save button
+	Verify exists @xpath=//tr[contains(., "A New Relation Type") and contains(., 7) and contains(., 86) and contains(., 0)]
+	Verify exists @xpath=//tr[contains(., "A 3rd New Relation Type") and contains(., 9) and contains(., 87) and contains(., 0)]
+Begin "Verifying cannot edit relations when there are dependencies"
+	Click the "Provider" grid checkbox
+	Click the "Edit" grid button
+	Verify exists @xpath='//input[@id="ph_inverse" and @disabled and @value="Provider"]'
+	Close the popup
+	Wait for RelationTypes grid
+Begin "Verifying delete"
+	Click the "A New Relation Type" grid checkbox
+	Click the "A Second New Relation Type" grid checkbox
+	Click the "A 3rd New Relation Type" grid checkbox
+	Click the "Delete" grid button
+	Click the "Yes" button
+	Verify !exists @xpath=//tr[contains(., "A New Relation Type")]
+	Verify !exists @xpath=//tr[contains(., "A Second New Relation Type")]
+	Verify !exists @xpath=//tr[contains(., "A 3rd New Relation Type")]
+Begin "Verifying cannot delete when there are dependencies"
+	Click the "Provider" grid checkbox
+	Click the "Delete" grid button
+	Verify exists "The selected row(s) cannot be deleted due to dependencies." text

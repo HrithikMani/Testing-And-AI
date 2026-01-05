@@ -1,0 +1,156 @@
+Begin "Insert Trans Data"
+		@Insert dictation_documents@driver.miedb.dbExec('INSERT INTO dictation_documents (dic_id, doc_id) VALUES (14, 674), (15, 675), (17, 678), (18, 683)')
+		@Insert documents@driver.miedb.dbExec('INSERT INTO documents (doc_id, revision_number, user_id, origin_id, pat_id, doc_type, storage_type, storage_id, service_location, origin_date, enter_date, revision_date, service_date) VALUES (669, 1, 16, 16, 5, "WCCHECKOUT", 1, 0, "OFFICE", "2024-03-07 17:38:41", "2024-03-07 17:38:41", "2024-03-07 17:38:41", "2024-03-07 00:00:00"),(670, 0, 16, 16, 40, "WCDOCNOT", 1, 0, "OFFICE", "2024-03-07 18:13:08", "2024-03-07 18:13:08", "2024-03-07 18:13:08", "2024-03-07 00:00:00"),(671, 0, 16, 16, 40, "WCALERT", 1, 0, "OFFICE", "2024-03-07 20:20:42", "2024-03-07 20:20:42", "2024-03-07 20:20:42", "2024-03-07 00:00:00"),(672, 0, 9, 9, 49, "WCALERT", 1, 0, "OFFICE", "2024-03-09 20:33:39", "2024-03-09 20:33:39", "2024-03-09 20:33:39", "2024-03-09 00:00:00"),(673, 0, 8, 8, 40, "REPLYPORTA", 1, 0, "OFFICE", "2024-03-09 20:53:03", "2024-03-09 20:53:03", "2024-03-09 20:53:03", "2024-03-09 00:00:00"),(674, 0, 16, 16, 5, "WCALERT", 1, 0, "OFFICE", "2024-03-09 21:57:17", "2024-03-09 21:57:17", "2024-03-09 21:57:17", "2024-03-09 00:00:00"),(675, 0, 16, 16, 40, "PATNOTE", 1, 0, "OFFICE", "2024-03-09 22:24:46", "2024-03-09 22:24:46", "2024-03-09 22:24:46", "2024-03-09 00:00:00"),(676, 0, 16, 16, 12, "WCDOCNOT", 1, 0, "OFFICE", "2024-03-14 12:11:30", "2024-03-14 12:11:30", "2024-03-14 12:11:30", "2024-03-14 00:00:00"),(677, 0, 16, 0, 14, "WCIMMFCST", 34, 0, "NULL", "2024-03-14 12:35:48", "2024-03-14 12:35:48", "2024-03-14 12:35:48", "2024-03-14 12:35:48"),(678, 0, 16, 16, 14, "VISIT", 4, 0, "OFFICE", "2024-03-14 13:04:40", "2024-03-14 13:04:40", "2024-03-14 13:04:40", "2024-03-14 12:35:41"),(679, 0, 16, 16, 14, "WKSTATUS", 4, 0, "OFFICE", "2024-03-14 13:04:41", "2024-03-14 13:04:41", "2024-03-14 13:04:41", "2024-03-14 12:35:41"),(682, 0, 16, 0, 6, "WCIMMFCST", 34, 0, "NULL", "2024-03-14 13:34:25", "2024-03-14 13:34:25", "2024-03-14 13:34:25", "2024-03-14 13:34:25"),(683, 0, 16, 16, 6, "VISIT", 4, 0, "OFFICE", "2024-03-14 13:50:22", "2024-03-14 13:50:22", "2024-03-14 13:50:22", "2024-03-14 13:34:20"),(684, 0, 16, 16, 6, "WKSTATUS", 4, 0, "OFFICE", "2024-03-14 13:50:23", "2024-03-14 13:50:23", "2024-03-14 13:50:23", "2024-03-14 13:34:20"), (687, 0, 16, 16, 14, "WCALERT", 4, 0, "OFFICE", "2024-03-14 13:50:23", "2024-03-14 13:50:23", "2024-03-14 13:50:23", "2024-03-14 13:34:20")')
+		@Insert dictation@driver.miedb.dbExec('INSERT INTO dictation (storage_id, user_id, trans_id, pat_id, dob, encounter_id, enc_dictation, job_type, comment, location_code, duration, priority, status, transdate, uploaddate, servicedate) VALUES (800011092469, 16, 16, 5, "", 0, 0, 0, "", "OFFICE", 3, 0, 2, "2024-03-09 21:58:38", "2024-03-07 20:41:55", "2024-03-07 20:41:00"),(800011092470, 16, 16, 40, "", 0, 0, 0, "", "OFFICE", 6, 0, 2, "2024-03-09 22:25:11", "2024-03-07 20:43:05", "2024-03-07 20:43:00"),(800011092471, 16, 16, 40, "", 0, 0, 0, "", "OFFICE", 7, 0, 0, "2024-03-09 21:35:50", "2024-03-07 20:45:45", "2024-03-07 20:45:00"),(0, 16, 16, 14, "2010-03-02", 114, 1, 0, "", "", 5, 0, 2, "2024-03-14 12:46:04", "2024-03-14 12:42:39", "2024-03-14 12:35:41"),(0, 16, 16, 6, "1939-01-01", 115, 1, 0, "", "", 7, 0, 2, "2024-03-14 13:48:40", "2024-03-14 13:46:41", "2024-03-14 13:34:20")')
+		@Insert encounter_dictation@driver.miedb.dbExec('INSERT INTO encounter_dictation (storage_id, encounter_id, field_name, obs_id, duration, user_id, upload_datetime, trans_id, transdate, status) VALUES (800011094671, 114, "Section-Smart Plan", 4625, 5, 16, "2024-03-14 12:42:39", 16, "2024-03-14 12:46:04", 2 ), (800011094676, 115, "Section-Physical exam", 4634, 7, 16, "2024-03-14 13:46:41", 16, "2024-03-14 13:48:40", 2)')
+		@Insert tran_stats@driver.miedb.dbExec('INSERT INTO user_tran_stats (id, id_type, user_id, revision_number, char_count, char_ws_count, word_count, line_count, page_count, para_count, wo_template_char_count, wo_template_char_ws_count, wo_template_word_count, wo_template_line_count, wo_template_page_count, wo_template_para_count, edit_duration, create_datetime) VALUES (669, 5, 16, 0, 377, 445, 69, 7, 1, 1, 0, 0, 0, 0, 0, 0, 16, "2024-03-07 17:38:41"),(670, 5, 16, 0, 6606, 7774, 1142, 120, 1, 10, 0, 0, 0, 0, 0, 0, 6, "2024-03-07 18:13:08"),(671, 5, 16, 0, 377, 445, 69, 7, 1, 1, 0, 0, 0, 0, 0, 0, 14, "2024-03-07 20:20:42"),(672, 5, 9, 0, 24, 29, 6, 1, 1, 1, 0, 0, 0, 0, 0, 0, 10, "2024-03-09 20:33:39"),(673, 5, 8, 0, 7, 8, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 5, "2024-03-09 20:53:03"),(674, 5, 16, 0, 24, 29, 6, 1, 1, 1, 0, 0, 0, 0, 0, 0, 16, "2024-03-09 21:57:17"),(675, 5, 16, 0, 9, 10, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 9, "2024-03-09 22:24:46"),(676, 5, 16, 0, 12, 13, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 10, "2024-03-14 12:11:30"),(1, 3, 16, 2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 9, "2024-03-14 12:46:04"),(2, 3, 16, 2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, "2024-03-14 13:48:40"),(1, 7, 9, 0, 40, 48, 10, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, "2024-03-14 14:10:3"),(669, 5, 9, 1, 17, 25, 5, 1, 0, 1, 17, 25, 5, 1, 0, 1, 19, "2024-03-16 16:59:35")')
+		@Insert document_revisions@driver.miedb.dbExec('INSERT INTO document_revisions (doc_id, revision_number, user_id, origin_id, pat_id, doc_type, storage_type, storage_id, service_location, origin_date, enter_date, revision_date, service_date) VALUES (669, 0, 16, 16, 5, "WCCHECKOUT", 1, 0, "OFFICE", "2024-03-07 17:38:41", "2024-03-07 17:38:41", "2024-03-07 17:38:41", "2024-03-07 00:00:00")')
+
+Begin Verify that an empty Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Click the "Run Query" button
+	Verify exists "butler" text
+	Verify exists "physician3" text
+	Verify exists "selenium" text
+	Verify exists "7405" text
+	Verify exists "944" text
+	Verify exists "00:00:21" text
+	Verify exists "8718" text
+	Verify exists "21" text
+	Verify exists "3" text
+	Verify exists "7" text
+	Verify exists "43" text
+
+Begin Verify that a department filtered Transcription Statistics form works
+	Enter "Physicians" in the "Select Department:" autocomplete
+	Click the "Run Query" button
+	Verify exists "physician3" text
+	Verify exists "selenium" text
+	Verify exists "butler" text
+
+Begin Verify that a user filtered Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Enter "Butler" in the "Select User:" autocomplete
+	Click the "Run Query" button
+	Verify !exists "physician3" text
+	Verify exists "butler" text
+	Verify exists "7405" text
+	Verify exists "00:00:21" text
+	Verify exists "944" text
+	Verify exists "8" text
+	Verify exists "6" text
+	Verify exists "15" text
+	Verify exists "113" text
+	Verify exists "134" text
+	Verify exists "1290" text
+
+Begin Verify that a provider filtered Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Enter "Nicole" in the "Limit to Provider:" autocomplete
+	Click the "Run Query" button
+	Verify exists "physician3" text
+	Verify exists "40" text
+	Verify exists "48" text
+	Verify exists "10" text
+	Verify exists "00:00:00" text
+	Verify !exists "butler" text
+
+Begin Verify that a document filtered Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Select "Alert Comment" from the "Document Type:" field
+	Click the "Run Query" button
+	Verify exists "physician3" text
+	Verify exists "butler" text
+	Verify exists "401" text
+	Verify exists "474" text
+	Verify exists "00:00:03" text
+	Verify exists "29" text
+	Verify exists "6" text
+	Verify exists "36" text
+	Verify exists "150" text
+
+Begin Verify that an excluded document filtered Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Select "Alert Comment" from the "Document Type:" field
+	Click the "Exclude Selected Document Types" checkbox
+	Click the "Run Query" button
+	Verify exists "physician3" text
+	Verify exists "butler" text
+	Verify exists "selenium" text
+	Verify exists "1778" text
+	Verify exists "00:00:00" text
+	Verify exists "00:00:06" text
+	Verify exists "1215" text
+	Verify exists "8" text
+	Verify exists "7" text
+	Verify exists "17" text
+	Verify exists "25" text
+
+Begin Verify that a template excluded Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Click the "Subtract Template Stats" checkbox
+	Click the "Run Query" button
+	Verify exists "physician3" text
+	Verify exists "butler" text
+	Verify exists "selenium" text
+	Verify exists "17" text
+	Verify exists "00:00:21" text
+	Verify exists "25" text
+	Verify exists "5" text
+
+
+Begin Verify that a Text/Word type filtered Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Select "Text/Word Documents" from the "Transcription Type:" field
+	Click the "Run Query" button
+	Verify exists "physician3" text
+	Verify exists "butler" text
+	Verify exists "selenium" text
+	Verify exists "41" text
+	Verify exists "54" text
+	Verify exists "1290" text
+	Verify exists "1090" text
+	Verify exists "23" text
+	Verify exists "24" text
+	Verify exists "8716" text
+	Verify exists "6" text
+
+Begin Verify that a encounter obs filtered Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Select "Encounter Observations" from the "Transcription Type:" field
+	Click the "Run Query" button
+	Verify !exists "physician3" text
+	Verify exists "butler" text
+	Verify exists "00:00:12" text
+	Verify exists "2" text
+	Verify exists "0" text
+
+Begin Verify that a encounter text filtered Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Select "Encounter Text" from the "Transcription Type:" field
+	Click the "Run Query" button
+	Verify exists "physician3" text
+	Verify !exists "butler" text
+	Verify exists "40" text
+	Verify exists "48" text
+	Verify exists "10" text
+	Verify exists "1" text
+
+Begin Verify that a date range filtered Transcription Statistics form works
+	Navigate "?f=layout&module=SystemReport&name=TranscriptionStats"
+	Type "03" in the @Transcribed Date Range #2:@xpath='//*[@id="sdt2MONTH"]'
+	Type "11" in the @Transcribed Date Range #2:@xpath='//*[@id="sdt2DAY"]'
+	Type "2024" in the @Transcribed Date Range #2:@xpath='//*[@id="sdt2YEAR"]'
+	Click the "Run Query" button
+	Verify exists "physician3" text
+	Verify exists "butler" text
+	Verify exists "selenium" text
+	Verify exists "-7393" text
+	Verify exists "-1288" text
+	Verify exists "-114" text
+	Verify exists "-134" text
+	Verify exists "-14" text
+	Verify exists "-1" text
+	Verify exists "-5" text
+	Verify exists "-24" text
+	Verify exists "-29" text

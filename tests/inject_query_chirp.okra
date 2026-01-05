@@ -1,0 +1,367 @@
+Begin "Setup for CHIRP Query"
+	Begin "Grant RTS Permission"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		#Begin "Security Exceptions Method"
+			#Click the "Access Control" charttab subtab
+			#Type "selenium" in the input
+			#Select "Username" in the 2nd dropdown
+			#Click the "Go!" button
+			#Gridclick "Username:selenium" "Edit" grid link
+			#Click the "Customize User Security" link
+			#Select "Yes" in the "Refer to Systems Editor" dropdown
+			#Type " " in the input
+			#Click the "Update Individual Security" button
+			#Verify exists the "[ Refer to Systems Editor: Yes ]" text
+		Begin "Security Role Method"
+			Click the "Security Roles" charttab subtab
+			Click the "System Owner" link
+			Click the "Edit Role" button
+			Select "Yes" from the "Refer to Systems Editor" dropdown
+			Type "inject_query_chirp.okra" in the sec_role_comment input
+			Click the "Update Role" button
+			Verify exists the "Security role System Owner has been updated successfully!" text
+	Begin "Add the Registry config"
+		Click the "Interface" charttab
+		Click the "Refer to Systems" charttab subtab
+		Begin "Create the RTS Entry"
+			Click the "Add Record" link
+			Type "TEST" in the @"System ID" input@xpath=//input[@id='system_id']
+			Type "Test Registry" in the @"System Name" input@xpath=//input[@id='system_name']
+			Click the "Show Options" link
+			Click the "Is Imm Registry" checkbox
+			Type "https://{BE_CAREFUL_HOSTNAME}/webchart/test_baseline_be_careful/chirpInjectv25Server.cgi" in the @"System Address" input@xpath=//input[@id='system_address']
+			Type "bob" in the @"System User" input@xpath=//input[@id='system_user']
+			Type "bobpass" in the @"System Password" input@xpath=//input[@id='system_pass']
+			Select "MIE" in the "System Partition" @popup dropdown@xpath=//*[contains(.,"System Partition")]/following-sibling::select
+			Type "MIIS" in the @"External Partition" input@xpath=//input[@id='external_partition']
+			Screenshot "Check My RTS"
+			Click the @"Save" button@xpath=//input[@type='submit' and @value='Save']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Verify exists the "Test Registry" text
+			Verify !exists the "Add Record" popup
+		Begin "Add the RTS Extended"
+			Check the "TEST" grid checkbox
+			Click the "Extended Values" button
+			Wait for the page
+			Verify exists the "TEST Extended Values" popup
+			Enter "hl7_version" in the addExtended autocomplete
+			Enter "hl7_segdefs" in the addExtended autocomplete
+			Type "2.5.1" in the hl7_version input
+			Type ".v25" in the hl7_segdefs input
+			Screenshot "Check My RTSE"
+			Click the @"Save" button@xpath=//input[@type='button' and @value='Save']
+			@Wait@driver.wcutils.waitForAJAX(30)
+	Begin "Turn on CHIRP Queries"
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Type "Use Chirp" in the input
+		Click the "Go" button
+		# in the 1st "Use Chirp" row
+		Click the "Edit" table link
+		Select "1" in the dropdown
+		Type " " in the input
+		Click the "Change" button
+	Begin "Add the MIIS Partition"
+		Click the "Chart" charttab
+		Click the "Partition Mgr" charttab subtab
+		Click the "Add Partition" link
+		Type "MIIS" in the "Partition" input
+		Type "MIIS" in the "Name" input
+		Type "MIIS" in the "Description" input
+		Type "100" in the "Part Order" input
+		Select "State Registry ID" in the "Identifier" dropdown
+		Click the "Save" button
+		Verify exists the "Partition (MIIS) successfully added." text
+Begin "Test the Query"
+	Begin "Perform a real query"
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Click the "Name" labelledradio
+		Type "Growing" in the "sstring" input
+		Click the "Search" button
+		Click the "Medical Record" charttab
+		Click the "MAR/Injections" charttab subtab
+		Click the "Get Test Registry Updates" link
+		#@Wait@driver.wcutils.waitForAJAX(90)
+		Verify exists the "Query Complete" text
+		Wait for the page
+		screenshot "query result"
+		#Begin "Add the State Registry number to the Patient"
+		#	Click the "6547548" link
+		#	Click the "Get Updates for This Patient" button
+		Begin "Verify the re-query succeeded and import the history"
+			Verify exists the "Test Registry Injection Updates" text
+			Click the "Add All >>" button
+			Click the "Save" button
+			Verify exists the "Injections Updated Successfully" text
+			Verify exists the "Displaying 1-20 / 30" text
+Begin "Perform a Query using WCID instead of MRN"
+	Begin "Add the Registry config"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Interface" charttab
+		Click the "Refer to Systems" charttab subtab
+		Begin "Create the RTS Entry"
+			Click the "Add Record" link
+			Type "TESTWCID" in the @"System ID" input@xpath=//input[@id='system_id']
+			Type "WCID Registry" in the @"System Name" input@xpath=//input[@id='system_name']
+			Click the "Show Options" link
+			Click the "Is Imm Registry" checkbox
+			Type "https://{BE_CAREFUL_HOSTNAME}/webchart/test_baseline_be_careful/chirpInjectv25WCIDServer.cgi" in the @"System Address" input@xpath=//input[@id='system_address']
+			Type "bob" in the @"System User" input@xpath=//input[@id='system_user']
+			Type "bobpass" in the @"System Password" input@xpath=//input[@id='system_pass']
+			#Select "" in the "System Partition" @popup dropdown@xpath=//*[contains(.,"System Partition")]/following-sibling::select
+			Type "CHIRP" in the @"External Partition" input@xpath=//input[@id='external_partition']
+			Screenshot "Check My RTS"
+			Click the @"Save" button@xpath=//input[@type='submit' and @value='Save']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Verify exists the "WCID Registry" text
+			Verify !exists the "Add Record" popup
+		Begin "Add the RTS Extended"
+			Check the "TESTWCID" grid checkbox
+			Click the "Extended Values" button
+			Wait for the page
+			Verify exists the "TESTWCID Extended Values" popup
+			Enter "hl7_version" in the addExtended autocomplete
+			Enter "hl7_segdefs" in the addExtended autocomplete
+			#Enter "send_pid_as_mr" in the addExtended autocomplete
+			Click the @"Show Fields" button@xpath=//button[contains(text(),'Show Fields')]
+			Click the @"send_pid_as_mr" link@xpath=//a[@id='send_pid_as_mr']
+			Enter "QBP_send_pid_as_mr_legacy" in the addExtended autocomplete
+			Type "2.5.1" in the hl7_version input
+			Type ".v25" in the hl7_segdefs input
+			Type "1" in the !send_pid_as_mr input
+			Type "1" in the QBP_send_pid_as_mr_legacy input
+			Screenshot "Check My WCID RTSE"
+			Click the @"Save" button@xpath=//input[@type='button' and @value='Save']
+			@Wait@driver.wcutils.waitForAJAX(30)
+	Begin "Add the CHIRP Partition"
+		Click the "Chart" charttab
+		Click the "Partition Mgr" charttab subtab
+		Click the "Add Partition" link
+		Type "CHIRP" in the "Partition" input
+		Type "CHIRP" in the "Name" input
+		Type "CHIRP" in the "Description" input
+		Type "100" in the "Part Order" input
+		Select "State Registry ID" in the "Identifier" dropdown
+		Click the "Save" button
+		Verify exists the "Partition (CHIRP) successfully added." text
+	Begin "Test the Query"
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Click the "Name" labelledradio
+		Type "Growing" in the "sstring" input
+		Click the "Search" button
+		Click the "Medical Record" charttab
+		Click the "MAR/Injections" charttab subtab
+		Click the "Get WCID Registry Updates" link
+		#@Wait@driver.wcutils.waitForAJAX(90)
+		Verify exists the "Query Complete" text
+		Wait for the page
+		screenshot "WCID query result"
+		Begin "Verify the re-query succeeded and import the history"
+			Verify exists the "WCID Registry Injection Updates" text
+Begin "Perform a Query re: #42989 - No RXR present in response"
+	Begin "Add a registry for a different message/local partition"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Interface" charttab
+		Click the "Refer to Systems" charttab subtab
+		Click the "Add Record" link
+		Type "TEST2" in the @"System ID" input@xpath=//input[@id='system_id']
+		Type "Test 42989" in the @"System Name" input@xpath=//input[@id='system_name']
+		Click the "Show Options" link
+		Click the "Is Imm Registry" checkbox
+		Type "https://{BE_CAREFUL_HOSTNAME}/webchart/test_baseline_be_careful/chirpInject42989v25WCIDServer.cgi" in the @"System Address" input@xpath=//input[@id='system_address']
+		Type "bob" in the @"System User" input@xpath=//input[@id='system_user']
+		Type "bobpass" in the @"System Password" input@xpath=//input[@id='system_pass']
+		#Select "MIE" in the "System Partition" @popup dropdown@xpath=//*[contains(.,"System Partition")]/following-sibling::select
+		Type "CHIRP" in the @"External Partition" input@xpath=//input[@id='external_partition']
+		Screenshot "Check 42989 RTS"
+		Click the "Save" @button@xpath=//input[@type='submit' and @value='Save']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Verify exists the "Test 42989" text
+		Verify !exists the "Add Record" popup
+	Begin "Add the RTS Extended"
+		Check the "TEST2" grid checkbox
+		Click the "Extended Values" button
+		Wait for the page
+		Verify exists the "TEST2 Extended Values" popup
+		Enter "hl7_version" in the addExtended autocomplete
+		Enter "hl7_segdefs" in the addExtended autocomplete
+		#Enter "send_pid_as_mr" in the addExtended autocomplete
+		Click the @"Show Fields" button@xpath=//button[contains(text(),'Show Fields')]
+		Click the @"send_pid_as_mr" link@xpath=//a[@id='send_pid_as_mr']
+		Enter "QBP_send_pid_as_mr_legacy" in the addExtended autocomplete
+		Type "2.5.1" in the hl7_version input
+		Type ".v25" in the hl7_segdefs input
+		Type "1" in the !send_pid_as_mr input
+		Type "1" in the QBP_send_pid_as_mr_legacy input
+		Screenshot "Check My 42989 RTSE"
+		Click the @"Save" button@xpath=//input[@type='button' and @value='Save']
+		@Wait@driver.wcutils.waitForAJAX(30)
+	Begin "Query for this test patient"
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Click the "Name" labelledradio
+		Type "Smith, Joe" in the "sstring" input
+		Click the "Search" button
+		Click the "Medical Record" charttab
+		Click the "MAR/Injections" charttab subtab
+		Click the "Get Test 42989 Updates" link
+		#@Wait@driver.wcutils.waitForAJAX(90)
+		Verify exists the "Query Complete" text
+		Verify !exists the "Query Complete" text
+		Wait for the page
+		screenshot "query result 42989"
+		#Verify exists the "Test 42989 Patient Matches" text
+		#Begin "Add the State Registry number to the Patient"
+			#Click the "6547549" link
+			#Click the "Get Updates for This Patient" button
+			#@Wait@driver.wcutils.waitForAJAX(30)
+		Verify exists the "Test 42989 Injection Updates" text
+		Verify exists the @"pneumococcal polysaccharide vaccine" text in the "11-16-2019" table row@xpath=//table/tbody/tr/td[contains(.,'pneumococcal polysaccharide vaccine')]/following-sibling::td[contains(.,'11-16-2019')]
+		Verify exists the @"influenza, high-dose seasonal, quadrivalent" text in the "10-10-2022" table row@xpath=//table/tbody/tr/td[contains(.,'influenza, high-dose seasonal, quadrivalent')]/following-sibling::td[contains(.,'10-10-2022')]
+Begin "Perform a Query re: #130736 - No Matching Records Found"
+	Begin "Add a registry for a different message/local partition"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Interface" charttab
+		Click the "Refer to Systems" charttab subtab
+		Click the "Add Record" link
+		Type "TEST3" in the @"System ID" input@xpath=//input[@id='system_id']
+		Type "Test 130736" in the @"System Name" input@xpath=//input[@id='system_name']
+		Click the "Show Options" link
+		Click the "Is Imm Registry" checkbox
+		Type "https://{BE_CAREFUL_HOSTNAME}/webchart/test_baseline_be_careful/chirpInjectv25ZSAServer.cgi" in the @"System Address" input@xpath=//input[@id='system_address']
+		Type "bob" in the @"System User" input@xpath=//input[@id='system_user']
+		Type "bobpass" in the @"System Password" input@xpath=//input[@id='system_pass']
+		#Select "MIE" in the "System Partition" @popup dropdown@xpath=//*[contains(.,"System Partition")]/following-sibling::select
+		Type "CHIRP" in the @"External Partition" input@xpath=//input[@id='external_partition']
+		Screenshot "Check 130736 RTS"
+		Click the "Save" @button@xpath=//input[@type='submit' and @value='Save']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Verify exists the "Test 130736" text
+		Verify !exists the "Add Record" popup
+	Begin "Add the RTS Extended"
+		Check the "TEST3" grid checkbox
+		Click the "Extended Values" button
+		Wait for the page
+		Verify exists the "TEST3 Extended Values" popup
+		Enter "hl7_version" in the addExtended autocomplete
+		Enter "hl7_segdefs" in the addExtended autocomplete
+		Enter "hl7_alt_segment_terminator" in the addExtended autocomplete
+		Type "2.5.1" in the hl7_version input
+		Type ".v25" in the hl7_segdefs input
+		Type "3" in the hl7_alt_segment_terminator input
+		Screenshot "Check My 130736 RTSE"
+		Click the @"Save" button@xpath=//input[@type='button' and @value='Save']
+		@Wait@driver.wcutils.waitForAJAX(30)
+	Begin "Query for this test patient"
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Click the "Name" labelledradio
+		Type "Growing, Joseph" in the "sstring" input
+		Click the "Search" button
+		Click the "Medical Record" charttab
+		Click the "MAR/Injections" charttab subtab
+		Click the "Get Test 130736 Updates" link
+		#@Wait@driver.wcutils.waitForAJAX(90)
+		Verify exists the "Registry Reported: No Matching Records Found" text
+		screenshot "query result 130736"
+		Click the "OK" button
+Begin "Perform a Query re: #139280 - DOB 01/01/1970"
+	Begin "Add a registry for a different message/local partition"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Interface" charttab
+		Click the "Refer to Systems" charttab subtab
+		Click the "Add Record" link
+		Type "TEST4" in the @"System ID" input@xpath=//input[@id='system_id']
+		Type "Test 139280" in the @"System Name" input@xpath=//input[@id='system_name']
+		Click the "Show Options" link
+		Click the "Is Imm Registry" checkbox
+		Type "https://{BE_CAREFUL_HOSTNAME}//webchart/test_baseline_be_careful/chirpInjectv25DOBServer.cgi" in the @"System Address" input@xpath=//input[@id='system_address']
+		Type "bob" in the @"System User" input@xpath=//input[@id='system_user']
+		Type "bobpass" in the @"System Password" input@xpath=//input[@id='system_pass']
+		#Select "MIE" in the "System Partition" @popup dropdown@xpath=//*[contains(.,"System Partition")]/following-sibling::select
+		Type "CHIRP" in the @"External Partition" input@xpath=//input[@id='external_partition']
+		Screenshot "Check 139280 RTS"
+		Click the "Save" @button@xpath=//input[@type='submit' and @value='Save']
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Verify exists the "Test 139280" text
+		Verify !exists the "Add Record" popup
+	Begin "Add the RTS Extended"
+		Check the "TEST4" grid checkbox
+		Click the "Extended Values" button
+		Wait for the page
+		Verify exists the "TEST4 Extended Values" popup
+		Enter "hl7_version" in the addExtended autocomplete
+		Enter "hl7_segdefs" in the addExtended autocomplete
+		Enter "hl7_alt_segment_terminator" in the addExtended autocomplete
+		Type "2.5.1" in the hl7_version input
+		Type ".v25" in the hl7_segdefs input
+		Type "3" in the hl7_alt_segment_terminator input
+		Screenshot "Check My 139280 RTSE"
+		Click the @"Save" button@xpath=//input[@type='button' and @value='Save']
+		@Wait@driver.wcutils.waitForAJAX(30)
+	Begin "Query for this test patient"
+		@Change DOB to 01/01/1970@driver.miedb.dbExec("UPDATE patients SET birth_date='1970-01-01' WHERE pat_id=(SELECT pat_id FROM patients WHERE first_name='Joseph' and last_name='Growing')")
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Click the "Name" labelledradio
+		Type "Growing, Joseph" in the "sstring" input
+		Click the "Search" button
+		Click the "Medical Record" charttab
+		Click the "MAR/Injections" charttab subtab
+		Click the "Get Test 139280 Updates" link
+		#@Wait@driver.wcutils.waitForAJAX(90)
+		Verify exists the "Test 139280 Patient Matches" text
+		screenshot "query result 139280"
+		@Reset DOB 06/17/2001 to @driver.miedb.dbExec("UPDATE patients SET birth_date='2001-06-17 04:13:00' WHERE pat_id=(SELECT pat_id FROM patients WHERE first_name='Joseph' and last_name='Growing')")
+Begin "Verify custom criteria works"
+	Begin "Enable the system setting"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Type "Use Chirp Additional" in the input
+		Click the "Go" button
+		#  in the "Use Chirp Additional Criteria" row
+		Click the "Edit" table link
+		Type "SELECT IF(pat_id=18,1,0) FROM patients WHERE pat_id=@pat_id" in the "Value" input
+		Type " " in the "Reason" input
+		Click the "Change" button
+	Begin "Verify William Hart displays the link"
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Click the "Name" labelledradio
+		Type "Hart" in the "sstring" input
+		Click the "Search" button
+		Click the "TEST-10019" link
+		Click the "Medical Record" charttab
+		Click the "MAR/Injections" charttab subtab
+		Verify exists the "Get Test Registry Updates" link
+	Begin "Verify Joseph Growing does not display the link"
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Click the "Name" labelledradio
+		Type "Growing" in the "sstring" input
+		Click the "Search" button
+		Click the "Medical Record" charttab
+		Click the "MAR/Injections" charttab subtab
+		Verify !exists the "Get Test Registry Updates" link
+	Begin "Clear the system setting"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Type "Use Chirp Additional" in the input
+		Click the "Go" button
+		# in the "Use Chirp Additional Criteria" row
+		Click the "Edit" table link
+		Type "" in the "Value" input
+		Type " " in the "Reason" input
+		Click the "Change" button

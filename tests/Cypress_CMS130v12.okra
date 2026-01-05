@@ -1,0 +1,493 @@
+"""
+ Cypress testing of Cypress CMS130v12 Measure
+ @owners: dcarlson nrichardson
+ filedeps: system/layouts/StructDoc/QRDA*.html, system/layouts/StructDocXSLTypes/QRDA.html, selenium/tests/Cypress_CMS*.okra, src/encounter_measures.c, system/reports/CMS130v12*.sql, system/reports/cql_*.sql, system/reports/CQL_*.sql, system/reports/quality_*.sql
+"""
+
+Begin "CMS130v12 Testing"
+
+@driver.setTimeout(900)
+@driver.miedb.dbExec("INSERT IGNORE INTO insurance_plans SET name='MEDICARE PLUS', active=1, insurance_type_code='1';")
+@driver.miedb.dbExec("INSERT IGNORE INTO insurance_plans SET name='MEDICAID', active=1, insurance_type_code='2';")
+@driver.miedb.dbExec("INSERT IGNORE INTO insurance_plans SET name='ABC Insurance', active=1, insurance_type_code='349';")
+
+@driver.miedb.dbExec("INSERT IGNORE INTO patient_partitions(wc_partition,name,description) VALUES ('CMS130','CMS130','Partition for CMS130 patients');")
+@driver.miedb.dbExec("INSERT IGNORE INTO document_types (doc_type, description, text_add, active, upload_add, allow_index) VALUES ('QRDA', 'QRDA Document', 1, 1, 1, 1);")
+@driver.miedb.dbExec("UPDATE system_settings SET value = \"'MEANUSE','OFFICEF','HISTEXAM','PEDIATRICS','OFFENT','POV','VISIT','VIRTUAL'\", reason = 'Cypress testing' WHERE item='Meaningful Use Visit Types';")
+@driver.miedb.dbExec("INSERT IGNORE INTO system_reports (name, category, description, notes, sql_query, create_date, revision_date, modified_by, run_counter, last_ran, restricted, active, realtime) VALUES ('Patient Chart Compare','','Patient Chart Compare','',\"SELECT\n  mrn1.wc_partition AS \'Partition A\',\n CONCAT(p1.last_name, \', \', p1.first_name, \'{$p}\', p1.pat_id) AS \'Name A\',\n    p1.birth_date AS \'Birthday A\',\n    p1.username AS \'Username A\',\n    p1.email AS \'Email A\',\n    mrn2.wc_partition AS \'Partition B\',\n    CONCAT(p2.last_name, \', \', p2.first_name, \'{$p}\', p2.pat_id) AS \'Name B\',\n    p2.birth_date AS \'Birthday B\',\n    p2.username AS \'Username B\',\n    p2.email AS \'Email B\',\n    dup.rating AS \'Similarity Rating\',\n    CONCAT(\'http://\', \'{$w|add_url=&webchart.cgi?opp=merge&f=chart&fix_dups=1&s=pat&t=Admin:Demographics&v=dashboard&merge_opts_\',p1.pat_id,\'=3&submit_merge=Merge+Using+Selected+Options&pat_id=\',p2.pat_id,\'&to_mrn=\',CONCAT(mrn2.wc_partition,\'-\', mrn2.mrnumber),\'&from_mrn=\',CONCAT(mrn1.wc_partition,\'-\', mrn1.mrnumber),\'&patient_pat_id=\',p1.pat_id,\'&from_pats_id=\',p1.pat_id,\'}\', \'Merge A to B\') AS \'Merge A to B\',\n    CONCAT(\'http://\', \'{$w|add_url=&webchart.cgi?opp=merge&f=chart&fix_dups=1&s=pat&t=Admin:Demographics&v=dashboard&merge_opts_\',p2.pat_id,\'=3&submit_merge=Merge+Using+Selected+Options&pat_id=\',p1.pat_id,\'&to_mrn=\',CONCAT(mrn1.wc_partition,\'-\', mrn1.mrnumber),\'&from_mrn=\',CONCAT(mrn2.wc_partition,\'-\', mrn2.mrnumber),\'&patient_pat_id=\',p2.pat_id,\'&from_pats_id=\',p2.pat_id,\'}\', \'Merge B to A\') AS \'Merge B to A\'\nFROM\n    patient_pdups dup\nINNER JOIN\n    patients p1 ON dup.pat_id = p1.pat_id\nINNER JOIN\n    patients p2 ON dup.pat_id_match = p2.pat_id\nINNER JOIN\npatient_mrns mrn1 ON p1.pat_id = mrn1.pat_id\nINNER JOIN\n       patient_mrns mrn2 ON p2.pat_id = mrn2.pat_id\nWHERE mrn1.wc_partition LIKE \'CMS%\'\nAND  mrn2.wc_partition LIKE \'CMS%\' AND dup.rating>3 ORDER BY mrn1.pat_id,mrn2.pat_id\",'2024-08-20 20:19:29','2024-08-20 20:19:29',97,0,'0000-00-00 00:00:00',0,1,0);")
+
+Navigate "?f=layout&module=Layout&1&name=QRDApost"
+Type "QRDA/CMS130v12/0_Aaron_Brewer.xml" into the "file1" input
+Type "CMS130-0" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/10_Charlene_Peters.xml" into the "file1" input
+Type "CMS130-10" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/11_Charles_Ward.xml" into the "file1" input
+Type "CMS130-11" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/12_Charlotte_Pearson.xml" into the "file1" input
+Type "CMS130-12" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/13_Christina_Gross.xml" into the "file1" input
+Type "CMS130-13" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/14_Christy_Morris.xml" into the "file1" input
+Type "CMS130-14" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/15_Clarence_Fernandez.xml" into the "file1" input
+Type "CMS130-15" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/16_Clayton_Grant.xml" into the "file1" input
+Type "CMS130-16" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(5)
+
+Type "QRDA/CMS130v12/17_Clayton_Grbnt.xml" into the "file1" input
+Type "CMS130-17" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/18_Darlene_Sandoval.xml" into the "file1" input
+Type "CMS130-18" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/19_Dawn_Frazier.xml" into the "file1" input
+Type "CMS130-19" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/1_Alice_Rice.xml" into the "file1" input
+Type "CMS130-1" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/20_Debra_Newman.xml" into the "file1" input
+Type "CMS130-20" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/21_Diane_Wheeler.xml" into the "file1" input
+Type "CMS130-21" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/22_Doris_Castillo.xml" into the "file1" input
+Type "CMS130-22" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/23_Earl_Conner.xml" into the "file1" input
+Type "CMS130-23" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/24_Ella_Spencer.xml" into the "file1" input
+Type "CMS130-24" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/25_Emily_Washington.xml" into the "file1" input
+Type "CMS130-25" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/26_Franklin_Drake.xml" into the "file1" input
+Type "CMS130-26" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/27_Gordon_Delgado.xml" into the "file1" input
+Type "CMS130-27" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/28_Grace_Hines.xml" into the "file1" input
+Type "CMS130-28" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/29_Gregory_Poole.xml" into the "file1" input
+Type "CMS130-29" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/2_Amy_Cummings.xml" into the "file1" input
+Type "CMS130-2" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/30_Ida_Ortega.xml" into the "file1" input
+Type "CMS130-30" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/31_Jared_Mclaughlin.xml" into the "file1" input
+Type "CMS130-31" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/32_Jean_Reynolds.xml" into the "file1" input
+Type "CMS130-32" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/33_Jeffrey_Thornton.xml" into the "file1" input
+Type "CMS130-33" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/34_Judith_Sims.xml" into the "file1" input
+Type "CMS130-34" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/35_Julian_Wheeler.xml" into the "file1" input
+Type "CMS130-35" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/36_Karl_Colon.xml" into the "file1" input
+Type "CMS130-36" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/37_Kelly_Payne.xml" into the "file1" input
+Type "CMS130-37" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/38_Lance_Porter.xml" into the "file1" input
+Type "CMS130-38" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/39_Leona_Stewart.xml" into the "file1" input
+Type "CMS130-39" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/3_Ana_Robbins.xml" into the "file1" input
+Type "CMS130-3" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/40_Lucy_Allison.xml" into the "file1" input
+Type "CMS130-40" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/41_Mabel_Simpson.xml" into the "file1" input
+Type "CMS130-41" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/42_Manuel_Greer.xml" into the "file1" input
+Type "CMS130-42" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/43_Marian_French.xml" into the "file1" input
+Type "CMS130-43" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/44_Marsha_Nichols.xml" into the "file1" input
+Type "CMS130-44" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/45_Martha_Crawford.xml" into the "file1" input
+Type "CMS130-45" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/46_Matthew_Morales.xml" into the "file1" input
+Type "CMS130-46" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/47_Patricia_Burton.xml" into the "file1" input
+Type "CMS130-47" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(5)
+
+Type "QRDA/CMS130v12/48_Patricia_Sherman.xml" into the "file1" input
+Type "CMS130-48" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/49_Perry_Habkins.xml" into the "file1" input
+Type "CMS130-49" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/4_Betty_Reid.xml" into the "file1" input
+Type "CMS130-4" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/50_Perry_Hawkins.xml" into the "file1" input
+Type "CMS130-50" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/51_Phyllis_Reyes.xml" into the "file1" input
+Type "CMS130-51" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/52_Rafael_Berry.xml" into the "file1" input
+Type "CMS130-52" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/53_Ramona_Horton.xml" into the "file1" input
+Type "CMS130-53" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/54_Rebecca_Curtis.xml" into the "file1" input
+Type "CMS130-54" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/55_Shannon_Barnett.xml" into the "file1" input
+Type "CMS130-55" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/56_Sonia_Morgan.xml" into the "file1" input
+Type "CMS130-56" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/57_Suzanne_Mabdonado.xml" into the "file1" input
+Type "CMS130-57" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(5)
+
+Type "QRDA/CMS130v12/58_Suzanne_Maldonado.xml" into the "file1" input
+Type "CMS130-58" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/59_Sylvia_Lloyd.xml" into the "file1" input
+Type "CMS130-59" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/5_Brent_Stevens.xml" into the "file1" input
+Type "CMS130-5" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/60_Theresa_Hodges.xml" into the "file1" input
+Type "CMS130-60" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/61_Vera_Goodwin.xml" into the "file1" input
+Type "CMS130-61" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/62_Vincent_Bush.xml" into the "file1" input
+Type "CMS130-62" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/63_Viola_Norton.xml" into the "file1" input
+Type "CMS130-63" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/64_Virginia_Washington.xml" into the "file1" input
+Type "CMS130-64" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/65_Wade_Gordon.xml" into the "file1" input
+Type "CMS130-65" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/66_Yolanda_Houston.xml" into the "file1" input
+Type "CMS130-66" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/6_Byron_Garrett.xml" into the "file1" input
+Type "CMS130-6" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/7_Catherine_Meyer.xml" into the "file1" input
+Type "CMS130-7" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(5)
+
+Type "QRDA/CMS130v12/8_Catherine_Meyer.xml" into the "file1" input
+Type "CMS130-8" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS130v12/9_Cecil_Wood.xml" into the "file1" input
+Type "CMS130-9" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+@@@
+driver.navigate("?f=admin&s=system_report&opp=query&report_name=Patient%20Chart%20Compare&submit_query")
+while len(driver.getElements(xpath="(//a[string(.)='Merge B to A'])")) > 1:
+	driver.clickElement(xpath="(//a[string(.)='Merge B to A'])[2]")
+	driver.pause(2)
+	driver.navigate("?f=admin&s=system_report&opp=query&report_name=Patient%20Chart%20Compare&submit_query")
+@@@
+
+Verify !exists 2nd "Merge B to A" link
+
+@driver.miedb.dbExec("INSERT INTO measure_enrollment (report_name,provider_id,start_date,end_date,status,reporting_program,use_case) select report_name,8,'2024-01-01','2024-12-31',1,'MIPS','report' from rxdb_utf8.Measures where eMeasureId like 'CMS130v12' order by eMeasureId;")
+
+Navigate "?f=layout&module=MIPS&name=Quality+of+Care+Status&tabmodule=reports&tabselect=Quality%20of%20Care&ts_caption=Provider%20Quality%20of%20Care%20Status"
+Enter "Selenium" into the "users_ac_txt" autocomplete
+Select "2024" into the "rep_year" dropdown
+Click the "Run Report" button
+Click the 11th checkbox
+Click the "Recalculate Selected" button
+@Wait@driver.pause(15)
+
+@driver.returnToMainWindow()
+
+@@@
+# Generate QRDA Is and zip for upload
+import requests
+import zipfile
+import os
+
+res = driver.miedb.dbQuery('SELECT session_id FROM logins ORDER BY id DESC LIMIT 1')
+session_id = res.getRow(0)['session_id']
+patres = driver.miedb.dbQuery(
+				"SET @performing_user_id=(SELECT user_id FROM users WHERE username='selenium');SET @begin_date='2024-01-01';SET @end_date='2024-12-31';SELECT p.pat_id "
+				"FROM rxdb_utf8_test.Measures mm "
+				"INNER JOIN measure_calc mc ON mm.report_name=mc.report_name "
+				"INNER JOIN encounters e ON mc.encounter_id=e.encounter_id "
+				"INNER JOIN patients p ON e.pat_id=p.pat_id "
+				"INNER JOIN patient_mrns pm ON p.pat_id=pm.pat_id "
+				"WHERE mm.eMeasureId='CMS130v12' "
+				"AND p.is_tmp = 0 "
+				"AND mc.init_pat_pop>0 "
+				"AND pm.wc_partition IN ('CMS130') "
+				"AND e.serv_date BETWEEN CONCAT( @begin_date, ' 00:00:00') AND CONCAT(@end_date, ' 23:59:59') "
+				"AND e.performing_user_id = @performing_user_id "
+				"GROUP BY e.pat_id")
+
+def create_zip_file(file_names, zip_name, driver):
+	with zipfile.ZipFile(zip_name, 'w') as zipf:
+		for file in file_names:
+			driver.getWebDriver()
+			if os.path.isfile(file):
+				zipf.write(file, os.path.basename(file))
+
+files_to_zip = []
+
+for patRow in patres: 
+	pat_id = patRow['pat_id']
+	url = (
+	f"{driver.driverOptions.baseurl}?f=layout&session_id={session_id}&module=StructDocTypes&name=QRDA-I&cdatype=QRDA"
+	f"&pat_id={pat_id}&begin_dateYEAR=2024&begin_dateMONTH=1&begin_dateDAY=1&begin_date=2024-01-01"
+	f"&end_dateYEAR=2024&end_dateMONTH=12&end_dateDAY=31&end_date=2024-12-31"
+	f"&output_filename=QRDA{pat_id}.xml&qrda_consumer=Cypress&debug_level=0&measure_id=CMS130v12&XML"
+	)
+	file_path = f"{driver.driverOptions.uploadDir}/QRDA{pat_id}.xml"
+	r = requests.get(url, allow_redirects=True)
+	open(file_path, 'wb').write(r.content)
+	files_to_zip.append(file_path)
+	driver.getWebDriver().execute_script("return 1")
+
+zip_file_name = f"{driver.driverOptions.uploadDir}/WebChartDownloadCMS130v12.zip"
+create_zip_file(files_to_zip, zip_file_name, driver)
+
+driver.miedb.dbExec("UPDATE users SET nat_pro_id='1718868015', tax_id_number='955956453' WHERE user_id=8;")
+
+url = (
+f"{driver.driverOptions.baseurl}?f=layout&session_id={session_id}&XML&module=StructDocTypes&name=QRDA-III&year=2024"
+f"&begin_dateMONTH=01&begin_dateDAY=01&begin_dateYEAR=2024&end_dateMONTH=12&end_dateDAY=31&end_dateYEAR=2024"
+f"&my_user_id=8&partition=1CMS130&measure_id=1CMS130v12"
+)
+file_path = f"{driver.driverOptions.uploadDir}/QRDAIII.xml"
+r = requests.get(url, allow_redirects=True)
+open(file_path, 'wb').write(r.content)
+@@@
+
+# Upload QRDA I zip
+@driver.getWebDriver().get("http://cypress730.med-web.com/users/sign_out")
+Type "rxdb@med-web.com" into the "user_email" input
+Type "Cypress2024" into the "user_password" input
+Click the "Sign in" button
+Click the "Selenium Testing" link
+CLick the "Selenium 2024" link
+Click the "C1 (QRDA-I)" link
+Click the 1st "Colorectal Cancer Screening" link
+@Wait for the file results element to appear@driver.waitFor(driver, lambda d: d.getElement(xpath='//file[@id="results"] '), expected_return=True, timeout=60)
+
+@driver.runJS("document.getElementById('results').style.display='block';")
+@driver.runJS("document.getElementById('results').classList.remove('hidden');")
+@driver.runJS("document.getElementById('results').setAttribute('aria-hidden', 'false');")
+@driver.runJS("document.getElementById('results').parentNode.parentNode.appendChild(document.getElementById('results'));")
+
+Type "WebChartDownloadCMS130v12.zip" into the "results" input
+@driver.runJS("document.getElementById('submit-upload').classList.remove('fileinput-exists');")
+Click on the " Upload" link
+
+@Wait for the test to pass@driver.waitFor(driver, lambda d: d.getElement(xpath='//p[@class="lead bg-success execution-status"] '), expected_return=True, timeout=600)
+Screenshot "QRDA I Results" 
+Verify exists "Passed" text
+
+# Upload QRDA III task-switch-link class
+@driver.getWebDriver().get("http://cypress730.med-web.com/vendors")
+Click the "Selenium Testing" link
+CLick the "Selenium 2024" link
+Click the "C2 + C3 (QRDA-III)" link
+Click the 2nd "Colorectal Cancer Screening" link
+@Wait for the file results element to appear@driver.waitFor(driver, lambda d: d.getElement(xpath='//file[@id="results"] '), expected_return=True, timeout=60)
+
+@Wait for the page to load@driver.waitFor(driver, lambda d: d.getElement(xpath='//h1[contains(@value, "Expected Aggregate Results")] '), expected_return=True, timeout=30)
+Screenshot "QRDA III Page" 
+Verify exists "Expected Aggregate Results" text
+
+@driver.runJS("document.getElementById('results').style.display='block';")
+@driver.runJS("document.getElementById('results').classList.remove('hidden');")
+@driver.runJS("document.getElementById('results').setAttribute('aria-hidden', 'false');")
+@driver.runJS("document.getElementById('results').parentNode.parentNode.appendChild(document.getElementById('results'));")
+
+Type "QRDAIII.xml" into the "results" input
+@driver.runJS("document.getElementById('submit-upload').classList.remove('fileinput-exists');")
+Click on the " Upload" link
+
+# Wait 
+@Wait for the test to pass@driver.waitFor(driver, lambda d: d.getElement(xpath='//p[@class="lead bg-success execution-status"] '), expected_return=True, timeout=600)
+Screenshot "QRDA III Results" 
+Verify exists "Passed" text
+
+@Click Hamburger Menu button@driver.clickElement(xpath='//i[@class="fas fa-2x fa-bars"]')
+Click on the "Log Out" link
+
+@driver.miedb.dbExec("DELETE FROM `system_reports` WHERE name='Patient Chart Compare';")
+@driver.miedb.dbExec("DELETE FROM `patient_mrns` WHERE wc_partition LIKE 'CMS%';")
+@driver.miedb.dbExec("DELETE FROM `patient_partitions` WHERE wc_partition LIKE 'CMS%';")

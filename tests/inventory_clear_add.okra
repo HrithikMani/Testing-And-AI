@@ -1,0 +1,35 @@
+Open the sidemenu
+Click the "Inventory" sidemenu entry
+Begin "Verify that the 'Clear' button works in the 'Add Inventory' tab"
+	Click the "Add Inventory" charttab
+	# in the 1st row in the table body in the "Receive General Inventory Items" table
+	Begin "Add, then clear"
+		# Select "activella" and get "Activella (New) qty: 0" from the autocomplete in the "Drug/Item" cell
+		Enter "Activella" into the "inv_acval0" autocomplete
+		Blur the "inv_acval0" autocomplete
+		@Wait@driver.wcutils.waitForAJAX(30)
+		# Select "tablet" and get "tablet 1-0.5mg qty: 0" in the autocomplete in the "Form" cell
+		Click the "tablet 1-0.5mg qty: 0" autocomplete choice
+		# in the "Qty" cell
+		Type "10" in the "inv_quantity0" input
+		# in the "Lot" cell
+		Type "12345" in the "inv_lot_id0_vis" autocomplete
+		# Select "some" and get "SomeManu Co" from the autocomplete in the "Manufacturer" cell
+		Enter "SomeManu Co" in the "inv_manufacturer0" autocomplete
+		# in the "Expiration Date" cell
+		Type "03-08-2020" in the "inv_exp_date0" date
+		Click the "Clear" button
+		# in the "Drug/Item" cell
+		Verify "value=" in the "inv_acval0" autocomplete
+		# in the "Form" cell
+		Verify "value=" in the "inv_formacval0" autocomplete
+		# in the "Qty" cell
+		Verify "value=" in the "inv_quantity0" input
+		# in the "Lot" cell
+		Verify "value=" in the "inv_lot_id0_vis" autocomplete
+		# in the "Manufacturer" cell
+		Verify "value=" in the "inv_manufacturer0" autocomplete
+		# in the "Expiration Date" cell
+		Verify "value=" in the "inv_exp_date0MONTH" input
+		Verify "value=" in the "inv_exp_date0DAY" input
+		Verify "value=" in the "inv_exp_date0YEAR" input

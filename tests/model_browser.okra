@@ -1,0 +1,31 @@
+Begin "Going to system reports"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Settings" link
+	Type "All reports" in the "select_text" input
+	Click the "Go" button
+	Verify exists "All Reports Table Update Time" text
+	Click the 8th "Edit" link
+	Type "0" in the "value" input
+	Type "No reason" in the "reason" input
+	Click the "Change" button
+	Verify exists "Successfully modified system setting with module (System), section (WebChart) and item (All Reports Table Update Time)" text
+	Click the "System" charttab
+	Click the "System Report" link
+	Verify exists "Model Browser" link
+	@Grant Selenium "Manage System Reports" Access@driver.wcutils.SetPermission('Control', 'Manage System Reports', '2', True)
+	Click the "System" charttab
+	Click the "System Report" link
+	Verify exists "Model Browser" link
+	Click the "Model Browser" link
+	Enter "users" in the "modelAC" autocomplete
+	Click the "User ID" @span@xpath='//span[@class='modelDetailToggler' and contains(., "User ID")]'
+	Verify exists "Referenced by" text
+	Verify exists "absence_programs.user_id" link
+	@Scroll sig_storage_id into View @driver.runJS("document.evaluate(`//li/span[contains(text(),'Sig Storage ID')]`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView();")
+	Wait for ajax
+	Click the "Sig Storage ID" @span@xpath='//span[@class='modelDetailToggler' and contains(., "Sig Storage ID")]'
+	Verify !exists "(File Key)" text
+	Click the "storage_keys.storage_id" link
+	Verify exists "(File Key)" text

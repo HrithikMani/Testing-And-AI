@@ -1,0 +1,40 @@
+Navigate "?f=f=layout&module=SystemEditors&rep_name=Locations"
+Verify exists "Locations" text
+	Wait "LocationManager" grid
+Begin "Test Set Status Operation"
+	Wait "LocationManager" grid
+	Select "Active" from grid perspective
+	Verify exists "OFFICE" grid entry
+	Click "OFFICE" grid checkbox
+	Verify exists "Set Status" grid button
+	Click "Set Status" grid button
+	Click the "No" labelledradio
+	Click "Save" button
+	@Wait for growl to toggle@driver.wcutils.waitForToggle(lambda d: d.getElement(xpath='//div[contains(@class, "growl")]'), expected=False)
+	Verify !exists "!OFFICE" grid entry
+	Select "Inactive" from grid perspective
+	Verify exists "OFFICE" grid entry
+	Click "OFFICE" grid checkbox
+	Verify exists "Set Status" grid button
+	Click "Set Status" grid button
+	Click the "Yes" labelledradio
+	Click "Save" button
+	@Wait for growl to toggle@driver.wcutils.waitForToggle(lambda d: d.getElement(xpath='//div[contains(@class, "growl")]'), expected=False)
+	Select "Active" from grid perspective
+	Verify exists "OFFICE" grid entry
+
+Begin "Test Set Outside Location Operation"
+	Wait "LocationManager" grid
+	Click "OFFICE" grid checkbox
+	Verify exists "Set Outside Location" grid button
+	Click "Set Outside Location" grid button
+	Click the "Yes" labelledradio
+	Click "Save" button
+	Wait "LocationManager" grid
+	Verify exists "OFFICE" grid checkbox
+	Click "OFFICE" grid checkbox
+	Verify exists "Set Outside Location" grid button
+	Click "Set Outside Location" grid button
+	Click the "No" labelledradio
+	Click "Save" button
+

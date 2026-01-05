@@ -1,0 +1,80 @@
+Begin "Grant User: [ {selenium_username} ] Access to Manage Layouts"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type {selenium_username} into the search input
+	Click the "Go!" button
+# Tickets 145217 and 120461. This will be fixed in changes from ticket 120461
+#	Click the "Edit" link
+	Wait for page
+	Click @the Edit link@xpath='//a[text()="Edit"][1]|//span[@class="link"][text()="Edit"][1]'
+	Click the "Customize User Security" link
+	Select Yes from the "Manage Layouts" dropdown
+	Select Yes from the "Manage System Layouts" dropdown
+	Type "webchart_golden_ticket test" in the sec_role_comment input
+	Click the "Update Individual Security" button
+	Verify exists "[ Manage Layouts: Yes ]" text
+	Verify exists "[ Manage System Layouts: Yes ]" text
+Begin "Selenium updates Layout Manager layout"
+	Open the sidemenu
+	Click the "Control" sidemenu entry
+	Verify exists "Layout Manager" link
+	Click the "System" charttab
+	Click the "Layout Manager" charttab subtab
+	Verify exists "Layout Manager" listview
+	Type "AbsenceCommonTypeDates" in the "search_for" input
+	Click the "Go" button
+	Verify exists "AbsenceCommonTypeDates" listview row
+	Click the "Edit" listview link
+	Verify exists "Yes, edit this layout" button
+	Click the "Yes, edit this layout" button
+	Verify exists "Layout Edit" text
+	Type "TestAA" in the 2nd change_comment input
+	Click the 1st "Save & Close" button
+	Begin "Verify the 7 character minimum alert"
+		Verify exists "Change Comments must be at least 7 characters" text
+	Type "TestAAA" in the 2nd change_comment input
+	Click the 1st "Save & Close" button
+	Verify exists "Layout Manager" listview
+	Verify exists "AbsenceCommonTypeDates" listview row
+	Type "AbsenceFMLAHoursJS" in the "search_for" input
+	Click the "Go" button
+	Verify exists "AbsenceFMLAHoursJS" listview row
+	Click the "Edit" listview link
+	Verify exists "Yes, edit this layout" button
+	Click the "Yes, edit this layout" button
+	Verify exists "Layout Edit" text
+	Type "TestBBB" in the 2nd change_comment input
+	Click the 1st "Save & Close" button
+	Verify exists "Layout Manager" listview
+	Verify exists "AbsenceFMLAHoursJS" listview row
+	Click the "All Layouts DV" link
+	@Switch Windows@driver.switchToPopup()
+	Wait for the alllayouts grid
+	Begin "Filter the DataVis Results"
+		Click the "Show/Hide Grid Controls" icon
+		Click the @Select Field dropdown@xpath='//select[@class="wcdv_control_addField"]'
+		Click the @Name option@xpath='//option[@value="Name"]'
+		Click the @Sumo Select@xpath='//span[@class="placeholder" and text()="Select Here"]'
+		Type "ABSENCE" into @the search-txt input@xpath='//input[@class="search-txt"]'
+		Click the @Select All Sumo checkbox@xpath='//span/following-sibling::label[contains(., "Select All")]'
+		Click the @Sumo OK button@xpath='//p[@class="btnOk"]'
+	Verify exists "AbsenceCommonTypeDates" grid entry
+	Verify exists "AbsenceFMLAHoursJS" grid entry
+	Click the "AbsenceCommonTypeDates" grid checkbox
+	Click the "AbsenceFMLAHoursJS" grid checkbox
+	Click the "Edit" grid button
+	Verify exists popup
+	Type "COMMIT THESE" in the "change_comment" input
+	Click the "Save" popup button
+	Wait for page
+	Wait for the alllayouts grid
+#	Click the "Show/Hide Grid Controls" icon
+	Click the @Select Field dropdown@xpath='//select[@class="wcdv_control_addField"]'
+	Click the @Change Comment option@xpath='//option[@value="Change Comment"]'
+	Click the @Sumo Select@xpath='//span[@class="placeholder" and text()="Select Here"]'
+	Type "COMMIT THESE" into @the search-txt input@xpath='//input[@class="search-txt"]'
+	Click the @COMMIT THESE Sumo checkbox@xpath='//li[@class="opt"]//label[contains(., "COMMIT THESE")]/parent::li//i'
+	Click the @Sumo OK button@xpath='//p[@class="btnOk"]'
+	Verify exists "COMMIT THESE" grid entry

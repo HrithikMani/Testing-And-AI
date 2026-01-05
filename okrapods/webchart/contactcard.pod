@@ -1,0 +1,17 @@
+"""
+Pod used to interact with Contact Cards on WebChart's EO/PO pages
+
+
+Usage examples:
+	Verify exists "Best Inc" contactcard
+	Verify exists "Funding End Date" contactcard info
+
+"""
+
+card://div[@class="contact"]/div[@class="name"]|//div[@class="contact"]/a[@class="name"]
+
+info://div[@class="contact"]/div[@class="name"]/following-sibling::div{OKRA_TEXT_CLS}
+	|//div[@class="contact"]/a[@class="name"]/following-sibling::div{OKRA_TEXT_CLS}
+	|//div[@class="contact"]/div[@class="info"]/div{OKRA_TEXT_CLS}
+
+

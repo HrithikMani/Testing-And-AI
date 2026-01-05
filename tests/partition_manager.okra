@@ -1,0 +1,52 @@
+Begin "Add a New Partition"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Partition Mgr" charttab subtab
+	Click the "Add Partition" link
+	Type "NEWPART" in the "partition" input
+	Type "PARTITIONTEST" in the "wc_guid" input
+	Type "New" in the "name" input
+	Type "Test Adding a Partition" in the "description" input
+	Type "2011" in the "mr_sequence" input
+	Select "Hidden From View But Searchable" from the "echart_opts" dropdown
+	Select "Auto Increment" from the "echart_opts" dropdown
+	Select the "No" radio
+	Select the "Active With Doc Queue" radio
+	Select the "Merge this partition's documents, and keep all MR Numbers" radio
+	Type "333" in the "part_order" input
+	Click the "part_restrict" checkbox
+	Select "Medical Record Number" from the "part_identifier" dropdown
+	Click the "Save" button
+Begin "Search for the new partition"
+	Type "new" in the "pm_srch_text" input
+	Click the "Search" button
+	Verify exists "PARTITIONTEST" text
+	Verify exists "Test Adding a Partition" text
+Begin "Edit the new partition"
+	Click the "Edit" listview link
+	Type "TESTPARTITION" in the "wc_guid" input
+	Type "Test" in the "name" input
+	Type "Test Editing a Partition" in the "description" input
+	Type "2010" in the "mr_sequence" input
+	Select "View Only" from the "echart_opts" dropdown
+	Select 2nd "Active" radio
+	Type "777" in the "part_order" input
+	Click the "part_restrict" checkbox
+	Select "License Number" from the "part_identifier" dropdown
+	Click the "Change" button
+	Begin "Verify the changes made to the partition"
+		Verify exists "Partition (NEWPART) successfully edited" text
+		Verify exists "NEWPART" text
+		Verify exists "new" text
+		Verify exists "Test Editing a Partition" text
+		Verify exists "2010" text
+		Verify exists "777" text
+		Verify exists "LN" text
+Begin "Delete the new partition"
+	Click the "Delete" link
+	Verify exists "WARNING" text
+	Verify exists "You are about to deactivate partition 'NEWPART'!" text
+	Click the @Deactivate button@xpath=//input[@value="Deactivate"][@type="SUBMIT"]
+	Verify exists "Partition 'NEWPART' was successfully deactivated" text
+	Verify !exists "NEWPART" listview row

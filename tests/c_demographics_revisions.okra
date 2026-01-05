@@ -1,0 +1,32 @@
+Begin Create Contact Chart
+	Navigate "?f=chart&s=pat&pat_id=43"
+	Click "Add New Contact" link
+	Type "Contactson" in the "Last Name" input
+	Type "Christoff" in the "First Name" input
+	Select "Contact" from the "Contact Type" dropdown
+	Type "email@e.mail" in the "Email" input
+	Type "2223334444" in the "Phone" input
+	Click the "Add New" button
+Begin Open and Close Contact Demographics
+	Click the "Overview (Contact)" charttab
+	Open the "Contact" dynamicsection
+	Close the "Contact" dynamicsection
+	Open the "Contact" dynamicsection
+	Verify exists @0 in Revision # column@xpath="//tr[1]/td[1][text()='0']"
+	Verify exists @Selenium, Selenium in Revised By column@xpath="//tr[1]/td[2][text()='Selenium, Selenium']"
+	
+	Verify exists @Contactson in Last Name column@xpath="//tr[1]/td[4][text()='Contactson']"
+	Verify exists @Christoff in First Name column@xpath="//tr[1]/td[5][text()='Christoff']"
+	Verify !exists @text in Middle Name column@xpath="//tr[1]/td[6]/text()"
+	Verify !exists @text in Country column@xpath="//tr[1]/td[7]/text()"
+	Verify !exists @text in Postal Code column@xpath="//tr[1]/td[8]/text()"
+	Verify !exists @text in Address 1 column@xpath="//tr[1]/td[9]/text()"
+	Verify !exists @text in Address 2 column@xpath="//tr[1]/td[10]/text()"
+	Verify !exists @text in County column@xpath="//tr[1]/td[11]/text()"
+	Verify !exists @text in City column@xpath="//tr[1]/td[12]/text()"
+	Verify !exists @text in State/Province column@xpath="//tr[1]/td[13]/text()"
+	Verify exists @(222) 333-4444 in Work Phone column@xpath="//tr[1]/td[14][text()='(222) 333-4444']"
+	Verify !exists @text in Mobile Phone column@xpath="//tr[1]/td[15]/text()"
+	Verify !exists @text in Fax Number column@xpath="//tr[1]/td[16]/text()"
+	Verify exists @"email@e.mail" in Email column@xpath="//tr[1]/td[17][text()='email@e.mail']"
+	Close the "Contact" dynamicsection

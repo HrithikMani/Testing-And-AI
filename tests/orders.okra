@@ -1,0 +1,177 @@
+"""
+   This test exercises basic orders functionality such as, adding an order, editing, completing, and deletion.
+   @systemtype: WCNOW
+"""
+
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+
+Begin "Add an order"
+	Click the "TEST-10019" link
+	Wait for page
+	Open the quicklink list
+	Click the "Add Order" quicklink
+	Begin "Order Request"
+		Select "Selenium, Selenium" from the "ordering_physician" dropdown
+		Select "Office" from the "location" dropdown
+		Select "Soon" from the "schedule_comment" dropdown
+		Enter "Urination painful (R30.0, Dysuria)" in the "conditionac_txt" autocomplete
+		Type "Order comments 1" in the "comments" input
+		Type "Patient instructions 1" in the "patient_instructions" input
+# Ticket #126334 and #134444 are frequently failing due to stale element on the set_name/'Test/Order Name' <select>. Attempting to stabilize it for now by using a raw block. 
+		@@@Select "Health Promotion" from the "Test/Order Name" popup dropdown
+			if	driver.verifyElementPresent(xpath='//div[contains(., "wc_win")]//select[contains(@name, "set_name")]'):
+				driver.clickElement(xpath='//div[contains(., "wc_win")]//select[contains(@name, "set_name")]')
+				driver.clickElement(xpath='//div[contains(., "wc_win")]//select[contains(@name, "set_name")]//option[contains(@value, "Health Promotion")]')
+			else:
+				driver.reportCommandStatus('orders.okra', '', False, 'set_name', 'Dropdown is not present')			
+		@@@
+		Wait for page
+		Click the "Dietary Consult" picklist checkbox
+		Click the "Physical Activity Consult" picklist checkbox
+		Click the "BMI Management" picklist checkbox
+		Click the "Submit" button
+	Begin "Verify the Order Was Added"
+		Begin "Verify Order Document"
+			@Switch Windows@driver.switchToPopup()
+			Verify exists "Dietary Consult" text
+			Verify exists "Physical Activity" text
+			Verify exists "BMI Management" text
+			@Switch Windows@driver.closePopup()
+		Begin "Verify Order in Order Requests"
+			Open "Medical Record" charttab
+			Click the "Order Requests" charttab subtab
+			Verify exists "Dietary Consult" text
+			Verify exists "Physical Activity" text
+			Verify exists "BMI Management" text
+			Verify exists "Order comments 1" text
+		Begin "Verify Order in Due List"
+			Open "Health Surveillance" charttab
+			Click the "Due List" charttab subtab
+			Verify exists "Dietary Consult" text
+			Verify exists "Physical Activity" text
+			Verify exists "BMI Management" text
+
+Begin "Edit an order"
+	Open "Medical Record" charttab
+	Click the "OrderRequestsLegacy" charttab subtab
+	Select "All Locations" from the "location" dropdown
+	Click the "Apply" button
+	Wait for page
+	Select "Labs" from the "Set Name" dropdown
+	Wait for page
+	Click the "Search" button
+	Wait for page
+	Click the "Edit" link
+	Begin "Order Request"
+# Ticket #126334 and #134444 are frequently failing due to stale element on the set_name/'Test/Order Name' <select>. Attempting to stabilize it for now by using a raw block. 
+		@@@Select "Quick Visit Orders" from the "Test/Order Name" popup dropdown
+			if	driver.verifyElementPresent(xpath='//div[contains(., "wc_win")]//select[contains(@name, "set_name")]'):
+				driver.clickElement(xpath='//div[contains(., "wc_win")]//select[contains(@name, "set_name")]')
+				driver.clickElement(xpath='//div[contains(., "wc_win")]//select[contains(@name, "set_name")]//option[contains(@value, "Quick Visit Orders")]')
+			else:
+				driver.reportCommandStatus('orders.okra', '', False, 'set_name', 'Dropdown is not present')			
+		@@@
+		Wait for page
+		Click the "Follow up" picklist checkbox
+		Click the "Submit" button
+	Begin "Finish Order Request"
+		Begin "Lipid Profile dialog"
+			Select "White/Caucasian" from the "Patient Race" field
+			Select "No" from the "Hispanic" field
+			Select "Finger stick(blood)" from the "Blood Lead Type" field
+			Select "Repeat" from the 1st "Blood Lead Purpose" field
+			Type "Bloom" in the "Blood Lead County Code(minimum of 2 digits if sent)" field
+			Click the "Yes" labelledradio
+			Type "Elizabeth! This is the big one!" in the "What does Redd Foxx say?" field
+			Click the "Finish" button
+	@Switch Windows@driver.switchToPopup()
+	Verify exists "Quick Visit Orders" text
+	Verify exists "Lipid Profile" text
+	Verify exists "Follow up" text
+	Begin "View a revision"
+		Click the "Properties" link
+		#clicking the revision number (0) may hit the wrong link in the future, so we'll get the revision date/time link instead
+		# This is done to confirm that we don't get a DB error in the diagnosis query
+		Click the "12-23-2015 15:15" listview link
+		# Add pod functionality to check document diffs. Ticket #126798
+
+Begin "Complete an order"
+	Navigate "?func=omniscope"
+	Wait for page
+	Click the "TEST-10019" link
+	Wait for page
+	Open "Medical Record" charttab
+	Click the "OrderRequestsLegacy" charttab subtab
+	Select "All Locations" from the "location" dropdown
+	Click the "Apply" button
+	Verify exists "Health Promotion" from the "Set Name" dropdown
+	Select "Health Promotion" from the "Set Name" dropdown
+	Wait for ajax
+	Click the "Search" button
+	Wait for page
+	#the first complete link is a header in the unordered orders listview
+	Click the 2nd "Complete" link
+	Enter "02-02-2016" in the 3rd date
+	Enter "02-02-2016" in the 4th date
+	Click the "Submit" button
+	Verify exists "Successfully updated order" text
+	Begin "Verify the Order was Completed"
+		Open "Medical Record" charttab
+		Click the "OrderRequestsLegacy" charttab subtab
+		Verify exists "Health Promotion" from the "Set Name" dropdown
+		Select "Health Promotion" from the "Set Name" dropdown
+		Wait for ajax
+		Click the "Search" button
+		Wait for page
+		Verify exists "BMI Management - completed" text
+
+Begin "Delete an order"
+	Navigate "?func=omniscope"
+	Wait for page
+	Click the "TEST-10019" link
+	Wait for page
+	Open "Medical Record" charttab
+	Click the "OrderRequestsLegacy" charttab subtab
+	Select "All Locations" from the "location" dropdown
+	Click the "Apply" button
+	Enter "Selenium" in the "Physician" autocomplete
+	Select "Health Promotion" from the "Set Name" dropdown
+	Click the "Search" button
+	Wait for page
+	Verify exists "Completed Orders" listview name
+	Verify exists "Dietary Consult - completed" text
+	Verify exists "Physical Activity Consult - completed" text
+	Verify exists "BMI Management - completed" text
+	Click the 2nd "Complete" link
+	Begin "Cancel one order item, complete another 2 order items"
+		Click the 1st "Cancelled" radio
+		Click the 2nd "Pending" radio
+		Click the 3rd "Pending" radio
+		Enter "02-02-2015" in the 3rd date
+		Enter "02-02-2015" in the 4th date
+	Click the "Complete" button
+	Begin "Verify one cancelled and other two are pending"
+		Verify exists "Successfully updated order" text
+		Verify exists "Cancelled" text
+		Verify exists 1st "Pending" text
+		Verify exists 2nd "Pending" text
+	Verify exists "View Recent" link
+	Click the "View Recent" link
+	Click the 2nd "Delete" link
+	Verify exists "2 items will be cancelled" text
+	Type "testing the order delete feature" in the "Reason for Deleting Document:" field
+	Click the "Delete Document" button
+	Verify exists "Deleted Successfully" text
+	Open "Medical Record" charttab
+	Click the "OrderRequestsLegacy" charttab subtab
+	Select "Health Promotion" from the "Set Name" dropdown
+	Click the "Search" button
+	Wait for page
+	Verify !exists "Incomplete Orders" listview name
+	Verify !exists "Completed Orders" listview name
+	@@@Switch Back to New Requisition Screen
+	driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+	@@@

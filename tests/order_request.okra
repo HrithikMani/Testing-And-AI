@@ -1,0 +1,47 @@
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+@Create Hyphenated Partition@driver.miedb.dbExec("INSERT IGNORE INTO patient_partitions (wc_partition, wc_uuid, name, description, mr_sequence, echart_opts,mtype,active,identifier, part_order) values ('MIE-TEST', UNHEX('11ED457D985DE93DB398B8CA3AF974FD'), 'MIE-TEST', 'MIE-TEST', '1001', 'V', 2, 2, 'MR',(Select max(pp.part_order) + 5 FROM patient_partitions pp))")
+@Assign Hyphenated Partition@driver.miedb.dbExec("INSERT IGNORE INTO patient_mrns (wc_partition, mrnumber, pat_id) VALUES('MIE-TEST', '10019', '18')")
+
+@Create Picklist@driver.miedb.dbExec("INSERT INTO order_pick_list SET set_name='LabCorp', group_by='Testing', order_id=255, order_by=1, column_index='1'")
+@Create Refer To Systems Entry@driver.miedb.dbExec("INSERT INTO refer_to_systems SET system_id='LABCORP', system_name='LabCorp', system_options='64' ON DUPLICATE KEY UPDATE system_id='LABCORP', system_name='LabCorp', system_options='64';")
+
+@Add Translation@driver.miedb.dbExec("INSERT INTO translate SET name = 'labcorp-account_numbers',  trans_from = 'MIE-TEST:OFFICE', trans_to = '12345678'")
+
+Open the sidemenu
+Click the "E-Chart" link
+Type "Hart, William" in the "sstring" input
+Click the "TEST-10019" link
+
+Click the "Add Order" link
+Begin "Order Request"
+	Verify exists "Order Request" popup
+	Wait for ajax
+	Select "LabCorp" from the "set_name" popup dropdown
+	Wait for ajax
+	Verify exists "Schedule In" dropdown
+	Select "Soon" from the "Schedule In" dropdown
+	Verify exists "Ordering Provider" dropdown
+	Select "Selenium, Selenium" from the "Ordering Provider" popup dropdown
+	Select "LabCorp" from the "Performing Facility" popup dropdown
+	Select "Office" from the "location" popup dropdown
+	Type "Order comments." in the "comments" input
+	Click the "Iron, Total" picklist checkbox
+	Select "MIE-TEST-10019" from the "MR #" dropdown
+	Click the "Submit" button
+	Begin "Finish Order Request"
+		Select "White/Caucasian" from the "question_1_0_R" popup dropdown
+		Select "No" from the "Hispanic" dropdown
+		Click the 1st "Yes" labelledradio
+		Click the "Finish" Button
+@Switch Windows@driver.switchToPopup()
+Verify exists "12345678" text
+@Close this window@driver.closePopup()
+
+@Remove Hyphenated Partition@driver.miedb.dbExec("DELETE FROM patient_mrns WHERE wc_partition = 'MIE-TEST'")
+@Remove Hyphenated Partition@driver.miedb.dbExec("DELETE FROM patient_partitions WHERE wc_uuid = UNHEX('11ED457D985DE93DB398B8CA3AF974FD')")
+@@@Switch Back to New Requisition Screen
+driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@

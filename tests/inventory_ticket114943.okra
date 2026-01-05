@@ -1,0 +1,423 @@
+Begin "Testing editing of lot information"
+	Begin "The Easy one - Single Use Lots"
+		Open the sidemenu
+		Click the "Inventory" sidemenu entry
+		Begin "View all records"
+			Select "All" in the "ib.location" dropdown
+			Click the "Search" button
+		Click the @"Edit" Link in the diphenhydramine row@xpath=//td[contains(.,'diphenhydramine')]/following-sibling::td/a[contains(.,'Edit')]
+		Begin "Make changes to the lot information"
+			Type "afosodl1198" in the "Lot Number" input
+			Type "Medique Inc" in the "Manufacturer" input
+			Enter "05-01-2030" in the exp_date date
+			Type "Lot Correction" in the Comment input
+			Click the "Save" button
+		Verify exists the "Successfully Updated Inventory Item" text
+		Begin "View the updated record"
+			Select "All" in the "ib.location" dropdown
+			Click the "Search" button
+		Verify exists the @"afosodl1198" in the "diphenhydramine" row with the updated manufacturer and expiration date@xpath=//td[contains(.,'diphenhydramine')]/following-sibling::td[contains(.,'afosodl1198')]/following-sibling::td[contains(.,'Medique Inc')]/following-sibling::td[contains(.,'05-01-2030')]
+	Begin "More Complicated - Single Lot Record, Multiple locations"
+		Click the @"Edit" link in the "lisinopril 5 mg tablet" in the "Office" row@xpath=//td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td[contains(.,'Office')]/following-sibling::td/a[contains(.,'Edit')]
+		Begin "Make changes to the lot information"
+			Type "abc123a" in the "Lot Number" input
+			Type "SomeManu Corp" in the "Manufacturer" input
+			Enter "02-01-2030" in the exp_date date
+			Type "Lot Correction" in the Comment input
+			Click the "Save" button
+		Verify exists the "Successfully Updated Inventory Item" text
+		Verify exists the @"abc123a" in the "lisinopril 5 mg tablet" row with the updated manufacturer and expiration date@xpath=//td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td[contains(.,'abc123a')]/following-sibling::td[contains(.,'SomeManu Corp')]/following-sibling::td[contains(.,'02-01-2030')]
+		Begin "Verify the other lots did not change"
+			Begin "View the other records"
+				Select "All" in the "ib.location" dropdown
+				Click the "Search" button
+			Verify exists the @"abc123" in the "lisinopril 5 mg tablet" row with the original manufacturer and expiration date@xpath=//td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td[contains(.,'abc123')]/following-sibling::td[contains(.,'SomeManu Co')]/following-sibling::td[contains(.,'01-01-2030')]
+	Begin "Edge Cases"
+		Begin "Single Use Lot"
+			Begin "Setup"
+				Click the "Add Inventory" charttab
+				Begin "Receive an item without a manufacturer or expiration"
+					Select "Office" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc0']
+					Verify !exists @the "Stockpile" dropdown in the "Site" cell@xpath=//select[@name='inv_stockpile_id0']
+					Enter "Lipitor" into the "inv_acval0" autocomplete
+					Blur the "inv_acval0" autocomplete
+					@Wait@driver.wcutils.waitForAJAX(30)
+					Click the "tablet 20mg" autocomplete choice
+					Type "20" in the "inv_quantity0" input
+					Type "lipi" in the "inv_lot_id0_vis" autocomplete
+					screenshot "presave1"
+				Begin "Receive an item without an expiration"
+					Select "Office" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc1']
+					Verify !exists @the "Stockpile" dropdown in the "Site" cell@xpath=//select[@name='inv_stockpile_id1']
+					Enter "Entresto" into the "inv_acval1" autocomplete
+					Blur the "inv_acval1" autocomplete
+					@Wait@driver.wcutils.waitForAJAX(30)
+					Click the "tablet 24-26mg" autocomplete choice
+					Type "20" in the "inv_quantity1" input
+					Type "entr" in the "inv_lot_id1_vis" autocomplete
+					Type "AnyManu Co" in the "inv_manufacturer1" autocomplete
+					screenshot "presave2"
+				Begin "Receive an item without a manufacturer"
+					Select "Office" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc2']
+					Verify !exists @the "Stockpile" dropdown in the "Site" cell@xpath=//select[@name='inv_stockpile_id2']
+					Enter "Plavix" into the "inv_acval2" autocomplete
+					Blur the "inv_acval2" autocomplete
+					@Wait@driver.wcutils.waitForAJAX(30)
+					Click the "tablet 75mg" autocomplete choice
+					Type "20" in the "inv_quantity2" input
+					Type "lipi" in the "inv_lot_id2_vis" autocomplete
+					Enter "01-01-2030" in the "inv_exp_date2" date
+					screenshot "presave3"
+				Begin "Receive an item with only a manufacturer"
+					Select "Office" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc3']
+					Verify !exists @the "Stockpile" dropdown in the "Site" cell@xpath=//select[@name='inv_stockpile_id3']
+					Enter "Calphron" into the "inv_acval3" autocomplete
+					Blur the "inv_acval3" autocomplete
+					@Wait@driver.wcutils.waitForAJAX(30)
+					Click the "tablet 667mg" autocomplete choice
+					Type "20" in the "inv_quantity3" input
+					Type "MyManu Co" in the "inv_manufacturer3" autocomplete
+					screenshot "presave4"
+				Click the "Add to Inventory" button
+				Verify exists the "Receiving Lipitor 20 mg tablet" text
+				Verify exists the "Receiving Entresto 24 mg-26 mg table" text
+				Verify exists the "Receiving Plavix 75 mg tablet" text
+				Verify exists the "Receiving Calphron 667 mg tablet" text
+				Click the "Show Inventory" charttab
+			Begin "Lot Number, no manufacturer or Expiration"
+				Click the @"Edit" link in the "Lipitor" row"@xpath=//td[contains(.,'Lipitor')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Update the Lot information"
+					Type "lipi01" in the "Lot Number" input
+					Type "LiMed" in the "Manufacturer" input
+					Enter "01-01-2030" in the "exp_date" date
+					Type "Lot Update" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Verify exists the @"lip01" text in the "Lipitor" row with updated info@xpath=//td[contains(.,'Lipitor')]/following-sibling::td[contains(.,'lipi01')]/following-sibling::td[contains(.,'LiMed')]/following-sibling::td[contains(.,'01-01-2030')]
+			Begin "Lot Number + Manufacturer, No Expiration"
+				Click the @"Edit" link in the "Entresto" row"@xpath=//td[contains(.,'Entresto')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Update the Lot information"
+					Type "entr01" in the "Lot Number" input
+					Type "EntMed" in the "Manufacturer" input
+					Enter "01-01-2030" in the "exp_date" date
+					Type "Lot Update" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Verify exists the @"entr01" text in the "Entresto" row with the updated info@xpath=//td[contains(.,'Entresto')]/following-sibling::td[contains(.,'entr01')]/following-sibling::td[contains(.,'EntMed')]/following-sibling::td[contains(.,'01-01-2030')]
+			Begin "Lot Number + Expiration, No Manufacturer"
+				Click the @"Edit" link in the "Plavix" row"@xpath=//td[contains(.,'Plavix')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Update the Lot information"
+					Type "plav01" in the "Lot Number" input
+					Type "PlavMed" in the "Manufacturer" input
+					Enter "06-01-2030" in the "exp_date" date
+					Type "Lot Update" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Verify exists the @"plav01" text in the "Plavix" row with the updated info@xpath=//td[contains(.,'Plavix')]/following-sibling::td[contains(.,'plav01')]/following-sibling::td[contains(.,'PlavMed')]/following-sibling::td[contains(.,'06-01-2030')]
+			Begin "Manufacturer Only"
+				Click the @"Edit" link in the "Calphron" row"@xpath=//td[contains(.,'Calphron')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Update the Lot information"
+					Type "calph01" in the "Lot Number" input
+					Type "CalMed" in the "Manufacturer" input
+					Enter "06-01-2030" in the "exp_date" date
+					Type "Lot Update" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Verify exists the @"calph01" text in the "Calphron" row with the updated info@xpath=//td[contains(.,'Calphron')]/following-sibling::td[contains(.,'calph01')]/following-sibling::td[contains(.,'CalMed')]/following-sibling::td[contains(.,'06-01-2030')]
+		Begin "Single Lot Record, Multiple Locations"
+			Begin "Setup"
+				Click the "Add Inventory" charttab
+				Begin "Receive an item without a manufacturer or expiration"
+					Begin "Location 1"
+						Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc0']
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Verify "value=0" "inv_stockpile_id0" dropdown
+						Enter "Ambien" into the "inv_acval0" autocomplete
+						Blur the "inv_acval0" autocomplete
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Click the "tablet 5mg" autocomplete choice
+						Type "20" in the "inv_quantity0" input
+						Type "ambo" in the "inv_lot_id0_vis" autocomplete
+					Begin "Location 2"
+						Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc1']
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Select "Store Room A" from the "inv_stockpile_id1" dropdown
+						Verify "value=1" "inv_stockpile_id1" dropdown
+						Enter "Ambien" into the "inv_acval1" autocomplete
+						Blur the "inv_acval1" autocomplete
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Click the "tablet 5mg" autocomplete choice
+						Type "20" in the "inv_quantity1" input
+						Type "ambo" in the "inv_lot_id1_vis" autocomplete
+				Begin "Receive an item without an expiration"
+					Begin "Location 1"
+						Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc2']
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Verify "value=0" "inv_stockpile_id2" dropdown
+						Enter "Glucophage" into the "inv_acval2" autocomplete
+						Blur the "inv_acval2" autocomplete
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Click the "tablet 850mg" autocomplete choice
+						Type "20" in the "inv_quantity2" input
+						Type "glec" in the "inv_lot_id2_vis" autocomplete
+						Type "AnyManu Co" in the "inv_manufacturer2" autocomplete
+					Begin "Location 2"
+						Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc3']
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Select "Store Room A" from the "inv_stockpile_id3" dropdown
+						Verify "value=1" "inv_stockpile_id3" dropdown
+						Enter "Glucophage" into the "inv_acval3" autocomplete
+						Blur the "inv_acval3" autocomplete
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Click the "tablet 850mg" autocomplete choice
+						Type "20" in the "inv_quantity3" input
+						Type "glec" in the "inv_lot_id3_vis" autocomplete
+						Type "AnyManu Co" in the "inv_manufacturer3" autocomplete
+				Begin "Receive an item without a manufacturer"
+					Begin "Location 1"
+						Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc4']
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Verify "value=0" "inv_stockpile_id4" dropdown
+						Enter "Strattera" into the "inv_acval4" autocomplete
+						Blur the "inv_acval4" autocomplete
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Click the "capsule 10mg" autocomplete choice
+						Type "20" in the "inv_quantity4" input
+						Type "strot" in the "inv_lot_id4_vis" autocomplete
+						Enter "01-01-2030" in the "inv_exp_date4" date
+					Begin "Location 2"
+						Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc5']
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Select "Store Room A" from the "inv_stockpile_id5" dropdown
+						Verify "value=1" "inv_stockpile_id5" dropdown
+						Enter "Strattera" into the "inv_acval5" autocomplete
+						Blur the "inv_acval5" autocomplete
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Click the "capsule 10mg" autocomplete choice
+						Type "20" in the "inv_quantity5" input
+						Type "strot" in the "inv_lot_id5_vis" autocomplete
+						Enter "01-01-2030" in the "inv_exp_date5" date
+				Begin "Receive an item with only a manufacturer"
+					Begin "Location 1"
+						Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc6']
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Verify "value=0" "inv_stockpile_id6" dropdown
+						Enter "Reglan" into the "inv_acval6" autocomplete
+						Blur the "inv_acval6" autocomplete
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Click the "tablet 10mg" autocomplete choice
+						Type "20" in the "inv_quantity6" input
+						Type "MyManu Co" in the "inv_manufacturer6" autocomplete
+					Begin "Location 2"
+						Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc7']
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Select "Store Room A" from the "inv_stockpile_id7" dropdown
+						Verify "value=1" "inv_stockpile_id7" dropdown
+						Enter "Reglan" into the "inv_acval7" autocomplete
+						Blur the "inv_acval7" autocomplete
+						@Wait@driver.wcutils.waitForAJAX(30)
+						Click the "tablet 10mg" autocomplete choice
+						Type "20" in the "inv_quantity7" input
+						Type "MyManu Co" in the "inv_manufacturer7" autocomplete
+				Click the "Add to Inventory" button
+				Verify exists the "Receiving Ambien 5 mg tablet" text
+				Verify exists the 2nd "Receiving Ambien 5 mg tablet" text
+				Verify exists the "Receiving Glucophage 850 mg tablet" text
+				Verify exists the 2nd "Receiving Glucophage 850 mg tablet" text
+				Verify exists the "Receiving Strattera 10 mg capsule" text
+				Verify exists the 2nd "Receiving Strattera 10 mg capsule" text
+				Verify exists the "Receiving Reglan 10 mg tablet" text
+				Verify exists the 2nd "Receiving Reglan 10 mg tablet" text
+				Click the "Show Inventory" charttab
+			Begin "Lot Number, no manufacturer or Expiration"
+				Begin "View the Ambien Items"
+					Type "Ambien" in the "display" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+				Click the @"Edit" link in the "Store Room A" row@xpath=//td[contains(.,'Store Room A')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Modify the Lot Information"
+					Type "ambi01" in the "Lot Number" input
+					Type "AmbiMed" in the "Manufacturer" input
+					Enter "06-01-2030" in the "exp_date" date
+					Type "Updated Lot" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Begin "View the Ambien Items"
+					Type "Ambien" in the "display" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+				Verify exists the @original lot information@xpath=//td[contains(.,'Ambien')]/following-sibling::td[text()='Hospital']/following-sibling::td[contains(.,'ambo')]/following-sibling::td[contains(.,'')]/following-sibling::td[contains(.,'')]/following-sibling::td[contains(.,'Edit')]
+				Verify exists the @new lot information@xpath=//td[contains(.,'Ambien')]/following-sibling::td[text()='Hospital: Store Room A']/following-sibling::td[contains(.,'ambi01')]/following-sibling::td[contains(.,'AmbiMed')]/following-sibling::td[contains(.,'06-01-2030')]/following-sibling::td[contains(.,'Edit')]
+			Begin "Lot Number + Manufacturer, No Expiration"
+				Begin "View the Glucophage Items"
+					Type "Glucophage" in the "display" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+				Click the @"Edit" link in the "Store Room A" row@xpath=//td[contains(.,'Store Room A')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Modify the Lot Information"
+					Type "gluco01" in the "Lot Number" input
+					Type "GlucoMed" in the "Manufacturer" input
+					Enter "02-01-2030" in the "exp_date" date
+					Type "Updated Lot" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Begin "View the Glucophage Items"
+					Type "Glucophage" in the "display" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+				Verify exists the @original lot information@xpath=//td[contains(.,'Glucophage')]/following-sibling::td[text()='Hospital']/following-sibling::td[contains(.,'glec')]/following-sibling::td[contains(.,'AnyManu Co')]/following-sibling::td[contains(.,'')]/following-sibling::td[contains(.,'Edit')]
+				Verify exists the @new lot information@xpath=//td[contains(.,'Glucophage')]/following-sibling::td[text()='Hospital: Store Room A']/following-sibling::td[contains(.,'gluco01')]/following-sibling::td[contains(.,'GlucoMed')]/following-sibling::td[contains(.,'02-01-2030')]/following-sibling::td[contains(.,'Edit')]
+			Begin "Lot Number + Expiration, No Manufacturer"
+				Begin "View the Strattera Items"
+					Type "Strattera" in the "display" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+				Click the @"Edit" link in the "Store Room A" row@xpath=//td[contains(.,'Store Room A')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Modify the Lot Information"
+					Type "stratt01" in the "Lot Number" input
+					Type "StratMed" in the "Manufacturer" input
+					Enter "07-01-2030" in the "exp_date" date
+					Type "Updated Lot" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Begin "View the Strattera Items"
+					Type "Strattera" in the "display" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+				Verify exists the @original lot information@xpath=//td[contains(.,'Strattera')]/following-sibling::td[text()='Hospital']/following-sibling::td[contains(.,'strot')]/following-sibling::td[contains(.,'')]/following-sibling::td[contains(.,'01-01-2030')]/following-sibling::td[contains(.,'Edit')]
+				Verify exists the @new lot information@xpath=//td[contains(.,'Strattera')]/following-sibling::td[text()='Hospital: Store Room A']/following-sibling::td[contains(.,'stratt01')]/following-sibling::td[contains(.,'StratMed')]/following-sibling::td[contains(.,'07-01-2030')]/following-sibling::td[contains(.,'Edit')]
+			Begin "Manufacturer Only"
+				Begin "View the Reglan Items"
+					Type "Reglan" in the "display" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+				Click the @"Edit" link in the "Store Room A" row@xpath=//td[contains(.,'Store Room A')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Modify the Lot Information"
+					Type "regla01" in the "Lot Number" input
+					Type "RegMed" in the "Manufacturer" input
+					Enter "05-01-2030" in the "exp_date" date
+					Type "Updated Lot" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Begin "View the Reglan Items"
+					Type "Reglan" in the "display" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+				Verify exists the @original lot information@xpath=//td[contains(.,'Reglan')]/following-sibling::td[text()='Hospital']/following-sibling::td[contains(.,'')]/following-sibling::td[contains(.,'MyManu Co')]/following-sibling::td[contains(.,'')]/following-sibling::td[contains(.,'Edit')]
+				Verify exists the @new lot information@xpath=//td[contains(.,'Reglan')]/following-sibling::td[text()='Hospital: Store Room A']/following-sibling::td[contains(.,'regla01')]/following-sibling::td[contains(.,'RegMed')]/following-sibling::td[contains(.,'05-01-2030')]/following-sibling::td[contains(.,'Edit')]
+		Begin "Non-medications"
+			Begin "Setup"
+				Click the "Control" charttab
+				Begin "Create a new item"
+					Click the "Add an Item" link
+					Type "Stomach Tube" in the "New Name" input
+					Click the "Add Item" button
+					Verify exists the "Inventory Item (0027) Added Successfully" text
+				Begin "Create a second new item"
+					Click the "Add an Item" link
+					Type "Fingertip Bandage" in the "New Name" input
+					Click teh "Add Item" button
+					Verify exists the "Inventory Item (0028) Added Successfully" text
+				Begin "Receive the Items"
+					Click the "Add Inventory" charttab
+					Begin "Receive Tubes"
+						Select "Office" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc0']
+						Verify !exists @the "Stockpile" dropdown in the "Site" cell@xpath=//select[@name='inv_stockpile_id0']
+						Enter "Stomach Tube" into the "inv_acval0" autocomplete
+						Blur the "inv_acval0" autocomplete
+						Type "20" in the "inv_quantity0" input
+						Type "AM32B" in the "inv_lot_id0_vis" autocomplete
+						Enter "01-01-2030" in the "inv_exp_date0" date
+						screenshot "presaven1"
+					Begin "Receive Bandages"
+						Begin "Location 1"
+							Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc1']
+							@Wait@driver.wcutils.waitForAJAX(30)
+							Verify "value=0" "inv_stockpile_id1" dropdown
+							Enter "Fingertip Bandage" into the "inv_acval1" autocomplete
+							Blur the "inv_acval1" autocomplete
+							Type "20" in the "inv_quantity1" input
+							Type "XT9C" in the "inv_lot_id1_vis" autocomplete
+							Enter "06-01-2030" in the "inv_exp_date1" date
+							screenshot "presavenr2a"
+						Begin "Location 2"
+							Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc2']
+							@Wait@driver.wcutils.waitForAJAX(30)
+							Select "Store Room A" from the "inv_stockpile_id2" dropdown
+							Enter "Fingertip Bandage" into the "inv_acval2" autocomplete
+							Blur the "inv_acval2" autocomplete
+							Type "20" in the "inv_quantity2" input
+							Type "XT9C" in the "inv_lot_id2_vis" autocomplete
+							Enter "06-01-2030" in the "inv_exp_date2" date
+							screenshot "presavenr2b"
+					Click the "Add to Inventory" button
+					Verify exists the "Receiving Stomach Tube (20)" text
+					Verify exists the "Receiving Fingertip Bandage (20)" text
+					Verify exists the 2nd "Receiving Fingertip Bandage (20)" text
+			Begin "Single Use Lot"
+				Click the "Show Inventory" charttab
+				Click the @"Edit" link in the "Stomach Tube" row@xpath=//td[contains(.,'Stomach Tube')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Update the Lot"
+					Type "AM32C" in the "Lot Number" input
+					Type "McTubes Inc." in the "Manufacturer" input
+					Enter "05-01-2030" in the exp_date date
+					Type "Lot Updated" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Verify exists the @"XT9C" text in the "Stomach Tube" row and other updated info@xpath=//td[contains(.,'Stomach Tube')]/following-sibling::td[contains(.,'AM32C')]/following-sibling::td[contains(.,'McTubes Inc.')]/following-sibling::td[contains(.,'05-01-2030')]
+			Begin "Multi-Location Lot"
+				Type "Fingertip Bandage" in the "display_name" input
+				Select "All" in the "ib.location" dropdown
+				Click the "Search" button
+				Begin "Update the Lot"
+					Click the @"Edit" link in the "Store Room A" row@xpath=//td[contains(.,'Fingertip Bandage')]/following-sibling::td[contains(.,'Hospital: Store Room A')]/following-sibling::td/a[contains(.,'Edit')]
+					Begin "Enter new Lot information"
+						Type "X97T" in the "Lot Number" input
+						Type "TipMart" in the "Manufacturer" input
+						Enter "03-01-2030" in the exp_date date
+						Type "Updated Lot" in the "Comment" input
+						Click the "Save" button
+					Verify exists the "Successfully Updated Inventory Item" text
+				Begin "View the items"
+					Type "Fingertip Bandage" in the "display_name" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+				Verify exists the @original lot information@xpath=//td[contains(.,'Fingertip Bandage')]/following-sibling::td[text()='Hospital']/following-sibling::td[contains(.,'XT9C')]/following-sibling::td[contains(.,'')]/following-sibling::td[contains(.,'06-01-2030')]/following-sibling::td[contains(.,'Edit')]
+				Verify exists the @new lot information@xpath=//td[contains(.,'Fingertip Bandage')]/following-sibling::td[text()='Hospital: Store Room A']/following-sibling::td[contains(.,'X97T')]/following-sibling::td[contains(.,'TipMart')]/following-sibling::td[contains(.,'03-01-2030')]/following-sibling::td[contains(.,'Edit')]
+	Begin "Re-use of lot"
+		Begin "Setup"
+			Click the "Add Inventory" charttab
+			Begin "Receive an existing item"
+				Select "Hospital" in the @dropdown in the "Site" cell@xpath=//select[@name='inv_transloc2']
+				@Wait@driver.wcutils.waitForAJAX(30)
+				Select "Store Room B" from the "inv_stockpile_id2" dropdown
+				Enter "Fingertip Bandage" into the "inv_acval2" autocomplete
+				Blur the "inv_acval2" autocomplete
+				Type "20" in the "inv_quantity2" input
+				Type "XT9C" in the "inv_lot_id2_vis" autocomplete
+				Enter "06-01-2030" in the "inv_exp_date2" date
+				screenshot "presavenr3"
+				Click the "Add to Inventory" button
+				Verify exists the "Receiving Fingertip Bandage (20)" text
+		Begin "Edit the Lot Information"
+			Click the "Show Inventory" charttab
+			Begin "Show the item"
+				Type "Fingertip Bandage" in the "display_name" input
+				Select "All" in the "ib.location" dropdown
+				Click the "Search" button
+			Begin "Update the Lot"
+				Click the @"Edit" link in the "Store Room A" row@xpath=//td[contains(.,'Fingertip Bandage')]/following-sibling::td[contains(.,'Hospital: Store Room B')]/following-sibling::td/a[contains(.,'Edit')]
+				Begin "Enter new Lot information"
+					Type "X97T" in the "Lot Number" input
+					Type "TipMart" in the "Manufacturer" input
+					Enter "03-01-2030" in the exp_date date
+					Type "Updated Lot" in the "Comment" input
+					Click the "Save" button
+				Verify exists the "Successfully Updated Inventory Item" text
+				Begin "View the items"
+					Type "Fingertip Bandage" in the "display_name" input
+					Select "All" in the "ib.location" dropdown
+					Click the "Search" button
+			Verify exists the @new lot information@xpath=//td[contains(.,'Fingertip Bandage')]/following-sibling::td[text()='Hospital: Store Room B']/following-sibling::td[contains(.,'X97T')]/following-sibling::td[contains(.,'TipMart')]/following-sibling::td[contains(.,'03-01-2030')]/following-sibling::td[contains(.,'Edit')]
+			Verify exists the @same lot_id in the "Hospital: Store Room A" and "Hospital: Store Room B" "Edit" links@xpath=//td[contains(.,'Hospital: Store Room B')]/following-sibling::td/a[contains(@href,concat('&lot_id=',substring-before(substring-after(substring-after(string(//td[contains(.,'Hospital: Store Room A')]/following-sibling::td/a[contains(.,'Edit')]/@href),'?'),'lot_id='),'&'),'&'))]
+

@@ -1,0 +1,135 @@
+Begin "Test Setup"
+	@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Condition Add Task',description='Condition Add Task',notes='A condition has been added.',type='condition'")
+	@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Condition Add Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+	@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('7883B7F5FE9B11EBA7C0B82A72DD83F3'), evt_type='on_condition_added',template_name='Condition Add Task',skip_is_tmp=1,where_clause='1',perform_url='',priority=4")
+
+	@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Condition Modify Task',description='Condition Modify Task',notes='A condition has been modified.',type='condition'")
+	@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Condition Modify Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+	@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('ECF5A6C1FE9B11EBA7C0B82A72DD83F3'), evt_type='on_condition_modify',template_name='Condition Modify Task',skip_is_tmp=1,where_clause='1',perform_url='',priority=3")
+	@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Condition Conclude Task',description='Condition Conclude Task',notes='A condition has been concluded.',type='condition'")
+	@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Condition Conclude Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+	@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('EE2DF8F5FE9B11EBA7C0B82A72DD83F3'), evt_type='on_condition_conclude',template_name='Condition Conclude Task',skip_is_tmp=1,where_clause='c.status=3',perform_url='',priority=2")
+	@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Condition Delete Task',description='Condition Delete Task',notes='A condition has been deleted.',type='condition'")
+	@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Condition Delete Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+	@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('EED7CBC6FE9B11EBA7C0B82A72DD83F3'), evt_type='on_condition_delete',template_name='Condition Delete Task',skip_is_tmp=1,where_clause='c.status=2',perform_url='',priority=1")
+
+Begin "Add Condition"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Type "Harris" in the "sstring" input
+	Click the "Search" button
+	Click the "Add Visit" link
+	Add "Smart Plan" quicklist item
+	Verify exists "Add Assessment" popup
+	Enter "Angina bullosa hemorrhagica" in the "Name" autocomplete
+	Enter "02-06-2007" in the "Onset Date" date
+	Enter "Selenium, Selenium" in the "Managed By" autocomplete
+	Click the 1st "Save" popup button
+	Begin "Verify condition added to the encounter Smart Plan"
+		Unmask dynamicsection
+		Verify exists "Angina bullosa hemorrhagica" dynamicitem
+	Begin "Check for condition add task creation"
+		Open the sidemenu
+		Click the "Task List" sidemenu entry
+		Click the "Task Search" charttab
+		Select "Condition Add Task" from the "Task Template" dropdown
+		Click the "Submit" button
+		Verify exists "Condition Add Task" listview link
+		Click the "Condition Add Task" listview link
+		@Switch Windows@driver.switchToPopup()
+		Click the "Mark Done w/o Note" button
+		@Switch to main window@driver.returnToMainWindow()
+
+Begin "Modify Condition - Add Note"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Click the "Harris" listview link
+	Click the "Medical Record" charttab
+	Click the "Conditions" charttab subtab
+	Edit "Other Problems" "Angina bullosa hemorrhagica" dynamicitem
+	Begin "Add a Condition Note"
+		Click the "Add Note" popup button
+		Type "very bullosa" in the "Notes" popup textarea
+		Select "Minor" from the dropdown
+		Click the "Submit" popup button
+		Click the "Save" popup button
+	Begin "Verify condition added to the encounter Smart Plan"
+		Verify exists "Angina bullosa hemorrhagica" dynamicitem
+	Begin "Check for task creation"
+		Open the sidemenu
+		Click the "Task List" sidemenu entry
+		Click the "Task Search" charttab
+		Select "Condition Modify Task" from the "Task Template" dropdown
+		Click the "Submit" button
+		Verify exists "Condition Modify Task" listview link
+		Verify !exists 3rd "Condition Modify Task" listview link
+	Begin "Mark Task done w/o Note"
+		Verify exists "Condition Modify Task" listview link
+		Click the "Condition Modify Task" listview link
+		@Switch Windows@driver.switchToPopup()
+		Click the "Mark Done w/o Note" button
+		@Switch to main window@driver.returnToMainWindow()
+
+Begin "Modify condition - Resolve/Conclude Condition"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Click the "Harris" listview link
+	Click the "Medical Record" charttab
+	Click the "Conditions" charttab subtab
+	Edit "Other Problems" "Angina bullosa hemorrhagica" dynamicitem
+	Click the "Additional Options" link
+	Select "Resolved" from the "Clinical Status" popup dropdown
+	Type "Concluding/Resolving condition" in the "Comments" input
+	Begin "Add a Condition Note"
+		Click the "Add Note" popup button
+		Type "Not so bullosa anymore" in the "Notes" popup textarea
+		Click the "Submit" popup button
+		Click the "Save" popup button
+	Begin "Verify condition added to the encounter Smart Plan"
+		Verify exists "Angina bullosa hemorrhagica" dynamicitem
+		Verify exists "Concluding/Resolving condition" dynamicitem text
+	Begin "Check for task creation"
+		Open the sidemenu
+		Click the "Task List" sidemenu entry
+		Click the "Task Search" charttab
+# Is this not working. Resolving condition doesn't show task under "Condition Conclude Task"
+#		Select "Condition Conclude Task" from the "Task Template" dropdown
+		Select "Condition Modify Task" from the "Task Template" dropdown
+		Click the "Submit" button
+# Again, shouldn't the task show up here instead of Modify Task template?
+#		Verify exists "Condition Conclude Task" listview link
+#		Verify exists "Condition Modify Task" listview link
+# No longer the workflow
+#		Click the "Condition Conclude Task" listview link
+		@Switch Windows@driver.switchToPopup()
+		@Switch to main window@driver.returnToMainWindow()
+
+Begin "Modify condition - Delete Condition with Note"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Click the "Harris" listview link
+	Click the "Medical Record" charttab
+	Click the "Conditions" charttab subtab
+	Edit "Other Problems" "Angina bullosa hemorrhagica" dynamicitem
+	Begin "Add a Condition Note"
+		Click the "Add Note" popup button
+		Type "My bad" in the "Notes" popup textarea
+		Click the "Submit" popup button
+		Verify exists "My bad" text
+		Click the "Save" popup button
+		Begin "Delete Condition"
+			Remove "Other Problems" "Angina bullosa hemorrhagica" dynamicitem
+			Click the "Remove" button
+			Verify !exists "Angina bullosa hemorrhagica" dynamicitem
+	Begin "Check for condition delete task creation"
+		Open the sidemenu
+		Click the "Task List" sidemenu entry
+		Verify exists "Angina bullosa hemorrhagica" listview item
+		Click the @"Done" link on the "Angina bullosa hemorrhagica" row@xpath=//td[contains(.,'Angina bullosa hemorrhagica')]/following-sibling::td//a[contains(., 'Done')]
+		Verify exists "Angina bullosa hemorrhagica" text
+		Type "Deleted" in the freetext field
+		Click the "Complete" button
+		Verify !exists "Angina bullosa hemorrhagica" text
+
+@Sweep up@driver.miedb.dbExec("DELETE tt.*, ttu.*, te.* FROM tasklist_events te LEFT JOIN task_template tt ON te.template_name=tt.name LEFT JOIN task_template_users ttu ON tt.task_template_id=ttu.task_template_id WHERE te.template_name IN ('Condition Add Task','Document Edit Task','Document Sign Task','Document Reject Task','Document Sign Preliminary Task')")
+

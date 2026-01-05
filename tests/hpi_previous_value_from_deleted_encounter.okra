@@ -1,0 +1,107 @@
+Begin "Deactivate HPI Flowsheet"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Flowsheets" charttab subtab
+
+	Select "Exact" from the "select_criteria" dropdown
+	Type "HPI" into the "select_text" input
+	Click the "Go" button
+	Click the "!Edit" link
+
+	Click the "activeFlowsheet" checkbox
+	Click the "Submit" button
+
+	Select "Exact" from the "select_criteria" dropdown
+	Type "HPI" into the "select_text" input
+	Click the "Go" button
+	Verify exists "0 Results" text
+
+Begin "Set 1st Previous Value"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+
+	Wait for ajax
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	Open the "Encounter" dynamicsection
+	# Make sure we set the service date to enforce the "order" of encounters.
+	Enter "01-01-2020 09:00" into the "DED_serv_date" date
+	Save the "Encounter" dynamicsection
+
+	@Wait for the page to reload@driver.sleep(5)
+	Wait for ajax
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	Open the "HPI" dynamicsection
+	Type "First HPI Note" into the "HPINotes" input
+	Save the "HPI" dynamicsection
+
+Begin "Set 2nd Previous Value"
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	# Verify exists "Attention" popup
+	# Click the "Yes" popup button
+
+	Wait for ajax
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	Open the "Encounter" dynamicsection
+	# Make sure we set the service date to enforce the "order" of encounters.
+	Enter "02-01-2020 09:00" into the "DED_serv_date" date
+	Save the "Encounter" dynamicsection
+
+	@Wait for the page to reload@driver.sleep(5)
+	Wait for ajax
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	Open the "HPI" dynamicsection
+	Type "Second HPI Note" into the "HPINotes" input
+	Save the "HPI" dynamicsection
+
+Begin "Check When 2nd Encounter Is Not Deleted"
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	# Verify exists "Attention" popup
+	# Click the "Yes" popup button
+
+	Wait for ajax
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	Open the "Encounter" dynamicsection
+	# Make sure we set the service date to enforce the "order" of encounters.
+	Enter "03-01-2020 09:00" into the "DED_serv_date" date
+	Save the "Encounter" dynamicsection
+
+	@Wait for the page to reload@driver.sleep(5)
+	Wait for ajax
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	Open the "HPI" dynamicsection
+	Verify exists "Second HPI Note" text
+
+Begin "Delete 2nd Encounter"
+	Click the "Medical Record" charttab
+	Click the "Encounters" charttab subtab
+	Wait for the "Encounters" grid
+	Select "Default" from the grid perspective
+	Wait for the "Encounters" grid
+	Click the "02-01-2020" grid checkbox
+	Click the 2nd "Delete" grid button
+	Click the "Delete" radio
+	Click the "Submit" popup button
+	Wait for the "Encounters" grid
+
+Begin "Check When 2nd Encounter Is Deleted"
+	Gridclick "Serv Date:01-01-2020" "Visit" grid link
+	@Wait for the exam to load@driver.sleep(5)
+	Wait for ajax
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	Open the "HPI" dynamicsection
+	Type "First HPI Note" into the "HPINotes" input
+	Save the "HPI" dynamicsection

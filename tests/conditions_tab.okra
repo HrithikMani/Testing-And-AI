@@ -1,0 +1,37 @@
+"""
+    Workflow test for Conditions Tab
+    @owners: dcarlson
+    @filedeps: system/layouts/dynList/Problem List.html, system/layouts/dynList/Problem Tab-PMH.html, system/layouts/dynList/SmartPlan.html, system/layouts/E-Chart/Conditions Tab.html, system/layouts/WCENCSECTION/Conditions NonPMH Tab.html, system/layouts/dynList/Unconfirmed Conditions.html, system/layouts/dynList/Declined Conditions.html, system/layouts/WCENCSECTION/Family History.html, system/cgibin/icd11/*, system/upgrade/dbtriggers/wc_encounter_orders_*.sql
+"""
+
+Begin "Test Entering a New Condition"
+	Navigate "?f=chart&s=pat&t=Medical+Record%3AConditions&v=cond&pat_id=18"
+	Toggle the "Problem List" quicklist
+	Add "Problem List" quicklist item
+	Enter "Breast mass" in the Name autocomplete
+	Click the "Additional Options" link
+	Click the 1st popup radio
+	Type "This is my encounter note" into the @xpath="//textarea[contains(@id,'encounter_note')]"
+	Select "Self-limited" from @xpath="//select[contains(@id,'emcat')]"
+	Click the @save button@xpath="//button[@class='wc2button save']"
+	Wait for ajax
+Begin "Verify ICD10 Warnings Don't Appear when setting is off"
+	@Update System Setting@driver.miedb.dbExec("UPDATE system_settings SET value=0 WHERE item='Highlight Non-Billable ICD10 Codes'")	
+	Navigate "?f=chart&s=pat&t=Medical+Record%3AConditions&v=cond&pat_id=18"
+	Verify !exists @xpath="//span[@class='fa myclass link warning flip']"
+Begin "Verify ICD10 Warnings Appear when setting is on"
+	@Update System Setting@driver.miedb.dbExec("UPDATE system_settings SET value=1 WHERE item='Highlight Non-Billable ICD10 Codes'")	
+	Navigate "?f=chart&s=pat&t=Medical+Record%3AConditions&v=cond&pat_id=18"
+	Verify exists @xpath="//span[@class='fa myclass link warning flip']"
+Begin "Verify new note appears (Need to add this validation)"
+	Notate "Problem List" "Breast mass" dynamicitem
+	Verify exists "This is my encounter note (Self-limited)" text
+	Close popup
+Begin "Test ICD-11"
+	@Turn ICD-11 On@driver.miedb.dbExec('UPDATE system_settings SET value=1 WHERE item="Show ICD11 on Conditions" ')
+	Toggle the "Problem List" quicklist
+	Add "Problem List" quicklist item
+	Click "ICD11 Tool" button
+	@Focus on the ICD11 frame@driver.getWebDriver().switch_to.frame("icd11_iframe")
+	@wait@driver.pause(5)
+	Type "CHF" into the @xpath="//input[contains(@class,'ctw-input')]"

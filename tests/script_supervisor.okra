@@ -1,0 +1,39 @@
+Open the sidemenu
+Click the "Control Panel" link
+Begin "Set up a supervising prescriber for Butler, Internist"
+	Click the "Access" charttab
+	Click the "My Settings" link
+	Select "Other User" from @id=def_pref_id
+	Enter "Butler, Internist" in the user_search_txt autocomplete
+	Enter "Patel, Ashish" in the "Supervising Prescriber" autocomplete
+	Click the "Submit Settings" button
+Begin "Prescribe and check script for supervisor name"
+	Open the sidemenu
+	Click the E-Chart link
+	Click the TEST-10019 link
+	Open the quicklink list
+	Click the "Prescribe" quicklink
+	Enter "levothyroxine oral" in the "qp_acval0" autocomplete
+	# Type "capsule 150mcg" in the "qp_formacval0" autocomplete
+	@Wait for form autocomplete@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[contains(@class, "defaultacdiv")]//div'), expected=True)
+	Click the "capsule 150mcg" autocomplete choice
+	@Pause@driver.pause(5)
+	@Wait for Levothyroxine warning@driver.wcutils.waitForEle(xpath='//div[@class="wc_win"]//*[contains(., "Warning for levothyroxine")]', timeout=120)
+	Close the "Warning for levothyroxine" popup
+	# Enter "capsule 150mcg" in the "qp_formacval0" autocomplete
+	Type "1 bid" in @id=qp_sig0
+	Type 30d in @id=qp_duration0
+	Type 60 in @id=qp_total_quantity0
+	Type 0 in @id=qp_refills0
+	Select "Butler, Internist E." from @id=qp_doctor_id0
+	#Close the "Dose Calculation Alert" popup
+	Click the 1st Prescribe button
+	#This is the Script: dropdown
+	Select "Script w/ Supervisor" from @id=doc_type
+	Click @id=rxprintFlags_printfax
+	Click the Submit button
+Begin "Print the script"
+	@Switch to "Print Chart" Window@driver.switchToPopup()
+	Click the "-- Print --" button
+	@Pause@driver.pause(5)
+	Screenshot script_with_supervisor

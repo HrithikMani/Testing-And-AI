@@ -1,0 +1,24 @@
+Navigate "?f=layout&module=SystemEditors&rep_name=Injection+VFC+Codes&group_name=Injections"
+Verify exists "Injection VFC Codes" text
+Begin "Test Add Injection VFC Codes"
+	Verify exists @Add Injection VFC Code link@xpath="//span[contains(@class, 'link') and contains(., 'Add Injection VFC Code')]"
+	Click @Add Injection VFC Code link@xpath="//span[contains(@class, 'link') and contains(., 'Add Injection VFC Code')]"
+	Type "V10" into the "vfc_code" input
+	Type "VFC description" into the "vfc_desc" input
+	Click the "Save" button
+	Verify exists "V10" grid row
+Begin "Test Edit Injection Code"
+	Click "V10" grid checkbox
+	Verify exists "Edit" grid button
+	Click "Edit" grid button
+	Type "V11" into the "vfc_code" input
+	Type "not VFC eligible anymore" into the "vfc_desc" input
+	Click the "Save" button
+	Verify !exists "V10" grid row
+	Verify exists "V11" grid row
+Begin "Test Delete Injection Code"
+	Click "V11" grid checkbox
+	Verify exists "Delete" grid button
+	Click "Delete" grid button
+	Click the "Yes" button
+	Verify !exists "V11" grid row

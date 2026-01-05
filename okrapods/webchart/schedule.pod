@@ -1,0 +1,21 @@
+"""
+Pod used to interact with scheduler elements
+
+- Treating schedule(s) as a separate entity from appointments. If you have anything that is specifically referencing an appointment, see appt.pod.
+
+Usage examples:
+	Verify exists "Ashish, Patel" schedule name
+	Click the "11:00" schedule row
+	Verify exists "Fri 2" schedule date	
+
+
+"""
+
+
+name://td[@id="schedleftcol"]//tr[@class="wc-behave wc-floathead"]{OKRA_TEXT_CLS}
+	|//td[@id="schedleftcol"]//tr[@class="wc-behave wc-floathead"]
+
+date://td[@id="schedleftcol"]//tr[1]
+
+row://td[@id="schedleftcol"]//tr/td/a/font{OKRA_TEXT_CLS}
+

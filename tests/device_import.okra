@@ -1,0 +1,32 @@
+"""
+    Test for device import tab
+    @owners: aaronc
+    @filedeps: src/wc_import/*
+"""
+
+Navigate "?f=wc_import"
+Begin "Test Quantifit Import"
+	Select "Quantifit Data Import" from the interface dropdown
+	Click the "Go" button
+	Type "quantifit.csv" into the file input
+	Select "TEST" from the ppartition dropdown
+	Check the "gold_track_format" checkbox
+	Click the "Upload" button
+	Verify exists "Thompson, Jennifer" text
+	Verify exists "Test saved." text
+Begin "Test Quantifit Import with verification"
+	@Set Save Results Automatically@driver.wcutils.SetSystemSetting('Webchart','Devices','Save Results Automatically','0',False)
+	Navigate "?f=wc_import"
+	Select "Quantifit Data Import" from the interface dropdown
+	Click the "Go" button
+	Type "quantifit.csv" into the file input
+	Select "MR" from the ppartition dropdown
+	Check the "gold_track_format" checkbox
+	Click the "Upload" button
+	Verify exists "Thompson, Jennifer" text
+	Verify exists "Could not find matching patient." text
+	Click the "Change patient" icon
+	Enter "Thompson, Jennifer" into the "device_patacinp" autocomplete
+	Screenshot "Test"
+	Click the 2nd "Upload" button
+	Verify exists "Upload Results" text

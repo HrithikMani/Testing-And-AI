@@ -1,0 +1,8 @@
+"""
+	Unit test for #wcjsfunc and #each [wcjs: ...]
+	@owners: zcawood
+	@filedeps: src/wcstache.c, system-dev/layouts/Test/MIEStacheWCJS.html
+"""
+Begin MIEStache WCJS Test
+	Navigate ?f=layout&module=UnitTest&name=RunTest&test_module=Test&test_name=MIEStacheWCJS
+	Verify exists "No layout unit test failures detected." text

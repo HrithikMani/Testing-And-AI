@@ -1,0 +1,27 @@
+"""
+ Test for testing GET/POST of FHIR Patient Records
+ @owners: dcarlson
+ @filedeps: system/layouts/FHIR*/*
+ @diffdeps: FHIR, Demographic
+"""
+
+@@@
+res = driver.miedb.dbQuery("SELECT session_id FROM logins ORDER BY id DESC LIMIT 1")
+if res:
+	res = res.getRes()
+	return{
+		'session_id': res[0]['session_id']
+	}
+@@@
+Begin "FHIR Practitioner GET"
+	Navigate "?f=layout&module=FHIRtools&name=JSONPost&tabmodule=admin&t=Admin&tabselect=Interface"
+	Type "{session_id}" into the "Session ID" input
+	Type "Practitioner/50" into @id='FHIRUrl'
+	Click the "Load example URL" button
+Begin "FHIR Practitioner POST and audit check"
+	Click the "Post" button
+	Navigate "?f=chart"
+	Type "Patel" in the "sstring" input
+	Click the "Search" button
+	Click the "05-11-1965" link
+	Verify exists "Ashish Patel" text

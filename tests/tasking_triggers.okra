@@ -1,0 +1,28 @@
+@Add a fast task@driver.miedb.dbExec("INSERT INTO task_template SET name='Task Complete Task',description='Task Complete Task',notes='An encounter order has been added.',type='task'")
+@Add an owner@driver.miedb.dbExec("INSERT INTO task_template_users SET task_template_id=(SELECT task_template_id FROM task_template WHERE name='Task Complete Task' ORDER BY task_template_id DESC LIMIT 1), owner_id=8, realm=''")
+@Add a tasklist event@driver.miedb.dbExec("INSERT INTO tasklist_events SET wc_uuid=UNHEX('F7F5F17A067511ECA7C0B82A72DD83F3'), evt_type='on_task_complete',template_name='Task Complete Task',skip_is_tmp=1,where_clause='1',perform_url='',priority=1")
+
+Open the sidemenu
+Click the "Task List" link
+Click the "All Pending" charttab
+Click the "My Tasks" link
+Click the "8" listview link
+@Switch Windows@driver.switchToPopup()
+@Scroll the "Mark Done w/o Note" link into view@driver.runJS("document.evaluate(`//input[@value='Mark Done w/o Note']`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView();")
+Click the "Mark Done w/o Note" button
+@Switch to main window@driver.returnToMainWindow()
+
+Begin Check for task complete task creation
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Task Search" charttab
+	Select "Task Complete Task" from the "Task Template" dropdown
+	Click the "Submit" button
+	Verify exists "Task Complete Task" listview link
+	Click the "Task Complete Task" listview link
+	@Switch Windows@driver.switchToPopup()
+	Click the "Mark Done w/o Note" button
+	@Switch to main window@driver.returnToMainWindow()
+
+@Sweep up@driver.miedb.dbExec("DELETE tt.*, ttu.*, te.* FROM tasklist_events te LEFT JOIN task_template tt ON te.template_name=tt.name LEFT JOIN task_template_users ttu ON tt.task_template_id=ttu.task_template_id WHERE te.template_name like 'Task Complete Task'")
+

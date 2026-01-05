@@ -1,0 +1,24 @@
+@Update Selenium user email address@driver.miedb.dbExec("UPDATE users SET email = 'selenium@enterprisehealth.com' WHERE username = 'selenium'")
+@Setup Permissions for print_queue_multi table@driver.miedb.dbExec("INSERT INTO model_security SET security_role_id = (SELECT security_role_id FROM security_roles WHERE security_role_name='System Owner'), user_id=0, object='print_queue_multi', crud_control='CREATE,READ,UPDATE,DELETE' ON DUPLICATE KEY UPDATE crud_control='CREATE,READ,UPDATE,DELETE'")
+
+Begin "Go to Harris, Christine"
+	Navigate "?f=chart&s=pat&t=Documents&v=detail&pat_id=40"
+Begin "Batch a document"
+	@Mouse over document heading@driver.mouseOver(xpath="(//div[@data-keyname='doc_id'])[1]")
+	@wait@driver.pause(1)
+	Click the "Batch" document dynop
+	Verify exists "Batch (1)" text
+Begin "Batch the next document"
+	@Mouse over document heading@driver.mouseOver(xpath="(//div[@data-keyname='doc_id'])[2]")
+	@wait@driver.pause(1)
+	Click the "Batch" document dynop
+	Verify exists "Batch (2)" text
+Begin "Send Batch"
+	Click the @Batch link for Send@xpath=//div[@id="wc_applicationbar"]//a[contains(., "Send")]
+	Verify exists "Send Batch" popup
+	Enter "Selenium, Selenium" in the contact_pat_id autocomplete
+	Click the "Send" popup button
+Begin "Verify that the documents were sent"
+	Verify notexists "Send Batch" popup
+	Navigate "?f=chart&s=pat&t=Documents&pat_id=55&v=list"
+	Verify exists "Received Document" listview row

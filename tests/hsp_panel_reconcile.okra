@@ -1,0 +1,12 @@
+Begin "Setup reconcile system setting"
+	@Enable reconcile link@driver.miedb.dbExec("UPDATE system_settings SET value=1 WHERE item = 'Show reconcile order panels link'")
+
+Begin "Reconcile order panels"
+	Navigate "?f=layout&module=HSP&name=PanelActionList&tabmodule=admin&tabselect=Health+Surveillance"
+	Click the "Reconcile Order Panels" link
+	@Wait for ajax@driver.wcutils.waitForAJAX(45)
+	Verify exists "Reconciled panels:" text
+Begin "Check Panels exist"
+	Navigate "?f=orders&s=order_panels&t=Order%20Panels&tabmodule=admin&tabselect=Orders&ts_caption=Orders-Panels"
+	Verify exists "Animal Exposure (Allergy)" text
+

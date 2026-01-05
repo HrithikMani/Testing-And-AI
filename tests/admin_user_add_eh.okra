@@ -1,0 +1,45 @@
+"""
+	@systemtype: EH
+"""
+
+Begin "Add a user chart"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Click the "Add Chart" link
+	Type "User" in the "Last Name" input
+	Type "New" in the "First Name" input
+	Begin "Verify birth date alert"
+		Click the "Add New" button
+		Verify exists "Enter required fields and/or address issues" text
+		Verify exists "Birth date is required" text
+		Close popup
+	Enter "01-01-1976" in the "Birth Date" date
+	Click the "Add New" button
+	Begin "Verify User Added"
+		Begin "Verify User's Chart"
+			Open the sidemenu
+			Click the "E-Chart" sidemenu entry
+			Type "user" in the input
+			Click the "Search" button
+			Verify exists "Your Recent Employees" table
+			Verify exists "User, New" text
+		Begin "Verify the User's Login Account"
+			Open the sidemenu
+			Click the "Control Panel" sidemenu entry
+			Click the "Access" charttab
+			Click the "Access Control" charttab subtab
+			Type "user" in the input
+			Click the "Go" button
+			Verify exists "WebChart Users" grid
+			Verify exists "User, New" text
+Begin "Attempt to add a duplicate user chart"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Click the "Add Chart" link
+	Type "User" in the "Last Name" input
+	Type "New" in the "First Name" input
+	Verify exists "Matching Charts" text

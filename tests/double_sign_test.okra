@@ -1,0 +1,23 @@
+"""
+	Test to check if its possible to edit a form twice.
+	@owners: nchoudhry
+	@filedeps: jsbin/formeditor.js, src/ecformlib.c, src/detailview.c
+"""
+
+Begin "Open an On Screen Form once"
+		Navigate '?f=chart&s=pat&t=On+Screen+Forms%3ACOVID+Consent&v=dashboard&pat_id=18'
+		Begin "E-Chart - On Screen Forms : COVID Consent Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		Click the "Upload" button
+		Wait for ajax
+Begin "Verify Edit link exists"
+	Click the "Edit" link
+	Wait for ajax
+Begin "Reset to home so there are no unsaved changes"
+	Navigate '?'

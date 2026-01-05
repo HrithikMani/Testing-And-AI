@@ -1,0 +1,10 @@
+Navigate "?f=admin&tabmodule=admin&tabselect=My+Settings"
+Begin ensure blank order set is selectable
+	Select "Select Picklist" from the "OrdersDefaultsDefault Order Set" dropdown
+	Click the "Submit Settings" button
+@@@Verify that the preference value is empty after the page submission
+res = driver.miedb.dbQuery("SELECT preference_value FROM preferences WHERE (module_name,category_name,preference_name, user_id) = ('Orders','Defaults','Default Order Set', '8')")
+if res:
+	res = res.getRes()
+	driver.reportCommandStatus('verify blank order set chosen', res[0]['preference_value'] == '', res[0]['preference_value'] == '', 'Preference Value: {0}'.format(res[0]['preference_value']), 'Preference code: {0}'.format(res[0]['preference_value']))
+@@@

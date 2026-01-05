@@ -1,0 +1,6 @@
+"""
+Empty test, to be assigned for files that don't need specific mappings. 
+C files should have tests in WCCurl that are covered by PreCommit
+@owners: jchance tblankenship
+@filedeps: README.md, .github/*, selenium/*,webchart.spec.template,installclient.c, buildcontainers/*,deploy/utils/export.py
+"""

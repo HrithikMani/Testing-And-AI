@@ -1,0 +1,19 @@
+Begin TeleHealth Permissions Test
+	Begin "No Permissions"
+		@Remove TeleHealth permissions from Selenium@driver.miedb.dbExec("INSERT INTO security_exception (user_id, revision_number, module_name, category_name, security_value, admin_user_id, create_datetime, revision_datetime, comment) VALUES ('8', '0', 'E-Chart', 'UseTeleHealth', '0', '8', '2007-02-02 09:15:00', '2007-02-02 09:15:00', 'tele')")
+		Navigate ?f=chart&s=pat&pat_id=18
+		Click the "TeleHealth Video Visit" icon
+		Verify exists "You do not have permission to use WebChart's TeleHealth features." text
+		Verify "exists" "More information on Security Role Settings." text
+		Click the "OK" popup button
+		Click the "Send Invite via SMS & Email" icon
+		Verify exists "You do not have permission to use WebChart's TeleHealth features." text
+		Verify "exists" "More information on Security Role Settings." text
+		Click the "OK" popup button
+	Begin "Access Denied"
+		@Give TeleHealth permissions to Selenium@driver.miedb.dbExec("UPDATE security_exception SET security_value=1 WHERE user_id=8 AND category_name='UseTeleHealth'")
+		Navigate ?f=chart&s=pat&pat_id=18
+		Click the "TeleHealth Video Visit" icon
+		@Switch Windows@driver.switchToPopup()
+		Verify exists "Access Denied" text
+		Verify exists "Telehealth requires access to your camera and microphone." text

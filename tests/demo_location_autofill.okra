@@ -1,0 +1,90 @@
+Begin "Check location is set"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry 
+	Click the "System" charttab
+	Click the "Locations Manager" charttab subtab
+	Verify exists "OFFICE" text
+
+Begin "Register Patient 1"
+	# @Set the Applicant partition to Edit (Optional) to test manually entering an MR#@driver.miedb.dbExec("UPDATE patient_partitions SET echart_opts='O' WHERE name='APP'")
+	Open the sidemenu
+	Click the E-Chart link
+	Click the "Patient Registration" charttab
+	Type "Dane" into "Last Name" input
+	Type "John" into "First Name" input
+	Type "01-01-1995" into the birth_date date
+	Click "Add New" button
+
+Begin "Save Default Data"
+	Open "Demographic Information" dynamicsection
+	Verify "value=*US*" Country dropdown
+	Verify "value=*IN*" "State / Province" dropdown
+	Save "Demographic Information" dynamicsection
+
+	Open "Employment Information" dynamicsection
+	Verify "value=*US*" Country dropdown
+	Verify "value=*IN*" "State/Province" dropdown
+	Save "Employment Information" dynamicsection
+
+Begin "Verify No Overwrite"
+	Open "Demographic Information" dynamicsection
+	Verify "value=*US*" Country dropdown
+	Verify "value=*IN*" "State / Province" dropdown
+	Select "Select Country" from Country dropdown
+	Save "Demographic Information" dynamicsection
+	
+	Open "Demographic Information" dynamicsection
+	Verify "value=**" Country dropdown
+	Verify "value=**" "State / Province" dropdown
+	Save "Demographic Information" dynamicsection
+
+	Open "Employment Information" dynamicsection
+	Verify "value=*US*" Country dropdown
+	Verify "value=*IN*" "State/Province" dropdown
+	Select "Select Country" from Country dropdown
+	Save "Employment Information" dynamicsection
+	
+	Open "Employment Information" dynamicsection
+	Verify "value=**" Country dropdown
+	Verify "value=**" "State/Province" dropdown
+	Save "Employment Information" dynamicsection
+
+Begin "Verify No State/Province"
+	Open "Demographic Information" dynamicsection
+	Select "United States" from Country dropdown
+	Save "Demographic Information" dynamicsection
+	
+	Open "Demographic Information" dynamicsection
+	Verify "value=*US*" Country dropdown
+	Verify "value=**" "State / Province" dropdown
+	Save "Demographic Information" dynamicsection
+
+	Open "Employment Information" dynamicsection
+	Select "United States" from Country dropdown
+	Save "Employment Information" dynamicsection
+	
+	Open "Employment Information" dynamicsection
+	Verify "value=*US*" Country dropdown
+	Verify "value=**" "State/Province" dropdown
+	Save "Employment Information" dynamicsection
+
+Begin "Register Patient 2"
+	# @Set the Applicant partition to Edit (Optional) to test manually entering an MR#@driver.miedb.dbExec("UPDATE patient_partitions SET echart_opts='O' WHERE name='APP'")
+	Open the sidemenu
+	Click the E-Chart link
+	Click the "Patient Registration" charttab
+	Type "Dune" into "Last Name" input
+	Type "Jane" into "First Name" input
+	Type "02-02-1996" into the birth_date date
+	Click "Add New" button
+
+Begin "Verify Location Did Not Fill"
+	Open "Demographic Information" dynamicsection
+	Verify "value=**" Country dropdown
+	Verify "value=**" "State / Province" dropdown
+	Save "Demographic Information" dynamicsection
+
+	Open "Employment Information" dynamicsection
+	Verify "value=**" Country dropdown
+	Verify "value=**" "State/Province" dropdown
+	Save "Employment Information" dynamicsection

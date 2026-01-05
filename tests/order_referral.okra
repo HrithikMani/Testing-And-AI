@@ -1,0 +1,31 @@
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+@Setup referral doc_type@driver.miedb.dbExec("UPDATE system_settings SET value='ORDREF' WHERE (module,section,item)=('Orders','Settings','Referral Doc Type')")
+Open the sidemenu
+Click the "E-Chart" link
+Click the "TEST-10019" link
+Begin "Create a Referral Order that will have a CDA"
+	Begin "Open the 'Office Visit-Initial' Encounter"
+		Click the "Add Visit" link
+		Verify exists "Plan" text
+		Click the "Plan" jumptab
+		Open the "Visit orders" dynamicsection
+		Click the "Make Referral Order" link
+		Begin "Order Request MIEWindow"
+			Select "Selenium, Selenium" from the "ordering_physician" dropdown
+			Type "Custom Referral Notes" in the comments input
+			Click the "Refer to Outside Provider" picklist checkbox
+			Click the "Submit" button
+		Verify exists "Referral Order" dynamicsection
+		Click the "Documents" charttab
+		Click the "Doc ID" link
+		Click the "Doc ID" link
+		Click the "Order-Referral" link
+		Begin "The encounter now has a CDA document"
+			Click the "Properties" link
+			Verify exists "CDA Document" link
+@@@Switch Back to New Requisition Screen
+driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@

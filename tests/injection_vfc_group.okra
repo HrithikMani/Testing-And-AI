@@ -1,0 +1,38 @@
+Begin "Set Up system for VFC Documentation"
+	Begin "Enable VFC/Funding Source"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Type "use chirp" in the input
+		Click the "Go" button
+		Click the "!Edit" link
+		Verify exists the "Edit System Setting" table
+		Select "Enabled" in the Value dropdown
+		Type "injection_vfc_group.okra" in the Reason input
+		Click the "Change" button
+		Verify exists the "Successfully modified system setting" text
+	Begin "Create the Custom Injections Layout to include the Indiana VFC Groups"
+		@Create Custom Injection Screen Layout@driver.miedb.dbExec("INSERT INTO layout SET module='Injections',name='Dialog',layout_html='{{#include InjectionsVFCGroup, IndianaChild}}\n{{#include InjectionsVFCGroup, IndianaAdult, last_vfc_group=1}}',active=1")
+Begin "Verify the Functionality"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+	Click the "Medical Record" charttab
+	Click the "MAR/Injections" charttab subtab
+	Click the "Add Inj/Imm" link
+	Begin "Do the options exist"
+		Verify exists the "CHIP Child" text
+		Screenshot IndianaVFCGroups
+	Begin "Do the options works"
+		Begin "default values"
+			Verify "value=V00" the "VFC Status" dropdown
+			Verify "value=" the "Funding Source" dropdown
+		Begin "Private Pay Child"
+			Click the @"Private Pay Child" button@xpath=//li[text()='Private Pay Child']
+			Verify "value=V01" the "VFC Status" dropdown
+			Verify "value=PHC70" the "Funding Source" dropdown
+		Begin "Adult Uninsured"
+			Click the @"Adult Uninsured" button@xpath=//li[text()='Adult Uninsured or Underinsured Vaccine - 317 Program']
+			Verify "value=V07" the "VFC Status" dropdown
+			Verify "value=VXC52" the "Funding Source" dropdown

@@ -1,0 +1,196 @@
+Begin "Grant User: [ {selenium_username} ] Access to SuperUser Restricted Areas"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type {selenium_username} into the search input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select Yes from the "Manage Login Trusts" dropdown
+	Select Yes from the "Manage Layouts" dropdown
+	Select "Add/Edit" from the "Manage System Reports" dropdown
+	Select Yes from the "Manage System Layouts" dropdown
+	Select Yes from the "Refer to Systems Editor" dropdown
+	Type "webchart_golden_ticket test" in the sec_role_comment input
+	Click the "Update Individual Security" button
+	Verify exists "Manage Login Trusts: Yes" text
+	Verify exists "[ Manage Layouts: Yes ]" text 
+	Verify exists "[ Manage System Layouts: Yes ]" text
+	Verify exists "[ Manage System Reports: Add/Edit ]" text
+	Verify exists "[ Refer to Systems Editor: Yes ]" text
+	Verify exists "[ Manage Login Trusts: Yes ]" text
+Begin "Enable New Login Style"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Type "new login style" into the input
+	Click the "Go" button
+	Click the !Edit link
+	Select "Enabled" from the "Value" dropdown
+	Type "Enable New Login Style" in the freetext field
+	Click the "Change" button
+	Verify exists "Successfully modified system setting" text
+Begin "Verify Access to the Sections (We are logged in with WCTESTSESSION, with golden ticket)"
+	Begin "Check Layout Manager"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "Layout Manager" charttab subtab
+		Verify exists "Add Layout" link
+	Begin "Check System Settings"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Verify exists "Add System Setting" link
+	Begin "Check Login Trusts"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Login Trusts" charttab subtab
+		Verify exists "Add Login Trust" link
+	Begin "Check System Reports"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "System Report" charttab subtab
+		Verify exists "!Delete" link
+		Click the "Add Report" link
+		@Wait@driver.pause(2)
+		Verify exists the @"[NEW REPORT]" text@xpath=//span[@id='nameLbl']
+	Begin "Check Refer to Systems"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Interface" charttab
+		Click the "Refer to Systems" charttab subtab
+		Verify exists "Add Record" link
+Begin "Logout and Log Back In As a Normal Login Without Golden Ticket"
+	Open the sidemenu
+	Click the "Logout" sidemenu entry
+	Click the "Standard Login" button
+	Type {selenium_username} into the 'login_user' input
+	Type {selenium_password} into the 'login_passwd' input
+	Click the "Next" button
+Begin "Verify No Access to the Sections Because of Golden Ticket"
+	Begin "Check Layout Manager"
+		# I'm using navigates here, because since we're logged in as a real user,
+		# the charttabs no longer automatically display all and driver.runJS('topmenu.openTabDrawer()')
+		# is not working for some reason
+		Navigate "?f=admin&s=layout_manager"
+		Verify exists "Super user access required" text
+	Begin "Check System Settings"
+		Navigate "?f=admin&s=system_settings"
+		Verify exists "Super user access required" text
+	Begin "Check Login Trusts"
+		Navigate "?f=admin&s=login_trusts"
+		Verify exists "Super user access required" text
+	Begin "Check System Reports"
+		Navigate "?f=admin&s=system_report"
+		Verify !exists the "!Delete" link
+		Click the "Add Report" link
+		@Wait@driver.pause(2)
+		Verify !exists the @"[NEW REPORT]" text@xpath=//span[@id='nameLbl']
+	Begin "Check Refer to Systems"
+		Navigate "?f=admin&s=rts_editor"
+		Verify exists "Super user access required" text
+	Begin "Check User Extended Fields Editor"
+		Navigate "?f=admin&s=extfield_editor"
+		Verify exists "Super user access required" text
+Begin "Re-gain Super User"
+	Begin "Go to Quick View"
+		Open the sidemenu
+		Click the "Quick View" sidemenu entry
+	Begin "Show the SuperUser Portlet"
+		Click the "Select Portlets" link
+		Click the "Super User" checkbox
+		Click the "Save" button
+	Verify exists the @"Super User" portlet@xpath='//div[@class="portlet-header"]/label[contains(., 'Super User')]'
+	Begin "Verify password validation"
+		# Make sure everything is loaded, datavis included before trying to hit a moving target
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Click the "Unlock for this Session" button
+		@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=120)
+		Type "broken" into the superUserPwdField input
+		Click the "Enable" button
+		#Verify exists the "Invalid Password" growl
+		@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+		Close popup
+	Begin "Gain Super User access"
+		Click the "Unlock for this Session" button
+		@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=120)
+		Type "golden" into the superUserPwdField input
+		Click the "Enable" button
+		@Wait for success@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//*[@id="moveable_content_User_20Portlet_Super_20User"]//input[contains(@value,"Super user access enabled.")]'), timeout=120)
+Begin "Test super things"
+	Begin "Check Layout Manager"
+		# I'm using navigates here, because since we're logged in as a real user,
+		# the charttabs no longer automatically display all and driver.runJS('topmenu.openTabDrawer()')
+		# is not working for some reason
+		Navigate "?f=admin&s=layout_manager"
+		Verify !exists "Super user access required" text
+	Begin "Check System Settings"
+		Navigate "?f=admin&s=system_settings"
+		Verify !exists "Super user access required" text
+	Begin "Check Login Trusts"
+		Navigate "?f=admin&s=login_trusts"
+		Verify !exists "Super user access required" text
+	Begin "Check System Reports"
+		Navigate "?f=admin&s=system_report"
+		Verify exists the "!Delete" link
+		Click the "Add Report" link
+		@Wait@driver.pause(2)
+		Verify exists the @"[NEW REPORT]" text@xpath=//span[@id='nameLbl']
+	Begin "Check Refer to Systems"
+		Navigate "?f=admin&s=rts_editor"
+		Verify !exists "Super user access required" text
+Begin "Test custom Super User passwords"
+	Begin "Set a custom password"
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Type "SuperUser Hash Value" in the "select_text" input
+		Click the "!Go" button
+		Click the "!Edit" link
+		Type "6026A781B858C9791FE9F7882346BCC38A76F38F9FDFFD17E2ACC94F381CC04A55E0C53EF8C3E6A2E32D65C248C0D8ECC4A1A48600F96347C9C595F39654C2C6" in the "Value" input
+		Type "Custom Password" in the "reason" input
+		Click the "Change" button
+		Verify exists "Successfully modified system setting" text
+	Begin "Get a new session"
+		Begin "Logout and Log Back In As a Normal Login Without Golden Ticket"
+			Open the sidemenu
+			Click the "Logout" sidemenu entry
+			Click the "Standard Login" button
+			Type {selenium_username} into the 'login_user' input
+			Type {selenium_password} into the 'login_passwd' input
+			Click the "Next" button
+			Wait for ajax
+		Begin "Verify no Super User access"
+			Begin "Check System Settings"
+				Navigate "?f=admin&s=system_settings"
+				Verify exists "Super user access required" text
+		Begin "Gain SuperUser access with a custom password"
+			Begin "Go to Quick View"
+				Open the sidemenu
+				Click the "Quick View" sidemenu entry
+			Verify exists the @"Super User" portlet@xpath='//div[@class="portlet-header"]/label[contains(., 'Super User')]'
+			Begin "Verify the default password no longer validates"
+				# Make sure everything is loaded, datavis included before trying to hit a moving target
+				@Wait@driver.wcutils.waitForAJAX(30)
+				Click the "Unlock for this Session" button
+				@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=120)
+				Type "golden" into the superUserPwdField input
+				Click the "Enable" button
+				#Verify exists the "Invalid Password" growl
+				@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+				Close popup
+			Begin "Gain Super User access"
+				Click the "Unlock for this Session" button
+				@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=120)
+				Type "mydogspot" into the superUserPwdField input
+				Click the "Enable" button
+				@Wait for success@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//*[@id="moveable_content_User_20Portlet_Super_20User"]//input[contains(@value,"Super user access enabled.")]'), timeout=120)
+		Begin "Verify Super User access (via custom password)"
+			Begin "Check Refer to Systems"
+				Navigate "?f=admin&s=rts_editor"
+				Verify !exists "Super user access required" text

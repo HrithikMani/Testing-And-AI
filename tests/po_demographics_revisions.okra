@@ -1,0 +1,30 @@
+Begin Open and Close Provider Organization Demographics
+	Navigate "?f=chart&s=pat&pat_id=64"
+	Open the "Provider Organization" dynamicsection
+	Close the "Provider Organization" dynamicsection
+	Open the "Provider Organization" dynamicsection
+	Verify exists @0 in Revision # column@xpath="//tr[1]/td[1][text()='0']"
+	Verify exists @Engineering, Medical Informatics in Revised By column@xpath="//tr[1]/td[2][text()='Engineering, Medical Informatics']"
+	Verify exists @09-04-2019 13:12 in Revision Date column@xpath="//tr[1]/td[3][text()='09-04-2019 13:12']"
+	Verify !exists @text in NPI column@xpath="//tr[1]/td[4][. !='']"
+	Verify exists @Outside Clinic in Name column@xpath="//tr[1]/td[5][text()='Outside Clinic']"
+	Verify !exists @text in Legal Name column@xpath="//tr[1]/td[6][. !='']"
+	Verify exists @text in Country column@xpath="//tr[1]/td[7][. !='']"
+	Verify !exists @text in Postal Code column@xpath="//tr[1]/td[8][. !='']"
+	Verify !exists @text in Address 1 column@xpath="//tr[1]/td[9][. !='']"
+	Verify !exists @text in Address 2 column@xpath="//tr[1]/td[10][. !='']"
+	Verify !exists @text in County column@xpath="//tr[1]/td[11][. !='']"
+	Verify !exists @text in City column@xpath="//tr[1]/td[12][. !='']"
+	Verify exists @IN in Employer State/Province column@xpath="//tr[1]/td[13][text()='IN']"
+	Verify exists @text in Employer Country column@xpath="//tr[1]/td[14][. !='']"
+	Verify !exists @text in Employer Postal Code column@xpath="//tr[1]/td[15][. !='']"
+	Verify !exists @text in Employer Address 1 column@xpath="//tr[1]/td[16][. !='']"
+	Verify !exists @text in Employer Address 2 column@xpath="//tr[1]/td[17][. !='']"
+	Verify !exists @text in Employer County column@xpath="//tr[1]/td[18][. !='']"
+	Verify !exists @text in Employer City column@xpath="//tr[1]/td[19][. !='']"
+	Verify exists @IN in Employer State/Province column@xpath="//tr[1]/td[20][text()='IN']"
+	Verify !exists @text in Work Phone column@xpath="//tr[1]/td[21][. !='']"
+	Verify !exists @text in Fax Number column@xpath="//tr[1]/td[22][. !='']"
+	Verify !exists @text in Email column@xpath="//tr[1]/td[23][. !='']"
+	Verify !exists @text in Date Deactivated column@xpath="//tr[1]/td[24][. !='']"
+	Close the "Provider Organization" dynamicsection

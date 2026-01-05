@@ -1,0 +1,31 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Wait for the "DataImportTypes" grid
+	Click the "Show/Hide Grid Controls" icon
+	Select "Name" from the @Filters dropdown@xpath='//span[contains(., "Filters")]/parent::div/following-sibling::div/select[@class="wcdv_control_addField"]'
+	Sumoselect "Patient Panel Status CSV API" from the "Name" grid sumoselect
+	Click the "OK" grid sumobutton
+	Wait for ajax
+	Click "Patient Panel Status CSV API" grid checkbox
+	Click the "Upload Data" button
+	Verify exists @xpath="//div[@class='wc_win']"
+	Verify exists "Patient Panel Status CSV API" text in @xpath="//div[@class='wc_win']"
+	Screenshot "test"
+	Click the "DI_Verbose" checkbox
+	@Wait@driver.pause(1)
+	Type 'PatientPanelStatusSuccess.csv' in the 'csv_file' input
+	Click the "Upload File" button
+	@driver.getWebDriver().switch_to.frame("di_output_frame")
+	@Wait@driver.pause(1)
+	Verify exists "Successfully imported file PatientPanelStatusSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+	Click the @Close button@xpath='//button[@class="xclose"]'
+Begin "Go to Panel Status Report and Verify Entries"
+	Navigate "?f=layout&s=pat&module=SystemReport&name=PanelStatus&tabmodule=reports&t=Health+Surveillance"
+	Enter "Exposure-Varicella" in the panel_ac_txt autocomplete
+	Click the "Search" button
+	Verify exists @xpath=//*[@id='panel__stat_gridContainer_0']//td[text()='TEST-10019']
+	Verify exists @xpath=//*[@id='panel__stat_gridContainer_1']//td[text()='TEST-10006']

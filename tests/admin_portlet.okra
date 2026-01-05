@@ -1,0 +1,11 @@
+Begin "Administrator Portlet Check"
+Verify exists "Sample patient demo" text
+Verify exists "WebChart Store" text
+Verify exists "Documentation/videos" text
+Verify exists "Getting started" text
+Verify exists "Latest news" text
+Verify exists 1st "read more" link
+Verify exists 2nd "read more" link
+Verify exists 3rd "read more" link
+Verify exists "Latest Apps" text
+Verify exists "Enterprise Health TeleHealth™ is a low-cost simple way for providers to connect with patients without having to install any software." text

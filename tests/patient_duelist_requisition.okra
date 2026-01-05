@@ -1,0 +1,22 @@
+Click the "TEST-10019" link
+Click the "Influenza Injection" checkbox
+Click the "Requisition Orders" button
+Begin "Order Request"
+	Select "Selenium, Selenium" from the "ordering_physician" dropdown
+	Select "Soon" from the "schedule_comment" dropdown
+	Select "Office" from the "location" dropdown
+	Type "Patient instructions." in the "patient_instructions" input
+	Type "Order comments." in the "comments" input
+	Click the "Save" popup button
+	@Close the window@driver.closePopup()
+	Begin "Verify Influenza Injection Requested"
+		Begin "Verify Influenza Injection is no longer listed in the Due List portlet"
+			@driver.waitFor(driver, lambda d: d.getElement(xpath="//a[text()='Hart, William']"), expected_return=True)
+			Click the "Hart, William" link
+			Verify notexists @"Influenza Injection" text@xpath='//div[@id="DueListPendingPortlet"]//span[contains(text(), "Influenza Injection")]'
+		Begin "Verify Influenza Injection move to Past Items Due List"
+			Open "Health Surveillance" charttab
+			Click the "Due List" charttab subtab
+			Click the "Pending Items" "Show/Hide" icon
+			Click the "In Progress" "Show/Hide" icon
+			Verify exists "Influenza Injection" grid entry

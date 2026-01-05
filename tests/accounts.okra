@@ -1,0 +1,22 @@
+Begin "Setup Christine"
+	@Update start date for Better Corp EO@driver.miedb.dbExec("UPDATE pat_pat_relations SET start_date = '2001-01-01' WHERE pat_id = 40 OR related_pat_id = 40")
+Begin "Create a new Account"
+	Navigate "?f=chart&s=pat&pat_id=43"
+	Click the "Add New Account" link
+	Type "Services" into the "Name:" input
+	Type "1000" in the "Opening Balance ($):" input
+	Click the "Add New" button
+	Verify exists "Services" text
+	Verify exists "$1,000.00" text
+	Click the "Accounting" charttab
+	Click the "Overview (Account)" charttab subtab
+	Open the "Account" dynamicsection
+	Type "Services Update" in the "DPI_last_name" input
+	Save the "Account" dynamicsection
+	Verify exists "Services Update" text
+Begin "Validate accounts on encounter"
+	Navigate "?f=chart&s=pat&pat_id=40"
+	Click the "Add Visit" link
+	Open the "Encounter" dynamicsection
+	Select "Services Update" in the "DEI_eo_payer_id" dropdown
+	Close the "Encounter" dynamicsection

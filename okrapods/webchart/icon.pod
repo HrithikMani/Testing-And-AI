@@ -1,0 +1,477 @@
+"""
+Pod used to interact with various icons
+
+- "icon addpanelitem" - selects the "+"(&#xf067;) icon on a panel
+- "icon editpanel" -  selects the "pencil"(&#xf040;) icon on a panel
+- "icon deletepanel" - selects the "trashcan"(&#xf014;) icon on a panel
+- "icon movepanel" - selects the "move"(&#xf047;) icon on a panel
+- "icon editpicklist" - selects the "pencil"(&#xf040;) icon on a picklist
+- "icon deletepicklistitem" - selects the "trashcan"(&#xf014;) icon on a picklist
+- "icon movepicklistitem" - selects the "move"(&#xf047;) icon on a picklist
+
+Usage examples:
+
+* Please note:
+	The preferred usage would be to use the icon's title, if one exists. If not, then maybe 
+	it should be added. This will serve two purposes, it will be more readable and we should
+	just be able to hover over the icon to get the title in order to know how to reference it.
+
+	Click the "Quick Links" icon
+	Click the "In House Testing Pick List" icon
+	Click the "Show/Hide Menu" icon
+	Click the menu icon
+	Click the help icon
+	Click the macros icon
+	Click "Blood" icon addpanelitem
+	Click "Blood" icon editpanel
+	Click "Blood" icon deletepanel
+	Verify "Blood" icon movepanel
+	Click "ANA" icon editpicklist
+	Click "ANA" icon deletepicklistitem
+	Verify "ANA" icon movepicklistitem
+
+* Notes:
+	- Do not add any verbs to this pod
+	  For now, this pod is only to be used as a reference to icons used within WebChart
+	- Font Awesome icon search: https://fontawesome.com/icons
+"""
+
+
+
+
+## General reference to a Font Awesome icon
+icon://li[contains(., "{OKRA_TEXT}")]/span[contains(@class, "fa")]|@id|@title|@value
+	|//span[contains(@class, "fa")]|@id|@title|@value
+	|//input[contains(@type, "image")]|@id|@title|@value
+	|//a[contains(@class, "fa")]|@id|@title|@value
+	|//button[contains(@class, "fa")]|@id|@title|@value
+	|//div[contains(., "wcdv")]//span[contains(@class, "fa")]/parent::button|@title
+	|//img{OKRA_TEXT_CLS}/parent::a|@title
+
+
+## General/Webchart Application Bar
+
+# WebChart side menu "list" icon
+menu://span[@id="wc_menuicon"]
+	|//span[contains(@id,"wc_menuicon")]
+
+# WebChart "thumbtack" icon in the side menu
+pin://a[@id="wc_pinned"]
+
+# "cogs" User Chart Tabs icon
+charttabs://li[@id="wc_tabs_gear"]/span[@class="light square fa"]
+
+# "i" Page performance data icon
+pageinfo://span[contains(@class, "fa fa-info-circle")]
+
+# Help "?" icon
+help://span[contains(@class, "fa") and @id="wc_help"]
+
+# "Keyboard" shortcut icon
+keys://span[contains(@class, "fa") and @id="wc_keys_help_icon"]
+
+# "globe-americas" language icon
+language://span[contains(@class, "fa") and @id="wc_lang"]
+
+# "magic" macros icon
+macros://span[contains(@class, "fa") and @id="wc_macro"]
+
+# "Chain links" subscription status icon
+subscription://span[contains(@class, "fa") and @id="wc_subscriptionstatus"]
+
+# "search" search icon
+search://span[contains(@class, "fa") and @id="wc_search_icon"]
+	|//input[contains(@type, "image") and contains(., "Search")]
+
+# "Clock" time zone icon
+timezone://span[contains(@class, "fa") and @title="Time Zone"]
+
+# "User" currently logged in user icon
+user://span[contains(@class, "fa") and @title="User"]
+
+# "Bug" Show errors icon
+error://span[contains(@class, "fa") and @title="Show Errors"]
+
+# "Level Up" Sort Ascending icon
+ascend://*{OKRA_TEXT_CLS}/[contains(@class, "fa") and @title="Ascending Order"]
+//span[contains(@class, "fa") and @title="Ascending Order"]
+
+# "Level Down" Sort Descending icon
+descend://*{OKRA_TEXT_CLS}/[contains(@class, "fa") and @title="Descending Order"]
+//span[contains(@class, "fa") and @title="Descending Order"]
+
+
+
+
+## Patient Charts
+
+# "Video Camera" TeleHealth icon
+telehealth://span[contains(@class, "fa") and @title="TeleHealth"]
+
+# "User Plus" send invite via SMS & email icon
+invite://span[contains(@class, "fa") and @title="Send Invite via SMS & Email"]
+
+# "Lightning bolt" quicklinks icon
+quicklink://span[contains(@class, "fa") and @title="Quick Links"]
+
+# "Bar chart" side chart icon
+sidechart://span[contains(@class, "fa") and @title="Toggle side chart"]
+
+# "Calculator" ICD10 calculator icon
+icdcalc://span[@title="ICD10 calculator available"]
+
+# "Lightning bolt" Due List perform icon
+duelist_perform://div[@class="DueListRow"]{OKRA_TEXT_CLS}//span[contains(@class, "fa") and @title="Perform"]
+	|//span[contains(@class, "fa") and @title="Perform"]
+
+# "Bulleted List" Encounter Template icon
+encountertemplate://a{OKRA_TEXT_CLS}/following-sibling::a//span[contains(@class, "fa") and @title="Templates"]
+	|//span[contains(@class, "fa") and @title="Templates"]
+
+# "Bulleted List" In House Testing Pick List icon
+orderlist://span[contains(@class, "fa") and contains(@title, "Pick List")]
+
+# "?" Info icon
+info://span[contains(@class, "fa-info-circle")]
+	|//*{OKRA_TEXT_CLS}/span[@class="fa wc_help"]
+	|//span[@class="fa wc_help"]
+
+# "Lg External Link" Link to document
+link://span[contains(@class, "fa-external-link")]
+
+
+
+
+## Dynamic Encounter Section Header icons
+
+# "Bulleted List" Summary View toggle section header icon
+summary://*[contains(@class, "exam_tab") and contains(., "{OKRA_TEXT}")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "summary_toggle") and @title="Summary view"]
+	|//*[contains(@class, "exam_tab")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "summary_toggle") and @title="Summary view"]
+
+# "Four Squares" Detail View toggle section header icon
+detail://*[contains(@class, "exam_tab") and contains(., "{OKRA_TEXT}")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "detail_toggle") and @title="Detail view"]
+	|//*[contains(@class, "exam_tab")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "detail_toggle") and @title="Detail view"]
+
+# "Copy from previous" section header icon
+copy_from_prev://*[contains(@class, "exam_tab") and contains(., "{OKRA_TEXT}")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "copy_from_prev") and @title="Copy from Previous Exam"]
+	|//*[contains(@class, "exam_tab")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "copy_from_prev") and @title="Copy from Previous Exam"]
+
+# "Delete copied" section header icon
+delete_copied://*[contains(@class, "exam_tab") and contains(., "{OKRA_TEXT}")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "delete_copied") and @title="Delete Copied Items"]
+	|//*[contains(@class, "exam_tab")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "delete_copied") and @title="Delete Copied Items"]
+
+# "Bookmark" Quick List toggle section header icon
+quicklist://*[contains(@class, "exam_tab") and contains(., "{OKRA_TEXT}")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "ql_toggle") and @title="Show/Hide Quick Lists"]
+	|//*[contains(@class, "exam_tab")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "ql_toggle") and @title="Show/Hide Quick Lists"]
+
+# "Book" Set Library toggle section header icon
+library://*[contains(@class, "exam_tab") and contains(., "{OKRA_TEXT}")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "setLibrary") and @title="Set library for this section"]
+	|//*[contains(@class, "exam_tab")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "setLibrary") and @title="Set library for this section"]
+
+# "Pencil" Edit section header icon
+sectionedit://*[contains(@class, "exam_tab") and contains(., "{OKRA_TEXT}")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "sectionEdit") and @title="Edit"]
+	|//*[contains(@class, "exam_tab")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "sectionEdit") and @title="Edit"]
+
+# "Microphone" Dictate section header icon
+dictate://*[contains(@class, "exam_tab") and contains(., "{OKRA_TEXT}")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "dictate") and @title="Dictate"]
+	|//*[contains(@class, "exam_tab")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "dictate") and @title="Dictate"]
+
+# "X" Hide section header icon
+hide://*[contains(@class, "exam_tab") and contains(., "{OKRA_TEXT}")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "wc-enc-dynamic-section-x") and @title="Hide section"]
+	|//*[contains(@class, "exam_tab")]/following-sibling::div[contains(@class, "heading_buttons")]/a[contains(@class, "wc-enc-dynamic-section-x") and @title="Hide section"]
+
+
+
+
+## Dynamic Encounter Dynamic Item and Quicklist icons
+
+# "Pencil" Edit Dynamic Item icon
+edit://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa-pencil") and contains(@title, "Edit")]
+   |//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa-pencil") and contains(@title, "Correct Medication")]
+   |//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa-pencil") and contains(@title, "Change Therapy")]
+
+# "Black Sqaure Ext Link" Drug Info Dynamic Item icon
+druginfo://div[contains(@class, "dynContent")]//div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[@title="Drug Info"]
+
+# "share-square" Continue Dynamic Item icon
+continue://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[@title="Continue"]
+
+# "Plus Sign" Add/Prescribe Dynamic Item icon
+add://div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{OKRA_TEXT}")]/following-sibling::div//div[contains(@class, "dynQL")]//div[contains(@class, "dyndiv")]//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")][contains(., "Other")]//button[contains(@title, "Add") or contains(@title, "Prescribe")]
+   |//div[contains(@class, "wc-enc-dynamic-section")]/*[@class="exam_tab"][contains(., "{OKRA_TEXT}")]/following-sibling::div//div[contains(@class, "dynQL")]//div[contains(@class, "dyndiv")]//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")][contains(., "Other")]
+
+# "ban" Delete Dynamic Item icon
+delete://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Delete"]
+   |//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Remove"]
+
+# "ban" Remove Dynamic Item icon
+remove://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Remove"]
+   |//div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Delete"]
+
+# "Arrows-v Up and Down" Move Dynamic Item icon
+move://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Move"]
+
+# "sticky-note" Notes Dynamic Item icon
+notes://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Notes"]
+
+# "paper-plane" Requisition Dynamic Item icon
+requisition://div[@class = "nest-header" and strong = "Future"]/following-sibling::ul/li/span{OKRA_TEXT_CLS}/following-sibling::span//button[contains(@class, "fa") and @title = "Requisition"]
+
+# "bolt" Add to Exam Dynamic Item icon
+examadd://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Add to Exam"]
+	|//div[@class="ql-list"]//li{OKRA_TEXT_CLS}/span/button[contains(@class, "fa") and @title="Add to Exam"]
+
+# "calendar-check" Add Task Dynamic Item icon
+taskadd://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Add Task"]
+
+# "angle-double-right" Remove from Assessment Dynamic Item icon
+assessmentremove://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Remove from Assessment"]
+
+# "medkit" Prescribe Med Dynamic Item icon
+prescribe://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[contains(@class, "fa") and @title="Prescribe"]
+
+# "ban" Discontinue Dynamic Item icon
+discontinue://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[@title="Discontinue"]
+
+# "clock-o" Log Time Dynamic Item icon
+log://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[@title="Log Time"]
+
+# "credit-card" Add Related Charge Dynamic Item icon
+charge://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[@title="Log Time"]
+
+# "check" Complete Order Dynamic Item icon
+complete://div[contains(@class, "dynContent")]/div/ul/li[contains(@class, "dynItem")]{OKRA_TEXT_CLS}//button[@title="Complete"]
+
+
+
+
+## Date and Time
+
+# "Calendar" Date Time Calendar icon
+calendar://td{OKRA_TEXT_CLS}/following-sibling::td//span/button[contains(@class, "fa") and @title="Calendar"]
+	|//span/button[contains(@class, "fa") and @title="Calendar"]
+	|//span/*[contains(@class, "fa") and @title="Calendar"]
+	|//span[contains(@class, "fa") and @title="Calendar"]
+
+# "Clock" Today icon
+now://td{OKRA_TEXT_CLS}/following-sibling::td//*[contains(@class, "fa") and @title="Today"]
+	|//*[contains(@class, "fa") and @title="Today"]
+
+# "Solid Circle with X" Clear icon
+clear://td{OKRA_TEXT_CLS}/following-sibling::td//*[contains(@class, "fa") and @title="Clear"]
+	|//*[contains(@class, "fa") and @title="Clear"]
+
+
+
+
+## Patient Medications
+
+# "Italic I" Drug Info icon
+drugguide://a[contains(@href, "druglookup") and @title="{OKRA_TEXT}"]/img[contains(@src, "info")]
+
+# "Printer" Print Drug Guide Info icon
+print://td//a{OKRA_TEXT_CLS}/parent::div/following-sibling::div/a[contains(@onclick, "print_drugguide") and @title="Print Drug Guide Info"]/img[contains(@src, "Print")]
+	|//a{OKRA_TEXT_CLS}/following-sibling::a[contains(@onclick, "print_drugguide") and @title="Print Drug Guide Info"]/img[contains(@src, "Print")]
+	|//a[contains(@onclick, "print_drugguide") and @title="Print Drug Guide Info"]/img[contains(@src, "Print")]
+	|//a[contains(@href, "print_drugguide") and @title="Print Drug Guide Info"]/img[contains(@src, "Print")]
+
+# "Red Exclamation Circle" Drug Alert icon
+alert://td{OKRA_TEXT_CLS}/following-sibling::td//span[contains(@class, "fa-exclamation-circle") and contains(@class, "alert")]
+	|//span[contains(@class, "fa-exclamation-circle") and contains(@class, "alert")]
+
+# "Yellow Exclamation Triangle" Drug Warning icon
+warning://td{OKRA_TEXT_CLS}/following-sibling::td//span[contains(@class, "fa-exclamation-triangle") and contains(@class, "warning")]
+	|//span[contains(@class, "fa-exclamation-triangle") and contains(@class, "warning")]
+
+
+
+
+## Documents
+
+# "User" View chart icon
+viewchart://*{OKRA_TEXT_CLS}//*[contains(@class, "fa") and @title="View Chart"][0]
+	|//*[contains(@class, "fa") and @title="View Chart"]
+
+# "Ext link arrow" View Document icon
+viewdoc://*{OKRA_TEXT_CLS}//*[contains(@class, "fa") and @title="View Document"][0]
+	|//*[contains(@class, "fa") and @title="View Document"]
+
+# "Checked checkbox" Add Task icon
+addtask://*{OKRA_TEXT_CLS}//*[contains(@class, "fa") and @title="Add Task"][0]
+	|//*[contains(@class, "fa") and @title="Add Task"]
+
+# "Calendar Check" Task icon
+task://*{OKRA_TEXT_CLS}//*[contains(@class, "fa") and @title="Add Task"][0]
+	|//*[contains(@class, "fa") and @title="Add Task"]
+
+# "Plus sign" Batch icon
+batch://*{OKRA_TEXT_CLS}//*[contains(@class, "fa") and @title="Batch"][0]
+	|//*[contains(@class, "fa") and @title="Batch"]
+
+# "Chain Link" Link to Encounter icon
+linkto://*{OKRA_TEXT_CLS}//*{OKRA_TEXT_CLS}//*[contains(@class, "fa") and @title="Link to Encounter"][0]
+	|//*[contains(@class, "fa") and @title="Link to Encounter"]
+
+# "Clipboard Paste" Link with Details icon
+linkdetails://*{OKRA_TEXT_CLS}//*{OKRA_TEXT_CLS}//*[contains(@class, "fa") and @title="Link with Details"][0]
+	|//*[contains(@class, "fa") and @title="Link with Details"]
+
+# "sticky-note" Link with Interpretation icon
+interpretation://*{OKRA_TEXT_CLS}//*{OKRA_TEXT_CLS}//*[contains(@class, "fa") and @title="Link with Interpretation"][0]
+	|//*[contains(@class, "fa") and @title="Link with Interpretation"]
+
+
+
+
+## Portlets
+
+# "Up Arrow" portlet collapse icon
+collapse://div[@class="portlet-header"]{OKRA_TEXT_CLS}/div[@class="controls"]/div[@title="Collapse"]
+	|//div[@class="portlet-header"]/div[@class="controls"]/div[@title="Collapse"]
+
+# "Down Arrow" portlet expand icon
+expand://div[@class="portlet-header"]{OKRA_TEXT_CLS}/div[@class="controls"]/div[@title="Expand"]
+	|//div[@class="portlet-header"]/div[@class="controls"]/div[@title="Expand"]
+
+# "X" portlet remove icon - Issue resolved.
+portletremove://div[@class="portlet-header"]{OKRA_TEXT_CLS}/div[@class="controls"]/div[@title="Remove"]
+	|//div[@class="portlet-header"]/div[@class="controls"]/div[@title="Remove"]
+
+# "4-way Arrow" portlet move icon
+portletmove://div[@class="portlet-header"]{OKRA_TEXT_CLS}/div[@class="controls"]/div[@title="Move"]
+	|//div[@class="portlet-header"]/div[@class="controls"]/div[@title="Move"]
+
+# "Pencil" portlet edit/manage information icon
+manageinformation://div[@class="portlet-header"]{OKRA_TEXT_CLS}/div[@class="controls"]/div[@class="edit"]/a[contains(@title, "Manage Information")]
+	|//div[@class="portlet-header"]/div[@class="controls"]/div[@class="edit"]/a[contains(@title, "Manage Information")]
+
+# "Lightning bolt" perform icon
+perform://span{OKRA_TEXT_CLS}/parent::div/following-sibling::div//span[contains(@class, "fa") and @title="Perform"]
+	|//span/parent::div/following-sibling::div//span[contains(@class, "fa") and @title="Perform"]
+
+
+
+
+## DataVis/Grid
+
+# "Undo" DataVis undo icon
+undo://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title "Reset")]//span[contains(@class, "fa-undo")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title "Reset")]//span[contains(@class, "fa-undo")]
+
+# "Circle Left" DataVis Back icon
+back://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Back")]//span[contains(@class, "fa-chevron-circle-left")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Back")]//span[contains(@class, "fa-chevron-circle-left")]
+
+# "Circle Right" DataVis Forward icon
+forward://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Forward")]//span[contains(@class, "fa-chevron-circle-right")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Forward")]//span[contains(@class, "fa-chevron-circle-right")]
+
+# "Floppy Disk" DataVis Save Perspective icon
+perspective://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//span[contains(@class, "fa fa-save")]
+	|//span[contains(@class, "fa fa-save")]
+
+# "Pencil" DataVis Rename icon
+rename://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Rename")]//span[contains(@class, "fa-pencil")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Rename")]//span[contains(@class, "fa-pencil")]
+
+# "Trash" DataVis Delete icon
+wcdvdelete://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Delete")]//span[contains(@class, "fa-trash")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Delete")]//span[contains(@class, "fa-trash")]
+
+# "File" DataVis Generate CSV icon
+csv://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Generate CSV")]//span[contains(@class, "fa-file-o")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Generate CSV")]//span[contains(@class, "fa-file-o")]
+
+# "Sync" DataVis Refresh icon
+refresh://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Refresh")]//span[contains(@class, "fa")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Refresh")]//span[contains(@class, "fa")]
+
+# "Cog" DataVis Options icon
+options://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Options")]//span[contains(@class, "fa-cog")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Options")]//span[contains(@class, "fa-cog")]
+
+# "Cheviron" DataVis Show/Hide icon
+showhide://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Show/Hide")]//span[contains(@class, "fa")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Show/Hide")]//span[contains(@class, "fa")]
+
+# "Up Sort duotone" DataVis Sort ascending/descending icon
+dvsortasc://div[@class="wcdv_grid"]//div[@class="wcdv_heading_container"]{OKRA_TEXT_CLS}//span[contains(@class, "fa-sort-asc")]
+	|//div[@class="wcdv_grid"]//tr{OKRA_TEXT_CLS}//div//span[contains(@class, "fa-sort-asc")]
+	|//div[@class="wcdv_grid"]//tr//div//span[contains(@class, "fa-sort-asc")]
+	|//div[@class="wcdv_grid"]//div//span[contains(@class, "fa-sort-asc")]
+	|//span[contains(@class, "fa-sort-asc")]
+
+# "Down Sort duotone" DataVis Sort ascending/descending icon
+dvsortdesc://div[@class="wcdv_grid"]//div[@class="wcdv_heading_container"]{OKRA_TEXT_CLS}//span[contains(@class, "fa-sort-desc")]
+	|//div[@class="wcdv_grid"]//tr{OKRA_TEXT_CLS}//div//span[contains(@class, "fa-sort-desc")]
+	|//div[@class="wcdv_grid"]//tr//div//span[contains(@class, "fa-sort-desc")]
+	|//div[@class="wcdv_grid"]//div//span[contains(@class, "fa-sort-desc")]
+	|//span[contains(@class, "fa-sort-desc")]
+
+# "Filter solid" DataVis filter icon
+filter://div[@class="wcdv_grid"]//div[@class="wcdv_heading_container"]{OKRA_TEXT_CLS}//span[contains(@class, "fa-filter")]
+	|//span[contains(@class, "fa-filter")]
+
+
+
+
+##Panels
+
+#"+" editItem - icon-plus (&#xf067;)
+addpanelitem://span[@class="panel-title"]{OKRA_TEXT_CLS}/following-sibling::div[@class="controls"]//span[contains(@class, "fa")][contains(@onclick, "editItem")]
+
+#"+" editItem - icon-plus (&#xf067;)
+addpanelaction://div[@class="wcdv_grid"]//span[contains(., "{OKRA_TEXT}")]/following-sibling::span[@class="hs-icon-group"]/a[contains(@class, "fa")][contains(@title, "Add panel action")]
+
+#"eye" - fa-eye
+viewpanel://div[@class="wcdv_grid"]//span[contains(., "{OKRA_TEXT}")]/following-sibling::span[@class="hs-icon-group"]/a[contains(@class, "fa")][contains(@title, "View panel")]
+
+#"history" activate panel - clock-rotate-left (f1da)
+activatepanel://div[@class="wcdv_grid"]//span[contains(., "{OKRA_TEXT}")]/following-sibling::span[@class="hs-icon-group"]/a[contains(@class, "fa")][contains(@title, "Activate panel")]
+
+#"circle X" inactivate panel - circle-xmark (f057)
+inactivatepanel://div[@class="wcdv_grid"]//span[contains(., "{OKRA_TEXT}")]/following-sibling::span[@class="hs-icon-group"]/a[contains(@class, "fa")][contains(@title, "Inactivate panel")]
+
+#"user" user - user (f007)
+panelmembership://div[@class="wcdv_grid"]//span[contains(., "{OKRA_TEXT}")]/following-sibling::span[@class="hs-icon-group"]/a[contains(@class, "fa")][contains(@title, "Panel membership")]
+
+#"pencil" editGroup/editSet - icon-pencil (&#xf040;)
+editpanel://span[@class="panel-title"][contains(text(), "{OKRA_TEXT}")]/following-sibling::div[@class="controls"]//span[contains(@class, "fa")][contains(@onclick, "editGroup") or contains(@onclick, "editSet")]
+	|//div[@class="wcdv_grid"]//span[contains(., "{OKRA_TEXT}")]/following-sibling::span[@class="hs-icon-group"]/a[contains(@class, "fa")][contains(@title, "Edit panel")]
+
+#"trash can" deleteGroup - icon-trash (&#xf014;)
+deletepanel://span[@class="panel-title"]{OKRA_TEXT_CLS}/following-sibling::div[@class="controls"]//span[contains(@class, "fa")][contains(@onclick, "delete")]
+	|//div[@class="wcdv_grid"]//span[contains(., "{OKRA_TEXT}")]/following-sibling::span[@class="hs-icon-group"]/a[contains(@class, "fa")][contains(@title, "Delete panel")]
+
+#"handle" itemHandle - icon-move (&#xf047;)
+movepanel://span[@class="panel-title"]{OKRA_TEXT_CLS}/following-sibling::div[@class="controls"]//span[contains(@class, "groupHandle")]
+
+
+
+
+##Picklists
+
+#"pencil" editItem - icon-pencil (&#xf040;)
+editpicklist://tr[@class="picklistItem"]/td/label/a[contains(text(), "{OKRA_TEXT}")]/parent::label/parent::td/parent::tr/td/span[@class="controls"]//span[contains(@class, "fa")][contains(@onclick, "editItem")]
+
+#"trash can" deleteItem - icon-trash (&#xf014;)
+deletepicklistitem://tr[@class="picklistItem"]/td/label/a[contains(text(), "{OKRA_TEXT}")]/parent::label/parent::td/parent::tr/td/span[@class="controls"]//span[contains(@class, "fa")][contains(@onclick, "delete")]
+
+#"handle" itemHandle - icon-move (&#xf047;)
+movepicklistitem://tr[@class="picklistItem"]/td/label/a[contains(text(), "{OKRA_TEXT}")]/parent::label/parent::td/parent::tr/td/span[@class="controls"]//span[contains(@class, "itemHandle")]
+
+
+
+
+##Scheduler
+
+#"pen to square" fa-edit - "fa-solid fa-pen-to-square" (f044)
+editblock://i[contains(@class, "fa fa-edit")]/parent::font[contains(@class, "appointment-block-edit")]/parent::a{OKRA_TEXT_CLS}|@title
+
+
+## Scriptlet
+
+# "minus circle" fa-minus-circle "fa-minus-circle fa-circle-minus" Unicode: (f056)
+minuscircle://div[contains(@class, "wc_win")]//div{OKRA_TEXT_CLS}/following-sibling::div[1]/input/following-sibling::span[contains(@class, "fa")]
+	|//div[contains(@class, "wc_win")]//div/following-sibling::div[1]/input/following-sibling::span[contains(@class, "fa")]
+

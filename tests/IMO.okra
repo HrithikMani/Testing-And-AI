@@ -1,0 +1,71 @@
+Begin "Turn on the needed settings"
+	@Enable IMO@driver.wcutils.SetSystemSetting('Conditions','IMO Search','OrgID','e17142266bb3f386',False)
+Begin "Nurse adds Visit encounter on Christine Harris"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+Begin "Add a New Condition"
+#del	Add "Smart Plan:Make New Assessment" "Other" dynamicitem
+	Add "Smart Plan" quicklist item
+	Verify exists "Add Assessment" popup
+	Verify exists @id="imoframeid"
+	@@@
+	driver.getWebDriver().switch_to.frame("imoframeid")
+	driver.pause(5)
+	try:
+		driver.getWebDriver().find_element_by_id("query").send_keys("DVT")
+		driver.pause(5)
+		driver.getWebDriver().find_element_by_id("search-button").click()
+		driver.pause(5)
+		driver.getWebDriver().find_element_by_id("add-button").click()
+	except AttributeError:
+		from selenium.webdriver.common.by import By
+		driver.getWebDriver().find_element(By.ID, "query").send_keys("DVT")
+		driver.pause(5)
+		driver.getWebDriver().find_element(By.ID, "search-button").click()
+		driver.pause(5)
+		driver.getWebDriver().find_element(By.ID, "add-button").click()
+	driver.getWebDriver().switch_to.default_content()
+	@@@
+	Click the "Add Another" button
+	Wait for page
+	@@@
+	driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@id, "imoDiv")]/iframe[@id="imoframeid"]'), expected_return=True, timeout=30)
+	driver.getWebDriver().switch_to.frame("imoframeid")
+	try:
+		driver.getWebDriver().find_element_by_id("query").send_keys("pain in knee")
+		driver.pause(5)
+		driver.getWebDriver().find_element_by_id("search-button").click()
+		driver.pause(5)
+		driver.getWebDriver().find_element_by_id("expand-button").click()
+		driver.pause(5)
+		driver.getWebDriver().find_element_by_id("711066").find_element_by_xpath("./div/div/table/tbody/tr[2]/td[1]/div/table/tbody/tr/td").click()
+		driver.pause(5)
+		driver.getWebDriver().find_element_by_id("711066").find_element_by_xpath("./div/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[3]/td").click()
+		driver.pause(5)
+		driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath='//tbody/tr[2]/td/span/div[contains(., "Pain in knee")]'))
+		driver.pause(5)
+		driver.getWebDriver().find_element_by_id("add-button").click()
+		driver.getWebDriver().switch_to.default_content()
+	except AttributeError:
+		from selenium.webdriver.common.by import By
+		driver.getWebDriver().find_element(By.ID, "query").send_keys("pain in knee")
+		driver.pause(5)
+		driver.getWebDriver().find_element(By.ID, "search-button").click()
+		driver.pause(5)
+		driver.getWebDriver().find_element(By.ID, "expand-button").click()
+		driver.pause(5)
+		driver.getWebDriver().find_element(By.ID, "711066").find_element(By.XPATH, "./div/div/table/tbody/tr[2]/td[1]/div/table/tbody/tr/td").click()
+		driver.pause(5)
+		driver.getWebDriver().find_element(By.ID, "711066").find_element(By.XPATH, "./div/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[3]/td").click()
+		driver.pause(5)
+		driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath='//tbody/tr[2]/td/span/div[contains(., "Pain in knee")]'))
+		driver.pause(5)
+		driver.getWebDriver().find_element(By.ID, "add-button").click()
+		driver.getWebDriver().switch_to.default_content()
+	@@@
+	Verify exists "Pain in right knee" text
+	Verify exists "Pain in left knee" text

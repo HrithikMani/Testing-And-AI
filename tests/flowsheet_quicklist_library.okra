@@ -1,0 +1,44 @@
+@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{nurse_username}')
+Begin "Find Patient, Add Visit"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+Begin "Encounter Setup"
+	@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+	# Open the "Encounter" dynamicsection
+	# Enter "02-02-2007" into the DED_serv_date date
+	# Click the dynamicsection nextbutton
+	# @Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+Begin "Physical exam"
+	# The Smart Plan quicklist starts open and we need to get rid of it.
+	@new zeus slow wait@driver.pause(10)
+	Toggle the "Smart Plan" quicklist
+	@new zeus slow wait@driver.pause(10)
+	# Unfortunately for now you have to open/close the section to show the quicklist.
+	Open the "Physical exam" dynamicsection
+	@new zeus slow wait@driver.pause(10)
+	Close the "Physical exam" dynamicsection
+	@new zeus slow wait@driver.pause(10)
+	Toggle the "Physical exam" quicklist
+	Begin "Save"
+		Add "Physical exam" "Other" dynamicitem
+		Verify exists "Flowsheet Observation: Physical Exam" popup
+		Select "Constitutional - General Appearance:" in the "obs_code" dropdown
+		Type "Test General Appearance Result" in the "obs_result" input
+		# 1st button is [Save to Library]
+		Click the 2nd "Save" popup button
+		@Wait for the section to refresh@driver.wcutils.waitForAJAX(30)
+		Verify exists "Test General Appearance Result" text
+	Begin "Save to Library"
+		Add "Physical exam" "Other" dynamicitem
+		Verify exists "Flowsheet Observation: Physical Exam" popup
+		Select "Constitutional - General Appearance:" in the "obs_code" dropdown
+		Type "Test General Appearance Result - Default Library" in the "obs_result" input
+		Click the "Save to Library" popup button
+		@Wait for the quicklist to refresh@driver.wcutils.waitForAJAX(30)
+		Close popup
+		Verify exists "Test General Appearance Result - Default Library" quicklist item

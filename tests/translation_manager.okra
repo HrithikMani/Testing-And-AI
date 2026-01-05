@@ -1,0 +1,189 @@
+Begin "Revoke Access"
+	@Set View Translations to No@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=0 WHERE security_role_id=1 AND module_name='Control' AND category_name='View Translations';")
+	@Set Add Translations to No@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=0 WHERE security_role_id=1 AND module_name='Control' AND category_name='Add Translations';")
+	@Set Delete Translations to No@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=0 WHERE security_role_id=1 AND module_name='Control' AND category_name='Delete Translations';")
+Begin "Verify No Access"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Interface" charttab
+	Click the "Trans Mgr" charttab subtab
+	Verify exists "You do not have permission to view translations." text
+Begin "Add New Translation"
+	@Set View Translations to Yes@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=1 WHERE security_role_id=1 AND module_name='Control' AND category_name='View Translations';")
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Interface" charttab
+	Click the "Trans Mgr" charttab subtab
+	Click the "Add Translation" button
+	Verify exists "You don't have permission to add translations" text
+	@Set Add Translations to Yes@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=1 WHERE security_role_id=1 AND module_name='Control' AND category_name='Add Translations';")
+	Click the close icon
+	Click the "Add Translation" button
+	Enter "que" into the transInterface autocomplete
+	Enter "obs_code" into the transCategory autocomplete
+	Wait for ajax
+	Verify "value=21" @id=transType
+	Type "Platelet" into the transFrom input
+	Type "363" into the transTo input
+	Click the "Save & Add Another" button
+Begin "Add Second Translation"
+	Wait for ajax
+	Type "testinterface" into the transInterface autocomplete
+	Enter "Physicians" into the transCategory autocomplete
+	Select "User" from the transType dropdown
+	Type "Selenium, Selenium" into the transFrom input
+	Type "12" into the transTo input
+	Click the "Save" button
+	Wait for the transMngrGroups grid
+Begin "Verify Creation"
+	Expand the "quest" grid
+	Click the "obs_codes" grid link
+	Wait for the transMngrDetail grid
+	Verify exists "25000000" grid entry
+	Verify exists "76" grid entry
+	Verify exists "Observation Code" grid entry
+	Verify exists "Platelet" grid entry
+	Verify exists "363" grid entry
+	Verify exists 2nd "Observation Code" grid entry
+	Collapse the "quest" grid
+	Expand the "testinterface" grid
+	Wait for ajax
+	@Scroll Physicians grid link into view@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath='//td/a[contains(text(), "Physicians")]'))
+	Click the Physicians grid link
+	Wait for the transMngrDetail grid
+	Verify exists "Selenium, Selenium" grid entry
+	Verify exists "NoMoreClipboard.com" grid link
+	Verify exists "User" grid entry
+Begin "Edit New Translation"
+	Click the "Selenium, Selenium" grid checkbox
+	Click the "Edit" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Type "8" into the transTo input
+	Click the "Save" popup button
+	Wait for the transMngrDetail grid
+	Verify exists "Selenium, Selenium" grid link
+Begin "Duplicate Translation"
+	Click the "Selenium, Selenium" grid checkbox
+	Click the "Duplicate" grid button
+	Enter "quest" into the transInterface autocomplete
+	Verify "value=Physicians" @id=transCategory
+	Click the "Save" button
+	Wait for the transMngrDetail grid
+	Expand the "quest" grid
+	Click the "Physicians" grid link
+	Verify exists "Selenium, Selenium" grid entry
+	Verify exists "Selenium, Selenium" grid link
+	Verify exists "User" grid entry
+Begin "Wildcard Translation"
+	Expand the "labcorp" grid
+	Wait for ajax
+	Click the "doc_types" grid link
+	Wait for the transMngrDetail grid
+	Click the "[*]" grid checkbox
+	Click the "Edit" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Verify exists @Selected Ends With Button@xpath='//*[@id="endsWith" and @class="btn btn-outline-secondary active"]'
+	Type "lab" into the transFrom input
+	Click the "Starts With" popup button
+	Click the "Save" popup button
+	Wait for the transMngrDetail grid
+	Verify exists "[lab*]" grid entry
+Begin "Delete Translation"
+	Expand the "demo_lab" grid
+	Click the "Physicians" grid link
+	Wait for the transMngrDetail grid
+	Verify exists "986" grid entry
+	Verify exists "Selenium, Selenium" grid link
+	Verify exists 1st "User" grid entry
+	Verify exists "603" grid entry
+	Verify exists "Sample, John" grid link
+	Verify exists 2nd "User" grid entry
+	5:Click the "986" grid checkbox
+	Wait for the transMngrDetail grid
+	Click the "Delete" grid button
+	Wait for ajax
+	Verify exists "You don't have permission to delete translations" text
+	Click the close icon
+	@Set Delete Translations to Yes@driver.miedb.dbExec("UPDATE security_role_acl SET security_value=1 WHERE security_role_id=1 AND module_name='Control' AND category_name='Delete Translations';")
+	Wait for the transMngrDetail grid
+	Click the "Delete" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Verify exists "Trans From: 986" popup text
+	Verify exists "Trans To: Selenium, Selenium" popup text
+	Click the "Yes" button
+	Wait for the transMngrDetail grid
+	Expand the "demo_lab" grid
+	Click the "Physicians" grid link
+	Verify notexists "986" grid entry
+	Verify notexists "Selenium, Selenium" grid link
+	Verify notexists 2nd "User" grid entry
+	Collapse the "demo_lab" grid
+Begin "Create unmapped translation"
+	@Create unmapped translation@driver.miedb.dbExec("INSERT INTO translate (name, trans_to, trans_from) VALUES ('demo_lab-Physicians', '', 'Butler, Internist')")
+	Refresh page
+	Expand the "demo_lab" grid
+	Click the Physicians grid link
+	Verify exists "Butler, Internist" grid entry
+	Verify exists "unmapped" grid entry
+	Verify exists "User" grid entry
+	Verify exists "603" grid entry
+	Click the "unmapped" grid link
+	Wait for the transMngrDetail grid
+	Verify exists "Butler, Internist" grid entry
+	Verify exists "unmapped" grid entry
+	Verify exists "User" grid entry
+	Verify notexists "603" grid entry
+	Verify notexists "Sample, John" grid link
+	Verify notexists 2nd "User" grid entry
+Begin "Do multi-edit"
+	Expand the "Lab Sample" grid
+	Click the "obs_codes" grid link
+	Wait for the transMngrDetail grid
+	Click the "Platelet" grid checkbox
+	Click the "Eosinophils (Abs)" grid checkbox
+	Click the "Edit" grid button
+	@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=30)
+	Wait for ajax
+	Enter "labs" into the transCategory autocomplete
+	Verify "value=Lab Sample" @id=transInterface
+	Select "Station" from the transType dropdown
+	Click the "Save" button
+	Expand the "Lab Sample" grid
+	Click the "labs" grid link
+	Wait for the transMngrDetail grid
+	Verify exists "Platelet" grid entry
+	Verify exists "363" grid entry
+	Verify exists "Eosinophils (Abs)" grid entry
+	Verify exists "372" grid entry
+	Verify exists 1st "Station" grid entry
+	Verify exists 2nd "Station" grid entry
+	Click the "Platelet" grid checkbox
+	Click the "Eosinophils (Abs)" grid checkbox
+	Click the "Edit" grid button
+	Wait for ajax
+	Select "Appointment" from the transType dropdown
+	Wait for ajax
+	Select "Appointment" from the transType dropdown
+	Click the "Save" button
+	Verify exists "Are you sure you want to modify the translation type for Lab Sample-labs?" text
+	Click the "Yes" popup button
+	Wait for the transMngrDetail grid
+	Verify exists "Platelet" grid entry
+	Verify exists "363" grid entry
+	Verify exists "Eosinophils (Abs)" grid entry
+	Verify exists "372" grid entry
+	Verify exists 1st "Appointment" grid entry
+	Verify exists 2nd "Appointment" grid entry
+Begin "Show all unmapped"
+	Click the "Show All Unmapped" button
+	Wait for the transMngrDetail grid
+	Verify exists "demo_lab" grid entry
+	Verify exists "Physicians" grid entry
+	Verify exists "Butler, Internist" grid entry
+	Verify exists "unmapped" grid entry
+	Verify exists "User" grid entry
+	Verify exists "demo_lab2" grid entry
+	Verify exists 2nd "Physicians" grid entry
+	Verify exists "1962494138" grid entry
+	Verify exists 2nd "unmapped" grid entry
+	Verify exists 2nd "User" grid entry

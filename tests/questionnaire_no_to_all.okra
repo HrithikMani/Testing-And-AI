@@ -1,0 +1,76 @@
+Begin "Employee Portal"
+	Begin "Homepage"
+		Click the "Better Corp." link
+		Verify exists @Notification Bell@id='portal-header-notify'
+		Screenshot First Visit
+		Click the @id="modal-close"
+		Screenshot Employee Homepage
+
+	Begin "Travel Questionnaire"
+		Click the @id='portal-user-menu-top'
+		Click the @xpath='//a/span[contains(text(), "Travel Questionnaire")]'
+		Verify exists @Notification Bell@id='portal-header-notify'
+		Screenshot Travel Questionnaire
+		@Scroll Next button into View @driver.runJS("document.evaluate(`//button[contains(.,'NEXT')]`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView();")
+		Click the "NEXT" button
+		Verify exists "No to all" text
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Streptomycin: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Neomycin: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Eggs: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Yeast: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Thermisol/Mercury: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Gelatin: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Aluminum: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Formaldehyde: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="2-Phenoxyethanol: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Polymycin: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Bee stings: No"]'
+		Verify !exists @xpath='//div[contains(@class, "portal-mask") and contains(@class, "fade-mask")]'
+		@Wait 1 seconds@driver.pause(1)
+		Click the @xpath='//span[text()="No to all"]/..'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Streptomycin: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Neomycin: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Eggs: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Yeast: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Thermisol/Mercury: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Gelatin: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Aluminum: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Formaldehyde: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="2-Phenoxyethanol: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Polymycin: No"]'
+		Verify exists @xpath='//div[contains(@class, "checked")]/span/input[@aria-label="Bee stings: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Streptomycin: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Neomycin: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Eggs: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Yeast: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Thermisol/Mercury: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Gelatin: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Aluminum: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Formaldehyde: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="2-Phenoxyethanol: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Polymycin: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Bee stings: Yes"]'
+
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Diabetes Mellitus: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Asthma: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Heart Disease: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Hypertension or High Blood Pressure: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Lung Conditions: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Liver Conditions including Hepatitis: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Kidney Conditions: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Digestive Tract Conditions: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Thrombocytopenia: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Coagulation Conditions: No"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Acute Illness or Fever within the last 48 hrs.: No"]'
+
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Diabetes Mellitus: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Asthma: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Heart Disease: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Hypertension or High Blood Pressure: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Lung Conditions: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Liver Conditions including Hepatitis: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Kidney Conditions: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Digestive Tract Conditions: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Thrombocytopenia: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Coagulation Conditions: Yes"]'
+		Verify exists @xpath='//div[not(contains(@class, "checked"))]/span/input[@aria-label="Acute Illness or Fever within the last 48 hrs.: Yes"]'

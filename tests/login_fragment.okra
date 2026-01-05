@@ -1,0 +1,7 @@
+Type selenium into the login_user input
+Type selenium into the login_passwd input
+Click the "Log On" button
+Click the "OK" button
+Click the "Unlock for this Session" button
+Type "golden" into the superUserPwdField input
+Click the "Enable" button

@@ -1,0 +1,109 @@
+"""
+@filedeps: system/layouts/SystemEditorsReport/Locations.html
+"""
+
+Begin "Add New Location"
+	Open the sidemenu
+	Click the "Control Panel" link
+	Click the "System" charttab
+	Click the "Locations Manager" charttab subtab
+	Unfilter grid
+	Verify !exists "Office 2" grid entry
+	Click the "Add Location" link
+	Type "2OFFICE" in the "code" input
+	Type "Office 2" in the "Description" popup input
+	Enter "Office" from the "Place of Service" autocomplete
+	Enter "Better Corp" from the "Organization" autocomplete
+	Type "123412341234" in the "Account Number" input
+	Type "2222 Main" in the "address1" input
+	Type "Suite #2" in the "address2" input
+	Type "Fort Wayne" in the "city" input
+	Select "Indiana" from the "state" dropdown
+	Type "46804" in the "zip_code" input
+	Select "United States" from the "country" dropdown
+	Type 'US/Eastern' in the 'Time Zone' autocomplete
+	Select 'Us/Eastern' from the 'Time Zone' autocomplete
+	Type "260-459-6270" in the "phone_number" input
+	Type "260-459-6271" in the "fax_number" input
+	Click the @Use in FAX header "Yes" radio@xpath='//legend[contains(., "Use in FAX header")]/following-sibling::div//label[contains(., "Yes")]/preceding-sibling::input[@type="radio"]'
+	Click the @Outside Location "No" radio@xpath='//legend[contains(., "Outside Location")]/following-sibling::div//label[contains(., "No")]/preceding-sibling::input[@type="radio"]'
+	Click the @Active "Yes" radio@xpath='//legend[contains(., "Active")]/following-sibling::div//label[contains(., "Yes")]/preceding-sibling::input[@type="radio"]'
+	Click the "Save" button
+	Wait for the "LocationManager" grid
+	Verify exists "Office 2" grid entry
+	Verify exists "Better Corp" grid entry
+Begin "Add Outside Location"
+	Open the sidemenu
+	Click the "Control Panel" link
+	Click the "System" charttab
+	Click the "Locations Manager" charttab subtab
+	Verify !exists "New Outside Office" grid entry
+	Click the "Add Location" link
+	Type "NEWOFFICE" in the "code" input
+	Type "New Outside Office" in the "Description" input
+	Enter "Other Unlisted Facility" from the "Place of Service" autocomplete
+	Enter "Enterprise Orthopedics" from the "Organization" autocomplete
+	Type "123412341235" in the "Account Number" input
+	Type "1234 Highland" in the "address1" input
+	Type "Suite F" in the "address2" input
+	Type "Fort Wayne" in the "city" input
+	Select "Indiana" from the "state" dropdown
+	Type "46804" in the "zip_code" input
+	Select "United States" from the "country" dropdown
+	Type 'US/Eastern' in the 'Time Zone' autocomplete
+	Select 'Us/Eastern' from the 'Time Zone' autocomplete
+	Type "260-459-9999" in the "phone_number" input
+	Type "260-459-8888" in the "fax_number" input
+	Click the @Use in FAX header "Yes" radio@xpath='//legend[contains(., "Use in FAX header")]/following-sibling::div//label[contains(., "Yes")]/preceding-sibling::input[@type="radio"]'
+	Click the @Outside Location "Yes" radio@xpath='//legend[contains(., "Outside Location")]/following-sibling::div//label[contains(., "Yes")]/preceding-sibling::input[@type="radio"]'
+	Click the @Active "Yes" radio@xpath='//legend[contains(., "Active")]/following-sibling::div//label[contains(., "Yes")]/preceding-sibling::input[@type="radio"]'
+	Click the "Save" button
+	Wait for the "LocationManager" grid
+	Verify exists "New Outside Office" grid entry
+Begin "Edit Location"
+	Unfilter grid
+	Verify exists "Office 2" grid entry
+	Verify exists "2222 Main" grid entry
+	Verify exists "Suite #2" grid entry
+	Verify exists "123412341235" grid entry
+	Click the "2OFFICE" grid checkbox
+	Click the "Edit" grid button
+	Type "Billing Office" in the "Description" input
+	Type "567856785678" in the "Account Number" input
+	Type "1808 W. Main" in the "address1" input
+	Type "Downstairs" in the "address2" input
+	Click the "Save" button
+	Wait for the "LocationManager" grid
+	Verify !exists "Office 2" grid entry
+	Verify !exists "2222 Main" grid entry
+	Verify !exists "Suite #2" grid entry
+	Verify !exists "123412341234" grid entry
+	Verify exists "Billing Office" grid entry
+	Verify exists "1808 W. Main" grid entry
+	Verify exists "Downstairs" grid entry
+	Verify exists "567856785678" grid entry
+Begin "De-Activate Location"
+	Begin "De-Activate using Set Status in the grid"
+		Verify exists "Billing Office" grid entry
+		Click the "Billing Office" grid checkbox
+		Click the "Set Status" grid button
+		Click the @Active "No" radio@xpath='//legend[contains(., "Active")]/following-sibling::div//label[contains(., "No")]/preceding-sibling::input[@type="radio"]'
+		Click the "Save" button
+		Wait for the "LocationManager" grid
+	Begin "De-Activate from the Edit Location page"
+		Open the sidemenu
+		Click the "Control Panel" link
+		Click the "System" charttab
+		Click the "Locations Manager" charttab subtab
+		Click the "NEWOFFICE" grid checkbox
+		Click the "Edit" grid button
+		Click the @Active "No" radio@xpath='//legend[contains(., "Active")]/following-sibling::div//label[contains(., "No")]/preceding-sibling::input[@type="radio"]'
+		Click the "Save" button
+		Wait for the "LocationManager" grid
+	Begin "Make sure the 2 new offices have been de-activated"
+		Verify !exists "2OFFICE" grid entry
+		Verify !exists "NEWOFFICE" grid entry
+		Wait for LocationManager grid
+		Select "Inactive" from the grid perspective
+		Verify exists "2OFFICE" grid entry
+		Verify exists "NEWOFFICE" grid entry

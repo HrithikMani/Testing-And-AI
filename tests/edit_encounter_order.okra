@@ -1,0 +1,32 @@
+Navigate "?f=chart"
+Type "Hart" into @name='sstring'
+Click "Search" button
+Click the "TEST-10019" link
+Open "Health Surveillance" charttab
+Click the "Due List" charttab subtab
+Wait for the "EncounterOrdersGridDV" grid
+Wait for ajax
+Verify exists "Add New Orders" button
+Click the "Add New Orders" button
+Verify !exists "Add New Orders" button
+Verify exists 'ordersle_orderac_txt' autocomplete
+Enter "Audiogram" in the 'ordersle_orderac_txt' autocomplete
+Click "Submit" button
+Wait for the "EncounterOrdersGridDV" grid
+Click the "Audiogram" grid checkbox
+Wait for the "EncounterOrdersGridDV" grid
+# Ticket 120461 grid buttons
+#  Click the "Edit" grid button
+	Click @the "Edit" grid button@xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Edit")]'
+Select "Completed" from the "status" popup dropdown
+Click the "Save" button
+@Wait 3 seconds@driver.pause(3)
+@@@Verify that the future appointment was canceled by the OnDeceased DML
+res = driver.miedb.dbQuery("SELECT eos.description AS status FROM encounter_orders eo INNER JOIN encounter_order_status eos ON eo.status=eos.status WHERE eo.pat_id=18 AND eo.order_name='Audiogram'")
+if res:
+	res = res.getRes()
+	driver.reportCommandStatus('Verify audiogram completed on William Hart\'s chart',
+		'', res[0]['status'] == 'Completed', 'Status: {0}'.format(res[0]['status']),
+		'Status: {0}'.format(res[0]['status']))
+@@@
+

@@ -1,0 +1,9 @@
+"""
+Pod used for generic waits without having to use raw logic directly in tests
+
+Example:
+	Wait for ajax
+"""
+
+@Wait
+	@driver.wcutils.waitForAJAX(quiet=5)

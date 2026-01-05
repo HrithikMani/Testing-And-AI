@@ -1,0 +1,85 @@
+Navigate ?f=layout&module=AutoRoutes&name=AutoRoutes
+Wait for the "autoroutes" grid
+
+Begin "Add a New Auto Route"
+	Click the "Add Auto Route" button
+	Verify exists "Add Auto Route" popup
+	Select "On Encounter Update" from the "trigger_type" dropdown
+	Type "My Test Auto Route" in the "description" input
+	Select "Family Physician" in "recipient_type" dropdown
+	Type "p.revised_by>0" in the "Where Clause" freetext field
+	Click the "Save" button
+
+Begin "Search for the New Auto Route"
+	Refresh page
+	Wait for the "autoroutes" grid
+	Click the @Description filter button@xpath="//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Description']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Description']//p[contains(@class, 'SelectBox')]"
+	Type "My Test Auto Route" in @xpath="//li[@data-wcdv-field='Description']//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "My Test Auto Route" label
+	Click the "OK" grid sumobutton
+	Verify exists "My Test Auto Route" grid entry
+
+Begin "Edit the New Auto Route"
+	Click the "My Test Auto Route" grid checkbox
+	Click the "Edit" grid button
+	Verify exists "Edit Auto Route" popup
+	Type "Edited Description on Test Auto Route" in the "description" input
+	Click the "Save" button
+
+Begin "Verify Previous Edits"
+	Unfilter grid
+	Click the @Description filter button@xpath="//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Description']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Description']//p[contains(@class, 'SelectBox')]"
+	Type "Edited Description on Test Auto Route" in @xpath="//li[@data-wcdv-field='Description']//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "Edited Description on Test Auto Route" label
+	Click the "OK" grid sumobutton
+	Verify exists "Edited Description on Test Auto Route" grid entry
+
+Begin "Duplicate Auto Route"
+	Unfilter grid
+	Click the "Edited Description on Test Auto Route" grid checkbox
+	Click the "Duplicate" grid button
+	Verify exists "Duplicate Auto Route" popup
+	Type "Duplicate Test Auto Route" in the "description" input
+	Select "On Order Add" from the "trigger_type" dropdown
+	Click the "Save" button
+	Wait for the "autoroutes" grid
+	Verify exists "Duplicate Test Auto Route" grid entry
+
+Begin "Delete an Auto Route"
+	Click the "Edited Description on Test Auto Route" grid checkbox
+	Click the "Duplicate Test Auto Route" grid checkbox
+	Click the "Delete" grid button
+	Verify exists "Delete Auto Route" popup
+	Click the "Yes" button
+	Wait for the "autoroutes" grid
+	Verify !exists "Edited Description on Test Auto Route" grid entry
+	Verify !exists "Duplicate Test Auto Route" grid entry
+
+Begin "Enable Multiple Auto Routes"
+	Click the "Demographics to Medisys" grid checkbox
+	Click the "Appointments to Medisys" grid checkbox
+	Click the "Billing to Medisys" grid checkbox
+	Click the "Enable / Disable" grid button
+	Click the "Enable" radio
+	Click the "Update" button
+	Wait for the "autoroutes" grid
+	Verify exists "p.interface IN('WEBCHART','Unknown')" grid entry
+	Verify exists "p.interface IN ('WEBCHART','Unknown')" grid entry
+	Verify exists "mr.wc_partition IN ('MR','MIE') AND e.closed=1 AND e.visit_type IN ('BILLING','VISIT','HISTEXAM')" grid entry
+
+
+Begin "Disable Multiple Auto Routes"
+	Click the "Demographics to Medisys" grid checkbox
+	Click the "Appointments to Medisys" grid checkbox
+	Click the "Billing to Medisys" grid checkbox
+	Click the "Enable / Disable" grid button
+	Click the "Disable" radio
+	Click the "Update" button
+	Wait for the "autoroutes" grid
+
+	# I believe by this point a previous "Unfilter grid" will expose these entries. Normally, the grid filters disabled routes out.
+	Verify exists "0 AND p.interface IN('WEBCHART','Unknown')" grid entry
+	Verify exists "0 AND p.interface IN ('WEBCHART','Unknown')" grid entry
+	Verify exists "0 AND mr.wc_partition IN ('MR','MIE') AND e.closed=1 AND e.visit_type IN ('BILLING','VISIT','HISTEXAM')" grid entry

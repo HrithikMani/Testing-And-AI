@@ -1,0 +1,18 @@
+"""
+	@owners: tvenable
+	@filedeps: system/layouts/Dashboard/EH Dashboard.html, system/layouts/Dashboard-Cards/*, system/layouts/Dashboard-Common/*
+"""
+
+Begin "View Dashboard"
+	Open the sidemenu
+	Click the "Reports" sidemenu entry
+	Click the "Executive Dashboard" charttab
+	Verify exists "po" dropdown
+	Verify exists "eo" dropdown
+	Verify exists @"CLINIC VISIT ACTIVITY" card@xpath='//div[@class="card-title"][normalize-space(text())="CLINIC VISIT ACTIVITY"]'
+	Verify exists @"VISIT TYPES" card@xpath='//div[@class="card-title"][normalize-space(text())="VISIT TYPES"]'
+	Verify exists @"TOP 10 SERVICES / TESTS PROVIDED" card@xpath='//div[@class="card-title"][normalize-space(text())="TOP 10 SERVICES / TESTS PROVIDED"]'
+	Verify exists @"WORK RELATED INJURY OR ILLNESS CASES/INCIDENTS" card@xpath='//div[@class="card-title"][normalize-space(text())="WORK RELATED INJURY OR ILLNESS CASES/INCIDENTS"]'
+	Verify exists @"HEALTH SURVEILLANCE" card@xpath='//div[@class="card-title"][normalize-space(text())="HEALTH SURVEILLANCE"]'
+	Verify exists @"DISABILITY / CASE MANAGEMENT" card@xpath='//div[@class="card-title"][normalize-space(text())="DISABILITY / CASE MANAGEMENT"]'
+	Verify exists @"PORTAL ACTIVITY" card@xpath='//div[@class="card-title"][normalize-space(text())="PORTAL ACTIVITY"]'

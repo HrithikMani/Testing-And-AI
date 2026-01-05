@@ -1,0 +1,43 @@
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+Open the sidemenu
+Click the "E-Chart" link
+Type "Morrison" in the "sstring" input
+Click the "Search" button
+Begin "Basic Add Order functions"
+	Open the quicklink list
+	Click the "Add Order" quicklink
+	Begin "Order Request MIEWindow"
+		Select "Selenium, Selenium" from the "ordering_physician" dropdown
+		Click the "Chloride" picklist checkbox
+		Click the "Magnesium" picklist checkbox
+		Click the "Potassium" picklist checkbox
+		Click the "Sodium" picklist checkbox
+		Click the "Submit" button
+	@Switch Windows@driver.switchToPopup()
+	Verify exists "Potassium" text
+	@Close this window@driver.closePopup()
+Begin "Cancel an order item"
+	Click the "Medical Record" charttab
+	Click the "OrderRequestsLegacy" charttab subtab
+	Click the 1st "Edit" link
+	Click the "Chloride" minusbutton
+	Click the "Submit" button
+	@Switch Windows@driver.switchToPopup()
+	Verify exists "Magnesium" text
+	Verify exists "Potassium" text
+	Verify !exists "Chloride" text
+	@Close this window@driver.closePopup()
+Begin "UnCancel an order item"
+	Click the 1st "Edit" link
+	Click the "Chloride" picklist checkbox
+	Click the "Submit" button
+	@Switch Windows@driver.switchToPopup()
+	Verify exists "Chloride" text
+	Verify exists "Magnesium" text
+	Verify exists "Potassium" text
+@@@Switch Back to New Requisition Screen
+driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@

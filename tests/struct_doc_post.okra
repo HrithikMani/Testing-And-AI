@@ -1,0 +1,10 @@
+Navigate ?f=layout&module=Document&name=Struct Doc Upload&tabmodule=patsearch
+Type CDAtest.xml into the @id='file1'
+Click the "Submit File" button
+@Wait 5 seconds to ensure the file uploads@driver.pause(5)
+Open the sidemenu
+Click the "E-Chart" sidemenu entry
+Type "Bleau" into the sstring input
+Click the Search button
+Verify exists "Bleau, Max" text
+

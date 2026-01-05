@@ -1,0 +1,14 @@
+Begin "Create a document revision"
+	@Add document revision@driver.miedb.dbExec("UPDATE documents SET revision_number=1 WHERE doc_id=121")
+Begin "Check the document"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+	Click the "Admin" charttab
+	Click the "Message Center" charttab subtab
+	@Scroll the "0000121" link into view@driver.runJS("document.evaluate(`//a[contains(text(),'0000121')]`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView();")
+	Click the "0000121" link
+	Verify !exists "This revision may not have included all of these test results." text
+	Click the Properties link
+	Click the @Zero link@xpath=//a[contains(@href, 'revision_number=0')]
+	Verify exists "This revision may not have included all of these test results." text

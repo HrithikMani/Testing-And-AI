@@ -1,0 +1,11 @@
+"""
+	Unit test for #mieapi
+	@owners: gjones
+	@filedeps: src/wcstache.c, src/api/ajaxget.c, system-dev/layouts/Test/MIEStacheAPI.html
+"""
+Begin MIEStache mieapi Test
+	Begin "Expected errors for bad requests"
+		@driver.wcErrorLog.ignore('*Error evaluating mieapi: GET/db/patients/99999999999*')
+		@driver.wcErrorLog.ignore('*Error evaluating mieapi: GET/db/patientsbadpath/18*')
+	Navigate ?f=layout&module=UnitTest&name=RunTest&test_module=Test&test_name=MIEStacheAPI
+	Verify exists "No layout unit test failures detected." text

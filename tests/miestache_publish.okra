@@ -1,0 +1,28 @@
+Begin "Setup MIEPUB Server API"
+	@@@
+	driver.miedb.dbExec("""REPLACE INTO refer_to_systems (system_id, system_name, system_address, system_pass)
+				VALUES ('MIEPUB_API', 'MIEPUB Server API',
+				(SELECT SUBSTRING_INDEX(value, '/', 3) FROM system_settings 
+				WHERE module='System' AND section='WebChart' AND item='MIEPub Server'),
+				'remote03')""")
+	@@@
+Navigate "?f=layout&module=Test&name=ServerPub"
+Begin "Verify page before clicking Publish"
+	Verify exists "MIE Pub from Server instead of client" text
+	Verify exists "Example Server Layout:" text
+	Verify exists "example/1" text
+	Verify exists "example/2" text
+	Verify exists "Output" text
+	Verify exists "Subscribed to example/1" text
+	Verify exists "Subscribed to example/2" text
+Click the "Publish From Server" button
+Begin "Verify page before clicking Publish"
+	Verify exists "MIE Pub from Server instead of client" text
+	Verify exists "Example Server Layout:" text
+	Verify exists "example/1" text
+	Verify exists "example/2" text
+	Verify exists "Output" text
+	Verify exists "Subscribed to example/1" text
+	Verify exists "Subscribed to example/2" text
+	Verify exists "hello" text
+	Verify exists "Json message" text

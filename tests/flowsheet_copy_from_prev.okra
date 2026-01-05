@@ -1,0 +1,101 @@
+Begin "Find patient, add encounter"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+
+Begin "Fill in Physical exam section"
+	Open the "Physical exam" dynamicsection
+
+	Type "flowsheet_obs_one" into the "General Appearance" flowsheet textarea
+	Type "flowsheet_obs_two" into the "Eyes" flowsheet textarea
+	Type "flowsheet_obs_three" into the "Ears" flowsheet textarea
+	Type "flowsheet_obs_four" into the "Nose" flowsheet textarea
+	Type "flowsheet_obs_five" into the "Mouth/Throat" flowsheet textarea
+	Type "flowsheet_obs_six" into the "Neck and Thyroid" flowsheet textarea
+	Type "flowsheet_obs_seven" into the "Respiratory" flowsheet textarea
+
+	Close the "Physical exam" dynamicsection
+
+	Verify exists "flowsheet_obs_one" text
+	Verify exists "flowsheet_obs_two" text
+	Verify exists "flowsheet_obs_three" text
+	Verify exists "flowsheet_obs_four" text
+	Verify exists "flowsheet_obs_five" text
+	Verify exists "flowsheet_obs_six" text
+	Verify exists "flowsheet_obs_seven" text
+
+Begin "Add another encounter"
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	Click the "Yes" popup button
+	# If we don't do this, then we'll click the "copy from previous" button before the new encounter
+	# loads, and it'll say that the "Physical exam" popup doesn't exist.
+	@Wait for the new page to load@driver.pause(10)
+
+Begin "Copy from previous exam"
+	Verify exists "Physical exam" icon copy_from_prev
+	Click "Physical exam" icon copy_from_prev
+	Verify exists "Physical exam" popup
+	Verify exists "Encounter #" text
+
+	# Check off the items to copy.
+	Click "General Appearance" checkbox
+	Click "Eyes" checkbox
+	Click "Ears" checkbox
+	Click "Nose" checkbox
+	Click "Mouth/Throat" checkbox
+	Click "Copy" popup button
+	
+	# Confirm the copy.
+	Verify exists "Copying 5 observations." popup text
+	Click "Yes" popup button
+
+	# Make sure popup window disappears.
+	Verify notexists "Physical exam" popup
+
+	# Make sure the things we copied are there.
+	Verify exists "flowsheet_obs_one" text
+	Verify exists "flowsheet_obs_two" text
+	Verify exists "flowsheet_obs_three" text
+	Verify exists "flowsheet_obs_four" text
+	Verify exists "flowsheet_obs_five" text
+
+	# Make sure the things we didn't copy aren't there.
+	Verify notexists "flowsheet_obs_six" text
+	Verify notexists "flowsheet_obs_seven" text
+
+Begin "Delete copied observations"
+	Verify exists "Physical exam" icon delete_copied
+	Click the "Physical exam" icon delete_copied
+	Verify exists "Physical exam" popup
+
+	Click "Eyes" checkbox
+	Click "Ears" checkbox
+	Click "Delete" popup button
+	
+	# Confirm the delete.
+	Verify exists "Deleting 2 observations." popup text
+	Click "Yes" popup button
+
+	# Make sure popup window disappears.
+	Verify notexists "Physical exam" popup
+
+	# Make sure the things we deleted are gone.
+	Verify notexists "flowsheet_obs_two" text
+	Verify notexists "flowsheet_obs_three" text
+
+	# Make sure the things we left are still there.
+	Verify exists "flowsheet_obs_one" text
+	Verify exists "flowsheet_obs_four" text
+	Verify exists "flowsheet_obs_five" text
+
+	Verify exists "Physical exam" icon delete_copied
+	Click "Physical exam" icon delete_copied
+	Verify exists "Physical exam" popup
+
+	# Make sure the things we deleted don't show up.
+	Verify notexists "Eyes" checkbox
+	Verify notexists "Ears" checkbox

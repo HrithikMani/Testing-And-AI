@@ -1,0 +1,94 @@
+Begin "Go to William Hart"s Chart"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+	Click the "Add New Provider" quicklink portletlink
+	@Switch windows@driver.switchToPopup()
+	Type "Smith" in the "Last Name" input
+	Type "John" in the "First Name" input
+	Click the "Add New" button
+	Verify exists "Smith, John" text
+	Verify exists "Provider" dynamicsection
+	Open the "Provider" dynamicsection
+	Type "D.O." in the "Degree" input
+	Type "A" in the "Middle Name" input
+	Click the "M" radio
+	Enter "05-07-1976" in the "Birth Date" date
+	Type "jasmith@bettercorp.com" in the "Email" input
+	Type "12341234" in the "License Number" input
+	Type "98769876" in the "Tax ID Number" input
+	Begin "Test DEA Number Check"
+		Type "1111111111" in the "DEA Number" input
+		Verify exists "Warning" popup
+		Verify exists "Warning - DEA number does not pass checksum test.  Please verify that the number is correct, and free of any labels or excess characters." text
+		Close popup
+	Click the "In network" radio
+	Advance the dynamicsection
+	Enter "Better Corp" in the "le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input" autocomplete
+	Click the "Add" button
+	Close the "Provider Organizations" dynamicsection
+	Open the "Languages" dynamicsection
+	Enter "English" in the "le_LanguagesSpoken_3157_value_field" autocomplete
+	Click the "Add" button
+	Close the "Languages" dynamicsection
+	Click the "Submit" button
+Begin "Verify the Provider Chart"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Provider Management" charttab
+	Type "Smith" in the input
+	Click the "Search" button
+	Verify exists "Smith, John A" text
+	Verify exists "D.O." text
+	Verify exists "In network" text
+	Verify exists "Provider" text
+	@Close window@driver.closePopup()
+Begin "Edit User Chart"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "Smith" in the input
+	Click the "Go!" button
+	Gridclick "User:Smith, John A" "Edit" grid link
+	Type "Smith" in the "Last Name" input
+	Type "John" in the "First Name" input
+	Type "Rudolf" in "Middle Name" input
+	Type "M.D." in the "Degree" input
+	Type "123 Here St" in the "Address 1" input
+	Type "Suite #5" in the "Address 2" input
+	Type "Anytown" in the "City" input
+	Select "United States" from the "Country" dropdown
+	Select "Indiana" from the "State/Province" dropdown
+	Type "46804" in the "Postal Code" input
+	Type "2604596270" in the "Home Number" input
+	Type "2604596270" in the "Cell Number" input
+	Type "2604596270" in the "Work Number" input
+	Type "2604596271" in the "Fax Number" input
+	Select "Text Message" from the "Preferred Alert Method" dropdown
+	Check the "Physicians" checkbox
+	Check the "Referring Physicians" checkbox
+	Click the "Submit" button
+	Verify exists "The department you have entered does not exist" text
+	Select "Providers" from the "Primary Dept" dropdown
+	Click the "Submit" button
+	Verify exists "Smith, John Rudolf" grid entry
+Begin "Verify the User"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "Smith, John" in the input
+	Click the "Go!" button
+	Verify exists "Login Disabled" text
+	Click the "(*)" link
+	Verify exists "John Rudolf Smith, M.D." text
+	Verify exists "123 Here St" text
+	Verify exists "Suite #5" text
+	Verify exists "Anytown IN, 46804" text
+	Verify exists "US" text
+	Verify exists "Fax" text
+	Verify exists "Referring Physicians" text
+	Verify exists "Referring Physician" text
+	Verify exists "(260) 459-6270" text
+	Verify exists "(260) 459-6271" text

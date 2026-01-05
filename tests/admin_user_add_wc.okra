@@ -1,0 +1,36 @@
+"""
+	@systemtype: WCNOW
+"""
+
+Begin "Add a user chart"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Click the "Add Chart" link
+	Type "User" in the "Last Name" input
+	Type "New" in the "First Name" input
+	Click the "Search" button
+	Begin "Verify Required Field alerts"
+		@Clear the Last Name input@driver.enterFormData('', id='DPI_last_name')
+		@Clear the First Name input@driver.enterFormData('', id='DPI_first_name')
+		Click the "Save" button
+		Verify exists "Warning" popup
+		Verify exists "You need to have at least the following data entered to submit:" popup text
+		Verify exists "First Name, Last Name, Birth Date" popup text
+		Close popup
+	Type "User" in the "Last Name" input
+	Type "New" in the "First Name" input
+	Enter "01-01-1980" in the "Birth Date" date
+	Click the "Save" button
+	Verify exists "User, New" text
+Begin "Attempt to add a duplicate user chart"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Click the "Add Chart" link
+	Type "David" in the "Last Name" input
+	Type "Dave" in the "First Name" input
+	Click the "Search" button
+	Verify exists "Matching Patients" text

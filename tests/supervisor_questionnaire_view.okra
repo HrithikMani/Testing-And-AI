@@ -1,0 +1,120 @@
+Begin "Set Questionnaire-Report Injury or Illness doc type on the Supervisor Documents chart tab"
+	@Add the REPIIQ doc type in the Supervisor Documents chart tab@driver.miedb.dbExec("INSERT IGNORE INTO charttab_doctypes SET ctab_id = (SELECT ctab_id FROM charttabs WHERE tabname = 'Supervisor Documents' LIMIT 1), doc_type = 'REPIIQ'")
+
+Begin "Supervisor Questionnaire View"
+	Begin "Login as employee"
+		@Setup WCTestSession for Outside@driver.wcutils.insertWCTSession('employee')
+		Click the "Better Corp." link
+		Begin "Accept the time zone alert"
+			Verify exists "TIMEZONE MISMATCH" popup
+			Click the "Update" popup button
+
+	Begin "Homepage"
+		Begin "Verify Employee Homepage"
+			Wait for ajax
+			Verify exists "Fred" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists @Help icon@id='portal-header-help'
+			Verify exists @Help icon img@xpath='//img[contains(@src, "portal-header-help.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists @Announcement Banner@id='announcement'
+			Verify exists @Announcement Banner img@xpath='//img[contains(@src, "portal-landing.png")]'
+			Verify exists "Message Center" text
+			Verify exists "My Appointments" text
+			Verify exists "My Medical Information" text
+			Verify exists "Report an Injury/Illness" text
+			Verify exists "Other Health Resources" text
+		@Blur for a problematic screenshot@driver.blurAll()
+		Screenshot Fred Homepage
+
+	Begin "Report an Injury/Illness"
+		Click the @id='portal-user-menu-top'
+		Click the @xpath='//a/span[contains(text(), "Report an Injury/Illness")]'
+		@Axe Test@driver.wcutils.reportAxe()
+		Click @"The employee involved in the incident"@xpath="//label[contains(.,'The employee involved in the incident')]"
+		Begin "Verify Report a work injury or illness"
+			Wait for ajax
+			Verify exists "Fred" text
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists "Incident Report" text
+			Verify exists "Person completing this form is" text
+			Verify exists "MR Number" text
+			Verify exists "What Would You Like To Report?" text
+			Verify exists "What were you doing immediately prior to the injury or illness?" text
+			Verify exists "How did the incident happen?" text
+			Verify exists "Save for later" text
+			Verify exists "Cancel" text
+			Verify exists "SUBMIT" text
+			@Axe Test@driver.wcutils.reportAxe()
+		@Scroll the section into view@driver.runJS('jQuery("h2:contains(Please complete the following questions)")[0].scrollIntoView()')
+		#Select "Accident/Injury" from the "What Would You Like To Report?" dropdown
+		@Select "Accident/Injury" from the "What Would You Like To Report?" dropdown@driver.runJS("mieel.$('obs_result_70_11').value='Accident/Injury'")
+		Type "Making lunch" in the "What were you doing immediately prior to the injury or illness?" input
+		Type "The chair broke and I hurt my back" in the "How did the incident happen?" input
+		Type "Upstairs Breakroom" in the "Description of where the injury or illness occurred" input
+		Verify exists @Homepage Image@xpath=//img[@alt='Return to homepage']
+		Click the SUBMIT button
+		Wait for ajax
+		Verify exists @Notification Bell@id='portal-header-notify'
+
+	Begin "Supervisor Portal"
+		Begin "Log out and log back in as a supervisor"
+			Navigate "?f=logout"
+			@Setup WCTestSession for Supervisor@driver.wcutils.insertWCTSession('supervisor')
+
+		Begin "Homepage"
+			Click the "(Supervisor Access)" link
+			@Wait for page ready@driver.wcutils.waitFor(lambda d: d.runJS('return document.readyState === "complete"'))
+		Begin "Accept the time zone alert"
+			Verify exists "TIMEZONE MISMATCH" popup
+			Click the "Update" popup button
+
+			Begin "Verify Supervisor Portal"
+				Begin "Portal Home popup"
+					Verify exists "Portal Home" text
+					Verify exists "Welcome to the" text
+					Close popup
+				Begin "Accept the time zone alert"
+					Verify exists "TIMEZONE MISMATCH" popup
+					Close popup
+				Verify exists @Message Center button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Message Center')]"
+				Verify exists @Order Status button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Order Status')]"
+				Verify exists @Reports button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Reports')]"
+				#Verify exists @Request an Appointment button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Request an Appointment')]"
+				Verify exists @Work Status button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Work Status')]"
+				Verify exists @Notification Bell@id='portal-header-notify'
+				@Blur for a problematic screenshot@driver.blurAll()
+				@Axe Test@driver.wcutils.reportAxe()
+				Screenshot "Acardi Supervisor" Homepage
+
+		Begin "Message Center"
+			Click the @xpath='//a/span/span[contains(text(), "Message Center")]'
+			Begin "Verify Message Center"
+				Wait for ajax
+				Verify exists "Acardi" text
+				Verify exists @Notification Bell@id='portal-header-notify'
+				Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+				Verify exists @Home icon@id='portal-header-home'
+				Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+				Verify exists @System logo@id='header-logo'
+				Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+				Verify exists "Message Center" text
+				Verify exists "Unread" text
+				Verify exists "Date" text
+				Verify exists "Regarding" text
+				Verify exists "Subject" text
+				Verify exists "Unread Only" text
+				Verify exists "Show All" text
+				Verify exists "Send a Message" link
+				Verify exists "Mark all Read" link
+				Verify exists "Questionnaire-Report Injury or Illness" link
+				Click the first "Questionnaire-Report Injury or Illness" link
+				Screenshot "Supervisor Test"
+				Verify exists "The chair broke and I hurt my back" text

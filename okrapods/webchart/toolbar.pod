@@ -1,0 +1,14 @@
+"""
+Pod used for interacting with or referencing the wc_pat_bar or wc_enc_bar within wc_othertoolbars
+
+Usage examples:
+	Click the "Agreement" toolbar link
+	Verify exists "Better Corp" toolbar text
+
+"""
+
+toolbar://div[@id="wc_othertoolbars"]
+
+text://div[@id="wc_othertoolbars"]{OKRA_TEXT_CLS}
+
+link://div[@id="wc_othertoolbars"]//a{OKRA_TEXT_CLS}

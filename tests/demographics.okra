@@ -1,0 +1,154 @@
+"""
+	Test a patient's demographics page.
+	@systemtype: WCNOW
+"""
+Begin "Edit the patient's demographics"
+	@Set the Applicant partition to Edit (Optional) to test manually entering an MR#@driver.miedb.dbExec("UPDATE patient_partitions SET echart_opts='O' WHERE name='APP'")
+	Begin "Missing last name, first name, and birth date"
+		Navigate "?f=chart&s=pat&pat_id=18&t=Demographics&v=dashboard"
+		Open the "Demographic Information" dynamicsection
+		@Clear the Last name field@driver.enterFormData('', id="DPI_last_name", clear=True)
+		@Clear the First name field@driver.enterFormData('', id="DPI_first_name", clear=True)
+		Click  the "Demographic Information" dynamicsection section
+		Verify exists "The following items are required" popup
+		Close the "Required fields" popup
+	Begin "Demographic Information section"
+		Type "Dr" in the "DPI_title" input
+		Type "Hart" in the "DPI_last_name" input
+		Type "William" in the "DPI_first_name" input
+		Type "III" in the "DPI_suffix" input
+		Type "Bill" in the "DPI_preferred_first_name" input
+		Begin "Zip code"
+			Verify exists "46804" text
+			Verify exists "Allen" text
+			Verify exists "Fort Wayne" text
+			Verify exists "Indiana" text
+			Enter "84086" in the "Postal Code" autofill
+			Wait for ajax
+			Type "2300 Commonwealth Avenue" in the "Address" input
+			Type "Apt 2" in the "Address 2" input
+			Verify exists "Rich" in the "DPI_county" input
+			Verify exists "Woodruff" in the "DPI_city" input
+			Verify exists "Utah" text
+			screenshot diff
+		Begin "Race"
+			Begin "Quick Add"
+				Click the "CDC_20Race_African_20American" checkbox
+			Begin "Current + Search"
+				Verify exists @Race table with White currently listed@xpath=//td[@id="le_pa_race_le_display"]//td[contains(.,"White")]
+				Click the @remove button for White@xpath=//td[contains(.,"White")]/following-sibling::td//input[@id="pa_race_le_RecordList_rmbutton0"]
+				Enter "Asian" in the "le_pa_race_le_6823_value_field" autocomplete
+				Click the "le_pa_race_le_button" listedit button
+				Verify exists @Race table with Asian now listed@xpath=//td[@id="le_pa_race_le_display"]//td[contains(.,"Asian")]
+		Begin "Ethnicity"
+			Begin "Quick Add"
+				Click the "CDC_20Ethnicity_Hispanic_20or_20Latino" checkbox
+			Begin "Current + Search"
+				Verify exists @Ehtnicity table with Not Hispanic currently listed@xpath=//td[@id="le_pa_ethnicity_le_display"]//td[contains(.,"Not Hispanic or Latino")]
+				Click the @remove button for Not Hispanic@xpath=//td[contains(.,"Not Hispanic or Latino")]/following-sibling::td//input[@id="pa_ethnicity_le_RecordList_rmbutton0"]
+				Enter "Declined" in the "le_pa_ethnicity_le_6824_value_field" autocomplete
+				Click the "le_pa_ethnicity_le_button" listedit button
+				Verify exists @Ethnicity table with Declined now listed@xpath=//td[@id="le_pa_ethnicity_le_display"]//td[contains(.,"Declined")]
+		Begin "Deceased Patient functionality"
+			@Create a pending future appointment for this patient@driver.miedb.dbExec("INSERT INTO appointments (pat_id, startdate, canceled, comment) VALUES (18, DATE_ADD(CURDATE(), INTERVAL 1 YEAR), 0, 'Testing OnDeceased')")
+			Begin "Mark the patient as deceased using only the select, no date entered"
+				Select Yes from the DPI_death_indicator dropdown
+				Close the "Demographic Information" dynamicsection
+				Verify exists "Patient is deceased" toolbar text
+				@@@Verify that the future appointment was canceled by the OnDeceased DML
+				res = driver.miedb.dbQuery("SELECT canceled, cancel_code FROM appointments WHERE pat_id=18 AND comment='Testing OnDeceased'")
+				if res:
+					res = res.getRes()
+					driver.reportCommandStatus('Verify OnDeceased canceled future appointments',
+						'', res[0]['canceled'] > 0, 'Canceled flag: {0}'.format(res[0]['canceled']),
+						'Cancel Code: {0}'.format(res[0]['cancel_code']))
+				@@@
+				Open the "Demographic Information" dynamicsection
+		Begin "Exclude the patient from Quality Care"
+			Verify !exists @Patient excluded from Quality Care Reporting alert@xpath=//td[@class="alert"][contains(.,"Patient Excluded from Quality Care Reporting")]
+			Click the 1st radio
+		Begin "Set patient's chart as a Temporary chart"
+			Verify !exists @Temporary Record on-page alert@xpath=//div[@class="obnoxious_warning"][contains(.,"WARNING: TEMPORARY RECORD")]
+			Click the 3rd radio
+		Begin "Set the patient's chart to Inactive"
+			Verify !exists @Inactive Record on-page alert@xpath=//div[@class="obnoxious_warning"][contains(.,"WARNING: INACTIVE RECORD")]
+			Click the 6th radio
+		Close the "Demographic Information" dynamicsection
+	Begin "Verify changes to demographics"
+		Navigate "?f=chart&s=pat&pat_id=18&t=Demographics&v=dashboard"
+		Verify exists "Hart III, William (Bill) S." text
+			Verify exists "2300 Commonwealth Avenue" text
+			Verify exists "Woodruff, Utah 84086" text
+			Begin "Verify changes to Race"
+				Verify exists "African American" text
+				Verify exists "Asian" text
+			Begin "Verify changes to Ethnicity"
+				Verify exists "Declined" text
+				Verify exists "Hispanic or Latino" text
+			Begin "Verify Deceased Patient functionality changes"
+				Verify exists "Patient is deceased" toolbar text
+			Begin "Verify Excluded from Quality Care Reporting"
+				Verify exists "Excluded from Quality Care Reporting" text
+			Begin "Verify set patient's chart as a Temporary chart"
+				Verify exists @Temporary Record on-page alert@xpath=//div[@class="obnoxious_warning"][contains(.,"WARNING: TEMPORARY RECORD")]
+			Begin "Verify set the patient's chart to Inactive"
+				Verify exists @Inactive Record on-page alert@xpath=//div[@class="obnoxious_warning"][contains(.,"WARNING: INACTIVE RECORD")]
+	Begin "Employment Information section"
+		Open the "Employment Information" dynamicsection
+		Type "MIE" in the "DPI_employer_name" input
+		Enter "22222" in the "DPI_employer_zipcode" autofill
+		Wait for ajax
+		Type "6302 Constitution Drive" in the "DPI_employer_addr1" input
+		Type "suite 1" in the "DPI_employer_addr2" input
+		Verify exists "Arlington" in the "DPI_employer_county" input
+		Verify exists "Arlington" in the "DPI_employer_city" input
+		Verify exists "Virginia" text
+		Type "260459670" in the "DPI_work_phone" input
+		Close the "Employment Information" dynamicsection
+		Begin "Verify changes to Employment Information section including city and state were updated by the zip code autofill"
+			Verify exists "MIE" text
+			Verify exists "6302 Constitution Drive" text
+			Verify exists "suite 1" text
+			Verify exists "Arlington, VA 22222" text
+			Verify exists "Empl" text
+	Begin "Marital / Contact Information"
+		Open the "Marital / Contact Information" dynamicsection
+			Verify exists "Donna Hart" in the "DPI_spouse_name" input
+			Verify exists "Doug Hart" in the "DPI_emergency_contact" input
+			Verify exists "(260) 444-0055" in the "DPI_emergency_phone" input
+			Close the "Marital / Contact Information" dynamicsection
+		Begin "Verify Marital / Contact Information"
+			Verify exists "Married" text
+			Verify exists "Donna Hart" text
+			Verify exists "01-15-1930" text
+	Begin "Contacts / Relationships"
+		Begin "Verify Contacts / Relationships"
+			Verify exists "Sample, John M. (Family Medicine)" text
+	Begin "Other Data section"
+		Open the "Other Data" dynamicsection
+		Enter "Female" in the "Birth Sex" autocomplete
+		Enter "FTM" in the "Gender Identity" autocomplete
+		Enter "Choose" in the "Sexual Orientation" autocomplete
+		Type "Sandra" in the "Previous First Name" freetext field
+		Type "Thompson" in the "Previous Last Name" freetext field
+		Advance the "Other Data" dynamicsection
+		@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+		Begin "Verify Other Demographic Data entries"
+			Verify exists "Female-to-Male (FTM)/Transgender Male" text
+			Verify exists "Choose not to disclose" text
+			Verify exists "Sandra" text
+			Verify exists "Thompson" text
+	Begin "Medical Record Numbers"
+		Type "919191919191" in the "EDITMR_mrnumber_APP" input
+		Click the "EDITMR_mrnumber_C_use" checkbox
+		Close the "Medical Record Numbers" dynamicsection
+		Begin "Verify Medical Record Numbers"
+			Verify exists "Applicant" text
+			Verify exists "919191919191" text
+			Verify exists "C (Contact)" text
+Begin "Verify changes to demographics"
+	Begin "Verify Insurance Summary table"
+		Verify exists "Insurance Summary" listview
+	Begin "Verify Matching Patients"
+		Verify exists "Manual Search" link
+		Verify exists "Preview Merge" button

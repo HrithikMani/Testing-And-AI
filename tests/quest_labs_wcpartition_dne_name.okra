@@ -1,0 +1,38 @@
+Begin "Setup Queries"
+	@Give David Carter a static MR number@driver.miedb.dbExec("INSERT INTO patient_mrns SET wc_partition='MR',pat_id=14,mrnumber='91754'")
+	@Create Quest Picklist@driver.miedb.dbExec("INSERT INTO order_pick_list SET set_name='Quest Labs', group_by='Group A', order_id=388, order_by=1, column_index='1'")
+	@Create Refer To Systems Entry Quest@driver.miedb.dbExec("INSERT INTO refer_to_systems SET system_id='QUESTLABS', system_name='Quest Labs', system_options=68")
+	@Create Refer To Systems Entry "Quest Test"@driver.miedb.dbExec("INSERT INTO refer_to_systems SET system_id='QUESTLABSTEST', system_name='Quest Test', system_options=68")
+	@Create Refer To Systems Extended Entries Quest@driver.miedb.dbExec("INSERT INTO refer_to_systems_extended_values SET system_id='QUESTLABS', ext_id=(SELECT ext_id FROM refer_to_systems_extended_index WHERE name='gt1_rel_type_ids'),value='1'")
+	@Create Refer To Systems Extended Entries Quest test@driver.miedb.dbExec("INSERT INTO refer_to_systems_extended_values SET system_id='QUESTLABSTEST', ext_id=(SELECT ext_id FROM refer_to_systems_extended_index WHERE name='gt1_rel_type_ids'),value='1'")
+	@Update Partition Name Before Test@driver.miedb.dbExec("UPDATE patient_partitions SET name='TESTPART' WHERE wc_partition='MR'")
+	@Add Translation 1@driver.miedb.dbExec("INSERT INTO translate SET name = 'quest-sending_facilities',  trans_from = 'OFFICE', trans_to = 'ABC123'")
+	@Add Translation 2@driver.miedb.dbExec("INSERT INTO translate SET name='quest-account_numbers', trans_from='[*:OFFICE]', trans_to='123456789'")
+
+Begin "Setup Quest"
+	Click the "Learn more about these features" link
+	Click the "Request setup with Quest Diagnostics" link
+	@Wait@driver.pause(2)
+
+Begin "Remove Translations"
+	@Remove Translation 1@driver.miedb.dbExec("DELETE FROM translate WHERE name = 'quest-account_numbers' AND trans_from = 'MR:OFFICE'")
+	@Remove Translation 2@driver.miedb.dbExec("DELETE FROM translate WHERE name = 'quest-account_numbers' AND trans_from = 'QUEST:OFFICE'")
+
+Begin "Add Order"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Type "Carter" in the "sstring" input
+	Click the "Search" button
+	Click the "Add Order" link
+
+Begin "Order Request"
+	Select "Selenium, Selenium" from the "ordering_physician" dropdown
+	Select "Quest Labs" from the "facility" dropdown
+	@Select MR-91754 from the MR number dropdown@driver.enterFormData("TESTPART-91754", id="mrnumber", blur=False)
+	Click the "Save" button
+
+Begin "Verification"
+	@Switch Windows@driver.switchToPopup()
+	Verify !exists "Unable to find" text
+	screenshot order
+	@Switch to main window@driver.returnToMainWindow()

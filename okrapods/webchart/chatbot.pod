@@ -1,0 +1,13 @@
+"""
+Pod used for interacting with the AI chatbot window.
+
+	Click the chatbot open_icon
+	Type "whats up doc" into the chatbot user_input
+	Click the chatbot send_button
+"""
+
+open_icon://div[@id="wc_appinfo"]//span[@id="ai_image"]/img
+
+user_input://textarea[contains(@class, "js-chat-input")]
+
+send_button://button[contains(@class, "js-send-btn")]

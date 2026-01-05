@@ -1,0 +1,14 @@
+Begin "Add a new EO"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Employer Organizations" link
+	Click the "Search" button
+	Click the "Better Corp." link
+	@wait for overlay @driver.pause(2)
+	Click the "Admin" charttab
+	Click the "Employees" charttab subtab
+	Open the "Employees" dynamicsection
+	Enter "Doe, Jane" in the le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input autocomplete
+	Click the Add button
+	Click the @Save button @xpath='//button[@title="Save and close the current section"]'
+	Verify exists "Jane Doe" text

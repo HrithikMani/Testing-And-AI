@@ -1,0 +1,3 @@
+Begin MIEStache Asserts Test
+	Navigate ?f=layout&module=UnitTest&name=RunTest&test_module=Test&test_name=MIEStacheAssert
+	Verify exists "No layout unit test failures detected." text

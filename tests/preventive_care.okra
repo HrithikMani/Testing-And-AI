@@ -1,0 +1,92 @@
+Begin "Go to Hart, William's Chart"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "Name" radio
+	Type "Hart" in the "sstring" input
+	Click the "Search" button
+	Verify exists "TEST-10019" link
+	Click the "TEST-10019" link
+
+Begin Verify Employee was Created
+	Click the !Summary charttab
+	Verify exists "Hart, William" text
+
+Begin "Preventive care"
+	Begin "Navigate to Encounter Preventive Care"
+		Click the "Add Visit" link
+		Wait for ajax
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=35)
+	Begin "Add Breast Cancer Screening"
+		Open the "Preventive care" dynamicsection
+		@Hover over Preventive Care Brest Cancer Screening@driver.mouseOver(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Breast Cancer Screening")]')
+		@Click Breast Cancer Screening's Add dynOp@driver.clickElement(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Breast Cancer Screening")]/span[@class="dynOps"]/*[@title="Add"]')
+		@Wait@driver.pause(5)
+		Verify exists "Add Encounter Order" popup
+		Select "Completed" in the dropdown
+		Enter "11-22-2022" in the 2nd date
+		Click the "Save" popup button
+		Close the "Preventive care" dynamicsection
+		Wait for ajax
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+		Verify exists "Breast Cancer Screening" text
+
+
+	Begin "Add Colonoscopy Screening"
+		Open the "Preventive care" dynamicsection
+		@Hover over Preventive Care Colonoscopy Screening@driver.mouseOver(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Colonoscopy Screening")]')
+		@Click Colonoscopy Screening's Add dynOp@driver.clickElement(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Colonoscopy Screening")]/span[@class="dynOps"]/*[@title="Add"]')
+		@Wait@driver.pause(5)
+		Verify exists "Add Encounter Order" popup
+		Select "Pending" in the dropdown
+		Enter "11-22-2026" in the 1nd date
+		Click the "Save" popup button
+		Close the "Preventive care" dynamicsection
+		Wait for ajax
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+		Verify exists "Colonoscopy Screening" text
+
+
+	Begin "Add Prostate Cancer Screening-PSA"
+		Open the "Preventive care" dynamicsection
+		@Hover over Preventive Care Prostate Cancer Screening-PSA@driver.mouseOver(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Prostate Cancer Screening-PSA")]')
+		@Click Prostate Cancer Screening-PSA's Add dynOp@driver.clickElement(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Prostate Cancer Screening-PSA")]/span[@class="dynOps"]/*[@title="Add"]')
+		@Wait@driver.pause(5)
+		Verify exists "Add Encounter Order" popup
+		Select "In Progress" in the dropdown
+		Enter "02-02-2022" in the 1nd date
+		Enter "02-03-2022" in the 2nd date
+		Click the "Save" popup button
+		Close the "Preventive care" dynamicsection
+		Wait for ajax
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+		Verify exists "In Progress" text
+
+
+	Begin "Add Hemoglobin A1C Screening"
+		Open the "Preventive care" dynamicsection
+		@Hover over Preventive Care Hemoglobin A1C Screening@driver.mouseOver(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Hemoglobin A1C Screening")]')
+		@Click Hemoglobin A1C Screening's Add dynOp@driver.clickElement(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Hemoglobin A1C Screening")]/span[@class="dynOps"]/*[@title="Add"]')
+		@Wait@driver.pause(5)
+		Verify exists "Add Encounter Order" popup
+		Select "Decline" in the dropdown
+		Click the "Today" button in the 2nd date
+		Click the "Save" popup button
+		Close the "Preventive care" dynamicsection
+		Wait for ajax
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+		Verify exists "Decline" text
+
+	Begin "Check Patient Summary Portlets"
+		Click the !Summary charttab
+		Begin Set Preventive Care portlets
+			Click the "Select Portlets" link
+			Check the "Preventive Care" picklist checkbox
+			Click the "Save" button
+			Wait for ajax
+			@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+		Begin "Verify all Preventice Care added from Encounter"
+		Verify exists "Preventive Care" text
+		Verify exists "Breast Cancer Screening" text
+		Verify exists "Colonoscopy Screening" text
+		Verify exists "Hemoglobin A1C Screening" text
+		Verify exists "Prostate Cancer Screening-PSA" text

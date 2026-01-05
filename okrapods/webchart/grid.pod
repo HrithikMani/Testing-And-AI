@@ -1,0 +1,220 @@
+"""
+Pod used for interacting with WCDataVis grid objects
+
+- Gridclick acts as a substitue for the standard Click verb, which accepts a string that is parsed into two values in order to select a column and the row to be referenced and then interacts with the {OKRA_TEXT} given.
+- Unfilter verb will clear any previously set filters for the WCDataVis grid 
+
+Usage:
+	Click the "Edit" grid button
+	Click the "Open" grid link
+	Select "Inactive" from the grid perspective
+	Click the "Billing Office" grid checkbox
+	Expand the "Offensive driving course" grid
+	Verify exists "567856785678" grid entry
+	Sort Ascending "column name" grid column
+	Sort "Reset" "column name" grid column
+	Wait for the PanelList grid
+	Gridclick "Code:2OFFICE" "Edit" grid link
+	Verify exists "Billing Office" grid entry
+	Select "Inactive" from the grid perspective
+	Unfilter grid
+	Sumoselect "Yes" from the "Active" grid sumoselect
+	Click the "Active" grid sumo
+	Click "ASSETCAL" grid sumooption
+	Type "noh" in the "Visit Type" grid sumoinput
+	Click the "OK" grid sumobutton
+	
+
+"""
+
+grid://div[@class="wcdv_grid"]
+
+collapsed_button://div[contains(@class, 'wcdv_grid_table')]//th[contains(@class, 'wcdv_group_value')]{OKRA_TEXT_CLS}/ancestor::tr//button[contains(@class, 'wcdv_expand_button')][@data-wcdv-expanded=0]
+
+expanded_button://div[contains(@class, 'wcdv_grid_table')]//th[contains(@class, 'wcdv_group_value')]{OKRA_TEXT_CLS}/ancestor::tr//button[contains(@class, 'wcdv_expand_button')][@data-wcdv-expanded=1]
+
+entry://div[@class="wcdv_grid_table"]//td[contains(@class, "wcdv_pivot_colval_boundary")]{OKRA_TEXT_CLS}
+
+perspective://option[contains(., "New Perspective")]/parent::select
+
+link://div[@class="wcdv_grid"]//a[contains(.,"{OKRA_TEXT}")]
+	|//div[@class="wcdv_grid"]//span[@class="link"]
+
+row://div[@class="wcdv_grid_table"]//tr[contains(.,"{OKRA_TEXT}")]
+	|//div[@class="wcdv_grid_table"]//tr
+
+checkbox://div[@class="wcdv_grid"]//td[contains(., "{OKRA_TEXT}")]/preceding-sibling::td/input[@type="checkbox"]
+
+checkall://div[@class="wcdv_grid"]//input[0][@name="checkAll" and @type="checkbox"]
+
+button://div[@class="wcdv_grid"]//button[@class="wcdv_show_all" and not(@disabled)]
+	|//div[@class="wcdv_grid"]//div[contains(@id,"scriptlet") and contains(@id, "tt") and contains(@style, "inline-block")]//button[@type="button" and not(@disabled)]
+	|//div[@class="wcdv_grid"]//button[not(@disabled)]|@id|@name|@value
+	|//div[@class="wcdv_grid"]//input[not(@disabled)]|@id|@name|@value
+
+sorticon://div[@class="wcdv_grid_content"]//span[contains(@class, "wcdv_heading_title")][contains(., "{OKRA_TEXT}")]/following-sibling::div/span[contains(@class, "wcdv_sort_icon")]
+
+ascending://div/ul[contains(@class, "context-menu-list")]/li[contains(@class, "context-menu-item")]/span[contains(., "Ascending") and contains(., "{OKRA_TEXT}")]
+	|//div/ul[contains(@class, "context-menu-list")]/li[contains(@class, "context-menu-item")]/span[contains(., "Ascending")]
+
+descending://div/ul[contains(@class, "context-menu-list")]/li[contains(@class, "context-menu-item")]/span[contains(., "Descending") and contains(., "{OKRA_TEXT}")]
+	|//div/ul[contains(@class, "context-menu-list")]/li[contains(@class, "context-menu-item")]/span[contains(., "Descending")]
+
+column://div[@class="wcdv_grid_table"]//div[@class="wcdv_heading_container"]/span[contains(@class, "wcdv_heading_title") and contains(.,"{OKRA_TEXT}")]
+	|//div[@class="wcdv_grid_table"]//div[@class="wcdv_heading_container"]/span[contains(@class, "wcdv_heading_title")]
+
+sumo://span[@class="wcdv_field_name"]{OKRA_TEXT_CLS}/ancestor::div[@class="wcdv_field"]//div[contains(@class, "SumoSelect")]
+
+sumoselect://div[contains(@class, "SumoSelect open")]/select
+
+sumooption://div[contains(@class, "SumoSelect open")]/select/option
+	|//div[contains(@class, "SumoSelect open")]/div[contains(@class, "optWrapper")]//p
+
+sumoinput://span[@class="wcdv_field_name"]{OKRA_TEXT_CLS}/ancestor::div[@class="wcdv_field"]//div[contains(@class, "SumoSelect")]/p/input
+	|//div[contains(@class, "SumoSelect open")]/p/input
+
+sumobutton://div[contains(@class, "SumoSelect open")]//p
+	|//div[contains(@class, "SumoSelect open")]/div[contains(@class, "optWrapper")]//p
+
+refresh://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Refresh")]//span[contains(@class, "fa")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Refresh")]//span[contains(@class, "fa")]
+
+options://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Options")]//span[contains(@class, "fa-cog")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Options")]//span[contains(@class, "fa-cog")]
+
+csv://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}//button[contains(@class, "wcdv_icon_button") and contains(@title, "Generate CSV")]//span[contains(@class, "fa-file-o")]
+	|//button[contains(@class, "wcdv_icon_button") and contains(@title, "Generate CSV")]//span[contains(@class, "fa-file-o")]
+
+dropdown://div[contains(@class, "SumoSelect open")]/select
+	|//span[contains(., "{OKRA_TEXT}")]/parent::div/following-sibling::div/select[contains(@class, "wcdv_control_addField")]
+	|//span[contains(., "{OKRA_TEXT}") and not(contains(@style, "display: none"))]/following-sibling::div//select
+	|//div[contains(@class, "wcdv") and contains(@class, "title")]{OKRA_TEXT_CLS}/following-sibling::div/select/options[not(contains(., "{OKRA_TEXT}"))]/parent::select
+	|//select|@id|@name|@title
+
+select://div{OKRA_TEXT_CLS}//div[contains(@class, "wcdv") and contains(@class, "title")]/following-sibling::div/select
+	|//div//div[contains(@class, "wcdv") and contains(@class, "title")]{OKRA_TEXT_CLS}/following-sibling::div/select
+
+gear://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}
+	//div[contains(@class, "wcdv_grid_titlebar")]
+	/div[contains(@class, "wcdv_titlebar_controls")]
+	/button[contains(@class, "wcdv_icon_button") and contains(@title, "Show/Hide Grid Controls")]
+
+add_filter_dropdown://div[@class="wcdv_grid"]{OKRA_TEXT_CLS}
+	//div[contains(@class, "wcdv_grid_control")]
+	/div[contains(@class, "wcdv_filter_control")]
+	//select[contains(@class, "wcdv_control_addField")]
+
+@Unmask
+@Wait for section mask@driver.wcutils.waitForMask()
+
+@Initialize
+@Setup Event Listener@driver.runJS("MIE.WC_DataVis.grids['{OKRA_TEXT}'].on('renderEnd', function() {window['gridRender_{OKRA_TEXT}'] = true})")
+
+@Wait
+@@@Wait for Grid to finish rendering
+if hasattr(driver, 'wcutils'):
+	driver.wcutils.waitForAJAX(quiet=5)
+if driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//span[not(contains(., "display: none") or not(@type="hidden")) and (contains(., "Loading") or contains(., "Working") or contains(., "Processing"))]'), expected_return=True):
+	driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//span[not(contains(., "display: none") or not(@type="hidden")) and (contains(., "Loading") or contains(., "Working") or contains(., "Processing"))]'), expected_return=False, timeout=300)
+	driver.reportCommandStatus('grid.pod', 'Wait verb', False, 'Wait For Grid', 'Grid is still loading after 5 minutes')
+if not driver.waitFor(driver, lambda d: d.runJS("return MIE.WC_DataVis.grids['{OKRA_TEXT}'].isIdle()"), expected_return=True, timeout=120):
+	driver.reportCommandStatus('grid.pod', 'Wait verb', False, 'Wait For Grid', 'Grid did not finish rendering')
+driver.wcutils.waitForAJAX(quiet=5)
+@@@
+
+@Expand
+Click the grid collapsed_button
+Verify data-wcdv-expanded=1 @xpath="//div[contains(@class, 'wcdv_grid_table')]//th[contains(@class, 'wcdv_group_value') and contains(., '{OKRA_TEXT}')]/ancestor::tr"
+
+@Collapse
+Click the grid expanded_button
+Verify data-wcdv-expanded=0 @xpath="//div[contains(@class, 'wcdv_grid_table')]//th[contains(@class, 'wcdv_group_value') and contains(., '{OKRA_TEXT}')]/ancestor::tr"
+
+
+@Gridclick
+"""
+def parse(str):
+	spl = str.split(":")
+	col = spl[0]
+	unid = spl[1]
+	return (col, unid,)
+"""
+@@@
+xp='//div[@class="wcdv_grid_table"]//th[contains(.,"{0}")]/ancestor::table//td[contains(.,"{1}")]/parent::tr/td//a[contains(., "{{OKRA_TEXT}}")]'
+ele = driver.getElement(xpath=xp)
+driver.wcutils.waitForAJAX(quiet=5)
+if driver.waitFor(driver, lambda d: d.getElement(xpath=xp), expected_return=True):
+	driver.runJS('arguments[0].scrollIntoView(true)', ele)
+	driver.clickElement(xpath=xp)
+else:
+	driver.reportCommandStatus('GridClick', 'Element not found', False, xp, '')
+@@@
+
+@Sort
+"""
+def parse(str):
+	return (str, )
+"""
+@@@
+wd = driver.getWebDriver()
+from selenium.webdriver.common.action_chains import ActionChains
+sorticon = driver.getElement(xpath='//div[@class="wcdv_grid_content"]//span[contains(@class, "wcdv_heading_title")][contains(., "{{OKRA_TEXT}}")]/following-sibling::div/span[contains(@class, "wcdv_sort_icon")]')
+ascdsc = driver.getElement(xpath='//ul[contains(@class, "context-menu-list")]/li[contains(@class, "context-menu-item")]/span[contains(., "{{OKRA_TEXT}}")]/ancestor::ul[contains(@class, "context-menu-list")]/li/span[contains(., "{0}")]')
+ActionChains(wd).move_to_element_with_offset(sorticon, 2, 2).click().move_to_element_with_offset(ascdsc, 2, 2).click().perform()
+@@@
+
+@Unfilter
+@@@
+if driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//span[contains(@style, "display: inline") or @style=""]/span[@class="link" and contains(., "clear filter")]'), expected_return=True):
+	driver.clickElement(xpath='//div[@class="wcdv_grid"]//span[contains(@style, "display: inline") or contains(@style, "")]/span[@class="link" and contains(., "clear filter")]')
+elif driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//span[contains(@style, "display: none") and not(contains(@style, "display: inline")) and not(@style="")]/span[@class="link" and contains(., "clear filter")]'), expected_return=True):
+	driver.reportCommandStatus('DataVis grid', 'grid.pod failure message', True, 'nothing to clear', '"clear filter" link is hidden')
+else:
+	driver.reportCommandStatus('DataVis grid', 'grid.pod failure message', False, '', '"clear filter" link was not found')
+@@@
+
+@Show
+@@@
+showHideBtn = '//div[@class="wcdv_grid"]//button[contains(@class, "showhide") and not(contains(@class, "open"))]'
+if driver.waitFor(driver, lambda d: d.getElement(xpath=showHideBtn), expected_return=True):
+	driver.clickElement(xpath=showHideBtn)
+	driver.reportCommandStatus('DataVis grid', 'grid.pod failure message', True, '', 'Showed the grid')
+else:
+	driver.reportCommandStatus('DataVis grid', 'grid.pod failure message', True, '', 'Grid already shown')
+@@@
+
+@Hide
+@@@
+showHideBtn = '//div[@class="wcdv_grid"]//button[contains(@class, "showhide") and contains(@class, "open")]'
+if driver.waitFor(driver, lambda d: d.getElement(xpath=showHideBtn), expected_return=True):
+	driver.clickElement(xpath=showHideBtn)
+	driver.reportCommandStatus('DataVis grid', 'grid.pod failure message', True, '', 'Hid the grid')
+else:
+	driver.reportCommandStatus('DataVis grid', 'grid.pod failure message', True, '', 'Grid already hidden')
+@@@
+
+@Load
+@@@
+if driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//*[self::input or self::button][contains(., "Load all rows")]'), expected_return=True):
+	driver.clickElement(xpath='//div[@class="wcdv_grid"]//*[self::input or self::button][contains(., "Load all rows")]')
+	if driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//*[self::input or self::button][contains(., "Load all rows")]'), expected_return=True):
+		driver.clickElement(xpath='//div[@class="wcdv_grid"]//*[self::input or self::button][contains(., "Load all rows")]')
+		driver.reportCommandStatus('DataVis grid', 'grid.pod failure message', False, '', '"Load all rows" button not clicked, 2nd attempt')
+	elif driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//*[self::input or self::button][contains(., "Load all rows")]'), expected_return=False):
+		driver.reportCommandStatus('DataVis grid', 'grid.pod failure message', True, '', '"Load all rows" button clicked')
+else:
+	driver.reportCommandStatus('DataVis grid', 'grid.pod failure message', False, '', '"Load all rows" button not present')
+@@@
+
+@Refresh
+Click the "{OKRA_TEXT}" grid refresh
+
+@Sumoselect
+"""
+def parse(str):
+   return (str, )
+"""
+Click the "{{OKRA_TEXT}}" grid sumo
+Type "{0}" in the "{{OKRA_TEXT}}" grid sumoinput
+Click the "{0}" grid sumooption
+

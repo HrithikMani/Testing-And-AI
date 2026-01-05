@@ -1,0 +1,830 @@
+Begin "Turn on the needed settings"
+	@Set the ICD10Calculator preference to Icon@driver.wcutils.SetPreference('{selenium_username}', 'E-Chart', 'Conditions', 'ICD10 Calculator', 1)
+	@Set the ICD10Calculator preference to Icon@driver.wcutils.SetPreference('{nurse_username}', 'E-Chart', 'Conditions', 'ICD10 Calculator', 1)
+Begin "Add unconfirmed conditions to test with later"
+	@Add UnconfirmedCondition1@driver.miedb.dbExec("INSERT INTO patient_conditions SET pat_id=(SELECT pat_id FROM patients where first_name='Christine' and last_name='Harris'),icd10='J69.0',concept_id='196034005',description='Milk inhalation pneumonitis',verification_status='unconfirmed',problem_list=0")
+	@Add UnconfirmedCondition2@driver.miedb.dbExec("INSERT INTO patient_conditions SET pat_id=(SELECT pat_id FROM patients where first_name='Christine' and last_name='Harris'),icd10='H26.8',concept_id='416071001',description='Glass Blowers Cataract',verification_status='unconfirmed',problem_list=0")
+	@Grant John Sample e-prescribing rights@driver.miedb.dbExec("UPDATE user_extended_fields SET surescripts_newrx = 1 WHERE user_id = (SELECT user_id FROM users WHERE last_name = 'Sample')")
+Begin "Employee Checks in Christine Harris to the Waiting Room"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the Checkin quicklink
+	Select "Waiting Room" from the Station field
+	Click the Save button
+	Open the sidemenu
+	Click the Logout sidemenu entry
+Begin "Login as Receptionist to Move Patient to a Visit Encounter"
+	@Setup WCTestSession for Reception@driver.wcutils.insertWCTSession('{reception_username}')
+	Open the sidemenu
+	Click the Checkin sidemenu entry
+# Temporary change to improve test runs
+# The four following lines should be replaced by changes/improvements to grid.pod
+# Ticket #83640
+	Wait for ajax
+	@Wait@driver.pause(5)
+	@Scroll Open into View@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath="//a[contains(text(),'Open')]"))
+	Click the "Open" grid link
+	@Switch to Encounters Window@driver.switchToPopup()
+	Select Visit from the DEI_visit_type dropdown
+	Click the Save button
+	Wait for page
+	@Close this window@driver.closePopup()
+	Open the sidemenu
+	Click the Logout sidemenu entry
+Begin "Nurse Begins the Visit Encounter"
+	@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{nurse_username}')
+	Begin "Nurse Moves Patient Into Exam Room 1"
+		Open the sidemenu
+		Click the Checkin sidemenu entry
+# Temporary change to improve test runs
+# The four following lines should be replaced by changes/improvements to grid.pod
+# Ticket #83640
+		@Wait@driver.pause(5)
+		@Scroll Open into View@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath="//a[contains(text(),'Waiting Room')]"))
+		Click the "Waiting Room" grid link
+		Wait for ajax
+		Select "Exam Room 1" from the "New Station" field
+		Type "Christine Harris in Exam Room 1" in the Comment field
+		Click the Save button
+		Verify exists "Exam Room 1" text
+# Temporary change to improve test runs
+# The four following lines should be replaced by changes/improvements to grid.pod
+# Ticket #83640
+		Wait for ajax
+		@Wait@driver.pause(5)
+		@Scroll Open into View@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath="//a[contains(text(),'Open')]"))
+		Click the "Open" grid link
+	Begin "Fill Out Dynamic Sections"
+		@Switch windows@driver.switchToPopup()
+		Begin "Encounter"
+			@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+			Begin "Tasking"
+				Click the "Add Task" icon
+				Verify exists "Add Task" popup
+				Type "Testing an encounter task" in the "Description" popup textarea
+				Enter "02-03-2007" in the 1st date
+				Enter "02-13-2007" in the 2nd date
+				Enter "Nurse" in the "owner_id_ac" autocomplete
+				Type "These are some encounter task notes" in the "Notes" popup textarea
+				Click the "Save" popup button
+			Open the "Encounter" dynamicsection
+			Enter "02-02-2007" into the DED_serv_date date
+			Close the "Encounter" dynamicsection
+			Verify exists "Testing an encounter task" dynamicitem
+		Begin "Smart Plan"
+			Begin "Add Anxiety to Smart Plan"
+				Unmask dynamicsection
+				Add "Smart Plan:Problem List" "Anxiety" quicklist item
+				Verify exists @ICD10 Calculator Available SPAN@xpath=//span[@title="ICD10 calculator available"]
+			Begin "Prescribe from Smart Plan"
+				Prescribe "Smart Plan" "Anxiety" dynamicitem
+				@Wait for indication to get set@driver.pause(5)
+				Verify exists "Reason for taking" autocomplete
+				Verify value=Anxiety for @name=indac
+				Close the "Prescribe Medication" popup
+				Verify !exists "Prescribe Medication" popup
+			Begin "Add Order from Smart Plan"
+				Order "Smart Plan" "Anxiety" dynamicitem
+				@Pause to allow time for script@driver.pause(5)
+				Verify exists 'Visit: 02-02-2007 (Harris, Christine M.)' text
+				Close the "Add Encounter Order" popup
+				Verify !exists "Add Encounter Order" popup
+			Begin "Remove the Anxiety item"
+				Remove "Smart Plan" "Anxiety" dynamicitem
+				@Pause to allow time for script@driver.pause(5)
+				Click the "Remove" popup button
+				Verify !exists "Anxiety" "Smart Plan" dynamicitem
+			Begin "Re-add Anxiety to Smart Plan"
+				Verify exists "Smart Plan" "Anxiety" quicklist item
+				Add "Smart Plan:Employee Past Medical History" "Anxiety" quicklist item
+				Verify exists "Anxiety" dynamicitem
+			Begin "Test Unconfirmed Conditions"
+				Scroll "Smart Plan" dynamicsection
+				Verify exists "Unconfirmed Conditions" quicklist
+				Verify exists @Milk inhalation pneumonitis quicklist item in Unconfirmed Conditions@xpath=//div[@class="ql-header" and contains(., "Unconfirmed Conditions")]/following-sibling::div[@class="ql-list"]//li[contains(., "Milk inhalation pneumonitis")]
+				Approve "Smart Plan" "Milk inhalation pneumonitis" quicklist item
+				Scroll "Smart Plan" dynamicsection
+				Verify exists @Milk inhalation pneumonitis quicklist item in Problem List@xpath=//div[@class="ql-header" and contains(., "Problem List")]/following-sibling::div[@class="ql-list"]//li[contains(., "Milk inhalation pneumonitis")]
+				Verify !exists @Milk inhalation pneumonitis quicklist item is not listed in Unconfirmed Conditions@xpath=//div[@class="ql-header" and contains(., "Unconfirmed Conditions")]/following-sibling::div[@class="ql-list"]//li[contains(., "Milk inhalation pneumonitis")]
+				Verify exists @Glass Blowers Cataract quicklist item in Unconfirmed Conditions@xpath=//div[@class="ql-header" and contains(., "Unconfirmed Conditions")]/following-sibling::div[@class="ql-list"]//li[contains(., "Glass Blowers Cataract")]
+				Decline "Smart Plan:Unconfirmed Conditions" "Glass Blowers Cataract" quicklist item
+				Verify exists "Decline Condition" popup textarea
+				Type "Testing Declining a Condition" in the 1st "Decline Condition" popup textarea
+				Click the Decline button
+				Verify exists @Glass Blowers Cataract quicklist item in Declined Conditions@xpath=//div[@class="ql-header" and contains(., "Declined Conditions")]/following-sibling::div[@class="ql-list"]//li[contains(., "Glass Blowers Cataract")]
+				Verify !exists @Glass Blowers Cataract quicklist item in Unconfirmed Conditions@xpath=//div[@class="ql-header" and contains(., "Unconfirmed Conditions")]/following-sibling::div[@class="ql-list"]//li[contains(., "Glass Blowers Cataract")]
+			Open "Smart Plan" dynamicsection
+			Wait for the EncounterOrdersGridDV grid
+			Advance the dynamicsection
+		Begin "Subjective"
+			Begin "Chief Complaint"
+				Type "Seen today with complaints of ankle pain" into the enc_ccomplaint input
+				Advance the dynamicsection
+			Begin "HPI"
+				Type "This is the third accident involving the employer's septic system in a week. Possibly they need better safety controls" in the obs_result_105_0 input
+				Advance the dynamicsection
+			Begin "Case"
+				#Click the "Injury (OSHA Standard)" radio
+				Click the 1st radio
+				@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath='//input[not(@disabled) and @type="radio"][contains(following-sibling::text(), "result of a single event")]'))
+				Click the "result of a single event" radio
+				#Click the 8th radio
+				Enter "08-08-1980 1314" in the 1st date
+				Type "0900" in the "DID_employee_starttime" input
+				Enter "08-08-1980 1500" in the 2nd date
+				Enter "08-08-1980" in the 4th date
+				Click the "Yes" radio
+				Click the "Injury" radio
+				Click the 3rd "Yes" radio
+				Click the "Not Denied" radio
+				Select "Major contributing cause" from the "Early Investigation Unit" dropdown
+				Enter "08-11-1980" in the "DID_osha_completed_dt" date
+				Enter "08-11-1980 0900" in the "DID_ca_dwc1_form" date
+				Click the "onsite location" radio
+				Enter "Better Corp" in the "incident_location_acinp" autocomplete
+				Type "Secondary fertilizer tank" in the "Where the event occurred" freetext field
+				Type "Cleaning the walkway around the top of the tank with a pushbroom" in the "What was the employee doing just before the incident occurred?" freetext field
+				Type "The employee's hat fell into the septic system, and he fell in trying to retrieve it." in the "What happened? Tell us how the injury occurred." freetext field
+				Type "septic chemicals caused a rash and the fall twisted his ankle" in the "What object or substance directly harmed the employee?" freetext field
+				Select "Chemicals" from the "Cause of Injury" dropdown
+				Click the 5th "Yes" radio
+				Type "The employee went in the chemical shower and packed ice around his ankle" in the "Please describe the treatment provided" freetext field
+				Click the "Onsite Health Services" radio
+				Select "Office" from the "DII_ohs_location" dropdown
+				Enter "Selenium, Selenium" in the "le_incusers_le_iu_id_value_ac_field" autocomplete
+				Select "Occupational Medicine" from the "Authorized providers" table dropdown
+				Click the 1st "Add" button
+				Select "Sprain/Strain" from the "Nature of injury" table dropdown
+				Select "Ankle - Left" from the 2nd "Nature of injury" table dropdown
+				Type "The sprain is quite severe" in the "Nature of injury" table textarea
+				Click the 2nd "Add" button
+				Select "Burn" from the "Nature of injury" table dropdown
+				Select "General Body" from the 2nd "Nature of injury" table dropdown
+				Type "This is a chemical burn caused by the septic tank chemicals Mr. Hart fell in" in the "Nature of injury" table textarea
+				Click the 2nd "Add" listedit button
+				Close the "Case" dynamicsection
+				Verify exists "Date/time of injury or onset of illness:" text
+				Verify exists "08-08-1980 13:14:00" text
+			Begin "Past Medical History"
+				Begin "New Encounter UI workflow"
+					Begin "Add a New Condition"
+						Toggle the "Past Medical History" quicklist
+						Add "Past Medical History" "Other" dynamicitem
+						Verify exists "Add Condition" popup
+						Enter "Acute bronchitis due to rhino" in the "Name" autocomplete
+						Enter "Selenium" in the "Managed By" autocomplete
+						Click the 1st "Save" popup button
+						Verify exists "Acute bronchitis due to rhinovirus" dynamicitem
+					Begin "Quicklist-Add a New Condition"
+						Add "Past Medical History:Make New PMH Item" "Arthritis" quicklist item
+						Verify exists "Arthritis" dynamicitem
+					Begin "Edit a Condition"
+						Edit "Past Medical History" "Acute bronchitis" dynamicitem
+						Click the 'Name' autocomplete
+						Type "ongoing" in the "Comments" freetext field
+						Enter "08-08-1980" in the "Onset Date" date
+						Verify exists "J20" popup text
+						Click the "Save" popup button
+					Begin "Remove a Condition"
+						Remove "Past Medical History" "Arthritis" dynamicitem
+						Click the "Remove" popup button
+						Verify !exists "Arthritis" dynamicitem
+			Begin "Past Procedures"
+				Begin "Add a New Past Procedure"
+					Toggle the "Past procedures" quicklist
+					Add "Past procedures" "Other" dynamicitem
+					Verify exists "Add Procedure" popup
+					Enter "Ryodora" in the "prochistac" autocomplete
+					Enter "08-08-1980" in the date
+					Type "No longer problematic" in the "Add Procedure" popup textarea
+					Click the 2nd "Save" popup button
+					Verify exists "Ryodoraku" dynamicitem
+					Verify exists "Tonsillectomy" dynamicitem
+				Begin "Edit a Past Procedure"
+					Edit "Past procedures" "Tonsillectomy" dynamicitem
+					Enter "08-08-1980" in the date
+					Type "Edited" in the "Edit Procedure" popup textarea
+					Click the "Save" popup button
+				Begin "Delete a Past Procedure"
+					Delete "Past procedures" "Tonsillectomy" dynamicitem
+					Verify exists "Delete Procedure" popup
+					Click the "Delete" button
+				Begin "Verify Changes"
+					Verify exists "Ryodoraku" text
+			Begin "Preventive care"
+				Open the "Preventive care" dynamicsection
+				Begin Adding Breast Cancer Screening
+					#Replace these raw lines once ticket #114868 has been finished for new dynItem functionality within open dynamic sections and multiple columns with different dynOps
+					@Hover over Preventive Care Brest Cancer Screening@driver.mouseOver(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Breast Cancer Screening")]')
+					@Click Breast Cancer Screening's Add dynOp@driver.clickElement(xpath='//div/ul/li[not(contains(@class, "ql_busy")) and contains(@class, "dynItem") and contains(.,"Breast Cancer Screening")]/span[@class="dynOps"]/*[@title="Add"]')
+					Verify exists "Add Encounter Order" popup
+					Select "Completed" in the dropdown
+					Enter "11-22-2022" in the 2nd date
+					Click the "Save" popup button
+					Close the "Preventive care" dynamicsection
+					Verify exists "11-22-2022" text
+			Begin "Presenting medications"
+				Begin "Verify existing medications"
+					Verify exists "Ortho Tri-Cyclen" dynamicitem
+					Verify exists "Miralax" dynamicitem
+					Verify !exists "amoxicillin" dynamicitem
+				Begin "Edit a medication"
+					Edit "Presenting medications" "Ortho" dynamicitem
+					Click the "Show All Details" popup button
+					Enter "08-08-1980" in the date
+					Enter "Primary dysmenorrhea" in the "Reason for taking" autocomplete
+					Click the "Save" popup button
+				Begin "Add a medication"
+					Add "Presenting medications" "Other" dynamicitem
+					Click the "Show All Details" popup button
+					Enter "amoxicillin" in the "Medication" autocomplete
+					Enter "tablet 500" in the "Form" autocomplete
+					Enter "08-08-1980" in the date
+					Type "Oral 1 tablet per" in the "Practitioner Sig" autocomplete
+#	Troubleshooting the popup. It seems that the "Show All Details" popup button is sometimes present because the wc_win has already expanded due to the "Show All Details" button being clicked in the "Edit a medication" section above. Also may just be timing.
+#					@@@
+#					ele = driver.getElement(xpath='//div[@class="obj-win-buttons"]/button[contains(@class, "show-all-details")][contains(.,"Show All Details")]')
+#					if ele:
+#						driver.clickElement(xpath='//div[@class="obj-win-buttons"]/button[contains(@class, "show-all-details")][contains(.,"Show All Details")]')
+#					else:
+#						driver.reportCommandStatus('Show All Details button', 'not rendered', '', False, '', '')
+#						if ele:
+#							driver.clickElement(xpath='//div[@class="obj-win-buttons"]/button[contains(@class, "show-all-details")][contains(.,"Show All Details")]')
+#						else:
+#							driver.reportCommandStatus('Show All Details button', 'not present', '', False, '', '')
+#					@@@
+#					@wait@driver.pause(3)
+#					Click the "Show All Details" popup button
+#					Click the "Show All Details" popup button
+#					@wait@driver.pause(3)
+#					Enter "Acute bronchitis due to rhino" in the "Reason for Taking" autocomplete
+					Click the 2nd "Save" popup button
+					Begin "Verify changes to Presenting medications section"
+						Verify exists "amoxicillin" dynamicitem
+				Begin "Delete a medication"
+					Remove "Presenting medications" "Miralax" dynamicitem
+					Click the "Remove" popup button
+				Begin "Test the Presenting medications quicklist"
+					Verify exists quicklist search
+					Type "x" in the "Presenting medications" quicklist search
+					Add "Presenting medications:Quick List" "levothyroxine" quicklist item
+					Click the "Show All Details" popup button
+					Enter "tablet 25" in the Form autocomplete
+					Enter "08-08-1980" in the date
+					Type "1 tab po bid" in the "Practitioner Sig" autocomplete
+					Click the 2nd "Save" popup button
+				Begin "Verify changes to Presenting medications section"
+					Verify exists "levothyroxine" dynamicitem
+					Verify exists "Ortho Tri-Cyclen" dynamicitem
+					Verify !exists "Miralax" dynamicitem
+					Toggle the "Presenting medications" quicklist
+			Begin "Allergies / Intolerances"
+				Begin "Add from Quicklist"
+					Toggle the "Allergies / Intolerances" quicklist
+					Add "Allergies / Intolerances" "NKDA" quicklist item
+				Begin "Add an allergy/intolerance"
+					Add "Allergies / Intolerances" "Other" dynamicitem
+					Enter "Fungicides Ointment" in the "Name" autocomplete
+					Enter "Itch" in the "Reaction" autocomplete
+					Enter "11-08-1980" in the "Start Date" date
+					Click the 2nd "Save" popup button
+					Toggle the "Allergies / Intolerances" quicklist
+				Begin "Notate an allergy/intolerance"
+					Notate "Allergies / Intolerances" "Fungicides Ointment" dynamicitem
+					Type "Consider alternative therapy" into the "Notes" popup textarea
+					Click the "Submit" button
+					Verify exists "Consider alternative therapy" text
+				Begin "Edit an allergy/intolerance"
+					Edit "Allergies / Intolerances" "Fungicides Ointment" dynamicitem
+					Enter "morphine" in the "Name" autocomplete
+					Verify exists "History" text
+					Verify exists "Revision" text
+					Verify exists "Created by Simmons, Nicole" text
+					Click the "Save" popup button
+				Begin "Delete an allergy/intolerance"
+					Delete "Allergies / Intolerances" "morphine" dynamicitem
+					Click the "Delete" popup button
+				Begin "Verify changes to Allergies/Intolerances section"
+					Verify exists "NKDA" dynamicitem
+					Verify !exists "Fungicides Ointment" dynamicitem
+					Verify !exists "morphine" dynamicitem
+			Begin "Family history"
+				Begin "Un-hide Family history"
+					Click the @Tools button@xpath='//div[@id="wc_encnav_buttons"]/a[@title="Tools"]'
+					Click the "!Family history" text
+					Click the @Close button@xpath='//button[@class="xclose"]'
+				Begin "Add item to Family History when setting is on and totally hide ALL non-billable ICD10 codes"
+					@Update System Setting@driver.miedb.dbExec("UPDATE system_settings SET value=2 WHERE item='Highlight Non-Billable ICD10 Codes'")
+					Toggle the "Family history" quicklist
+					Add "Family history" "Other" dynamicitem
+					Enter "Inflammatory conditions of jaws" in the "Problem" autocomplete
+					Select "Sibling" from the dropdown
+					Type "Testing the comments - 2." in the "Comments" freetext
+					Click the "Save" popup button
+					@Wait@driver.pause(5)
+					Toggle the "Family history" quicklist
+				Begin "Add item to Family History when setting is on"
+					@Update System Setting@driver.miedb.dbExec("UPDATE system_settings SET value=1 WHERE item='Highlight Non-Billable ICD10 Codes'")
+					Toggle the "Family history" quicklist
+					Add "Family history" "Other" dynamicitem
+					Enter "Hypercementosis" in the "Problem" autocomplete
+					Select "Mother" from the dropdown
+					Type "Testing the comments - 1." in the "Comments" freetext
+					Click the "Save" popup button
+					@Wait@driver.pause(5)
+					Toggle the "Family history" quicklist
+				Begin "Edit Family History dynamic item"
+					Edit "Family history" "Hypercementosis" dynamicitem
+					Select "Spouse" from the "Relationship" dropdown
+					Click the "Save" popup button
+				Begin "Delete Family History item"
+					Verify exists "Lung cancer" dynamicitem
+					Delete "Family history" "Lung cancer" dynamicitem
+					Click the "Delete" popup button
+				Begin "Verify changes to Family history"
+					Verify !exists "Lung cancer" dynamicitem
+					Verify !exists "Father" text
+					Verify exists "Hypercementosis" dynamicitem
+					Verify !exists "Mother" text
+					Verify exists "Spouse" text
+					Verify exists "Inflammatory conditions of jaws" dynamicitem
+					Verify exists "Sibling" text
+			Begin "Immunizations / Injections"
+				@Wait@driver.pause(5)
+				Toggle "Immunizations / Injections" quicklist
+				Begin "Add Injection"
+					Add "Immunizations / Injections" "Other" dynamicitem
+					Enter "botulinum antitoxin" in the "injectionac" autocomplete
+					Enter "06-03-1985" in the date
+					Click the 2nd "Save" popup button
+					Verify exists "botulinum antitoxin" dynamicitem
+				Begin "Edit an Injection"
+					Verify !exists "nausea" text
+					Edit "Immunizations / Injections" "botulinum antitoxin" dynamicitem
+					Enter "botulinum antitoxin" in the "injectionac" autocomplete
+					Type "nausea" in the "Reaction" popup textarea
+					Click the "Save" popup button
+					Verify exists "nausea" text
+				Begin "Delete an Injection"
+					Delete "Immunizations / Injections" "botulinum antitoxin" dynamicitem
+					Click the "Delete" popup button
+					Verify !exists "botulinum antitoxin" text
+					Verify !exists "nausea" text
+				Toggle the "Immunizations / Injections" quicklist
+			Begin "Social history"
+				Open the "Social history" dynamicsection
+				Select "Never smoker" from the "Smoking Status" flowsheet dropdown
+				Advance the dynamicsection
+				Begin "Verify changes to Social History"
+					Verify exists "Never smoker" text
+			Begin "Presenting restrictions"
+				Advance the dynamicsection
+			Begin "Review of systems"
+				Begin "General row"
+					Wait for ajax
+					Click the "Normal activity." button
+					Click the "Normal energy level." button
+				Begin "Eyes row"
+					Type "Patient experiences dry eyes." in the "Eyes" freetext field
+				Begin "Skin row"
+					Type "Patient has no apparent rashes, lesions, or bruises." in the "Skin" freetext field
+					Click the "No complaints." button
+					Advance the dynamicsection
+				Begin "Verify changes to Review of Systems"
+					Verify exists "General" text
+					Verify exists "Normal activity" text
+					Verify exists "Normal energy level" text
+					Verify exists "Eyes:" text
+					Verify exists "Patient experiences dry eyes" text
+					Verify exists "Skin:" text
+					Verify exists "Patient has no apparent rashes, lesions, or bruises. No complaints." text
+			Begin "Linked Documents"
+				Advance the dynamicsection
+				Verify exists "Injection 06-03-1985" text
+				Verify exists "botulinum antitoxin" text
+				Unlink "Linked Documents" "botulinum antitoxin" dynamicitem
+			Begin "Questionnaire"
+				Advance the dynamicsection
+		Begin "Objective"
+			Begin "Vitals"
+				Type "70" in the "height" input
+				Type "135" in the "weight" input
+				Select "lbs" from the "weight_units" dropdown
+				Verify value=19.37 @id=bmi
+				Type "Kyphosis" in the "heightcomments" input
+				Type "Patient is obese" in the "weightcomments" input
+				Type "Dietary consultation given to patient" in the "bmicomments" input
+				Type "100" in the "bpsys" input
+				Type "65" in the "bpdia" input
+				Select "Left Arm" from the "site" dropdown
+				Select "Standing" from the "position" dropdown
+				Type "Patient is taking blood pressure medication currently." in the "bpcomments" input
+				Type "60" in the "pulse" input
+				Select "Regular" from the "pulsereg" dropdown
+				Select "Radial" from the "pulsesite" dropdown
+				Type "Heart rate appears normal." in the "pulsecomments" input
+				Type "99" in the "temperature" input
+				Type "Normal, for him" in the "tempcomments" input
+				Type "100" in the "o2sat" input
+				Type "Lungs are good" in the "o2satcomments" input
+				Type "20" in the "resp" input
+				Type "Patient is not a smoker." in the "respcomments" input
+				Select "Resting" from the "exertionlevel" dropdown
+				Type "Patient exercises daily." in the "exertcomments" input
+				Select "0" from the "painsev" dropdown
+				Type "Patient is not in any pain currently." in the "paincomments" input
+				Type "Good health" in the "VitalsNarrative" input
+				Advance the dynamicsection
+				Begin "Verify changes to Vitals"
+					Verify exists "Kyphosis" text
+			Begin "Physical exam"
+				Type "Well developed" in the "General Appearance" freetext field
+				Type "Ability to communicate is normal" in the "Neurology" freetext field
+				Close the "Physical exam" dynamicsection
+				Begin "Verify changes to Physical Exam"
+					Verify exists "Well developed" text
+					Verify exists "Ability to communicate is normal" text
+				Begin "Update Physical Exam observations via inline editing"
+					@@@ Edit the "General Appearance" observation to say "Haggard" instead
+					from selenium.webdriver.common.action_chains import ActionChains
+					from selenium.webdriver.common.keys import Keys
+					elt = driver.getElement(xpath='//div[contains(@class,"flowsheet_label")][contains(.,"General Appearance")]/following-sibling::div[contains(@class,"flowsheet_output")]//div[contains(@class,"flowsheet_editable")]')
+					elt.click()
+					a = ActionChains(driver.getWebDriver())
+					a.send_keys(Keys.HOME)
+					a.key_down(Keys.SHIFT)
+					a.send_keys(Keys.END)
+					a.key_up(Keys.SHIFT)
+					a.send_keys(Keys.DELETE)
+					a.perform()
+					elt.send_keys('Haggard')
+					driver.blur(elt)
+					@@@
+					Wait for ajax
+					Open the "Physical exam" dynamicsection
+					Verify exists "!Haggard" text
+				Advance the dynamicsection
+			Begin "Tests & procedures"
+				Click the "In House Testing Pick List" icon
+				Click the "Rabies Injection" picklist checkbox
+				Click the "Vision Ishihara" picklist checkbox
+				Click the "Add Procedures" button
+				Verify !exists "In House Testing" popup
+			Begin "Rabies Injection section"
+				Verify exists "Rabies Injection" dynamicsection
+				Add "Rabies Injection:Library Injections" "Other RIG Injection" quicklist item
+				Type "12345" in the "Vial / Lot" input
+				Enter "Abbott Laboratories" in the "Manufacturer" autocomplete
+				Enter "02-02-2010" in the "Expiration Date" date
+				Enter "02-02-2007" in the "Administering Date" date
+				Click the 2nd "Save" popup button
+				Complete "Rabies Injection" "Rabies" dynamicitem
+				Verify exists "In Progress" text
+				Verify exists "RIG" text
+				Verify exists "Administered On" text
+			Begin "Vision Ishihara section"
+				Open the "Vision Ishihara" dynamicsection
+				Type "28%" in the @id=obs_result_80_0
+				Complete "Vision Ishihara" "Vision Ishihara" dynamicitem
+				Advance the dynamicsection
+			Begin "Images"
+				Verify exists @Upload tool@xpath='//div[contains(@class, "dropZone-container")]'
+				Verify exists "Drop files here" text
+				Verify exists "Choose Files" button
+				Verify exists @Disabled "Upload Image" button@xpath='//input[@type="button" and (@disabled) and @value="Upload Image"]'
+				Verify exists @Disabled "Clear List" button@xpath='//input[@type="button" and (@disabled) and @value="Clear List"]'
+				Close the "Images" dynamicsection
+		Begin "Assessment"
+			Begin "Symptoms / Diagnosis"
+				Add "Symptoms / Diagnosis" "Other" dynamicitem
+				Enter "Ariboflavinosis" in the "Name" autocomplete
+				Enter "08-08-1980" in the "Onset Date" date
+				Enter "Selenium, Selenium" in the "Managed By" autocomplete
+				Click the 1st "Save" popup button
+			Begin "Warnings and Guidelines section"
+				Open "Warnings and Guidelines" dynamicsection
+				Verify exists "Guideline" text
+				Verify exists "Alerts" text
+				Verify exists "Ortho Tri-Cyclen" text
+				# Snapshot moved Vaccine due date to 12/31/2025 - https://pm.mieweb.com/issues/142276
+				# Verify exists "This patient is past due for a MMR injection" text
+				Verify exists "This patient is past due for an Annual Pap Exam" text
+				Verify exists "This patient is past due for a Varicella injection" text
+				Advance the dynamicsection
+			Begin "Incident summary section"
+				Verify exists "Work related:" text
+				Advance the dynamicsection
+				Begin "Verify the entries were saved"
+					Verify exists "Yes" text
+					Verify exists "Injury" text
+					Verify exists "08-11-1980" text
+					Verify exists "08-11-1980" text
+					Verify exists "Yes" text
+			Begin "Workers comp section"
+# ASK SEAN ABOUT THIS, OKRA DOESN'T FIND THESE RADIO BUTTONS
+				#Click the 1st "Yes" radio
+				Click the "Is_20patient_20able_20to_20perform_20usual_20work_3F_Yes" input
+# ASK SEAN ABOUT THIS, OKRA DOESN'T FIND THESE RADIO BUTTONS
+				#Click the 2nd "No" radio
+				Click the "Chemical_20or_20toxic_20compounds_20involved_3F_No" input
+# ASK SEAN ABOUT THIS, OKRA DOESN'T FIND THESE RADIO BUTTONS
+				#Click the 1st "Undetermined" radio
+				Click the "Are_20findings_20and_20diagnosis_20consistent_20with_20injury_3F_Undetermined_20_3CE_3E" input
+# ASK SEAN ABOUT THIS, OKRA DOESN'T FIND THESE RADIO BUTTONS
+				#Click the 2nd "Undetermined" radio
+				Click the "Other_20current_20condition_20that_20will_20impede_20recovery_3F_No" input
+# ASK SEAN ABOUT THIS, OKRA DOESN'T FIND THESE RADIO BUTTONS
+				#Click the 4th "Yes" radio
+				Click the "DII_others_injured_1" input
+				Advance the dynamicsection
+				Begin "Verify the entries were saved"
+					Verify exists "Is employee able to perform usual work?" text
+					Verify exists "Yes" text
+					Verify exists "Chemical or toxic compounds involved?" text
+					Verify exists " No" text
+					Verify exists "Are your findings and diagnosis consistent with employee's account of injury or onset of illness?" text
+					Verify exists "Is there any other current condition that will impede or delay employee's recovery?" text
+			Begin "Quality"
+				Advance the dynamicsection
+		Begin "Plan"
+			Begin "Open Order Requests"
+				Advance the dynamicsection
+			Begin "Plan narrative"
+				Advance the dynamicsection
+			Begin "Medication orders"
+				Wait for ajax
+				Click the "Refill" button
+				Wait for ajax
+				Begin "Refill All Meds"
+# Come back and add testing for the alerts
+					Verify exists "Refill All" popup button
+					Click the "Refill All" popup button
+					Wait for ajax
+					Verify exists "Refill All Meds" popup
+					Begin "Fill out amoxicillin refill"
+						Type "30d" in the 3rd "amoxicillin" popup input
+						Type "30" in the 4th "amoxicillin" popup input
+						Type "0" in the 6th "amoxicillin" popup input
+						Click @"Selenium, Selenium" from the amoxicillin dropdown@xpath='//div[@class="wc_win"]//td[contains(.,"amoxicillin")]//following-sibling::td[@class="value"]//select[1]/option[contains(.,"Selenium, Selenium")]'
+					Begin "Fill out levothyroxine refill"
+						Type "30d" in the 3rd "levothyroxine" popup input
+						Type "30" in the 4th "levothyroxine" popup input
+						Type "0" in the 6th "levothyroxine" popup input
+						Click @"Selenium, Selenium" from the levothyroxine dropdown@xpath='//div[@class="wc_win"]//td[contains(.,"levothyroxine")]//following-sibling::td[@class="value"]//select[1]/option[contains(.,"Selenium, Selenium")]'
+					Begin "Fill out lorazepam refill"
+						Type "30d" in the 3rd "lorazepam" popup input
+						Type "30" in the 4th "lorazepam" popup input
+						Type "0" in the 6th "lorazepam" popup input
+						Click @"Selenium, Selenium" from the lorazepam dropdown@xpath='//div[@class="wc_win"]//td[contains(.,"lorazepam")]//following-sibling::td[@class="value"]//select[1]/option[contains(.,"Selenium, Selenium")]'
+					Begin "Fill out Ortho Tri-Cyclen refill"
+						Type "30d" in the 3rd "Ortho Tri-Cyclen" popup input
+						Type "30" in the 4th "Ortho Tri-Cyclen" popup input
+						Type "1" in the 6th "Ortho Tri-Cyclen" popup input
+						Click the @"Selenium, Selenium" from the Ortho Tri-Cyclen dropdown@xpath='//div[@class="wc_win"]//td[contains(.,"Ortho Tri-Cyclen")]//following-sibling::td[@class="value"]//select/option[contains(.,"Selenium, Selenium")]'
+						Type "Please put pills in an easy to open container for patient." in the "Ortho Tri-Cyclen" freetext field
+					Click the "Save" popup button 
+					Begin "Verify Meds were Refilled"
+						Verify exists "Refill amoxicillin" text
+						Verify exists "Refill levothyroxine" text
+						Verify exists "Refill Ortho Tri-Cyclen" text
+				Enter "Topamax" in the "medordersle_orderac_txt" autocomplete
+				Begin "Verify we get the drug warning miewin"
+					Verify exists "Warning for Topamax" popup
+					Close the "Warning for Topamax" popup
+				Enter "capsule, sprinkle 25mg" in the "medordersle_formac_txt" autocomplete
+				Begin "Dosage Calculation Alert"
+					Type "500mg inv q12" in the "medordersle_sigac_txt" autocomplete
+					#Verify exists "Dose Calculation Alert" popup
+					#Verify exists "Warning - dose calculations for this medication could not be determined automatically" text
+					@wait for growl@driver.wcutils.waitForToggle(lambda d: d.getElement(xpath='//div[contains(@class, "growl")]'), expected=False)
+					@Blank the Sig autocomplete@driver.enterFormData(" ", id="medordersle_sigac_txt", clear=True, blur=False)
+					Type "50 cap po qid" in the "medordersle_sigac_txt" autocomplete
+					Verify exists "Maximum individual dose for this patient is 500 MG." text
+					Verify exists "Prescribed dose of 1250mg exceeds the accepted maximum individual dose for the drug" text
+					Verify exists "Please evaluate dose." text
+					@wait for growl@driver.wcutils.waitForToggle(lambda d: d.getElement(xpath='//div[contains(@class, "growl")]'), expected=False)
+				@Blank the Sig autocomplete@driver.enterFormData("",id="medordersle_sigac_txt", clear=True, blur=False)
+				Type "1 cap po tid" in the "medordersle_sigac_txt" autocomplete
+				Verify "value=capsule, sprinkle 25mg" @id=medordersle_formac_txt
+				Verify "value=1 capsule by mouth 3 times a day" @id=le_medordersle_r_sig_patient_valueinp
+				Type "5" in the "le_medordersle_rf_duration_value" input
+				@@@Blur the "le_medordersle_rf_duration_value" input
+				durele = driver.getElement(xpath='//input[contains(., "le_medordersle_rf_duration_value")]|@id|@name')
+				driver.blur(durele)
+				@@@
+				Verify "value=5d" @id=le_medordersle_rf_duration_value
+				Verify "value=15" @id=le_medordersle_rf_total_quantity_value
+				Select "Capsule" from the 1st dropdown
+				Begin "Dosage Calculation Alert"
+					Type "0" in the "le_medordersle_rf_refills_value" input
+					#Verify exists "Dose Calculation Alert" popup
+					#Verify exists "Duration range for this patient is 7 - 0 days" text
+					Verify exists "Please evaluate duration of therapy." text
+					@wait for growl@driver.wcutils.waitForToggle(lambda d: d.getElement(xpath='//div[contains(@class, "growl")]'), expected=False)
+				Type "1" in the "le_medordersle_rf_refills_value" input
+				Type "Acute bronchitis" in the "medordersle_indac_txt" autocomplete
+				Select "Selenium, Selenium" from the "le_medordersle_rf_doctor_id_value" dropdown
+				Click the "Add" button
+				Verify exists "Start Topamax" text
+				Advance the dynamicsection
+				Begin "Verify Medication Orders Added"
+					Verify exists "Refill Ortho Tri-Cyclen" text
+					Verify exists "Refill amoxicillin" text
+					Verify exists "Start Topamax" text
+				Begin "Continue a med order"
+					Toggle the "Medication orders" quicklist
+					@Mouse over a continueable drug@driver.mouseOver(xpath="//h3[contains(text(),'Medication orders')]/parent::div//div[contains(@data-name,'MedOrdersQuickList')]//li[@data-keyname='med_prescribe.refill_id']")
+					Click the @xpath="//h3[contains(text(),'Medication orders')]/parent::div//div[contains(@data-name,'MedOrdersQuickList')]//li[@data-keyname='med_prescribe.refill_id']//button[@title='Continue']"
+					Click the 2nd "Save" popup button
+				Begin "Prescribe aspirin"
+					Add "Medication orders:Quick List" "Other" dynamicitem
+					Enter "aspirin" in the "Medication" autocomplete
+					Enter "tablet 325" in the Form autocomplete
+					Type "1 tab daily" in the "Practitioner Sig" autocomplete
+					Type "30d" in the "Duration" popup input
+					Type "0" in the "Refills" popup input
+					Select "Sample, John M." from the "Prescriber" popup dropdown
+#					Click @the "None" "Transmission" radio button@xpath='//div[@class="wc_win"]//*[contains(., "Transmission")]//input[@type="radio" and @value="none"]'
+					Click the 2nd "Save" popup button
+				Begin "Edit the aspirin order"
+					Edit "Medication orders" "aspirin" dynamicitem
+					Type "2 tab qd" in the "Practitioner Sig" autocomplete
+					Type "1" in the "Refills" popup input
+					Click the "Save" popup button
+					Verify exists "Change to aspirin" text
+					Verify exists "2 tablets every day" text
+			Begin "Visit orders"
+				Click the "Edit" button
+				Type "Patient had the test completed at St. Joe Hospital" in the listedit textfield
+				Type "08-08-1980" in the date
+				Select "Completed" from the dropdown
+				Click the "OK" button
+				Enter "24 Hour Chloride Urine" in the "hsordersle_orderac_txt" autocomplete
+				Type "Patient should fast 12 hours before test" in the listedit textfield
+				Type "08-08-1980" in the 1st date
+				Click the "Add" button
+				Click the "Panels" link
+				Begin "Order Pick Lists"
+					Click the "Driver Fitness Determination (DOT)" picklist link
+					Begin "Suggestions for Panel"
+						Click the 2nd "!Check All" popup button
+						Click the "Ok" popup button
+						Verify exists "Audiogram" text
+						Verify exists "DMV DOT Physical" text
+						Verify exists "Monocular Test" text
+						Verify exists "Urinalysis" text
+						Verify exists "Vision Acuity" text
+						Verify exists "Vision Ishihara" text
+# 8-10-21 Look into why Audiogram and DMV DOT Physical are no longer listed
+#				Click the "Audiogram" listedit minusbutton
+#				Click the "DMV DOT Physical" listedit editbutton
+#				Type "Test Edit Button" in the listedit textfield
+#				Select "Ordered" from the dropdown
+#				Click the "OK" button
+#				Verify exists "DMV DOT Physical () (Routine) ( Test Edit Button Ordered)" text
+				Click the "Pick Lists" link
+				Begin "Order Pick Lists"
+					Verify exists "Picklists" text
+					Verify exists "In House Testing" picklist link
+					Verify exists "Panels" text
+					Verify exists "Driver Fitness Determination" picklist link
+					Click the "Health Promotion" picklist link
+					Begin "Health Promotion"
+						Click the "Dietary Consult" picklist checkbox
+						Click the "Ok" button
+				Advance the dynamicsection
+			Begin "Restrictions"
+				Close the "Restrictions" dynamicsection
+				Toggle the "Restrictions" quicklist
+				Add "Restrictions" "Other" dynamicitem
+				Verify exists "Restriction Type" autocomplete
+				Enter "Climbing" in the "Restriction Type" autocomplete
+				Type "No Climbing more than 5 steps per hour" in the type_option dropdown
+				Enter "02-05-2099" in the "end_date" date
+				Verify "checked=true" @Affect WC is checked@xpath=//input[@id="affect_work"]
+				Verify "checked=true" @Occupational WC is checked@xpath=//input[@id="occ_wc"]
+				Click the 2nd "Save" popup button
+				Wait for ajax
+				Verify exists "OCC WC, No Climbing more than 5 steps per hour" text
+				Open the "Accommodations" dynamicsection
+			Begin "Accommodations"
+				# Empty/unused (at the moment) Accommodations - add content
+				Advance the dynamicsection
+			Begin "Restrictions Not Accommodated"
+				# Empty/unused (at the moment) Restrictions - add content
+				Advance the dynamicsection
+			Begin "CC"
+#				Enter "Selenium, Selenium ( Fort Wayne, IN United States 46804)" in the "le_EncounterUsers__name__display" autocomplete
+#				Select "Referring Physician" from the dropdown
+#				Click the "Add" button
+#				Enter "Sample, John M. ( Fort Wayne, IN United States 46804 - 6302 Constitution Drive  )" in the "le_EncounterUsers__name__display" autocomplete
+#				Select "Referring Physician" from the dropdown
+#				Click the "Add" button
+#				Verify exists "Add New Physician" link
+#				Verify exists "Sample, John M. ( Fort Wayne, IN United States 46804 - 6302 Constitution Drive ) Referring Physician No" text
+				Advance the dynamicsection
+#				Verify exists "cc: John M. Sample, M.D." text
+			Begin "Future case appointments"
+				# Empty/unused (at the moment) Restrictions - add content
+				Advance the dynamicsection
+			Begin "CCDA / Clinical Education
+				Advance the dynamicsection
+			Begin "Clinical education"
+				# Empty/unused (at the moment) Clinical education - add content
+				Advance the dynamicsection
+			Begin "Depart instructions"
+				Type "Ice ankle twice a day for 4 days and limit activity." in the "Depart Summary" freetext field
+				Advance the dynamicsection
+				Verify exists "Ice ankle twice a day" text
+			Begin "Recommendations"
+				# Empty/unused (at the moment) Recommendations - add content
+				Advance the dynamicsection
+			Begin "Tracking Notes"
+				# Empty/unused (at the moment) Tracking Notes - add content
+				Advance the dynamicsection
+			Begin "Goals"
+				Close the "Goals" dynamicsection
+				Toggle the "Goals" quicklist
+				Add "Goals" "Other" dynamicitem
+				Verify exists "Add Goal" popup
+				Enter "BMI" in the "Goal" autocomplete
+				Enter "06-06-2010" in the date
+				Type "22" in the "target" input
+				Click the 2nd "Save" popup button
+				Verify exists "BMI:" text
+				Verify exists "recently:" text
+			Begin "Financials"
+				Toggle the "Financials" quicklist
+				Add "Financials:Quick List" "Charge" quicklist item
+				Begin "Immunizations"
+					Enter "Influenza Injection" in the "Item" autocomplete
+					Click the 2nd "Save" popup button
+					Verify !exists popup
+					Verify exists "Influenza" dynamicitem
+				Begin "Library Charge"
+					Add "Financials:Quick List" "Charge" quicklist item
+					Enter "Xray Chest PA and Lateral" in the "Item" autocomplete
+					Click the "Save to Library" button
+					Close popup
+					Open the "Financials" dynamicsection
+					Close the "Financials" dynamicsection
+					Toggle the "Financials" quicklist
+					Add "Financials" "Xray Chest PA and Lateral" quicklist item
+					Verify exists "Xray Chest PA and Lateral" dynamicitem
+				Begin "Create a Snomed Encounter_billing record"
+					Add "Financials:Quick List" "Charge" quicklist item
+					Enter "Discharge to healthcare facility for hospice care" in the "Item" autocomplete
+					Click the 2nd "Save" popup button
+					Verify !exists popup
+					Verify exists "Discharge to healthcare facility for hospice care" dynamicitem
+		Begin "Summary"
+			Begin "Final medications"
+				Open the "Final medications" dynamicsection
+				# Empty/unused (at the moment) Final medications - add content
+				Advance the dynamicsection
+			Begin "Final allergies"
+				# Empty/unused (at the moment) Final allergies - add content
+				Advance the dynamicsection
+			Begin "Final medical history"
+				# Empty/unused (at the moment) Final medical history - add content
+				Advance the dynamicsection
+			Begin "Final restrictions & accommodations"
+				# Empty/unused (at the moment) Final restrictions & accommodations - add content
+				Close the "Final restrictions & accommodations" dynamicsection
+	Begin "Closing out the patient's encounter"
+		Click the "Archive & Close" button
+		Begin "Verify the 'Provider is recommended before archiving and closing the encounter' alert"
+			Verify exists "Provider is recommended before archiving and closing the encounter" text
+			Click the "No" popup button
+		Wait for ajax
+		Begin "Add Provider"
+			Open the "Encounter" dynamicsection
+			Enter "Selenium, Selen" in the provider_chart_ac_input autocomplete
+			Click the dynamicsection nextbutton
+			Unmask dynamicsection
+		Wait for ajax
+		@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+		@Confirm that Selenium was added as the Provider@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(., "Provider:")]/span[contains(., "Selenium")]'), expected_return=True, timeout=15)
+		Verify exists "Archive & Close" button
+		Click the "Archive & Close" button
+		@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//*[contains(., 'Encounter has been closed and Archived successfully')]"), expected_return=True, timeout=15)
+		Verify exists "Encounter has been closed and Archived successfully" text
+		Verify exists "Additional Views" table
+		@@@Verify that the Ishihara order only created 1 document
+		driver.wcutils.waitForAJAX(30)
+		res = driver.miedb.dbQuery("SELECT COUNT(*) AS c FROM documents WHERE pat_id=40 AND doc_type='ISHIHARA' AND DATE(service_date) = '2007-02-02'")
+		if res:
+			res = res.getRes()
+			driver.reportCommandStatus('Verify that exactly one Ishihara document got made',
+				'Doc Count: {0}'.format(res[0]['c']), res[0]['c'] == 1, '', '')
+		@@@
+		Verify exists "Encounter Options" table
+		Click the "Exam Room 1" link
+		Begin "Enter New Station Details"
+			Verify exists "Enter New Station Details" popup
+			Select "Checkout" from the "New Station" popup dropdown
+			Type "Checking out Christine Harris" in the "Comment" freetext field
+			Click the "Save" button

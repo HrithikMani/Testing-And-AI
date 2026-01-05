@@ -1,0 +1,51 @@
+Begin "Grant permissions"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Open "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Yes" from the "Manage Relationship Types" dropdown
+	Type "Grant Manage Relationship Types access" in the "sec_role_comment" input
+	Click the "Update Individual Security" button
+
+Begin "Verifying permission restrictions"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Editors" charttab subtab
+	Click the "Relation Types" charttab
+	Verify exists "Columns" text
+	Verify exists "Add Relation Type" link
+	Click the "Account" grid checkbox
+	Wait for ajax
+	@Scroll the Delete button into view@driver.runJS('arguments[0].scrollIntoView({block: "center"})', driver.getElement(xpath="//button[contains(.,'Delete')]"))
+	Click the "Delete" grid button
+	Verify exists "Attention" popup
+	Verify exists "The selected row(s) cannot be deleted due to dependencies" popup text
+	Click the "OK" popup button
+	
+Begin "Remove permissions"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Open "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "No" from the "Manage Relationship Types" dropdown
+	Type "Remove Manage Relationship Types access" in the "sec_role_comment" input
+	Click the "Update Individual Security" button
+
+Begin "Verifying permission restrictions"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Editors" charttab subtab
+	Click the "Relation Types" charttab
+	Verify !exists "Add Relation Type" link
+	Verify !exists "Account" grid checkbox
+	Verify !exists "Edit" grid button

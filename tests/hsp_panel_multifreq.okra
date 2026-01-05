@@ -1,0 +1,116 @@
+Begin "Show patient's initial age before using time machine"
+	Navigate "?f=chart&s=pat&pat_id=18"
+Begin "Go to 1985 when William was 30yo for ND1 panel"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Wait for page
+	Enter "03-01-1985" in the date
+	Click the "Submit" button
+	Wait for page
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Wait for page
+	Click the "HSPPM_E_ND1_18_check" checkbox
+	Click the "Submit" button
+	Navigate "?f=chart&s=pat&t=Admin%3ADue+List&v=dashboard&pat_id=18"
+	Wait for page
+	Click the "ND1" grid checkbox
+# Ticket 120461 grid buttons
+#  Click the "Edit" grid button
+	Click @the "Edit" grid button@xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Edit")]'
+	Select "Completed" from the Status popup dropdown
+	Enter "03-01-1985" in the 2nd "completed_dt" date
+	Click the "Save" popup button
+	@Wait for the date to be calculated before navigating away@driver.pause(30)
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Verify exists "Next: 02-28-1989" text
+
+Begin "Go to 2000 when William was 45yo for ND1 panel"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Wait for page
+	Enter "03-01-2000" in the date
+	Click the "Submit" button
+	Wait for page
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Click @the "Add Completion Date" grid button@xpath='//*[@id="3551_complete_show"]'
+	Click the "Today" button
+	Click the "Complete Order" popup button
+	@Wait for the date to be calculated before navigating away@driver.pause(30)
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Verify exists "Next: 03-01-2003" text
+
+Begin "Go to 2003 when William was 48yo for ND1 panel"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Wait for page
+	Enter "03-01-2003" in the date
+	Click the "Submit" button
+	Wait for page
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Click @the "Add Completion Date" grid button@xpath='//*[@id="3551_complete_show"]'
+	Click the "Today" button
+	Click the "Complete Order" popup button
+	@Wait for the date to be calculated before navigating away@driver.pause(30)
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Verify exists "Next: 02-28-2005" text
+	Wait for page
+	Click the "HSPPM_I_ND1_18_check" checkbox
+	Click the "Submit" button
+
+Begin "Go back to 1994 when William was 39yo for ND2 panel"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Wait for page
+	Enter "03-01-1994" in the date
+	Click the "Submit" button
+	Wait for page
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Wait for page
+	Click the "HSPPM_E_ND2_18_check" checkbox
+	Click the "Submit" button
+	Navigate "?f=chart&s=pat&t=Admin%3ADue+List&v=dashboard&pat_id=18"
+	Wait for the "DueListOrdersNonPendingDV" grid
+	Wait for page
+	Click the "ND2" grid checkbox
+# Ticket 120461 grid buttons
+#  Click the "Edit" grid button
+	Click @the "Edit" grid button@xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Edit")]'
+	Select "Completed" from the Status popup dropdown
+	Enter "03-01-1994" in the 2nd "completed_dt" date
+	Click the "Save" popup button
+	@Wait for the date to be calculated before navigating away@driver.pause(30)
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Verify exists "Next: 02-29-1996" text
+
+Begin "Go to 2001 when William was 46yo for ND2 panel"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Wait for page
+	Enter "03-01-2001" in the date
+	Click the "Submit" button
+	Wait for page
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Click @the "Add Completion Date" grid button@xpath='//*[@id="3552_complete_show"]'
+	Click the "Today" button
+	Click the "Complete Order" popup button
+	@Wait for the date to be calculated before navigating away@driver.pause(30)
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Verify exists "Next: 03-01-2003" text
+
+Begin "Go to 2003 when William was 48yo for ND2 panel"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Wait for page
+	Enter "03-01-2003" in the date
+	Click the "Submit" button
+	Wait for page
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Click @the "Add Completion Date" grid button@xpath='//*[@id="3552_complete_show"]'
+	Click the "Today" button
+	Click the "Complete Order" popup button
+	@Wait for the date to be calculated before navigating away@driver.pause(30)
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Verify exists "Next: 02-28-2008" text
+	Wait for page
+	Click the "HSPPM_I_ND2_18_check" checkbox
+	Click the "Submit" button
+
+Begin "Return to present time"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Click the @xpath='//button[@title="Clear"]'
+	Click the "Submit" button
+

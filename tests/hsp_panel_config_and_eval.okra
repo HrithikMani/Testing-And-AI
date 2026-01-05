@@ -1,0 +1,311 @@
+Begin HSP Panel Configuration
+	
+	Begin System Setup for Order List Entries
+		@For speed, inactivate other orders@driver.miedb.dbExec("UPDATE order_list SET inactive=1, ext_id='OKRA'")
+		@Add Orders@driver.miedb.dbExec("INSERT INTO order_list (name, provider_guideline) VALUES ('Representative event for the ZAP panel', ''), ('Offensive driving course', 'The employee will be trained in the use of a variety of vehicles as a deadly weapon.'), ('Slow moving target shooting certification', 'Power up 5 Roomba-mounted zombie targets, 20 paces from the employee.  Hand the employee a Remington 870 tactical shotgun and 7 shells.  The certification is earned if all targets go down within 1 minute and the employee avoids physical contact with any targets.'), ('Bug-out bag inspection', 'See that pack includes essential items for first aid, water purification, a fire-making.'), ('Urban foraging training', 'A class that teaches how to find essential items such as food, water and shelter in a post-apocalyptic urban setting.  Also covered are topics in improvised weaponry, pre-digital communication methods, and trapping.'), ('Structural climbing', 'Learn to get to the tops of buildings and other structures for purposes of scavenging and escape.')")
+		@To avoid scrolling, inactivate most other panels@driver.miedb.dbExec("UPDATE panel SET active=0, change_reason='OKRA' WHERE panel_id > 'ANIMALHAND'")
+	
+	Begin Add a Panel
+		Navigate "?f=layout&module=HSP&name=PanelActionList&tabmodule=admin&tabselect=Health+Surveillance"
+		Wait for page
+		Click the "Add Panel" button
+		Type "ZAP" into @name=panel_id
+		Type "Zombie Apocalypse Preparation" into @name=name
+		Type "Essential skills to help employees survive in a world ravaged by the undead creatures that will be the inevitable result of the reckless experimentation currently going on in our research division." into @name=description
+		Enter "Representative event for the ZAP panel" in the "order_event_data_inp" autocomplete
+		Click the "open_membership" checkbox
+		Click the "restricted" checkbox
+		Type "No comment" in the "comments" input
+		Type "Feeling optimistic about the future?" in the "exit_alert" input
+		Click @xpath="//input[@data-trigger_type='O'][@data-membership='1']"
+		Click the "Submit" button
+		Wait for the PanelList grid
+		Click the @xpath="//button[@title='Refresh']"
+		Wait for the PanelList grid
+		Unfilter grid
+		Wait for the PanelList grid
+		Load grid
+		Verify exists "Zombie Apocalypse Preparation" text
+	
+	Begin Edit a Panel
+		@Mouse over ZAP panel@driver.mouseOver(xpath="//span[text()='Zombie Apocalypse Preparation']")
+		Click @xpath="//span[text()='Zombie Apocalypse Preparation']/following-sibling::span/a[@title='Edit panel']"
+		Click @xpath="//li[contains(@class, 'reg-add')]/span[contains(@class,'fa-plus')]"
+		Type "Company" into @id="reg_source"
+		Type "RM-1.0" into @name=reg_reference
+		Type "Approved" into @id=reg_status
+		Click @xpath="//input[@id='reg_status']/ancestor::table//input[@value='Submit']"
+		Type "Membership in this panel requires signing an NDA regarding research division activities." into the "comments" input
+		Click the "Submit" button
+		Wait for the PanelList grid
+		Load grid
+		Wait for the PanelList grid
+		@Mouse over ZAP panel@driver.mouseOver(xpath="//span[text()='Zombie Apocalypse Preparation']")
+		Click @View panel@xpath="//span[text()='Zombie Apocalypse Preparation']/following-sibling::span/a[@title='View panel']"
+		Verify exists "RM-1.0" text
+		Verify exists "signing an NDA" text
+		Click the "Edit" popup button
+		@Wait 4 seconds@driver.pause(4)
+		Click the "Cancel" popup button
+	
+	Begin Add Actions
+		@Mouse over ZAP panel@driver.mouseOver(xpath="//span[text()='Zombie Apocalypse Preparation']")
+		Click @Add panel action button@xpath="//span[text()='Zombie Apocalypse Preparation']/following-sibling::span/a[@title='Add panel action']"
+		Enter "Representative event for the ZAP panel" in the "order_event_data_inp" autocomplete
+		Click the @Routine radio button@id="tt-r"
+		Type "1" into @name="min_freq_value"
+		Type "7" into @name="lead_time"
+		Type "30" into @name="valid_value"
+		Type "45" into @name="grace_value"
+		Click the "trigger_others" checkbox
+		Click the "Submit" button
+		Wait for the PanelList grid
+		Load grid
+		Wait for the PanelList grid
+		Expand the "Zombie Apocalypse Preparation" grid
+		Verify exists "Representative event" text
+	
+		@Mouse over ZAP panel@driver.mouseOver(xpath="//span[text()='Zombie Apocalypse Preparation']")
+		Click @Add panel action button@xpath="//span[text()='Zombie Apocalypse Preparation']/following-sibling::span/a[@title='Add panel action']"
+		Enter "Bug-out bag inspection" in the "order_event_data_inp" autocomplete
+		Click the @With Other radio button@id="tt-r-tact"
+		Click @Representative action trigger@xpath="//ul[contains(@class, 'related-actions')]/li"
+		Click the "Submit" button
+		Wait for the PanelList grid
+		Load grid
+		Wait for the PanelList grid
+		Expand the "Zombie Apocalypse Preparation" grid
+		Verify exists "Bug-out bag" text
+	
+		@Mouse over ZAP panel@driver.mouseOver(xpath="//span[text()='Zombie Apocalypse Preparation']")
+		Click @Add panel action button@xpath="//span[text()='Zombie Apocalypse Preparation']/following-sibling::span/a[@title='Add panel action']"
+		Enter "Urban foraging training" in the "order_event_data_inp" autocomplete
+		Click the @With Other radio button@id="tt-r-tact"
+		Click @Representative action trigger@xpath="//ul[contains(@class, 'related-actions')]/li"
+		Click the "Submit" button
+		Wait for the PanelList grid
+		Load grid
+		Wait for the PanelList grid
+		Expand the "Zombie Apocalypse Preparation" grid
+		Verify exists "Urban foraging training" text
+	
+		@Mouse over ZAP panel@driver.mouseOver(xpath="//span[text()='Zombie Apocalypse Preparation']")
+		Click @Add panel action button@xpath="//span[text()='Zombie Apocalypse Preparation']/following-sibling::span/a[@title='Add panel action']"
+		Enter "Slow moving target shooting certification" in the "order_event_data_inp" autocomplete
+		Click the @With Other radio button@id="tt-r-tact"
+		Click @Representative action trigger@xpath="//ul[contains(@class, 'related-actions')]/li"
+		Click the "Submit" button
+		Wait for the PanelList grid
+		Load grid
+		Wait for the PanelList grid
+		Expand the "Zombie Apocalypse Preparation" grid
+		Verify exists "Slow moving target shooting certification" text
+	
+		@Mouse over ZAP panel@driver.mouseOver(xpath="//span[text()='Zombie Apocalypse Preparation']")
+		Click @Add panel action button@xpath="//span[text()='Zombie Apocalypse Preparation']/following-sibling::span/a[@title='Add panel action']"
+		Enter "Structural climbing" in the "order_event_data_inp" autocomplete
+		Click the @On-Demand radio button@id="tt-o"
+		Type "7" into @name="lead_time"
+		Type "30" into @name="valid_value"
+		Type "45" into @name="grace_value"
+		Type "On-Demand action, order manually when the climbing instructor is on-site." into @name="instructions"
+		Click the "Submit" button
+		Wait for the PanelList grid
+		Load grid
+		Wait for the PanelList grid
+		Expand the "Zombie Apocalypse Preparation" grid
+		Verify exists "Structural climbing" text
+	
+	Begin Edit Panel Action
+		Expand the "Bug-out bag inspection" grid
+		@driver.mouseOver(xpath="//span[text()='Bug-out bag inspection']/ancestor::tr/following-sibling::tr")
+		Click @Edit panel action button@xpath="//span[text()='Bug-out bag inspection']/ancestor::tr/following-sibling::tr//a[@title='Edit panel action']"
+		Type "120" into @name="valid_value"
+		Click the "valid_panel_only" checkbox
+		Click the "Submit" button
+		Wait for the PanelList grid
+		Load grid
+		Wait for the PanelList grid
+		@Mouse over ZAP panel@driver.mouseOver(xpath="//span[text()='Zombie Apocalypse Preparation']")
+		Expand the "Zombie Apocalypse Preparation" grid
+		Expand the "Bug-out bag inspection" grid
+		@driver.mouseOver(xpath="//span[text()='Bug-out bag inspection']/ancestor::tr/following-sibling::tr")
+		Click @View panel action button@xpath="//span[text()='Bug-out bag inspection']/ancestor::tr/following-sibling::tr//a[@title='View panel action']"
+		Verify exists "120d" text
+		Click @Close button@xpath=//form[contains(@class, 'panact-ow')]//input[@value='Close']
+	
+	Begin Copy Panel Action
+		@driver.mouseOver(xpath="//span[text()='Bug-out bag inspection']/ancestor::tr/following-sibling::tr")
+		Click @Copy panel action button@xpath="//span[text()='Bug-out bag inspection']/ancestor::tr/following-sibling::tr//a[@title='Copy panel action']"
+		Enter "Offensive driving course" in the "order_event_data_inp" autocomplete
+		Click @Representative action trigger@xpath="//ul[contains(@class, 'related-actions')]/li"
+		Click the "Submit" button
+		Wait for the PanelList grid
+		Load grid
+		Wait for the PanelList grid
+		Expand the "Zombie Apocalypse Preparation" grid
+		Verify exists "Offensive driving course" text
+	
+	Begin Inactivate Panel Action
+		Expand the "Offensive driving course" grid
+		@driver.mouseOver(xpath="//span[text()='Offensive driving course']/ancestor::tr/following-sibling::tr")
+		Click @Inactivate panel action button@xpath="//span[text()='Offensive driving course']/ancestor::tr/following-sibling::tr//a[@title='Inactivate action']"
+		Click the "Yes" button
+		Wait for the PanelList grid
+		Load grid
+		Wait for PanelList grid
+		Expand the "Zombie Apocalypse Preparation" grid
+		Expand the "Offensive driving course" grid
+		Verify exists @"Offensive driving course" INACTIVE text@xpath="//th[contains(.,'Offensive driving course')]/parent::tr/following-sibling::tr[1][contains(.,'INACTIVE')]"
+	
+	Begin Inactivate Panel
+		@Mouse over ZAP panel@driver.mouseOver(xpath="//span[text()='Zombie Apocalypse Preparation']")
+		Click @Inactivate panel button@xpath="//span[text()='Zombie Apocalypse Preparation']/following-sibling::span/a[@title='Inactivate panel']"
+		Click the "Yes" button
+		Wait for PanelList grid
+		Wait for the PanelList grid
+		Load grid
+		Wait for PanelList grid
+		Verify exists @"Zombie Apocalypse Preparation" INACTIVE text@xpath="//th[contains(.,'Zombie Apocalypse Preparation - INACTIVE')]"
+	
+Begin HSP Panel Evaluation
+
+	Begin Bring Back Panels and Orders
+		@Reactivate orders@driver.miedb.dbExec("UPDATE order_list SET inactive=0, ext_id='' WHERE ext_id='OKRA'")
+		@Reactivate panels@driver.miedb.dbExec("UPDATE panel SET active=1, change_reason='' WHERE change_reason='OKRA'")
+	
+	Begin "Reactivate and unrestrict the ZAP panel"
+		@Set active@driver.miedb.dbExec("UPDATE panel SET active=1, restricted=0 WHERE panel_id='ZAP'")
+	
+	Begin "Go to William Hart's Chart"
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Click the "TEST-10019" link
+	
+	Begin "Add ZAP panel membership"
+		Open "Health Surveillance" charttab
+		Click the "Panel Membership Overview" charttab subtab
+		Click the @ZAP panel checkbox@id='HSPPM_E_ZAP_18_check'
+		Click the Submit button
+	
+	Begin "Check for correct due date"
+		@Wait for the date to be calculated before navigating away@driver.pause(5)
+		Verify exists "Next: 03-26-2023" text
+	
+	Begin "Trigger On-Demand action"
+		Open "Health Surveillance" charttab
+		Click the "Due List" charttab subtab
+		Verify notexists "Structural climbing" text
+		Wait for the EncounterOrdersGridDV grid
+		Click the "Add New Orders" button
+		Enter "Zombie Apocalypse Preparation On-Demand with Membership" in the "ordersle_orderac_txt" autocomplete
+		Click the "Submit" button
+		Verify exists "Zombie Apocalypse Preparation On-Demand with Membership" grid checkbox
+		Click the "Zombie Apocalypse Preparation On-Demand with Membership" grid checkbox
+# Ticket 121545 - structural climbing
+		@Pause@driver.pause(15)
+		@Check that the checkbox is checked@driver.wcutils.waitForEle(xpath='//td[contains(., "Zombie Apocalypse Preparation On-Demand with Membership")]/preceding-sibling::td[contains(@class, "wcdv_selected_row")]/input[@type="checkbox"]')
+# Ticket 120461 grid buttons
+#		Click the "Evaluate" grid button
+# Ticket 121545 - structural climbing
+		@Pause@driver.pause(15)
+		@Check that the Evaluate button is present and available to click@driver.wcutils.waitForEle(xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Evaluate")]')
+		Verify exists @the "Evaluate" grid button@xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Evaluate")]'
+		Click @the "Evaluate" grid button@xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Evaluate")]'
+# Ticket 121545 - structural climbing
+		@Pause@driver.pause(15)
+		@Check that the popup is present@driver.wcutils.waitForEle(xpath='//div[contains(@class, "wc_win")]//div[contains(@class, "wc_win_title") and contains(., "Panel Status")]')
+# Ticket 121545 - structural climbing
+		@Pause@driver.pause(15)
+		@Check that the popup OK button is present@driver.wcutils.waitForEle(xpath='//div[contains(@class, "wc_win")]//div[contains(@class, "wc_win_title") and contains(., "Panel Status")]/ancestor::div[contains(@class, "wc_win")]//div//input[contains(@type, "button") and contains(@value, "OK")]')
+		Click the "OK" popup button
+# Ticket 121545 - structural climbing
+		@Pause@driver.pause(15)
+		@Check that Structural Climbing shows in the DV table@driver.wcutils.waitForEle(xpath='//div[@class="wcdv_grid"]//td[contains(., "Structural climbing")]')
+		Verify exists "Structural climbing" text
+	
+	Begin "Deactivate the ZAP panel"
+		@Set inactive@driver.miedb.dbExec("UPDATE panel SET active=0 WHERE panel_id='ZAP'")
+	
+	Begin "Time Travel to Late Winter"
+		Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+		Enter "03-16-2033" in the date
+		Click the "Submit" button
+	
+	Begin "Add WARM and COLD Panel Memberships for William Hart"
+		Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+		Select "Cold Weather" from the "pm_extra_panel" dropdown
+		Click the "Submit" button
+		Select "Warm Weather" from the "pm_extra_panel" dropdown
+		Click the "Submit" button
+		Click the "HSPPM_E_COLD_18_check" checkbox
+		Click the "HSPPM_E_WARM_18_check" checkbox
+		Click the "Submit" button
+		@Wait for the date to be calculated before navigating away@driver.pause(5)
+		Verify exists "Next: 03-16-2033" text
+		Verify exists "Next: 05-16-2033" text
+	
+	Begin "Make sure WARM panel doesn't trigger too soon"
+		Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+		Enter "03-24-2033" in the date
+		Click the "Submit" button
+		Navigate "?f=panelactiontest&tabmodule=admin&tabselect=HSP"
+		Enter "Hart, William" in the "pat_id" autocomplete
+		Click the "Evaluate" button
+		Verify !exists "due: 08-15-2033" text
+	
+	Begin "Make sure WARM panel triggers mid-season"
+		Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+		Enter "07-01-2033" in the date
+		Click the "Submit" button
+		Enter "Hart, William" in the "pat_id" autocomplete
+		Click the "Evaluate" button
+		@Wait for the date to be calculated before navigating away@driver.pause(5)
+		Verify exists "due: 08-15-2033" text
+	
+	Begin "Complete WARM Panel, then exit"
+		Navigate "?f=chart&s=pat&t=Admin%3ADue+List&v=dashboard&pat_id=18"
+		Click the "Sunshine Exposure" grid checkbox
+# Ticket 120461 grid buttons
+#		Click the "Edit" grid button
+		Click @the "Edit" grid button@xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Edit")]'
+		Select "Completed" from the "Status" popup dropdown
+		Enter "07-01-2033" in the 2nd "completed_dt" date
+		Click the "Save" popup button
+	
+	Begin "Exit WARM panel and re-enter later in the season"
+		Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+		Click the @id="HSPPM_I_WARM_18_check"
+		Click the "Submit" button
+		Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+		Enter "10-21-2033" in the date
+		Click the "Submit" button
+		Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+		Click the "HSPPM_E_WARM_18_check" checkbox
+		Click the "Submit" button
+		@Wait for the date to be calculated before navigating away@driver.pause(5)
+		Verify exists "Next: 05-16-2034" text
+	
+	Begin "Time Travel to Original Date"
+		Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+		Click the @id="travel_dateCLEAR"
+		Click the "Submit" button
+	
+	Begin "Complete Noise Panel"
+		Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+		Select "OSHA Noise" from the "pm_extra_panel" dropdown
+		Click the Submit button
+		Click the "HSPPM_E_OSHANOISE_18_check" checkbox
+		Click the Submit button
+		Navigate "?f=chart&s=pat&t=Admin%3ADue+List&v=dashboard&pat_id=18"
+		Wait for the EncounterOrdersGridDV grid
+		Click the @xpath="(//input[@name='checkAll'])[2]"
+# Ticket 120461 grid buttons
+#		Click the "Edit" grid button
+		Click @the "Edit" grid button@xpath='//div[@class="wcdv_grid"]//div[not(contains(@id, "tt"))]//button[@type="button" and not(@disabled)]/span[contains(., "Edit")]'
+		Select "Completed" from the Status popup dropdown
+		Enter "02-02-2023" in the 2nd "completed_dt" date
+		Click the "Save" popup button
+		@Wait for the date to be calculated before navigating away@driver.pause(60)
+		Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+		Verify exists "Next: 02-02-2024" text

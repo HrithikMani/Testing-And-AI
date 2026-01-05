@@ -1,0 +1,24 @@
+Open the sidemenu
+Click the "E-Chart" link
+Type "Haynes" in the "sstring" input
+Click the "Search" button
+
+Begin Add Document
+	Click the "Add Document" Link
+	Click the 2nd "Text" link
+	Click the "Show" Link
+	Click the 3nd "Text" Link
+	Type "Test subject of the 1st revision" in the "Subject:" field
+	Type "Test notes of the 1st revision" in the @Text Area@xpath=//textarea[@id="file"]
+	Click the "Add Document" button
+
+Begin Edit Document
+	Click the 1st "Edit" link
+	Type "Test subject of the 2nd revision" in the "Subject:" field
+	Type "Test notes of the 2nd revision" in the @Text Area@xpath=//textarea[@id="file"]
+	Click the "Edit Document" button
+
+Begin Check for previous revision subject
+	Click the "Properties" link
+	Click the 4th "0" listview item
+	Verify exists "Test subject of the 1st revision" text

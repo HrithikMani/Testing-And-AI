@@ -1,0 +1,18 @@
+Click the "TEST-10019" link
+	Open "Health Surveillance" charttab
+	Click the "Due List" charttab subtab
+	Wait for the "EncounterOrdersGridDV" grid
+	Click the "Add New Orders" button
+	Verify exists 'ordersle_orderac_txt' autocomplete
+	Enter "Travel Questionnaire" in the 'ordersle_orderac_txt' autocomplete
+	Click "Submit" button
+	Wait for the "EncounterOrdersGridDV" grid
+	Open the quicklink list
+	Click the "Email" quicklink
+	Verify exists "Email Patient" popup
+	Select "Pat Portal Message Notification" from the layout_name popup dropdown
+	Click the Preview button
+	@Wait@driver.pause(5)
+	Verify exists "Click here to visit the employee Portal to complete these activities." link
+	Verify exists "The following questionnaire(s) are due:" text
+	Verify exists "Travel Questionnaire" text

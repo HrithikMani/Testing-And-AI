@@ -1,0 +1,39 @@
+Begin "Test Permissions"
+	Navigate "?f=layout&module=SystemEditors&rep_name=Admin+Code"
+	Verify !exists @Add Admin Code link@xpath="//span[contains(@class, 'link') and contains(., 'Add Admin Code')]"
+	Verify !exists Edit grid button
+	Verify !exists Delete grid button
+Begin "Setup Permissions"
+	Navigate "?m=admin&t=security&opp=esecuser&user_id=8"
+	Select "Yes" from the "Control_Manage Admin Codes" dropdown
+	Type "Add Manage Admin Codes permissions" in "sec_role_comment" input
+	Click "Update Individual Security" button
+Begin "Test Add Admin Code"
+	Navigate "?f=layout&module=SystemEditors&rep_name=Admin+Code"
+	Verify exists @Add Admin Code link@xpath="//span[contains(@class, 'link') and contains(., 'Add Admin Code')]"
+	Click @Add Admin Code link@xpath="//span[contains(@class, 'link') and contains(., 'Add Admin Code')]"
+	Select "class" from "Module" popup dropdown
+	Type "CEO" in Code input
+	Type "Chief Executive Officer" in Description input
+	Click "Save" button 
+	Verify exists "CEO" grid entry
+Begin Test Edit Admin Code
+	Click "CEO" grid checkbox
+	Verify exists Edit grid button
+	Click Edit grid button
+	Type "CEX" in Code input
+	Type "Chief Executive" in Description input
+	Click "Save" button
+	Verify !exists "CEO" grid entry
+	Verify exists "CEX" grid entry
+Begin Test Delete Admin Code
+	Click "CEX" grid checkbox
+	Verify exists Delete grid button
+	Click Delete grid button
+	Click "Yes" button
+	Verify !exists "CEX" grid entry
+Begin "Reset Permissions"
+	Navigate "?m=admin&t=security&opp=esecuser&user_id=8"
+	Select "No" from the "Control_Manage Admin Codes" dropdown
+	Type "Add Manage Admin Codes permissions" in "sec_role_comment" input
+	Click "Update Individual Security" button

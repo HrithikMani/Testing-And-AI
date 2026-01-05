@@ -1,0 +1,43 @@
+"""
+ Test for checking if supervisors show up correctly in the recent charts section
+ @owners: nchoudhry
+ @filedeps: src/chart.c
+"""
+Begin "Go to Hart, William Profile so he shows up in recent charts'"
+	Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+	Click the @"MR# or EMP#" radio button@xpath='//input[@value="m"][@type="radio"]'
+	Type "10019" in the "sstring" input
+	Click the "Search" button
+Begin "Verify there are no current supervisors"
+	Navigate "?"
+	Verify !exists "Patel, Ashish" text
+	Verify !exists "Sergio, Acardi (backup)" text
+Begin "Add 'Patel, Ashish' as a supervisor"
+	Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+	Click the @"MR# or EMP#" radio button@xpath='//input[@value="m"][@type="radio"]'
+	Type "10019" in the "sstring" input
+	Click the "Search" button
+	Click the "Demographics" icon manageinformation
+	Open the "Contacts / Relationships" dynamicsection
+	Enter "Patel, Ashish" in the le_UserPatientsuser__name__display autocomplete
+	Select "Supervisor" from the le_UserPatientsuser_up_role_id_value dropdown
+	Click the Add button
+	Close the "Contacts / Relationships" dynamicsection
+Begin "Confirm that 'Patel, Ashish' is shown as a supervisor on recent charts"
+	Navigate "?"
+	Verify exists "Patel, Ashish" text
+Begin "Add 'Patel, Ashish' as a supervisor"
+	Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+	Click the @"MR# or EMP#" radio button@xpath='//input[@value="m"][@type="radio"]'
+	Type "10019" in the "sstring" input
+	Click the "Search" button
+	Click the "Demographics" icon manageinformation
+	Open the "Contacts / Relationships" dynamicsection
+	Enter "Acardi, Sergio" in the le_UserPatientsuser__name__display autocomplete
+	Select "Backup Supervisor" from the le_UserPatientsuser_up_role_id_value dropdown
+	Click the Add button
+	Close the "Contacts / Relationships" dynamicsection
+Begin "Confirm that 'Acardi, Sergio' is shown as a backup supervisor on recent charts"
+	Navigate "?"
+	Verify exists "Patel, Ashish" text
+	Verify exists "Acardi, Sergio (backup)" text

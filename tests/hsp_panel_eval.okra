@@ -1,0 +1,140 @@
+# WHERE DID THE ZAP PANEL GO?
+# Begin "Reactivate and unrestrict the ZAP panel"
+# 	@Set active@driver.miedb.dbExec("UPDATE panel SET active=1, restricted=0 WHERE panel_id='ZAP'")
+# 
+# Begin "Go to William Hart's Chart"
+# 	Open the sidemenu
+# 	Click the "E-Chart" sidemenu entry
+# 	Click the "TEST-10019" link
+# 
+# Begin "Add ZAP panel membership"
+# 	Click the "Health Surveillance" charttab
+# 	Click the "Panel Membership Overview" charttab subtab
+# 	Select "Zombie Apocalypse Preparation" from the "pm_extra_panel" dropdown
+# 	Click the 1st Submit button
+# 	Click the @ZAP panel checkbox@id='HSPPM_E_ZAP_18_check'
+# 	Click the 2nd Submit button
+# 
+# Begin "Check for correct due date"
+# 	@Wait for the date to be calculated before navigating away@driver.pause(5)
+# 	Verify exists "Next: 03-26-2007" text
+# 
+# Begin "Trigger On-Demand action"
+# 	Open "Health Surveillance" charttab
+# 	Click the "Due List" charttab subtab
+# 	Verify notexists "Structural climbing" text
+# 	Wait for the EncounterOrdersGridDV grid
+# 	Click the "Add New Orders" button
+# 	Enter "Zombie Apocalypse Preparation On-Demand with Membership" in the "ordersle_orderac_txt" autocomplete
+# 	Click the "Submit" button
+# 	Click the "Zombie Apocalypse Preparation On-Demand with Membership" grid checkbox
+# 	Click the "Evaluate" grid button
+# 	Click the "OK" popup button
+# 	Verify exists "Structural climbing" text
+# 
+# Begin "Deactivate the ZAP panel"
+# 	@Set inactive@driver.miedb.dbExec("UPDATE panel SET active=0 WHERE panel_id='ZAP'")
+
+@Setup to allow date ranges on entry actions@driver.miedb.dbExec("INSERT INTO system_settings (module, section, item, value) VALUES ('WebChart', 'Health Surveillance', 'Use Date Range for Entry Actions', '1') ON DUPLICATE KEY UPDATE value='1'")
+
+Begin "Time Travel to Late Winter"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Enter "03-16-2017" in the date
+	Click the "Submit" button
+
+Begin "Add WARM and COLD Panel Memberships for William Hart"
+	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+	Select "Cold Weather" from the "pm_extra_panel" dropdown
+	Click the "Submit" button
+	Select "Warm Weather" from the "pm_extra_panel" dropdown
+	Click the "Submit" button
+	Click the "HSPPM_E_COLD_18_check" checkbox
+	Click the "HSPPM_E_WARM_18_check" checkbox
+	Click the "Submit" button
+	@Wait for the date to be calculated before navigating away@driver.pause(5)
+	Verify exists "Next: 01-15-2018" text
+	Verify exists "Next: 05-16-2017" text
+
+Begin "Make sure WARM panel doesn't trigger too soon"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Enter "03-24-2017" in the date
+	Click the "Submit" button
+	Navigate "?f=panelactiontest&tabmodule=admin&tabselect=HSP"
+	Enter "Hart, William" in the "pat_id" autocomplete
+	Click the "Evaluate" button
+	Verify !exists "due: 08-15-2017" text
+
+Begin "Make sure WARM panel triggers mid-season"
+	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+	Enter "07-01-2017" in the date
+	Click the "Submit" button
+	Enter "Hart, William" in the "pat_id" autocomplete
+	Click the "Evaluate" button
+	@Wait for the date to be calculated before navigating away@driver.pause(5)
+	Verify exists "due: 08-15-2017" text
+
+# Ticket 120461 grid buttons - fix needed
+#Begin "Complete WARM Panel, then exit"
+#	Navigate "?f=chart&s=pat&t=Admin%3ADue+List&v=dashboard&pat_id=18"
+#	Click the "Sunshine Exposure" grid checkbox
+#	Click the "Edit" grid button
+#	Select "Completed" from the "Status" popup dropdown
+#	Enter "07-01-2017" in the 2nd "completed_dt" date
+#	Click the "Save" popup button
+#
+#Begin "Exit WARM panel and re-enter later in the season"
+#	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+#	Click the @id="HSPPM_I_WARM_18_check"
+#	Click the "Submit" button
+#	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+#	Enter "10-21-2017" in the date
+#	Click the "Submit" button
+#	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+#	Click the "HSPPM_E_WARM_18_check" checkbox
+#	Click the "Submit" button
+#	@Wait for the date to be calculated before navigating away@driver.pause(5)
+#	Verify exists "Next: 05-16-2018" text
+#
+#Begin "Exit COLD panel and re-enter after the start of next season"
+#	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+#	Click the @id="HSPPM_I_COLD_18_check"
+#	Click the "Submit" button
+#	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+#	Enter "12-01-2018" in the date
+#	Click the "Submit" button
+#	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+#	Click the "HSPPM_E_COLD_18_check" checkbox
+#	Click the "Submit" button
+#	@Wait for the date to be calculated before navigating away@driver.pause(5)
+#	Verify exists "Next: 03-15-2019" text
+#
+#Begin "Jump to near the end of next COLD Season"
+#	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+#	Enter "03-01-2018" in the date
+#	Click the "Submit" button
+#	Enter "Hart, William" in the "pat_id" autocomplete
+#	Click the "Evaluate" button
+#	@Wait for the date to be calculated before navigating away@driver.pause(5)
+#	Verify exists "due: 03-15-2018" text
+#
+#Begin "Time Travel to Original Date"
+#	Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+#	Click the @id="travel_dateCLEAR"
+#	Click the "Submit" button
+#
+#Begin "Complete Noise Panel"
+#	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+#	Select "OSHA Noise" from the "pm_extra_panel" dropdown
+#	Click the Submit button
+#	Click the "HSPPM_E_OSHANOISE_18_check" checkbox
+#	Click the Submit button
+#	Navigate "?f=chart&s=pat&t=Admin%3ADue+List&v=dashboard&pat_id=18"
+#	Wait for the EncounterOrdersGridDV grid
+#	Click the @xpath="(//div[@id='EncounterOrdersGridDV']//input[@name='checkAll'])[1]"
+#	Click the "Edit" grid button
+#	Select "Completed" from the Status popup dropdown
+#	Enter "02-02-2007" in the 2nd "completed_dt" date
+#	Click the "Save" popup button
+#	@Wait for the date to be calculated before navigating away@driver.pause(5)
+#	Navigate "?f=chart&s=pat&t=Admin%3APanel+Membership+Overview&v=dashboard&pat_id=18"
+#	Verify exists "Next: 02-02-2008" text

@@ -1,0 +1,100 @@
+"""
+Pod used to interact with appointment-related elements within MIE scheduler
+
+- Appointment links are hard-coded into the pod in order to allow referencing an appt by pt name or the appt time and reduce the use of oridinals
+
+* aptcell - refers to appointment cells in Multi View & Week View Schedules
+* dictarea - refers to appointment cells in a List View Schedule
+
+Usage examples:
+	Verify exists 3rd "Medicare" appt info
+	Click the "10:00" appt checkin
+	Click the "Hart, William" appt waitingroom
+	Verify exists "10:00" appt examroom
+	
+"""
+
+appt://td[contains(@id,"aptcell")]/div/a{OKRA_TEXT_CLS}
+	|//td[contains(@id,"aptcell")]
+
+info://tr[contains(@id,"dictarea")]/td[3]/font{OKRA_TEXT_CLS}
+	|//td[contains(@id,"aptcell")]/nobr{OKRA_TEXT_CLS}
+	|//td[contains(@id,"aptcell")]/b{OKRA_TEXT_CLS}
+	|//td[contains(@id,"aptcell")]/font{OKRA_TEXT_CLS}
+	|//td[contains(@id,"aptcell")]/span{OKRA_TEXT_CLS}
+
+checkin://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Checkin")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Checkin")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Checkin")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Checkin")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Checkin")]
+	|//td[contains(@id,"aptcell")]/span/a[contains(.,"Checkin")]
+
+checkedout://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Checked Out")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Checked Out")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Checked Out")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Checked Out")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Checked Out")]
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/span/a[contains(.,"Checked Out")]
+
+completingquestionnaire://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Completing Questionnaire")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Completing Questionnaire")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Completing Questionnaire")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Completing Questionnaire")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Completing Questionnaire")]
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/span/a[contains(.,"Completing Questionnaire")]
+
+examroom://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Exam Room")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Exam Room")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Exam Room")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Exam Room")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Exam Room")]
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/span/a[contains(.,"Exam Room")]
+
+waitingroom://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Waiting Room")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Waiting Room")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Waiting Room")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Waiting Room")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Waiting Room")]
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/span/a[contains(.,"Waiting Room")]
+
+adddictation://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Add Dictation")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Add Dictation")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Add Dictation")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Add Dictation")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Add Dictation")]
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/a[contains(.,"Add Dictation")]
+
+adddocument://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Add Document")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Add Document")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Add Document")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Add Document")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Add Document")]
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/a[contains(.,"Add Document")]
+
+addtask://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Add Task")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Add Task")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Add Task")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Add Task")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Add Task")]
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/a[contains(.,"Add Task")]
+
+email://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Email")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Email")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Email")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Email")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Email")]
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/a[contains(.,"Email")]
+
+printchart://a[contains(., "{OKRA_TEXT}")]/ancestor::td[contains(@id, "aptcell")]//div[@class="appointment-row"]//a[contains(.,"Print Chart")]
+	|//tr[contains(@id,"dictarea")]/td/font/nobr/a{OKRA_TEXT_CLS}/following::td[1]/font/span/a[contains(.,"Print Chart")]
+	|//tr[contains(@id,"dictarea")]/td/font/a{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Print Chart")]
+	|//td/a/font{OKRA_TEXT_CLS}/following::td[1][contains(@id,"aptcell")]/span/a[contains(.,"Print Chart")]
+	|//td[contains(@id,"aptcell")]/div{OKRA_TEXT_CLS}/following-sibling::span/a[contains(.,"Print Chart")]
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/a[contains(.,"Print Chart")]
+
+link://td[contains(@id,"aptcell")]/span/a{OKRA_TEXT_CLS}
+	|//td[contains(@id,"aptcell")]{OKRA_TEXT_CLS}/a
+	|//td[contains(@id,"aptcell")]/a{OKRA_TEXT_CLS}
+	|//td[contains(@id,"aptcell")]/a
+

@@ -1,0 +1,54 @@
+"""
+Pod used to interact with elements within MIE tables
+
+- "table name" queries for the given string contained within a span that is a child within a fieldset
+- "table row" queries for the given string contained within any cell in any row of a table's body
+- "table header" queries for the given string contained within a row that is a child of the table header
+- "table footer" queries for the given string contained within a row that is a child of the table footer
+- "table link" queries for the given string within an <a> tag, within any cell, in any row, of the body of the table.
+- "table dropdown" queries for a <select> contained within a table immediately following the given string.
+- "table textarea" queries for a textarea contained  within a table immediately following the given string.
+
+row is kind of misleading because it actually queries for a cell containing the given {OKRA_TEXT_CLS}. For the purposes of the tests I want it to query for the given string contained within any of the cells within a row. May change this later.
+
+Usage examples:
+	Verify exists "Executed Agreement" table row
+	Verify exists "Doc ID" table header
+	Verify exists "Displaying" table footer
+
+	Click the "Hide" table name
+	Click the "Serv Date" table header
+	Click the "Show All" table footer
+	Click the "Agreement" table link
+
+	Select "Sprain/Strain" from the "Nature of injury" table dropdown
+
+	Type "The sprains is quite severe" in the "Nature of injury" table textarea
+"""
+
+name://table[contains(@class,"newui zebra")]//fieldset//span{OKRA_TEXT_CLS}
+	|//table[contains(@class,"newui zebra")]//caption{OKRA_TEXT_CLS}
+	|//table[contains(@class,"dlg_root")]//fieldset//span{OKRA_TEXT_CLS}
+	|//table[contains(@class,"lv_root")]//fieldset//span[not(contains(@style, "display:none")) and not(contains(@style, "display: none"))]
+
+row://table[contains(@class,"newui zebra")]/tbody//tr//td{OKRA_TEXT_CLS}
+	|//table/tbody//tr//td{OKRA_TEXT_CLS}
+
+header://table[contains(@class,"newui zebra")]//thead//tr/th{OKRA_TEXT_CLS}
+	|//table[contains(@class,"newui zebra")]//thead//tr/th/a{OKRA_TEXT_CLS}
+
+footer://table[contains(@class,"newui zebra")]//tfoot//tr/td{OKRA_TEXT_CLS}
+	|//table[contains(@class,"newui zebra")]//tfoot//tr/td/a{OKRA_TEXT_CLS}
+
+link://td[contains(., "{OKRA_TEXT}")]/following-sibling::td/a
+	|//table[contains(@class,"newui zebra")]/tbody//tr//td//a{OKRA_TEXT_CLS}
+	|//table[contains(@class,"dlg_root")]/tbody//tr//td//a{OKRA_TEXT_CLS}
+
+dropdown://div[not(contains(@style, "none")) and not(contains(@style, "hidden"))]{OKRA_TEXT_CLS}/following::table[1]//tr//td//span//select
+	|//div[not(contains(@style, "none")) and not(contains(@style, "hidden"))]{OKRA_TEXT_CLS}/following-sibling::div//table/tbody/tr/td/span/select
+	|//td[not(contains(@style, "none")) and not(contains(@style, "hidden"))]{OKRA_TEXT_CLS}/following-sibling::td//span//select
+
+textarea://div{OKRA_TEXT_CLS}/following::table[1]//tr//td//span//textarea
+   |//table//tr/td{OKRA_TEXT_CLS}/following-sibling::td/textarea
+
+

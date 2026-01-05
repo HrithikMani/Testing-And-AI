@@ -1,0 +1,25 @@
+Begin "Setup Multipage Form"
+	@@@
+	driver.miedb.dbExec("""REPLACE INTO layout (module, name, active, layout_html) VALUES ('E-Chart', 'Flu Decline',
+		1, '<div class="center">
+			<WCSIGNFORM DOC_TYPE="DWC1" HEIGHT="1050" WIDTH="800">
+			</div>')""")
+	@@@
+
+Begin "Navigate to Flu Consent"
+	Click the TEST-10019 link
+	Click the "On Screen Forms" charttab
+	Click the "Flu Consent" charttab subtab
+	Screenshot "Flu Consent"
+	Click the "Upload" button
+	Verify exists "Flu Consent Form" text
+	Screenshot "Final Document"
+	
+Begin "Navigate to Flu Decline"
+	Click the "On Screen Forms" charttab
+	Click the "Flu Decline" charttab subtab
+	Verify exists @First page of form@xpath='//canvas[@id="canvas_sign_DWC1_0"]'
+	Verify exists @Last page of form@xpath='//canvas[@id="canvas_sign_DWC1_3"]'
+	Click the "Upload" button
+	Verify exists "CA Workers' Compensation Claim Form (DWC1)" text
+	Verify exists @Four pages of images@xpath='//div[@class="document"]/a[4]'

@@ -1,0 +1,48 @@
+"""
+ Test for testing GET/POST of FHIR AllergyIntolerance Records
+ @owners: dcarlson
+ @filedeps: system/layouts/FHIR*/*
+ @diffdeps: FHIR, Allergy, Agy, agy
+"""
+
+@@@
+res = driver.miedb.dbQuery("SELECT session_id FROM logins ORDER BY id DESC LIMIT 1")
+if res:
+	res = res.getRes()
+	return{
+		'session_id': res[0]['session_id']
+	}
+@@@
+Begin "FHIR Allergy"
+	Navigate "?f=layout&module=FHIRtools&name=JSONPost&tabmodule=admin&t=Admin&tabselect=Interface"
+	Type "{session_id}" into the "Session ID" input
+	Type "AllergyIntolerance/6" into @id='FHIRUrl'
+	Click the "Load example URL" button
+	Click the "Post" button
+	Screenshot "Result Posting 6"
+	Type "AllergyIntolerance/11" into @id='FHIRUrl'
+	Click the "Load example URL" button
+	Click the "Post" button
+	Screenshot "Result Posting 11"
+	Type "AllergyIntolerance/22" into @id='FHIRUrl'
+	Click the "Load example URL" button
+	Click the "Post" button
+	Screenshot "Result Posting 22"
+Begin "FHIR Allergy Check on New Patient"
+@@@
+res = driver.miedb.dbQuery("SELECT MIN(rxagyid) id1,MIN(rxagyid)+1 id2, MIN(rxagyid)+2 id3 FROM rxlist_allergylist  WHERE revision_date >= DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY rxagyid ASC LIMIT 1")
+if res:
+	res = res.getRes()
+	return{
+		'id1': res[0]['id1'],
+		'id2': res[0]['id2'],
+		'id3': res[0]['id3']
+	}
+@@@
+	Navigate "?f=chart&s=pat&t=Medical+Record%3AAllergies%2FMedications&v=rxlist&pat_id=13&rxsub=detailsagy&rxagyid={id1}"
+	Verify exists @"Sulfamethoxazole" input value@xpath='//input[@value="Sulfamethoxazole"]'
+	Navigate "?f=chart&s=pat&t=Medical+Record%3AAllergies%2FMedications&v=rxlist&pat_id=18&rxsub=detailsagy&rxagyid={id2}"
+	Verify exists @"PENICILLINS" input value@xpath='//input[@value="PENICILLINS"]'
+	Navigate "?f=chart&s=pat&t=Medical+Record%3AAllergies%2FMedications&v=rxlist&pat_id=49&rxsub=detailsagy&rxagyid={id3}"
+	Verify exists @"LATEX" input value@xpath='//input[@value="LATEX"]'
+	Verify exists @"Burning" input value@xpath='//input[@value="Burning"]'

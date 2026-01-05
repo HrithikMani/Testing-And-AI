@@ -1,0 +1,32 @@
+"""
+Pod used to interact with elements within MIE listedits
+
+
+Usage examples:
+	Verify exists "DMV DOT" listedit row
+	Click the 2nd listedit button
+	Click the "Audiogram" listedit minusbutton
+	Click the "Audiogram" listedit editbutton
+	Type "Patient had the test completed at St. Joe Hospital" in the listedit textfield
+
+"""
+
+row://table[contains(@class,"dlg_root")]/tbody/tr/td//strong{OKRA_TEXT_CLS}
+	|//table[contains(@class,"dlg_root")]/tbody/tr/td//font{OKRA_TEXT_CLS}
+
+button://table[contains(@class,"dlg_root")]//input[@type="button"][contains(@value, "{OKRA_TEXT}")]
+	|//table[contains(@class,"dlg_root")]//input[@type="button"]|@id|@name
+
+minusbutton://strong{OKRA_TEXT_CLS}/preceding::span[2]/input[@value="—"]
+	|//td{OKRA_TEXT_CLS}/following::span[2]/input[@value="—"]
+
+editbutton://strong{OKRA_TEXT_CLS}/preceding::span[1]/input[@value="Edit"]
+	|//td{OKRA_TEXT_CLS}/following::span[1]/input[@value="Edit/Disc"]
+	|//td{OKRA_TEXT_CLS}/following::span[1]/input[@value="Edit"]
+
+discbutton://strong{OKRA_TEXT_CLS}/preceding::span[1]/input[@value="Edit"]
+	|//td{OKRA_TEXT_CLS}/following::span[1]/input[@value="Edit/Disc"]
+	|//td{OKRA_TEXT_CLS}/following::span[1]/input[@value="Edit"]
+
+textfield://div[contains(.,"le")]/table[@class="dlg_root"]//input[@type!="hidden" and @type!="submit" and @type!="button" and not(@disabled) and (@type="text") and not(@class="year") and not (@class="month") and not (@class="day")]
+

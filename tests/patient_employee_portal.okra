@@ -1,0 +1,327 @@
+# Based off this video and the ones that follow - https://mie.talentlms.com/shared/start/key:AGLHRKMF
+
+Begin "Initialization"
+	# This is how you would manually get to ?f=chart&s=pat&pat_id=43 but the datavis sometimes loads collapsed sometimes expanded
+		#Open the sidemenu
+		#Click the "Control Panel" link
+		#Click the "Employer Organizations" charttab
+		#Type "better" in the input
+		#Click the "Search" button
+		#Wait for the "EmployerOrganizations" grid
+		#Verify exists "Better Corp." link
+		#Click the "Better Corp." link
+	Navigate "?f=chart&s=pat&pat_id=43"
+	Open the "Chart Types" dynamicsection
+	Verify exists @Chart Type Portal text@xpath="//*[@id='le_provcharttypes_display']//font[text()='Portal']"
+	Click the "Portal Management" charttab
+	Click the "Portal Setup" charttab subtab
+	Open the "First Time Setup" dynamicsection
+	Click the "Administrative Assistant" checkbox
+	Click the "Applicant" checkbox
+	Click the "Behavioral Health Services" checkbox
+	Click the "Clinical Staff" checkbox
+	Click the "COVID" checkbox
+	Click the "Employees" checkbox
+	Click the "Medical Records" checkbox
+	Click the "Outside Clinic" checkbox
+	Click the "Physicians" checkbox
+	Click the "SuperUser" checkbox
+	Click the "System Owner" checkbox
+	Click the "Telehealth" checkbox
+	Click the "Transcription" checkbox
+	Click the "Submit" button
+	@Wait for the setup to finish@driver.waitFor(driver, lambda d: d.getElement(xpath="//*[@id='portal_first_setup_sec_roles_value']//li[text()='System Owner']"), expected_return=True, timeout=120)
+	Open the "General Configuration" dynamicsection
+	Verify exists @Portal Consent Form text@xpath=//*[@id='consentforms_RecordList_compactrow0']//strong[text()='Portal Consent']
+	@Scroll the section into view@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath='//*[contains(@class, "exam_tab")][contains(., "General Configuration")]/parent::div[contains(@class, "edit_mode")]//button[contains(@class, "save") and @type="button" or contains(., "save")]'))
+	Type "1" into the "DPI_consent_renew_interval" input
+	Select "YEAR!" in the "DPI_consent_renew_unit" dropdown
+	Save the "General Configuration" dynamicsection
+
+Begin "Modules"
+	Click the "Portal Management" charttab
+	Click the "Employee Portal" charttab subtab
+	Click the @Select Modules folder@xpath=//*[@class='folder' and contains(text(), 'Select Modules')]
+	Click the "Form Link 1" checkbox
+	Click the "My Medical Information" checkbox
+	Click the @Questionnaire Link 2@xpath=//input[@name="layout_name" and @value="Questionnaire Link 2"]
+	Verify "checked=true" @Questionnaire Link 1 is checked@xpath=//input[@name="layout_name" and @value="Questionnaire Link 1"]
+	Verify "checked=true" @Send a Message is checked@xpath=//input[@name="layout_name" and @value="Send a Message"]
+	Verify "checked=true" @My Appointments is checked@xpath=//input[@name="layout_name" and @value="My Appointments"]
+	Verify "checked=true" @Other Health Resources is checked@xpath=//input[@name="layout_name" and @value="Other Health Resources"]
+	Verify "checked=true" @Report Work Injury or Illness is checked@xpath=//input[@name="layout_name" and @value="Report Work Injury or Illness"]
+	Verify "checked=true" @Work Status is checked@xpath=//input[@name="layout_name" and @value="Work Status"]
+	Click the "Save" button
+
+	Begin "Module - My Medical Information"
+		Click the @Add message types link in My Medical Information@xpath='//div[@class="portal-module-content"]//div[@class="newui table-reset"]//div[@class='setup-message-list']/a' 
+		@Switch Windows@driver.switchToPopup()
+		Click the "Edit" button
+		@Wait for the page load@driver.waitFor(driver, lambda d: d.getElement(xpath='//span[text()="Basic Information"]'), expected_return=True, timeout=120)
+		Enter "Allergy Injection" into the 2nd "description" autocomplete
+		Click the @Add button@xpath=//input[@id="le_ct_document_list_button"]
+		Enter "Audiogram" into the 2nd "description" autocomplete
+		Click the @Add button@xpath=//input[@id="le_ct_document_list_button"]
+		Click the "Save" button
+		# This is how you would manually get to ?f=chart&s=pat&pat_id=43 but the datavis sometimes loads collapsed sometimes expanded
+			#Open the sidemenu
+			#Click the "Control Panel" link
+			#Click the "Employer Organizations" charttab
+			#Type "better" in the input
+			#Click the "Search" button
+			#Wait for ajax
+			#Wait for the "EmployerOrganizations" grid
+			#@Wait@driver.pause(30)
+			#Verify exists "Better Corp." link
+			#Click the "Better Corp." link
+		Navigate "?f=chart&s=pat&pat_id=43"
+		Click the "Portal Management" charttab
+		Click the "Employee Portal" charttab subtab
+		Type "Patient Medical Information" into the "DPI_UPortal_20My_20Medical_20Information_CN" input
+		Click the @My Medical Information Submit@xpath=//*[@id="moveable_content_Patient_20Portal_20Modules_My_20Medical_20Information"]//input[@value="Submit"]
+
+	Begin "Module - Send a Message"
+		Click the @Add message types link in Send a Message@xpath='//a[contains(@onclick, 'EncExam_OrderPickListLE')]'
+		Click the @Pencil icon@xpath=//*[@class="wc_win_title_extra"]//*[@class="fa fa-pencil"]
+		@Switch Windows@driver.switchToPopup()
+		Click the @Inner Plus Symbol@xpath=//*[contains(@title, 'Add Item to the')]
+		Enter "Animal Allergy Questionnaire" into the "Order Content" autocomplete
+		@Wait@driver.pause(5)
+		Click the "Save" button
+		@Close Browser Tab@driver.closePopup()
+		Click the @Add message types link in Send a Message@xpath='//a[contains(@onclick, 'EncExam_OrderPickListLE')]'
+		Click the "Ask a Clinical Question" checkbox
+		Click the "My Medical Information" checkbox
+		Click the "Influenza Vaccination Consent or Exemption" checkbox
+		Click the "Request an Accommodation" checkbox
+		Click the "Return to Work from a Medical Absence" checkbox
+		Click the "Travel Questionnaire" checkbox
+		Click the "Animal Allergy Questionnaire" checkbox
+		Click the "Ok" button
+		Click the @Send a Message Submit@xpath=//*[@id="moveable_content_Patient_20Portal_20Modules_Send_20a_20Message"]//input[@value="Submit"]
+		wait for ajax
+		@Wait@driver.pause(60)
+
+	Begin "Module - Questionnaire Link 1"
+		@Scroll to the input@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath='//*[@id="DPI_cust_mod_name_1"]'))
+		Type "Animal Exposure Questionnaire" into the "DPI_cust_mod_name_1" input
+		Enter "Animal Exposure Questionnaire" into the "questLinkAC1" autocomplete
+		wait for ajax
+		@Wait@driver.pause(30)
+		Click the @Questionnaire Link 1 Submit@xpath=//*[@id="moveable_content_Patient_20Portal_20Modules_Questionnaire_20Link_201"]//input[@value="Submit"]
+		wait for ajax
+		@Wait@driver.pause(30)
+	
+	Begin "Module - Questionnaire Link 2"
+		Type "Influenza Vaccine Consent" into the "DPI_cust_mod_name_2" input
+		Enter "Influenza Vaccination Consent or Exemption" into the "questLinkAC2" autocomplete
+		Click the @Questionnaire Link 2 Submit@xpath=//*[@id="moveable_content_Patient_20Portal_20Modules_Questionnaire_20Link_202"]//input[@value="Submit"]
+
+	Begin "Module - Form Link 1"
+		Type "Flu Consent Form" into the "DPI_cust_form_name_1" input
+		Enter "Flu Consent Form - Form" into the "DPI_custom_form_1" autocomplete
+		Click the @Form Link 1 Submit@xpath=//*[@id="moveable_content_Patient_20Portal_20Modules_Form_20Link_201"]//input[@value="Submit"]
+	
+	Begin "Module - Report a work injury or Illness"
+		Type "Incident Report" in the "report_incident" input 
+		Click the @Report a work injury or illness Submit@xpath=//*[@id="moveable_content_Patient_20Portal_20Modules_Report_20Work_20Injury_20or_20Illness"]//input[@value="Submit"]
+	
+	Begin "Module - Other Health Resources"
+		Click the "Add Health Resource" button
+		@Scroll to the bottom@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath='//*[@id="moveable_content_Patient_20Portal_20Modules_Other_20Health_20Resources"]//input[@id="ohr-submit-btn-bottom"]'))
+		Click the @NMC Home link@xpath=//*[@class="link-title" and text()="NMC home"]
+		Verify exists "Normal Link" text
+		@Switch to main window@driver.returnToMainWindow()
+		Click the @X button to close window@xpath=//button[@class="xclose"]
+
+Begin "Configuration"
+	Open the "Configuration" dynamicsection
+	Click the "DPCB_enable_prefill_from_context" checkbox
+	Verify exists @Employee string in Replacement Text for Employee@xpath='//input[@id="DPI_portal_patient_label" and @value="Employee"]'
+	Verify exists @Better Corp string in Brand for Welcome Message@xpath='//input[@id="DPI_portal_welcome_name" and @value="Better Corp"]'
+	Verify exists @Employee Portal. string in Description for Welcome Message@xpath='//input[@id="DPI_portal_welcome_type" and @value="Employee Portal."]'
+	Click the @Add Messages link@xpath='//tr[@class="ticker-preview"]//div[@class="link-spacer"]/a'
+	@Wait@driver.pause(30)
+	@Switch Windows@driver.switchToPopup()
+	@Wait@driver.pause(30)
+	# This happens in the video but selenium doesn't have permissions to do this, so that is the check instead
+		#Type "Don't forget your Flu shot this season" into the @Body@xpath='//*[@class=" CodeMirror-line "]'
+		#Click the "Save & Close" button
+		#Verify exists "Don't forget your Flu shot this season" text
+	Verify exists "A permission level of 'Yes' is required." text
+	@Close Browser Tab@driver.closePopup()
+	Click the @Add Message types link in Message Center@xpath='//div[@class="wc-enc-dynamic-section-content"]//div[@class="newui table-reset"]//div[@class='setup-message-list']/a'
+	@Wait@driver.pause(30)
+	@Switch Windows@driver.switchToPopup()
+	Click the "Edit" button
+	Enter "Allergy Injection" into the 2nd "description" autocomplete
+	Click the @Add button@xpath=//input[@id="le_ct_document_list_button"]
+	Click the "Save" button
+	@Close Browser Tab@driver.closePopup()
+	Click the "DPCB_show_esign_docs" checkbox
+	Click the "DPCB_show_completed_questionnaires" checkbox
+	Click the @Save Button@xpath=//div[@class="wc-enc-dynamic-section show_summary no_toggle no_quick_lists edit_mode"]//button[@class="save"]
+
+Begin "Employees"
+	Click the "Admin (EO/PO)" charttab
+	Click the "Employees" charttab subtab
+	Verify exists "Frederick Anderson" link
+	Verify exists "Sergio Acardi" link
+	Navigate "?f=chart&s=pat&t=Summary&v=dashboard&pat_id=42"
+	Click the @Contacts Pencil@xpath=//a[@href="?f=chart&s=pat&t=Relationships&v=dashboard&pat_id=42"]
+	Verify exists @Anderson, Frederick: Self@xpath=//tr[td[1]/font/a[text()='Anderson, Frederick'] and td[2]/font[text()='Self']]
+	Verify exists @Anderson, Frederick: Portal User@xpath=//tr[td[1]/font/a[text()='Anderson, Frederick'] and td[2]/font[text()='Portal User']]
+	Verify exists @Acardi, Sergio: Supervisor@xpath=//tr[td[1]/font/a[text()='Acardi, Sergio'] and td[2]/font[text()='Supervisor']]
+	Verify exists @Better Corp Employer Relationship@xpath=//tr[td[1]/font/a[text()='Better Corp.'] and td[2]/font[contains(text(), 'Employer')]]
+
+Begin "Portal Navigation"
+	Navigate ?f=logout
+	Navigate ?
+	Begin "Enable New Login Style"
+		@@@Enable New Login Style
+		driver.miedb.dbExec("UPDATE system_settings SET value='1' WHERE module='System' AND section='Login' AND item='New login style'")
+		@@@
+	Navigate "?f=logout"
+	Navigate ?
+	Click the "Standard Login" button
+	Type 'employee' into the 'login_user' input
+	Type 'selenium' into the 'login_passwd' input
+	Click the "Next" button
+	Click the "Better Corp." link
+	Click the @Timezone Mismatch Close button@xpath=//button[@class="modal-close modal-close-x"]
+	# TODO would be good to have sql statement to insert portal consent here in case not previously accepted, or this is how to do it manually with updated snapshot
+		Click on the "Portal Consent" link
+		Click on the @Acknowledge radio@xpath='//input[@id="obs_result_293_2_0"]/parent::span'
+		Click on the @SMS Opt-In Agreement@xpath='//input[@id="obs_result_293_12_0"]/parent::span'
+		Click on the @Telehealth Consent@xpath='//input[@id="obs_result_293_15_0"]/parent::span'
+		Click on the SUBMIT button
+	@Wait@driver.pause(10)
+	Click @Portal Navigation Menu dropdown@id="portal-user-name"
+	Verify exists "Message Center" link
+	Verify exists "My Appointments" link
+	Verify exists "My Medical Information" link
+	Verify exists "Covid Vaccination Status" link
+	Verify exists "Animal Exposure Questionnaire" link
+	Verify exists "Report an Injury/Illness" link
+	Verify exists "Work Status" link
+	Verify exists "Other Health Resources" link
+	Verify exists "Flu Consent Form" link
+	Verify exists "Patient Medical Information" link
+	Verify exists "Influenza Vaccine Consent" link
+	Verify exists "Settings" link
+	# TODO this works in okra instance but not in whole test
+	#Verify exists @Supervisor Portal link@xpath=//a[@href="webchart.cgi?f=layout&pat_id=42&cobrand_patid=43&module=Employer+Portal&name=Home"]
+	Verify exists "Sign Out" link
+	# TODO - used to be able to do this now don't have permissions
+		#Click the "Settings" link
+		#Verify exists "Account" text
+		#Click the @Home Button@xpath=//div[@id="portal-header-quick-btns"]
+	Click the @Question Mark button@xpath=//button[@id="portal-header-help"]
+	Verify exists "Portal Home" text
+	Click the @X button@xpath=//span[@title="close"]
+	@Wait@driver.pause(30)
+	Click the @Notification Bell@id='portal-header-notify'
+	Verify exists "Appointments" text
+	Verify exists "Questionnaires" text
+	Verify exists "Messages" text
+	Click the "Written Opinion - Noise" link
+	Click the "back" link
+	Click the "Send a Message" link
+	Click the @Ask a Clincal Question begin@xpath=//a[@href="webchart.cgi?f=layout&module=Patient+Portal&pat_id=42&name=Create+Order&order_name=Ask a Clinical Question&autopatid=1&fromPage=Questionnaire"]
+	@Wait@driver.pause(30)
+	Verify exists "Corporate Office" text
+	Click the @1st radio@xpath=//input[@id="obs_result_71_2_0"]/parent::span
+	Type "This is my question" into the @Body@xpath=//textarea[@id="obs_result_71_3"]
+	Click the @1st checkbox@xpath=//input[@id="consent-box"]/parent::span
+	Click the "SUBMIT" button
+	@Wait@driver.pause(30)
+	Verify exists "Question to Clinician Initiated From Portal" text
+	Click the @Home Button@xpath=//div[@id="portal-header-quick-btns"]
+	@Wait@driver.pause(30)
+	Click the @Message Center link@xpath=//span[@class="portal-btn-inner" and contains(text(), "Message Center")]
+	Verify exists "Messages" text	
+	Click the @Home Button@xpath=//div[@id="portal-header-quick-btns"]
+	# TODO - problem is that the location is not being set so third dropdown is not appearing
+	Click the @My Appointments link@xpath=(//span[@class="portal-btn-inner" and contains(text(), "My Appointments")])[2]
+	Click the "schedule a new appointment" link
+	Click the @1st dropdown@xpath=//div[@id="uniform-APPT_type"]
+	Click @Blood Pressure Check@xpath=//option[@value="BP"]
+	Wait for ajax
+	@Wait@driver.pause(30)
+	Click the @3rd dropdown@xpath=//div[@id="uniform-APPT_res_id"]
+	Click @Simmons@xpath=//option[@value="39"]
+	@Wait@driver.pause(10)
+	Click the @4th dropdown@xpath=//div[@id="uniform-APPT_startdate"]
+	Click @2023-02-02 13:30:00@xpath=//option[@value="2023-02-02 13:30:00"]
+	Type "I will be sure to bring my personal protective equipment for inspection" into the @Text area@xpath=//textarea[@id="APPT_comment"]
+	Click the "submit" button
+	Verify exists "Scheduled Appointments" text
+	Click the @Home Button@xpath=//a[@id="portal-header-home"]
+	wait for ajax
+	@Wait@driver.pause(30)
+	Click the @Animal Exposure Questionnaire@xpath=(//span[@class="portal-btn-inner" and contains(text(), "Animal Exposure Questionnaire")])[2]
+	wait for ajax
+	@Wait@driver.pause(30)
+	Click the @1st Yes button@xpath=//input[@id="obs_result_101_2_0"]/parent::span
+	Click the "SUBMIT" button
+	wait for ajax
+	@Wait@driver.pause(30)
+	Click the @Message Center link@xpath=//span[@class="portal-btn-inner" and contains(text(), "Message Center")]
+	wait for ajax
+	@Wait@driver.pause(60)
+	Verify exists "Animal Exposure Questionnaire is completed" text
+	Click the "Immunization Schedule" link 
+	Wait for ajax
+	Click the @Home Button@xpath=//div[@id="portal-header-quick-btns"]
+	Click the @Report an Injury/Illness@xpath=(//span[@class="portal-btn-inner" and contains(text(), "Report an Injury/Illness")])[2]
+	Click the @1st radio@xpath=//input[@id="obs_result_70_1_0"]/parent::span
+	Click the "SUBMIT" button
+	wait for ajax
+	@Wait@driver.pause(30)
+	Click the @Work Status@xpath=(//span[@class="portal-btn-inner" and contains(text(), "Work Status")])[2]
+	wait for ajax
+	@Wait@driver.pause(60)
+	Verify exists "Work Status Report" text
+	Click the @Home Button@xpath=//div[@id="portal-header-quick-btns"]
+	wait for ajax
+	@Wait@driver.pause(30)
+	Click the @Other Health Resources@xpath=(//span[@class="portal-btn-inner" and contains(text(), "Other Health Resources")])[2]
+	wait for ajax
+	@Wait@driver.pause(30)
+	Verify exists "NoMoreClipboard" text
+	Click the @Home Button@xpath=//div[@id="portal-header-quick-btns"]//a[@id="portal-header-home"]
+
+Begin "Auto Schedule Appointment"
+	Click the @Influenza Vaccine Consent@xpath=(//span[@class="portal-btn-inner" and contains(text(), "Influenza Vaccine Consent")])[2]
+	wait for ajax
+	Click the @Consent to Vaccine from Employee Health@xpath=//input[@id="obs_result_469_0_0"]/parent::span
+	Click the @1st Yes button@xpath=//input[@id="obs_result_469_2_0"]/parent::span
+	Click the @2nd No button@xpath=//input[@id="obs_result_469_12_1"]/parent::span
+	Click the @3rd No button@xpath=//input[@id="obs_result_469_14_1"]/parent::span
+	Click the @4th No button@xpath=//input[@id="obs_result_469_15_1"]/parent::span
+	Click the @5th No button@xpath=//input[@id="obs_result_469_16_1"]/parent::span
+	Click the @6th No button@xpath=//input[@id="obs_result_469_17_1"]/parent::span
+	Click the @7th No button@xpath=//input[@id="obs_result_469_19_1"]/parent::span
+	@Wait@driver.pause(30)
+	@Scroll to the bottom@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath='//span[@id="footer-cpr"]'))
+	Click the "SUBMIT" button
+	wait for ajax
+	@Wait@driver.pause(180)
+	Click the @Notification Bell@id='portal-header-notify'
+	wait for ajax
+	@Wait@driver.pause(60)
+	Verify exists "Flu Vaccine" text
+	Click the @schedule button@xpath=//a[@class="round-btn nav-btn sched-btn" and text()="schedule"]
+	Click the @dropdown@xpath=//div[@id="uniform-APPT_startdate"]
+	Click @2023-02-02 13:30:00@xpath=//option[@value="2023-02-02 13:30:00"]
+	Click the "submit" button
+	Navigate "?f=logout"
+	Navigate ?
+	Click the "Standard Login" button
+	Type 'selenium' into the 'login_user' input
+	Type 'selenium' into the 'login_passwd' input
+	Click the "Next" button
+	Navigate "?f=chart&s=pat&t=Summary&v=dashboard&pat_id=42"
+	Verify exists "[Flu Vaccine]" text
+	Click the "Documents-DV" charttab 
+	Verify exists "02-02-2023 by employee" text

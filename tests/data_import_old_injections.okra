@@ -1,0 +1,41 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Click the "Legacy Data Import" link
+	Verify exists "Please Choose Data Import type:" text 
+	Select "Injections CSV API" in the opp dropdown
+	Click the Go button
+	@driver.getWebDriver().switch_to.frame("di_frame_Injections")
+	Click the "DI_Verbose" checkbox
+	Type 'InjectDataImportSuccess.csv' in the 'csv_file' input
+	Click the "Upload" button
+	Verify exists "Successfully imported file InjectDataImportSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+Begin "Verify Entries"
+	Begin "Jane Doe Injections"
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Click the "Name" radio
+		Type "Doe, Jane" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Doe, Jane M" link
+		Click the "Medical Record" charttab
+		Click the "MAR/Injections" charttab subtab
+		Verify exists "DTP-Hib-Hep B" listview link
+		Verify exists "IPV" listview link
+		Verify exists "poliovirus vaccine, inactivated" listview link
+	Begin "William Hart Injections"
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Click the "Name" radio
+		Type "Hart" in the "sstring" input
+		Click the "Search" button
+		Verify exists "TEST-10019" link
+		Click the "TEST-10019" link
+		Click the "Medical Record" charttab
+		Click the "MAR/Injections" charttab subtab
+		Verify exists "Influenza, split (incl. purified surface antigen)" listview link
+		Verify exists "Hep B, adolescent or pediatric" listview link
+		Verify exists "DTaP-Hep B-IPV" listview link

@@ -1,0 +1,255 @@
+"""
+	This tests EPCS and used SYSTEM=surescirpts to do a mock escript signature
+	https://github.mieweb.com/webchart/webchart/blob/master/deploy/system_types/surescripts.py
+	@filedeps: src/escript.c src/api/erxmsgtest.c src/rxss.c src/rx.c
+"""
+@Set the Cross-Browser EPCS to Mobile@driver.wcutils.SetPreference('physician', 'E-Chart', 'Meds/Allergies', 'Cross-Browser EPCS', 2)
+@Set Surescripts Staging URL@driver.miedb.dbExec('UPDATE system_settings SET value="https://zeus-qa.med-web.com/ssdms/interface.cgi" WHERE item="SureScripts Staging URL"')
+Begin Log in as Patel, Ashish
+	Open the sidemenu
+	Click the Logout sidemenu entry
+	@Setup WCTestSession for physician@driver.wcutils.insertWCTSession('physician')
+Begin "Set up a preferred pharmacy for William Hart"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Type "Hart" in the "sstring" input
+	Click the "Search" button
+	Click the TEST-10019 link
+	Click the "Medical Record" charttab
+	Click the Allergies/Medications link
+	Click the "Preferred Pharmacy" link
+	Click @id=phsearch_filter_zip
+	Type 46804 in @id=zipinput
+	# Enter "Bannockburn Pharmacy" in the "pharmacy_ac_text" autocomplete
+	Type "Bannockburn P!" in the "pharmacy_ac_text" autocomplete acinput
+	@@@
+	driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[contains(@class, "defaultacdiv")]//div'), expected=True)
+	@@@
+	Click the "Bannockburn Pharmacy" autocomplete choice
+	Click the "Set as Preferred" button
+	@Little pause to make sure screen is back@driver.pause(5)
+Begin "Prescribe a non controlled substance"
+	Click the Prescribe link
+	Enter atorvastatin in the qp_acval0 autocomplete
+	Enter "tablet 40mg" into the 2nd qp_formacval0 autocomplete
+	#Close the "Warning for atorvastatin" popup
+	Type "1 bid" in @id=qp_sig0
+	Type 30d in @id=qp_duration0
+	Type 60 in @id=qp_total_quantity0
+	Type 0 in @id=qp_refills0
+	Select "Patel, Ashish" from @id=qp_doctor_id0
+	#Close the "Dose Calculation Alert" popup
+	Click the 1st Prescribe button
+	Verify exists "atorvastatin 40 mg tablet" text
+Begin "Transmit the non controlled substance E-prescription"
+	Click the Submit button
+	@Switch to "Print Chart" Window@driver.switchToPopup()
+	Verify exists "atorvastatin 40 mg tablet" text
+	Click the "-- Fax/Transmit --" button
+	Verify exists "All scripts sent successfully." text
+	@Close this window@driver.closePopup()
+Begin "Prescribe a controlled substance"
+	@Little pause@driver.pause(10)
+	Click the Prescribe link
+	Enter lorazepam in the qp_acval0 autocomplete
+	Enter "tablet 2mg" in the qp_formacval0 autocomplete
+	#Close the "Warning for lorazepam" popup
+	Type "1 bid" in @id=qp_sig0
+	Type 30d in @id=qp_duration0
+	Type 60 in @id=qp_total_quantity0
+	Type 0 in @id=qp_refills0
+	Select "Patel, Ashish" from @id=qp_doctor_id0
+	#Close the "Dose Calculation Alert" popup
+	Click the 1st Prescribe button
+	Verify exists "lorazepam 2 mg tablet" text
+Begin "Transmit the controlled substance E-prescription"
+	Click the @signature required span@xpath="//span[text()='Ashish Patel']"
+	Click the @ready to sign checkbox@xpath="//div[@class='wc_win']//input[@type='checkbox']"
+	Click the Sign button
+	@Wait for the sign@driver.wcutils.waitForEle(xpath='//div[@class="wc_win_title"][contains(., "Signing Prescription")]', expected=False, timeout=240)
+	@Switch to "Print Chart" Window@driver.switchToPopup()
+	Verify exists "lorazepam 2 mg tablet" text
+	Click the "-- Fax/Transmit --" button
+	Verify exists "All scripts sent successfully." text
+	@Close this window@driver.closePopup()
+
+Begin "Send the solicit messages"
+	Begin "Renewals"
+		Begin "Approve Renewal request"
+			Navigate "?f=layout&module=E-Prescribe&name=ErxMessagesList&tabmodule=admin&t=Admin"
+			Click the 1st dynamicitem
+			Click the @Renewal radio@xpath="//input[@name='msg_type' and @value='renewal']"
+			Type 1 into the "num_refills" input
+			Click the Save button
+			@Little pause to let the message go through@driver.pause(10)
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @refill listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="5"]"
+			Click the Approve button
+			Click the Yes button
+			Click the "Send Approval" button
+			@Little pause to make sure screen is back@driver.pause(5)
+
+		Begin "Approve Renewal w/edit refill"
+			Navigate "?f=layout&module=E-Prescribe&name=ErxMessagesList&tabmodule=admin&t=Admin"
+			Click the 1st dynamicitem
+			Click the @Renewal radio@xpath="//input[@name='msg_type' and @value='renewal']"
+			Type 1 into the "num_refills" input
+			Click the Save button
+			@Little pause to let the message go through@driver.pause(10)
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @refill listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="9"]"
+			Click the "Approve w/ Edit Refill" button
+			Click the Yes button
+			Type 2 into the @refills amount edit field@xpath="//tr/td[text()='Total number of dispensings approved']/following-sibling::td/input"
+			Click the "Send Approval" button
+			@Little pause to make sure screen is back@driver.pause(5)
+
+		Begin "Deny Renewal request"
+			Navigate "?f=layout&module=E-Prescribe&name=ErxMessagesList&tabmodule=admin&t=Admin"
+			Click the 1st dynamicitem
+			Click the @Renewal radio@xpath="//input[@name='msg_type' and @value='renewal']"
+			Type 1 into the "num_refills" input
+			Click the Save button
+			@Little pause to let the message go through@driver.pause(10)
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @refill listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="13"]"
+			Click the Deny button
+			Select "Refill not appropriate" in the @reason dropdown@xpath="//tr/td[text()='Denial reason']/following-sibling::td/select"
+			Click the "Send Denial" button
+			@Little pause to make sure screen is back@driver.pause(5)
+
+		Begin "Change Renewal Request"
+			Navigate "?f=layout&module=E-Prescribe&name=ErxMessagesList&tabmodule=admin&t=Admin"
+			Click the 1st dynamicitem
+			Click the @Renewal radio@xpath="//input[@name='msg_type' and @value='renewal']"
+			Type 1 into the "num_refills" input
+			Click the Save button
+			@Little pause to let the message go through@driver.pause(10)
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @refill listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="17"]"
+			Click @patient match cell@xpath="//td[text()='Patient']"
+			Enter "Hart, William S." in the "patac_17" autocomplete
+			Click the Set button
+			@Little pause@driver.pause(2)
+			Click the OK button
+			Click the Change button
+			@Switch to "E-Prescribe window" Window@driver.switchToPopup()
+			Enter Benadryl in the RXQPDASH_qpres_acval0 autocomplete
+			Enter "capsule 25mg" in the "RXQPDASH_qpres_formacval0" autocomplete
+			Close the "Warning for Benadryl" popup
+			Type "1 bid" in @id=RXQPDASH_qpres_sig0
+			Type 30d in @id=RXQPDASH_qpres_duration0
+			Type 60 in @id=RXQPDASH_qpres_total_quantity0
+			Type 0 in @id=RXQPDASH_qpres_refills0
+			Select "Patel, Ashish" from @id=RXQPDASH_qpres_doctor_id0
+			Click the Submit button
+			Close the "Warning for Benadryl" popup
+			Click the Submit button
+			@Close this window@driver.closePopup()
+			@Wait for the reason for change field to appear@driver.waitFor(driver, lambda d: d.getElement(xpath="//tr/td[contains(text(), 'Reason for Change')]/following-sibling::td/textarea"), expected_return=True, timeout=60)
+			Type "needs some bennies" into the @reason for change field@xpath="//tr/td[contains(text(), 'Reason for Change')]/following-sibling::td/textarea"
+			Click the OK button
+			@Little pause to make sure screen is back@driver.pause(5)
+
+		Begin "Approve controlled substance renewal"
+			Navigate "?f=layout&module=E-Prescribe&name=ErxMessagesList&tabmodule=admin&t=Admin"
+			Click the 2nd dynamicitem
+			Click the @Renewal radio@xpath="//input[@name='msg_type' and @value='renewal']"
+			Type 1 into the "num_refills" input
+			Click the Save button
+			@Little pause to let the message go through@driver.pause(10)
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @change listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="21"]"
+			Click the Approve button
+			Click the Yes button
+			Click the @ready to sign checkbox@xpath="//tr/td[contains(text(), 'Ready to Sign')]/following-sibling::td/input[@type='checkbox']"
+			Click the Sign button
+			@Little pause to make sure screen is back@driver.pause(15)
+
+	Begin "Changes"
+		Begin "Approve Change request"
+			Navigate "?f=layout&module=E-Prescribe&name=ErxMessagesList&tabmodule=admin&t=Admin"
+			Click the 1st dynamicitem
+			Click the @Change radio@xpath="//input[@name='msg_type' and @value='change']"
+			Type "not strong enough" into the "Change Reason" input
+			Type "1 bid" into the "Sig Text" input
+			Click the Save button
+			@Little pause to let the message go through@driver.pause(10)
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @change listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="25"]"
+			Click @patient match cell@xpath="//td[contains(@class, 'matchpat')]"
+			Enter "Hart, William S." in the "pat_id25_patac_input" autocomplete
+			@Little pause@driver.pause(2)
+			Click the @body to move focus@xpath="//body"
+			Click the OK button
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @change listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="25"]"
+			Click the Approve button
+			Click the Submit button
+			@Little pause to make sure screen is back@driver.pause(5)
+
+		Begin "Deny Change request"
+			Navigate "?f=layout&module=E-Prescribe&name=ErxMessagesList&tabmodule=admin&t=Admin"
+			Click the 1st dynamicitem
+			Click the @Change radio@xpath="//input[@name='msg_type' and @value='change']"
+			Type "not strong enough" into the "Change Reason" input
+			Type "1 bid" into the "Sig Text" input
+			Click the Save button
+			@Little pause to let the message go through@driver.pause(10)
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @change listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="29"]"
+			Click the Deny button
+			Select "Change not appropriate" in the @reason dropdown@xpath="//tr/td[contains(text(), 'Denial Reason')]/following-sibling::td/select"
+			Click the Submit button
+			@Little pause to make sure screen is back@driver.pause(5)
+
+		Begin "Approve controlled substance change"
+			Navigate "?f=layout&module=E-Prescribe&name=ErxMessagesList&tabmodule=admin&t=Admin"
+			Click the 2nd dynamicitem
+			Click the @Change radio@xpath="//input[@name='msg_type' and @value='change']"
+			Type "not strong enough" into the "Change Reason" input
+			Type "1 bid" into the "Sig Text" input
+			Click the Save button
+			@Little pause to let the message go through@driver.pause(10)
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @change listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="33"]"
+			Click @patient match cell@xpath="//td[contains(@class, 'matchpat')]"
+			Enter "Hart, William S." in the "pat_id33_patac_input" autocomplete
+			@Little pause@driver.pause(2)
+			Click the @body to move focus@xpath="//body"
+			Click the OK button
+			Navigate ?f=layout&s=pat&module=erx&name=RxWorklist&tabmodule=erx&t=Worklist
+			Click the @change listview row@xpath="//table[contains(@class,"lv_root")]/tbody//tr//td[text()="33"]"
+			Click the Approve button
+			Click the Submit button
+			Click the @ready to sign checkbox@xpath="//tr/td[contains(text(), 'Ready to Sign')]/following-sibling::td/input[@type='checkbox']"
+			Click the Sign button
+			@Little pause to make sure screen is back@driver.pause(15)
+
+	Begin "Cancels"
+		Begin "Send Cancel of NewRx"
+			Navigate "?f=chart&s=pat&t=Medical+Record%3AAllergies%2FMedications&v=rxlist&pat_id=18"
+			Begin "Prescribe some gabapentin"
+				Click the Prescribe link
+				Enter gabapentin in the qp_acval0 autocomplete
+				Enter "capsule 400mg" in the qp_formacval0 autocomplete
+				Close the "Warning for gabapentin" popup
+				Type "1 bid" in @id=qp_sig0
+				Type 30d in @id=qp_duration0
+				Type 60 in @id=qp_total_quantity0
+				Type 0 in @id=qp_refills0
+				Select "Patel, Ashish" from @id=qp_doctor_id0
+				#Close the "Dose Calculation Alert" popup
+				Close the "Warning for gabapentin" popup
+				Click the 1st Prescribe button
+				Verify exists "gabapentin 400 mg capsule" text
+			Begin "Transmit the non controlled substance E-prescription"
+				Click the Submit button
+				@Switch to "Print Chart" Window@driver.switchToPopup()
+				Verify exists "gabapentin 400 mg capsule" text
+				Click the "-- Fax/Transmit --" button
+				Verify exists "All scripts sent successfully." text
+				@Close this window@driver.closePopup()
+			Click the @E-sent span for gabapentin@xpath="//div[@id='lv_patientmedlist_span']//tr[last()]/td[contains(@class, 'patientmedlist_Comment_cell')]/div[contains(text(), 'E-sent:')]/span[contains(@class, 'esent-link')]"
+			Click the "Cancel Prescription" button
+			Click the Yes button

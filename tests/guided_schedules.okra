@@ -1,0 +1,98 @@
+"""
+	@owners: sdrupa
+	@filedep: system/layouts/Scheduler/GuidedTimeTemplate.html
+	@filedep: system/jsbin/scheduler.js
+	@systemtype: EH
+"""
+Begin "Turn on Guided Schedules"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry 
+	Click the "My Settings" charttab
+	Select "Enabled" from the "Guided Schedules" dropdown 
+	Click the "Submit Settings" button
+Begin "Create an inclusionary schedule block" 
+	Open the sidemenu 
+	Click the "Scheduler" sidemenu entry
+	Click the "Schedules" charttab 
+	Click the "Guided Template" link 
+	Verify exists "Allow appointments to be scheduled during a designated time." text 
+	Click the "Allow" button 
+	Verify exists "Should this happen repeatedly?" text 
+	Click the "Yes" button
+	Select "Day(s)" from the recurrence dropdown 
+	Enter "02-07-2023" in the date
+	Click the "Next" button 
+	Verify exists "When should this happen?" text 
+	Enter "02-03-2023" in the date
+	Type "08:00" in the @starttime input@xpath="//input[@id='starttime']"
+	Type "12:00" in the @endtime input@xpath="//input[@id='endtime']"
+	Screenshot "time templating"
+	Click the "Next" button 
+	Verify exists "What location will this be at?" text 
+	Select "Office" in the "location" dropdown
+	Click the "Next" button 
+	Verify exists "What scheduling resource is this for?" text 
+	Enter "Selenium, Selenium" into the "resource_id_ac" autocomplete 
+	Click the "Next" button
+	Screenshot "Templating 2"
+	Verify exists "Do you want to require that an appointment have certain appointment types in order to be allowed to schedule during this time?" text 
+	Click the "Yes" button
+	Enter "Audiogram" into the "appt_types_req_ac_txt" autocomplete 
+	Click the "Next" button 
+	Verify exists "I've already added the required types in the last step." text 
+	Click the "Next" button
+	Verify exists "Do you want to allow portal users to find time from this?" text 
+	Click the "Yes" button 
+	Screenshot "test1"
+	Click the "Audiogram" checkbox 
+	Screenshot "test2"
+	Click the "Next" button 
+	Verify exists " How many appointments should be allowed at the same time?" text 
+	Type "2" in the input 
+	Click the "Next" button 
+	Type "Testing allow option for guided schedule" in the @"Comments" textarea@xpath="//textarea[@id='comment']"
+	Click the "Save" button
+	Verify exists "Success" text 
+	Close popup 
+	Refresh page
+Begin "Create an exclusionary schedule block" 
+	Click the "Guided Template" link 
+	Verify exists "Block anyone from scheduling an appointment during a designated time." text 
+	Click the "Block" button 
+	Verify exists "Should this happen repeatedly?" text 
+	Click the "No" button
+	Verify exists "When should this happen?" text 
+	Enter "02-08-2023" in the date
+	Type "08:00" in the @starttime input@xpath="//input[@id='starttime']"
+	Type "16:00" in the @endtime input@xpath="//input[@id='endtime']"
+	Click the "Next" button 
+	Verify exists "What location will this be at?" text
+	Select "Office" in the "location" dropdown
+	Click the "Next" button 
+	Verify exists "What scheduling resource is this for?" text 
+	Enter "Selenium, Selenium" into the "resource_id_ac" autocomplete 
+	Click the "Next" button
+	Verify exists "Do you want to require that an appointment have certain appointment types in order to be allowed to schedule during this time?" text 
+	Click the "Yes" button 
+	Enter "COVID Testing" into the "appt_types_req_ac_txt" autocomplete
+	Click the "Next" button
+	Click the "Next" button
+	Click the "No" button
+	Click the "Next" button
+	Verify exists " How many appointments should be allowed at the same time?" text 
+	Type "1" in the input 
+	Click the "Next" button
+	Type "Testing block option for guided schedule" in the @"Comments" textarea@xpath="//textarea[@id='comment']"
+	Click the "Save" button
+	Verify exists "Success" text 
+	Close popup 
+	Refresh page
+Begin "Verify creation of schedules"
+	Click the @Resource filter button@xpath="//div[@id='ActiveSchedulesGrid']//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Resource']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Resource']//p[contains(@class, 'SelectBox')]"
+	Click the 'Selenium, Selenium" label
+	Click the @ok button@xpath="//li[@data-wcdv-field='Resource']//p[@class='btnOk']"
+	Verify exists "Testing allow option for guided schedule" text
+	Verify exists "Testing block option for guided schedule" text
+	Verify exists @xpath=//tr[td[normalize-space(.) = "02-03-2023 08:00:00"] and td[normalize-space(.) = "02-03-2023 12:00:00"] and td[normalize-space(.) = "Daily"] and td[normalize-space(.) = "Testing allow option for guided schedule"]]
+	Verify exists @xpath=//tr[td[normalize-space(.) = "02-08-2023 08:00:00"] and td[normalize-space(.) = "02-08-2023 16:00:00"] and td[normalize-space(.) = "Testing block option for guided schedule"]]

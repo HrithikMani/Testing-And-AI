@@ -1,0 +1,32 @@
+Begin "Edit a Security Role"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Security Roles" charttab subtab
+	Click the 1st "Edit" listview link
+Begin "Check for duplicate select names"
+	@@@
+	driver.reportCommandStatus('All selects named uniquely', '', driver.runJS('''
+		var allPermSelectNames = Array.from(document.querySelectorAll('#sec_role_form select')).map(function (sel) { return sel.name });
+		var uniquePermSelectNames = allPermSelectNames.filter(function (value, index, self) { return self.indexOf(value) === index; });
+		return allPermSelectNames.length == uniquePermSelectNames.length'''), '', '')
+	@@@
+Begin "Change a value"
+	Select "Yes" in the "Control_Manage Chart Types" dropdown
+	Type "This is a reason" in the "sec_role_comment" input
+	Click the "Update Role" button
+	Verify exists "Security role Administrative Assistant has been updated successfully!" text
+Begin "Verify value changed"
+	Click the "Administrative Assistant" link
+	Verify exists @Manage Chart Types is Yes@xpath='//td[contains(.,"Manage Chart Type") and @class="field"]/following-sibling::td[contains(.,"Yes")]'
+	Click the "Done" button
+Begin "Verify model_security changed"
+	Click the 1st "JSON" listview link
+	Verify exists "chart_types" grid entry
+Begin "Add JSON Security"
+	Click the "Add New Security" link
+	Select account_types in the "object" dropdown
+	Click the crud_create checkbox
+	Click the crud_read checkbox
+	Click the "Save" button
+	Verify exists "account_types" grid entry

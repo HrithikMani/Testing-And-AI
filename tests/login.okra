@@ -1,0 +1,16 @@
+Begin Login Using Default Username
+	Navigate "?f=logout"
+	Type {selenium_username} into the login_user input
+	Type {selenium_password} into the login_passwd input
+	Click the "Log In" button
+	Screenshot okralogin
+Begin Sidemenu Usage
+	Open the sidemenu
+	Click the E-Chart sidemenu entry
+	Screenshot echart
+Begin Pin Sidemenu
+	Pin the sidemenu
+	Screenshot pinned
+Begin Charttabs
+	Click the "Injection Program" charttab tab
+	Screenshot injectionprogram

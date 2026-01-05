@@ -1,0 +1,32 @@
+Navigate "?f=layout&module=AdminConsole&name=HL7Logs&tabmodule=admin"
+Enter "02-02-2007" into the start_date date
+Click the "Submit" button
+Click the "Testred, Testcolor" link
+@Switch Windows@driver.switchToPopup()
+Begin Confirm first document link
+	CLick the "Documents" charttab
+	Click the 1st "10-30-2020" listview link
+	Click the "Properties" link
+	Wait for ajax
+	Verify exists "Raw HL7" link
+	Click the "Raw HL7" link
+	@Wait@driver.pause(3)
+	@Switch Windows@driver.switchToPopup()
+	Verify exists "MSH||Color^2.16.840.1.114222.4.1.220759^ISO|CDPH Branch Lab^05D2197416^CLIA|TESTAPPLICATION|TESTFACILITY|20201030120455-0800||ORU^R01^ORU_R01" text
+	@Close this window@driver.closePopup()
+#I just want to close the most recent popup, but I can't get back to the first popup, so I have to click the original link again.  Seems like a bug.  Maybe not.
+Click the "Testred, Testcolor" link
+@Switch Windows@driver.switchToPopup()
+Begin Confirm second document link
+	CLick the "Documents" charttab
+	Click the 2nd "10-30-2020" listview link
+	Click the "Properties" link
+	Wait for ajax
+	Verify exists "Raw HL7" link
+	Click the "Raw HL7" link
+	@Wait@driver.pause(3)
+	@Switch Windows@driver.switchToPopup()
+	Verify exists "MSH||Color^2.16.840.1.114222.4.1.220759^ISO|CDPH Branch Lab^05D2197416^CLIA|TESTAPPLICATION|TESTFACILITY|20201030120455-0800||ORU^R01^ORU_R01" text
+	@Close this window@driver.closePopup()
+@Close this window@driver.closePopup()
+

@@ -1,0 +1,26 @@
+"""
+Pod used to interact with freetext/textareas
+
+Usage examples:
+	Type "xxxxxx" in the "TEXTAREA NAME" freetext field
+	Verify exists "TEXTAREA NAME" freetext field
+
+"""
+
+
+field://table[@class="dlg_root"]//td//div{OKRA_TEXT_CLS}/following-sibling::textarea
+	|//tr/td[contains(@class,"HeaderCell")]{OKRA_TEXT_CLS}/following::tr[1]/td//span//textarea
+	|//tr{OKRA_TEXT_CLS}/following-sibling::tr[1]//textarea[contains(@class,"resizeInput")]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td[@class="results"]//textarea[contains(@class,"resizeInput")]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td//textarea[contains(@class,"resizeInput")]
+	|//td{OKRA_TEXT_CLS}/following-sibling::td/textarea
+	|//div[contains(@class,"flowsheet_label")]{OKRA_TEXT_CLS}/following-sibling::div[contains(@class,"flowsheet_input")]//textarea
+	|//div/label{OKRA_TEXT_CLS}/following-sibling::div//textarea
+	|//tr//td{OKRA_TEXT_CLS}/following-sibling::tr/td//textarea
+	|//textarea[contains(@class,"resizeInput") and contains(@data-context, translate("{OKRA_TEXT}", " ", "_"))]
+	|//td{OKRA_TEXT_CLS}/textarea[contains(@class,"resizeInput")]
+	|//div[@class="wc_win"]//div{OKRA_TEXT_CLS}/following-sibling::div/textarea
+	|//div[@class="wc_win"]//tr{OKRA_TEXT_CLS}//textarea
+	|//div[@class="wc_win"]//textarea
+	|//textarea[contains(@id,"{OKRA_TEXT}")]
+	|//textarea

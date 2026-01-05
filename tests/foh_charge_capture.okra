@@ -1,0 +1,812 @@
+Begin "FOH Testing Setting Changes and Setup"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "My Settings" link
+	Select No from the "Use Popup for Patient Links" dropdown
+	Click the "Submit Settings" button
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" link
+	Type "Selenium" in the "search" input
+	Click the "Go!" button
+	# Change this next line when something is implemented to Okra allow something more specific for a listview.
+	# Also, Okra sees all other "Editor" as "Edit" links, hence why it is 7th or !exact match
+	Click the 1st !Edit link
+	Select Fiscal from the "realm" dropdown
+	Click the "Submit" button
+	Verify exists "User (selenium) was updated successfully" text
+	Click the 1st !Edit link
+	Click the "Customize User Security" link
+	Select "Yes" from the "Control_Manage Contacts" dropdown
+	Select "Edit" from the "WebChart_Manage Encounter Charges" dropdown
+	Select "Yes" from the "Manage Accounts" dropdown
+	Type "Manage Enc Charges: Edit Access" in the "sec_role_comment" input
+	Click the "Update Individual Security" button
+Begin "Manage Employer Organizations Hierarchy"
+	Open the sidemenu
+	Click the "Employer Organizations" sidemenu entry
+	Type "Better" in the name input
+	Click the "Search" button
+	Click the "Better Corp." link
+	Click the "Overview (EO)" charttab
+	Begin "Test Sub-Employer dynamic section"
+		Verify exists "" text in "Sub-Employer Organizations" dynamicsection
+		Begin "Add and Validate Sub-Employer Organization"
+			Click the "Add New Sub-EO" link
+			Type "Best Inc" in the name input
+			Click the "Add New" button
+			Verify exists "Attention" popup
+			Verify exists "Enter required fields and/or address issues" text
+			Verify exists "A unique MR number is required" text
+			Close the Attention popup
+			Type "9999" in the "mrnumber" input
+			Verify exists Available text
+			Click the "Add New" button
+			@Wait for the Ajax to create the new chart@driver.wcutils.waitForAJAX(30)
+			Verify exists "Best Inc" contactcard
+		Begin "Validate New Sub-Employer Organization was added to Better Corp Overview(EO)"
+			Open the sidemenu
+			Click the "Employer Organizations" sidemenu entry
+			Type "Better" in the name input
+			Click the "Search" button
+			Click the "Better Corp." link
+			Click the "Overview (EO)" charttab
+			Verify exists "Best Inc" text
+Begin "Test Employer & Provider Organization Overview pages"
+	Begin "Provider Organization"
+		Begin "Manage Provider Organization dynamic section"
+			Open the sidemenu
+			Click the "Provider Management" sidemenu entry
+			Type "PSC-Federal Occ" name input
+			Click the "Search" button
+			@wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//a[contains(., 'PSC-Federal Occupational Health')]"), expected_return=True, timeout=5)
+			Click the "PSC-Federal Occupational Health" link
+			@wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//*[contains(., 'Aaalastname')]"), expected_return=True, timeout=5)
+			Begin "Validate Provider Organization section information and Postal Code logic"
+				Begin "Validate the contact card information before changes"
+					Verify exists "7700 Wisconsin Avenue" text
+					Verify exists "Floor 7th" text
+					Verify exists "Bethesda, Maryland 20814" text
+					Verify exists "United States" text
+				Begin "Edit Provider Information"
+					Open the "Provider Organization" dynamicsection
+					Type "20184" in the "DPI_zip_code" input
+					Type "1234 Main Street" in the "DPI_address1" input
+					Type "Suite 5" in the "DPI_address2" input
+					Close the "Provider Organization" dynamicsection
+				Begin "Validate the contact card information after changes from Postal Code logic changes"
+					Verify exists "PSC-Federal Occupational Health" text
+					Verify exists "FOH" text
+					Verify exists "20184" text
+					Verify exists "1234 Main Street" text
+					Verify exists "Suite 5" text
+					Verify exists "Upperville" text
+					Verify exists "Virginia" text
+					Verify exists "United States" text
+		Begin "Manage Provider Organization Contacts dynamic section"
+			Begin "Add a New test Contact and test other functionality"
+				Click the "Add New Contact" link
+				Type "Aaalastname" in the "last_name" input
+				Begin "Test the alert for incomplete information"
+					Click the "Add New" button
+					Verify exists "Attention" popup
+					Verify exists "Enter required fields and/or address issues" text
+					Verify exists "Contact type is required" text
+					Verify exists "First name is required" text
+					Close popup
+				Type "Aaalastname" in the "last_name" input
+				Type "Firstname" in the "first_name" input
+				Select "Agency Official Signatory Contact" from the "relation_type_desc" dropdown
+				Type "faaalastname@foh.com" in the "email" input
+				Enter "06-04-2099" into the "start_date" date
+				Enter "06-04-2017" into the "end_date" date
+				Click the "Add New" button
+				Begin "Test the alert for incorrect date range"
+					Verify exists "Attention" popup
+					Verify exists "Enter required fields and/or address issues" text
+					Verify exists "End date must be after start date" text
+					Close popup
+				Enter "03-23-2016" into the "start_date" date
+				Enter "02-23-2022" into the "end_date" date
+				Click the "Add New" button
+				Begin "Test the New Contact Overview(Contact) page and verify New Contact, Firstname Aaalastname was added and the information is correct"
+					Verify exists "Contact" dynamicsection
+					Verify exists "Organizations" dynamicsection
+					Open the "Organizations" dynamicsection
+					Verify exists "Click on the organization below and edit the account" text
+					Verify exists "Other Data" dynamicsection
+					Verify exists "Chart Types" dynamicsection
+					Verify exists "Firstname Aaalastname" contactcard
+					Verify exists "faaalastname@foh.com" text in "Firstname Aaalastname" contactcard
+					Verify exists "PSC-Federal Occupational Health" contactcard
+					Verify exists "03-23-2016" text
+					Verify exists "effective" text
+					Verify exists "02-23-2022" text
+					Verify exists "funding end date" text
+					Verify exists "Contact" text
+					Click the "Submit" button
+				Begin "Verify New Contact, Firstname Aaalastname's contact card in PSC-Federal Occupational Health's Overview(PO)"
+					Open the sidemenu
+					Click the "Provider Management" sidemenu entry
+					Type "PSC-Federal Occ" name input
+					Click the "Search" button
+					@wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//a[contains(., 'PSC-Federal Occupational Health')]"), expected_return=True, timeout=5)
+					Click the "PSC-Federal Occupational Health" link
+					@wait@driver.waitFor(driver, lambda d: d.getElement(xpath="//*[contains(., 'Aaalastname')]"), expected_return=True, timeout=5)
+					Verify exists "Aaalastname, Firstname" text
+					Verify exists "Agency Official Signatory Contact" text
+					Verify exists "03-23-2016" text
+					Verify exists "02-23-2022" text
+					Verify exists "faaalastname@foh.com" text
+				Begin "Test Edit/End/Delete options in the editable Contacts section"
+					Begin "Test the Edit button"
+						Open the Contacts dynamicsection
+						Click the 1st "Edit" button
+						Enter "10-06-2011" into the "start_date" date
+						Enter "10-06-2029" into the "end_date" date
+						Click the "OK" button
+						Begin "Verify that the contact was edited successfully"
+							Verify exists "10-06-2011" text
+							Verify exists "10-06-2029" text
+					Begin "Test the End button"
+						Click the 1st "End" button
+						Verify exists "Unlink" text
+						# Verify exists "le_pat_parent_relations_link_rel_pat_end_value0" checkbox
+						Verify exists "Cancel" button
+						# This line will fail, the checkbox is not working 12/1/17
+						# Click the "le_pat_parent_relations_link_rel_pat_end_value0" checkbox
+						Click the "Cancel" button
+					Begin "Test the Delete button"
+						Click the 1st "Delete" button
+						Verify exists "Unlink" text
+						# Verify exists "le_pat_parent_relations_link_rel_pat_end_value0" checkbox
+						Verify exists "Cancel" button
+						# This line will fail, the checkbox is not working 12/1/17
+						# Click the "le_pat_parent_relations_link_rel_pat_end_value0" checkbox
+						#Screenshot "Strikethrough Deleted Test Patient"
+						# Change/remove the '2nd' from the following line when Sean enables detectVisible in Okra
+						Close the Contacts dynamicsection
+						# Uncomment this line when Sean adds functionality to not look for hidden content
+						#Verify exists "Aaalastname, Firstname" text
+						Open the Contacts dynamicsection
+						# Uncomment this line when Sean adds functionality to not look for hidden content
+						#Verify exists "Aaalastname, Firstname" text
+			Begin "Add additional contacts for testing purposes"
+				Begin "Add a New Contact - Sara Fallon"
+					Navigate "?f=chart&s=pat&pat_id=10542"
+					Click the "Overview (PO)" charttab
+					Click the "Add New Contact" link
+					Type "Fallon" in the "last_name" input
+					Type "Sara" in the "first_name" input
+					Select "Agency Official Signatory Contact" from the "relation_type_desc" dropdown
+					Type "sfallon@foh.com" in the "email" input
+					Enter "02-23-2016" into the "start_date" date
+					Enter "02-23-2020" into the "end_date" date
+					Click the "Add New" button
+					Verify exists "Sara Fallon" contactcard
+					Begin "Verify New Contact, Sara Fallon's contact card in PSC-Federal Occupational Health's Overview(PO)"
+						Navigate "?f=chart&s=pat&pat_id=10542"
+						Click the "Overview (PO)" charttab
+						Verify exists "Fallon, Sara" text
+						Verify exists "Agency Official Signatory Contact" text
+						Verify exists "02-23-2016" text
+						Verify exists "02-23-2020" text
+						Verify exists "sfallon@foh.com" text
+				Begin "Add a New Contact - Lucy Letterman"
+					Navigate "?f=chart&s=pat&pat_id=10542"
+					Click the "Overview (PO)" charttab
+					Click the "Add New Contact" link
+					Type "Letterman" in the "last_name" input
+					Type "Lucy" in the "first_name" input
+					Select "Agency Official Signatory Contact" from the "relation_type_desc" dropdown
+					Type "lletterman@foh.com" in the "email" input
+					Enter "02-23-2016" into the "start_date" date
+					Enter "02-23-2020" into the "end_date" date
+					Click the "Add New" button
+					Verify exists "Lucy Letterman" contactcard
+					Begin "Verify New Contact, Lucy Letterman's contact card in PSC-Federal Occupational Health's Overview(PO)"
+						Navigate "?f=chart&s=pat&pat_id=10542"
+						Click the "Overview (PO)" charttab
+						Verify exists "Letterman, Lucy" text
+						Verify exists "Agency Official Signatory Contact" text
+						Verify exists "02-23-2016" text
+						Verify exists "02-23-2020" text
+						Verify exists "lletterman@foh.com" text
+				Begin "Add a New Contact - David Kimmel"
+					Navigate "?f=chart&s=pat&pat_id=10542"
+					Click the "Overview (PO)" charttab
+					Click the "Add New Contact" link
+					Type "Kimmel" in the "last_name" input
+					Type "David" in the "first_name" input
+					Select "Agency Official Signatory Contact" from the "relation_type_desc" dropdown
+					Type "dkimmel@foh.com" in the "email" input
+					Enter "02-23-2016" into the "start_date" date
+					Enter "02-23-2020" into the "end_date" date
+					Click the "Add New" button
+					Verify exists "David Kimmel" contactcard
+					Begin "Verify New Contact, David Kimmel's contact card in PSC-Federal Occupational Health's Overview(PO)"
+						Navigate "?f=chart&s=pat&pat_id=10542"
+						Click the "Overview (PO)" charttab
+						Verify exists "Kimmel, David" text
+						Verify exists "Agency Official Signatory Contact" text
+						Verify exists "02-23-2016" text
+						Verify exists "02-23-2020" text
+						Verify exists "dkimmel@foh.com" text
+	Begin "Employer Organization"
+		Begin "Manage Employer Organization dynamic section"
+			Open the sidemenu
+			Click the "Employer Organizations" sidemenu entry
+			Type "Better Corp" in the name input
+			Click the "Search" button
+			Click the "Better Corp" link
+			Click the "Overview (EO)" charttab
+			Begin "Validate Employer Organization section information"
+				Verify exists "Better Corp" contactcard
+				Verify exists "1700 Amphitheatre Parkway" text
+				Verify exists "Mountain View, California" text
+				Verify exists "(650) 459-6270" text
+				Verify exists "(650) 459-6271" text
+				Verify exists "https://www.enterprisehealth.com" text
+			Begin "Manage Employer Organziation Contacts dynamic section"
+				Begin "Add a New Contact - Ellen Ross"
+					Click the "Add New Contact" link
+					Type "Ross" in the "last_name" input
+					Type "Ellen" in the "first_name" input
+					Select "Agency Official Signatory Contact" from the "relation_type_desc" dropdown
+					Type "eross@foh.com" in the "email" input
+					Click the "Add New" button
+					Verify exists "Ellen Ross" contactcard
+					Begin "Add more info to Ellen Ross"
+						Open the "Contact" dynamicsection
+						Type "Elizabeth" in the "DPI_middle_name" input
+						Type "CPA" in the "Position Title" input
+						Type "22401" in the "DPI_zip_code" input
+						Type "502 Caroline Street" in the "DPI_address1" input
+						Type "(540) 254-9765" in the "DPI_work_phone" input
+						Type "(540) 254-9766" in the "DPI_fax_number" input
+						Type "betsy@better.com" in the "DPI_email" input
+					Begin "Verify New Contact, Ellen Ross with added info"
+						Verify exists "Ellen Elizabeth Ross" text
+						Verify exists "CPA" text
+						Verify exists "502 Caroline Street" text
+						Verify exists "Fredericksburg, Virginia 22401" text
+						Verify exists "(540) 254-9765" text
+						Verify exists "(540) 254-9766" text
+						Verify exists "betsy@better.com" text
+					Begin "Verify New Contact, Ellen Ross's contact card in Better Corp's Overview(PO)"
+						Open the sidemenu
+						Click the "Employer Organizations" sidemenu entry
+						Type "Better Corp" in the name input
+						Click the "Search" button
+						Click the "Better Corp" link
+						Click the "Overview (EO)" charttab
+						Verify exists "Ross, Ellen Elizabeth" text
+						Verify exists "Agency Official Signatory Contact" text
+						Verify exists "02-02-2007" text
+						Verify exists "(540) 254-9765" text
+						Verify exists "(540) 254-9766" text
+						Verify exists "betsy@better.com" text
+				Begin "Add a New Contact - Manuel Isaacs"
+					Click the "Add New Contact" link
+					Type "Isaacs" in the "last_name" input
+					Type "Manuel" in the "first_name" input
+					Select "Agency Official Signatory Contact" from the "relation_type_desc" dropdown
+					Type "misaacs@foh.com" in the "email" input
+					Click the "Add New" button
+					Verify exists "Manuel Isaacs" contactcard
+					Begin "Verify New Contact, Manuel Isaacs' contact card in Better Corp's Overview(PO)"
+						Open the sidemenu
+						Click the "Employer Organizations" sidemenu entry
+						Type "Better Corp" in the name input
+						Click the "Search" button
+						Click the "Better Corp" link
+						Click the "Overview (EO)" charttab
+						Verify exists "Isaacs, Manuel" text
+						Verify exists "Agency Official Signatory Contact" text
+						Verify exists "02-02-2007" text
+						Verify exists "misaacs@foh.com" text
+				Begin "Add a New Contact - Rachel Gilbert"
+					Click the "Add New Contact" link
+					Type "Gilbert" in the "last_name" input
+					Type "Rachel" in the "first_name" input
+					Select "Agency Official Signatory Contact" from the "relation_type_desc" dropdown
+					Type "rgilbert@foh.com" in the "email" input
+					Click the "Add New" button
+					Verify exists "Rachel Gilbert" contactcard
+					Begin "Verify New Contact, Rachel Gilbert' contact card in Better Corp's Overview(PO)"
+						Open the sidemenu
+						Click the "Employer Organizations" sidemenu entry
+						Type "Better Corp" in the name input
+						Click the "Search" button
+						Click the "Better Corp" link
+						Click the "Overview (EO)" charttab
+						Verify exists "Gilbert, Rachel" text
+						Verify exists "Agency Official Signatory Contact" text
+						Verify exists "02-02-2007" text
+						Verify exists "rgilbert@foh.com" text
+Begin "Agreements"
+	Begin "Manage Customer Agreements"
+		Open the sidemenu
+		Click the "Employer Organizations" sidemenu entry
+		Type "Better Corp" in the name input
+		Click the "Search" button
+		Click the "Better Corp" link
+		Click the "Overview (EO)" charttab
+		Begin "Test the Other Data dynamic section in Better Corp"
+			Open the "Other Data" dynamicsection
+			Begin "Test the logic used for ALC, ATA, AID, YEAR, MAIN, SUB fields"
+				Begin "ALC field test"
+					Type "75030030" in the "Requesting Agency Funding Information - ALC" freetext field
+					Verify exists "Entering this ALC is not permissible. Please contact a Fiscal team supervisor." text
+					Click the "OK" button
+					Type "A" in the "Requesting Agency Funding Information - ALC" freetext field
+					Verify exists "The ALC must be 8 digits." text
+					Click the "OK" button
+					Type "123456789" in the "Requesting Agency Funding Information - ALC" freetext field
+					Verify exists "The ALC must be 8 digits." text
+					Click the "OK" button
+				Begin "TAS ATA field"
+					Type "A" in the "Requesting Agency Funding Information - TAS ATA" freetext field
+					Verify exists "The value selected is not a valid ATA number. ATA numbers must be exactly 3 numeric digits long (ex 020)." text
+					Click the "OK" button
+					Type "0000" in the "Requesting Agency Funding Information - TAS ATA" freetext field
+					Verify exists "The value selected is not a valid ATA number. ATA numbers must be exactly 3 numeric digits long (ex 020)." text
+					Click the "OK" button
+				Begin "TAS AID field"
+					Type "Testing" in the "Requesting Agency Funding Information - TAS AID" autocomplete
+					Verify exists "The value selected is not a valid AID number. AID numbers must be exactly 3 numeric digits long (ex 020)." text
+					Click the "OK" button
+					Type "0000" in the "Requesting Agency Funding Information - TAS AID" autocomplete
+					Verify exists "The value selected is not a valid AID number. AID numbers must be exactly 3 numeric digits long (ex 020)." text
+					Click the "OK" button
+				Begin "TAS MAIN field"
+					Type "A" in the "Requesting Agency Funding Information - TAS MAIN" autocomplete
+					Verify exists "The value selected is not a valid MAIN number. MAIN numbers must be exactly 4 numeric digits long (ex 0020)." text
+					Click the "OK" button
+					Type "00000" in the "Requesting Agency Funding Information - TAS MAIN" autocomplete
+					Verify exists "The value selected is not a valid MAIN number. MAIN numbers must be exactly 4 numeric digits long (ex 0020)." text
+					Click the "OK" button
+				Begin "TAS SUB field"
+					Type "A" in the "Requesting Agency Funding Information - TAS SUB" autocomplete
+					Verify exists "The value selected is not a valid SUB number. SUB numbers must be exactly 3 numeric digits long (ex 020)." text
+					Click the "OK" button
+					Type "00000" in the "Requesting Agency Funding Information - TAS SUB" autocomplete
+					Verify exists "The value selected is not a valid SUB number. SUB numbers must be exactly 3 numeric digits long (ex 020)." text
+					Click the "OK" button
+				Type "BetterEIN" in the "Requesting Agency EIN" freetext field
+				Type "BetterFSN" in the "Requesting Agency Funding Information - FSN" freetext field
+				Type "12345678" in the "Requesting Agency Funding Information - ALC" freetext field
+				Type "BetterTreasuryAgencyCode" in the "Requesting Agency Funding Information - Treasury Agency Code" freetext field
+				Type "BetterTradingPartnerCode" in the "Requesting Agency Funding Information - Trading Partner Code" freetext field
+				Type "000" in the "Requesting Agency Funding Information - TAS ATA" freetext field
+				Click the "Collection" radio
+				Type "BetterObjectClassCode" in the "Requesting Agency Funding Information - Object Class Code" freetext field
+				Type "BetterBPN" in the "Requesting Agency Funding Information - BPN" freetext field
+				Type "BetterBPN+4" in the "Requesting Agency Funding Information - BPN + 4" freetext field
+				Type "BetterAdditionalAccountingClassification/Information" in the "Requesting Agency Funding Information - Additional Accounting Classification/Information" freetext field
+				Advance the dynamicsection
+				Verify exists "BetterEIN" text
+				Verify exists "BetterFSN" text
+				Verify exists "12345678" text
+				Verify exists "BetterTreasuryAgencyCode" text
+				Verify exists "BetterTradingPartnerCode" text
+				Verify exists "000" text
+				Verify exists "Collection" text
+				Verify exists "BetterObjectClassCode" text
+				Verify exists "BetterBPN" text
+				Verify exists "BetterBPN+4" text
+				Verify exists "BetterAdditionalAccountingClassification/Information" text
+		Begin "Test the Eligible Service Plans dynamic section in Better Corp"
+			Verify exists "Agreement Title" text
+			Verify exists "SOW Title" text
+			Advance the dynamicsection
+		Begin "Test the Agreements dynamic section in Better Corp"
+			Advance the dynamicsection
+		Begin "Test the Sub-Employer Organizations dynamic section in Better Corp"
+			Advance the dynamicsection
+		Begin "Test the Chart Types dynamic section in Better Corp"
+			Click the "Submit" button
+	Begin "Add an Agreement"
+		Click the "Add Agreement" link
+		Begin "Add a PO to the agreement from the Parties section"
+			Verify exists "Better Corp" contactcard
+			Open the "Parties" dynamicsection
+			Enter "PSC-Federal Occupational Health" in the "Provider Organization" autocomplete
+			Advance the dynamicsection
+			Verify exists "PSC-Federal Occupational Health" contactcard
+		Begin "Add New Contacts for the Organizations in the Contacts section"
+			Enter "Isaacs, Manuel" in the 1st autocomplete
+			Select "Agency Official Signatory Contact" from the 1st dropdown
+			Click the 1st "Add" button
+			Enter "Kimmel, David" in the 2nd autocomplete
+			Select "Agency Official Signatory Contact" from the 2nd dropdown
+			Click the 2nd "Add" button
+			Begin "Verify contacts were added and all information is correct"
+				Verify exists "Kimmel, David" text
+				Verify exists "Isaacs, Manuel" text
+				Verify exists the 2nd "Agency Official Signatory Contact" text
+			Advance the dynamicsection
+		Begin "Enter the Agreement Details"
+			Enter "02-02-2007" in the 1st date
+			Enter "Federal Occupational Health - Behavioral Health Services" in the "Agreement Title" autocomplete acinput
+			Click the "FOH Standard Forms" radio
+			Click the "Single Order IAA" radio
+			Click the "Yes" radio
+			Click the "Annual Renewal" radio
+			Enter "10-01-2014" in the 2nd date
+			Enter "09-30-2018" in the 3rd date
+			Click the 1st "Franchise Fund" radio
+			Click the 2nd "Franchise Fund" radio
+			Type "A10611" in the "STM Agreement Number (If applicable)" freetext field
+			Click the "Active" radio
+			Advance the dynamicsection
+			Verify exists "FOH Standard Forms" text
+			Verify exists "Single Order IAA" text
+			Verify exists "Annual Renewal" text
+			Verify exists "10-01-2014" text
+			Verify exists "09-30-2018" text
+			Verify exists the 1st "Franchise Fund" text
+			Verify exists the 2nd "Franchise Fund" text
+			Verify exists "A10611" text
+			Verify exists "Active" text
+		Begin "Enter the Additional Details"
+			Click the 1st "Yes" radio
+			Click the "New" radio
+			Click the 2nd "No" radio
+			Type "$500.00" in the "Estimated Agreement Amount - Direct Cost" freetext field
+			Type "$300.00" in the "Estimated Agreement Amount - Overhead Fees and Charges" freetext field
+			Type "$800.00" in the "Estimated Agreement Amount - Total Estimated Amount" freetext field
+			Advance the dynamicsection
+			Verify exists "Yes" text
+			Verify exists "New" text
+			Verify exists 2nd "No" text
+			Verify exists "$500.00" text
+			Verify exists "$300.00" text
+			Verify exists "$800.00" text
+		Begin "Enter Agreement Staging"
+		# 2/8/18 Checked with Aris about adding to this section and said to skip for now
+			Advance the dynamicsection
+		Begin "Upload Documents"
+			# Must be exact match because there is also an Executed Agreements subtab under the Agreements tab
+			Click the @Executed Agreement link@xpath=//div[contains(.,"Upload files")]/following-sibling::div/a[contains(.,"Executed Agreement")]
+			Begin "Add an Executed Agreement (PDF) document"
+				@driver.switchToPopup()
+				Select "PDF File" from the storage_type dropdown
+				Type "Fate-Core-Character-Sheet.pdf" into the file input
+				Click the "Add Document" button
+				Verify exists "(Executed Agreement) has been uploaded successfully!" text
+				@Close the popup@driver.closePopup()
+				Begin "Verify Executed Agreement was added"
+					Advance the dynamicsection
+					Click the "Save" button
+					@Wait for the section@driver.wcutils.waitForAJAX(30)
+					Click the "Agreement" toolbar link
+					Click the "Documents" jumptab
+					Verify exists "Executed Agreement" listview row
+		Begin "Finish Agreement"
+			Begin "Save Agreement without Closing"
+				Click the "Save" button
+				@Wait for the Agreement to save and reload@driver.wcutils.waitForAJAX(30)
+				Verify exists "Parties" dynamicsection
+				Verify exists "Save" button
+				Verify exists "Route" button
+			Begin "Finalize Agreement"
+				Click the "Agreement" toolbar link
+				Click the "Finalize" button
+				@Wait for the Agreement to close and the page to reload@driver.wcutils.waitForAJAX(30)
+				Verify exists "Encounter has been closed and Archived successfully" text
+				Verify exists "Additional View View IAA Preliminary Archived as Document" text
+				Verify exists "Re-Archive Encounter" link
+				Verify exists "Additional Views" text
+				Verify exists "Encounter Options" text
+	Begin "Modify an Agreement"
+		Click the "Encounters" charttab
+		Click the "Serv Date" listview header
+		Click the 1st "Set Current" listview link
+		Click the 1st "Set Open" listview link
+		Click the 1st "Agreement" listview link
+		Reopen the "Agreement Details" dynamicsection
+		Enter "10-01-2016" in the 2nd date
+		Enter "09-30-2017" in the 3rd date
+		Close the "Agreement Details" dynamicsection
+		Begin "Confirm changes"
+			@Wait for the Agreement Details section to close and render@driver.wcutils.waitForAJAX(30)
+			Verify exists "10-01-2016" text
+			Verify exists "09-30-2017" text
+		Click the "Finalize" button
+		@Wait for the Agreement to close and refresh the page@driver.wcutils.waitForAJAX(30)
+		Verify exists "10-01-2016" text
+		Verify exists "09-30-2017" text
+		Verify exists "Encounter has been closed and Archived successfully as Document" text
+		Verify exists "Additional View View IAA Preliminary Archived as Document" text
+		Verify exists "Re-Archive Encounter" link
+		Verify exists "Additional Views" text
+		Verify exists "Encounter Options" text
+Begin "Statement of Work"
+	Begin "Add a Statement of Work"
+		Click the "Overview (EO)" charttab
+		Click the "Add Statement of Work" link
+		Begin "Link an Agreement to the SOW"
+			Open the "Agreements" dynamicsection
+			Click the @Agreement's "Link" link@xpath=//td[contains(.,"A10611")]/following-sibling::td/a[contains(.,"Link")]
+			Click the @Statement of Work link@xpath=//span[contains(.,"Statement of Work")]/parent::a
+			Open the "Agreements" dynamicsection
+			Verify exists !Unlink link
+			Verify exists "Would you like to create a new SOW?" text
+			Begin "Verify the alert"
+# Note: find way to distinguish radio buttons
+				@Wait for the Agreements section to reload after linking the agreement@driver.wcutils.waitForAJAX(30)
+				Click the 2nd radio
+				Verify exists "If a new SOW is not required, STOP and delete this encounter!" text
+				Verify exists "If you do not have access to delete encounters," text
+				Verify exists "please submit a request through the Service Request Portal to delete this SOW." text
+				Close the popup
+			Verify exists "Unlink" link
+# Note: find way to distinguish radio buttons
+			Click the 1st radio
+			Enter "07/02/2016" in the 1st date
+			Enter "07/02/2015" in the 2nd date
+			Click the dynamicsection nextbutton 
+			Begin "Test the alert for incorrect date range"
+				Verify exists "Required fields" popup
+				Verify exists "Period of performance end date has to be after the period of performance start date." text
+				Close popup
+			Enter "07/02/2015" in the 1st date
+			Enter "07/02/2016" in the 2nd date
+			Click the dynamicsection nextbutton 
+			Begin "Test the alert for date range outside of the Agreement's period of performance"
+				@Wait for the section to close and the page to render@driver.wcutils.waitForAJAX(30)
+				Verify exists "Required fields" popup
+				Verify exists "Period of performance date range has to be within the valid agreement (10-01-2016 - 09-30-2017)" text
+				Close popup
+			Enter "10/01/2016" in the 1st date 
+			Enter "09/30/2017" in the 2nd date 
+			Advance the dynamicsection
+			Verify exists "Period of performance start date:" text
+			Verify exists "10-01-2016" text
+			Verify exists "Period of performance end date:" text
+			Verify exists "09-30-2017" text
+		Begin "Test the Parties Section"
+			Advance the dynamicsection
+			Verify exists "PSC-Federal Occupational Health" contactcard
+			Verify exists "Better Corp." contactcard
+		Begin "Test the Contacts Section"
+			Enter "Isaacs, Manuel" in the 1st autocomplete
+			Select "Program Official Signatory Contact" from the 1st dropdown
+			Click the 1st "Add" button
+			Enter "Gilbert, Rachel" in the 1st autocomplete
+			Select "Contact" from the 1st dropdown
+			Click the 1st "Add" button
+			Enter "Letterman, Lucy" in the 2nd autocomplete
+			Select "Program Official Signatory Contact" from the 2nd dropdown
+			Click the 2nd "Add" button
+			Advance the dynamicsection
+			Verify exists "Lucy Letterman" contactcard
+			Verify exists "Manuel Isaacs" contactcard
+			Verify exists "Rachel Gilbert" contactcard
+		Begin "Test the Details Section"
+			Enter "Organizational Development and Leadership Services" in the autocomplete
+			Click the "New" radio
+			Type "100000.00" in the "SOW Expected Total Funding for this Statement of Work" freetext field
+			Type "This is a free text area where the user creating this SOW may enter specific details not elsewhere captured." in the "SOW Additional Information" freetext field
+			Type "STMSOWNumber" in the "STM SOW Number(s)" freetext field
+			Advance the dynamicsection
+			Verify exists "Organizational Development and Leadership Services" text
+			Verify exists "New" text
+			Verify exists "100000.00" text
+			Verify exists "This is a free text area where the user creating this SOW may enter specific details not elsewhere captured." text
+			Verify exists "STMSOWNumber" text
+		Begin "Test the Scope of Services Section"
+			Advance the dynamicsection
+		Begin "Test the Documents Section"
+			Begin "Test Printing an IPAC Payment"
+				@Wait for the section@driver.wcutils.waitForAJAX(30)
+				Click the "IPAC Payment" link
+				@driver.switchToPopup()
+				@Wait for the page to render@driver.wcutils.waitForAJAX(30)
+				@Close the popup@driver.closePopup()
+			Begin "Test Uploading the Executed Statement of Work"
+				Click the "Executed Statement of Work" link
+				@driver.switchToPopup()
+				Select "PDF File" from the storage_type dropdown
+				Type "Fate-Core-Character-Sheet.pdf" into the file input
+				Click the "Add Document" button
+				@Close the popup@driver.closePopup()
+				Advance the dynamicsection
+				Verify exists "Executed Statement of Work" listview row
+				Verify exists "IPAC Payment" listview row
+			Begin "Test the Linked Service Orders Section"
+				Advance the dynamicsection
+			Begin "Test the Eligible Service Plans Section"
+				@Wait for the section@driver.wcutils.waitForAJAX(30)
+				Verify exists "Agreement Title: Federal Occupational Health - Behavioral Health Services (10-01-2016 - 09-30-2017)" text
+				Verify exists "Service Order Items cannot be added until the the SOW is saved as Preliminary." text
+				Close the "Eligible Service Plans" dynamicsection
+			Click the "Create Preliminary SOW" button
+			Verify exists "Statement of Work - Preliminary" listview row
+			Verify exists "Statement of Work Encounter" listview row
+			@Wait for the section@driver.wcutils.waitForAJAX(30)
+			Click the "Eligible Service Plans" jumptab
+			Click the "Add Service Order Items" link
+Begin "Service Order"
+	Begin "SOW Section"
+		Open the "SOW" dynamicsection
+		Verify exists "Organizational Development and Leadership Services" text
+		Verify exists "10-01-2016" text
+		Verify exists "09-30-2017" text
+		Verify exists "Unlink" link
+		Advance dynamicsection
+	Begin "Parties Section"
+		Enter "PSC-Federal Occupational Health" in the "Provider Organization" autocomplete
+		Advance the dynamicsection
+		Verify exists "Better Corp" contactcard
+		Verify exists "PSC-Federal Occupational Health" contactcard
+	Begin "Contacts Section"
+		Enter "Isaacs, Manuel" in the 1st autocomplete
+		Select "Program Official Signatory Contact" from the 1st dropdown
+		Click the 1st "Add" button
+		Enter "Gilbert, Rachel" in the 1st autocomplete
+		Select "Contact" from the 1st dropdown
+		Click the 1st "Add" button
+		Enter "Letterman, Lucy" in the 2nd autocomplete
+		Select "Program Official Signatory Contact" from the 2nd dropdown
+		Click the 2nd "Add" button
+		Advance the dynamicsection
+		Verify exists "Lucy Letterman" contactcard
+		Verify exists "Manuel Isaacs" contactcard
+		Verify exists "Rachel Gilbert" contactcard
+	Begin "Order Requests Section"
+		Click the "Make Service Order" link
+		@Wait for the page to render@driver.wcutils.waitForAJAX(30)
+		Begin "Test the Order Request MIEWin"
+			Enter "06-15-2015" into the 1st date
+			Enter "07-02-2018" into the 2nd date
+			Click the "Submit" button
+			Begin "Test the 'Problems With Order' Alert"
+				Verify exists "The following items are required in your system" text
+				Verify exists "The start and end dates for Service Order Request must be between 10-01-2016 and 09-30-2017" text
+				Verify exists "No orders remain." text
+				Click the "OK" button
+			Enter "10-01-2016" into the 1st date
+			Enter "09-30-2017" into the 2nd date
+			Click the 1st "Clinical Health Services: Medical Employability Case Review Services" picklist checkbox
+			Click the "A0L - FedStrive Advantage Standard-New Orleans LA" picklist checkbox
+			Click the "A17 - FedStrive Advantage Standard-Laguna Niguel CA" picklist checkbox
+			Click the "A19 - FedStrive Advantage Standard-Washington DC" picklist checkbox
+			Click the "A1C - FSA Extended-Fresno CA" picklist checkbox
+			Click the "Submit" button
+			Begin "Edit Service Order"
+				@Wait for the page to render@driver.wcutils.waitForAJAX(30)
+				Click the @Edit Order Button@xpath=//a[contains(.,"Edit Order")][@class="wc2button"]
+				Click the "Environmental Health Services: Ergonomics Assessment Services" picklist checkbox
+				Click the "Submit" button
+			Begin "Verify Orders Requested"
+				Verify exists "Start Date: 10-01-2016" text
+				Verify exists "End Date: 09-30-2017" text
+				Verify exists "Clinical Health Services: Medical Employability Case Review Services" text
+				Verify exists "Environmental Health Services: Ergonomics Assessment Services" text
+				Verify exists "A0L - FedStrive Advantage Standard-New Orleans LA" text
+				Verify exists "A17 - FedStrive Advantage Standard-Laguna Niguel CA" text
+				Verify exists "A19 - FedStrive Advantage Standard-Washington DC" text
+				Verify exists "A1C - FSA Extended-Fresno CA" text
+Begin "Manage Funding Sources and Accounts"
+	Open the sidemenu
+	Click the "Employer Organizations" sidemenu entry
+	Type "Better" in the name input
+	Click the "Search" button
+	Click the "Better Corp." link
+	Click the "Overview (EO)" charttab
+	@Wait for the page to render@driver.wcutils.waitForAJAX(30)
+	@Scroll down@driver.scrollTo(y=750)
+	Click the "Add New Account" link
+	Begin "Create A Testing Account"
+		Type "Funding Source 1" in the "Name" field
+		Type "15000.00" in the "Opening Balance" field
+		Enter "10-01-2016" in the 1st date
+		Enter "09-30-2016" in the 2nd date
+		Click the "Add New" button
+		Begin "Test the Funding Date Range Warning"
+			Verify exists 'The "Funding End Date" must be after the "Funding Start Date"' text
+			Click the "OK" button
+		Enter "09-30-2017" in the 2nd date
+		Click the "Add New" button
+		Begin "Test the New Account's Overview page"
+			Begin "Allocations Section"
+				Begin "Add Allocation"
+					Click the "Add Allocation" link
+					Select "Clinical Health Services: Medical Employability Case Review Services (OP516)" from the "last_name" dropdown 
+					Type "50,000.00" in the "Opening Balance" field
+					Enter "10/01/2016" in the 1st date
+					Enter "09/30/2017" in the 2nd date
+					Click the "Add New" button
+					Begin "Test the Parent Account Balance Warning"
+						Verify exists popup
+						Verify exists "Allocation accounts can not exceed the parent account opening balance." text
+						Click the "OK" button
+					Type "5,000.00" in the "Opening Balance" field
+					Enter "09-30-2018" in the 2nd date
+					Click the "Add New" button
+					Begin "Test the Account Funding Period Warning"
+						Verify exists popup
+						Verify exists "The Allocation's funding period must be within the parent account's funding period." text
+						Click the "OK" button
+					Enter "09-30-2017" in the 2nd date
+					Click the "Add New" button
+					Verify exists "Clinical Health Services: Medical Employability Case Review Services (OP516)" text
+					Verify exists "$5,000.00" text
+				Begin "Account Section"
+					Verify exists "Funding Source 1" contactcard
+					Verify exists "$10,000.00"|"Balance" contactcard info
+					Verify exists "Balance" contactcard info
+					Verify exists "$15,000.00" contactcard info
+					Verify exists "Opening Balance" contactcard info
+					Verify exists "10-01-2016" contactcard info
+					Verify exists "Funding Start Date" contactcard info
+					Verify exists "09-30-2017" contactcard info
+					Verify exists "Funding End Date" contactcard info
+				Begin "Funding Data Section"
+					Open the "Funding Data" dynamicsection
+					# Click the Yes radio button
+					Click the 1st radio
+					Close the "Funding Data" dynamicsection
+				Click the "Submit" button
+				Click the "Overview (Account)" charttab
+				Verify exists "Has all funding data been reviewed and verified as accurate?" text
+				Verify exists "Yes" text
+				Verify exists "Requesting Agency EIN" text
+				Verify exists "BetterEIN" text
+	Begin "Use Time Machine to put test within the correct timeframe
+		Navigate "?tabmodule=admin&tabselect=Health+Surveillance&f=panelactiontest&s=time_machine"
+		Enter "05-17-2017" in the date
+		Click the "Submit" button
+Begin "Charges"
+	Navigate '?f=chart&s=pat&pat_id=43'
+	Click the "Service Order" toolbar link
+	Begin "Charges Section"
+		Open the "Charges" dynamicsection
+		Verify exists the "A1C - FSA Extended-Fresno CA" table row
+		Verify exists the "A0L - FedStrive Advantage Standard-New Orleans LA" table row
+		Verify exists the "A17 - FedStrive Advantage Standard-Laguna Niguel CA" table row
+		Verify exists the "A19 - FedStrive Advantage Standard-Washington DC" table row
+# MIEdriver bug, must select by value
+# Change; the element value/name compared to its label is misleading
+		Select "35018" from the "charge_plans" dropdown
+# Change; the element value/name compared to its label is misleading
+		Select "Ergo Methods" from the "po_chart_id" dropdown
+# Change; the element value/name compared to its label is misleading
+		Select "Other Direct Costs" from the "order_id" dropdown
+# Change; the element value/name compared to its label is misleading
+#		Select "FSA: Clinical Health Services: Medical Employability Case Review Services (OP516)" from the @Funding Source dropdown@xpath=//select[@name="accounts"][@id="fund_chart_id"]/option[contains(.,"FSA: Clinical Health Services: Medical Employability Case Review Services (OP516)")]
+		Select "FSA: Clinical Health Services: Medical Employability Case Review Services (OP516) (Available: $5,000.00)" from the 2nd "fund_chart_id" dropdown
+		Type "26000" in the @Quantity input@xpath=//td[@class="field"][contains(.,"Quantity")]/following-sibling::td/input[@id="quant"]
+		Click the "Add Charge" button
+		Begin "Test the Funding Source Ceiling alert"
+			Verify exists "Quantity exceeds funding source ceiling. Reduce quantity to lower amount." text
+			Click the "OK" button
+		Type "3000" in the @Quantity input@xpath=//td[@class="field"][contains(.,"Quantity")]/following-sibling::td/input[@id="quant"]
+		Click the "Add Charge" button
+		Select "Travel and Per Diem" from the "order_id" dropdown
+		Select "FSA: Clinical Health Services: Medical Employability Case Review Services (OP516) (Available: $2,000.00)" from the 2nd "fund_chart_id" dropdown
+		Type "2000" in the @Quantity input@xpath=//td[@class="field"][contains(.,"Quantity")]/following-sibling::td/input[@id="quant"]
+		Click the "Add Charge" button
+		Begin "Test the Funding Source Ceiling alert"
+			Verify exists "Funding source is within 90% of ceiling." text
+			Click the "OK" button
+		@Wait for the page to render@driver.wcutils.waitForAJAX(30)
+		Verify exists "Environmental Health Services: Ergonomics Assessment Services  (OP503)" table row
+		Verify exists "Clinical Health Services: Medical Employability Case Review Services (OP516)" table row
+		Verify exists "Other Direct Costs" table row
+		Verify exists "Travel and Per Diem" table row
+		Verify exists "$3,000.00" table row
+		Verify exists "$2,000.00" table row
+Begin "Finalize and Archive & Close"
+	Begin "Test the Add More Items alert"
+		Click the "Finalize" button
+		@Wait for the page to render@driver.wcutils.waitForAJAX(30)
+		Verify exists "Encounter has been closed and Archived successfully as Document" text
+		Verify exists "Additional View View Service Order Archived as Document" text
+		Verify exists "Additional View Population Survey for SPCs Archived as Document" text
+		Verify exists "Re-Archive Encounter" link
+		Verify exists "Additional Views" table name

@@ -1,0 +1,391 @@
+"""
+ Cypress Measure Template
+ @owners: dcarlson nrichardson
+ Add @ to filedeps below and update the ###
+ @filedeps: system/layouts/StructDoc/QRDA*.html, system/layouts/StructDocXSLTypes/QRDA.html, selenium/tests/Cypress_CMS951*.okra, src/encounter_measures.c, system/reports/CMS951v3*.sql, system/reports/cql_*.sql, system/reports/CQL_*.sql, system/reports/quality_*.sql
+"""
+
+Begin "CMS951v3 Testing"
+
+@driver.setTimeout(900)
+@driver.miedb.dbExec("INSERT IGNORE INTO insurance_plans SET name='MEDICARE PLUS', active=1, insurance_type_code='1';")
+@driver.miedb.dbExec("INSERT IGNORE INTO insurance_plans SET name='MEDICAID', active=1, insurance_type_code='2';")
+@driver.miedb.dbExec("INSERT IGNORE INTO insurance_plans SET name='ABC Insurance', active=1, insurance_type_code='349';")
+
+@driver.miedb.dbExec("INSERT IGNORE INTO patient_partitions(wc_partition,name,description) VALUES ('CMS951','CMS951','Partition for CMS951 patients');")
+@driver.miedb.dbExec("INSERT IGNORE INTO document_types (doc_type, description, text_add, active, upload_add, allow_index) VALUES ('QRDA', 'QRDA Document', 1, 1, 1, 1);")
+@driver.miedb.dbExec("UPDATE system_settings SET value = \"'MEANUSE','OFFICEF','HISTEXAM','PEDIATRICS','OFFENT','POV','VISIT','VIRTUAL'\", reason = 'Cypress testing' WHERE item='Meaningful Use Visit Types';")
+@driver.miedb.dbExec("INSERT IGNORE INTO system_reports (name, category, description, notes, sql_query, create_date, revision_date, modified_by, run_counter, last_ran, restricted, active, realtime) VALUES ('Patient Chart Compare','','Patient Chart Compare','',\"SELECT\n  mrn1.wc_partition AS \'Partition A\',\n CONCAT(p1.last_name, \', \', p1.first_name, \'{$p}\', p1.pat_id) AS \'Name A\',\n    p1.birth_date AS \'Birthday A\',\n    p1.username AS \'Username A\',\n    p1.email AS \'Email A\',\n    mrn2.wc_partition AS \'Partition B\',\n    CONCAT(p2.last_name, \', \', p2.first_name, \'{$p}\', p2.pat_id) AS \'Name B\',\n    p2.birth_date AS \'Birthday B\',\n    p2.username AS \'Username B\',\n    p2.email AS \'Email B\',\n    dup.rating AS \'Similarity Rating\',\n    CONCAT(\'http://\', \'{$w|add_url=&webchart.cgi?opp=merge&f=chart&fix_dups=1&s=pat&t=Admin:Demographics&v=dashboard&merge_opts_\',p1.pat_id,\'=3&submit_merge=Merge+Using+Selected+Options&pat_id=\',p2.pat_id,\'&to_mrn=\',CONCAT(mrn2.wc_partition,\'-\', mrn2.mrnumber),\'&from_mrn=\',CONCAT(mrn1.wc_partition,\'-\', mrn1.mrnumber),\'&patient_pat_id=\',p1.pat_id,\'&from_pats_id=\',p1.pat_id,\'}\', \'Merge A to B\') AS \'Merge A to B\',\n    CONCAT(\'http://\', \'{$w|add_url=&webchart.cgi?opp=merge&f=chart&fix_dups=1&s=pat&t=Admin:Demographics&v=dashboard&merge_opts_\',p2.pat_id,\'=3&submit_merge=Merge+Using+Selected+Options&pat_id=\',p1.pat_id,\'&to_mrn=\',CONCAT(mrn1.wc_partition,\'-\', mrn1.mrnumber),\'&from_mrn=\',CONCAT(mrn2.wc_partition,\'-\', mrn2.mrnumber),\'&patient_pat_id=\',p2.pat_id,\'&from_pats_id=\',p2.pat_id,\'}\', \'Merge B to A\') AS \'Merge B to A\'\nFROM\n    patient_pdups dup\nINNER JOIN\n    patients p1 ON dup.pat_id = p1.pat_id\nINNER JOIN\n    patients p2 ON dup.pat_id_match = p2.pat_id\nINNER JOIN\npatient_mrns mrn1 ON p1.pat_id = mrn1.pat_id\nINNER JOIN\n       patient_mrns mrn2 ON p2.pat_id = mrn2.pat_id\nWHERE mrn1.wc_partition LIKE \'CMS%\'\nAND  mrn2.wc_partition LIKE \'CMS%\' AND (dup.rating>3 OR (LEFT(p1.last_name,1)=LEFT(p2.last_name,1) AND p2.first_name=p1.first_name AND p1.birth_date=p2.birth_date )) ORDER BY mrn1.pat_id,mrn2.pat_id\",'2024-08-20 20:19:29','2024-08-20 20:19:29',97,0,'0000-00-00 00:00:00',0,1,0);")
+
+Navigate "?f=layout&module=Layout&1&name=QRDApost"
+Type "QRDA/CMS951v3/0_Angela_Drake.xml" into the "file1" input
+Type "CMS951-0" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/10_Charlene_Peterson.xml" into the "file1" input
+Type "CMS951-10" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/11_Christian_Rivera.xml" into the "file1" input
+Type "CMS951-11" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/12_Dana_Patterson.xml" into the "file1" input
+Type "CMS951-12" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/13_Dana_Pearson.xml" into the "file1" input
+Type "CMS951-13" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/14_Diana_Rodriquez.xml" into the "file1" input
+Type "CMS951-14" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/15_Dianne_C.xml" into the "file1" input
+Type "CMS951-15" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/16_Dianne_Cain.xml" into the "file1" input
+Type "CMS951-16" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/17_Florence_Swanson.xml" into the "file1" input
+Type "CMS951-17" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/18_Gail_Johnston.xml" into the "file1" input
+Type "CMS951-18" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/19_Gail_Johnston.xml" into the "file1" input
+Type "CMS951-19" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/1_Anne_Cole.xml" into the "file1" input
+Type "CMS951-1" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/20_Glenda_Chandler.xml" into the "file1" input
+Type "CMS951-20" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/21_Gwendolyn_Conner.xml" into the "file1" input
+Type "CMS951-21" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/22_Hazel_Love.xml" into the "file1" input
+Type "CMS951-22" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/23_Jackie_Walton.xml" into the "file1" input
+Type "CMS951-23" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/24_Johnny_Perry.xml" into the "file1" input
+Type "CMS951-24" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/25_Judy_Marshall.xml" into the "file1" input
+Type "CMS951-25" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/26_Julia_Blake.xml" into the "file1" input
+Type "CMS951-26" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/27_June_Gregory.xml" into the "file1" input
+Type "CMS951-27" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/28_Lydia_Walton.xml" into the "file1" input
+Type "CMS951-28" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/29_Margaret_Barnett.xml" into the "file1" input
+Type "CMS951-29" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/2_Anthony_Austin.xml" into the "file1" input
+Type "CMS951-2" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/30_Misty_Lindsey.xml" into the "file1" input
+Type "CMS951-30" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/31_Nina_Knight.xml" into the "file1" input
+Type "CMS951-31" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/32_Phillip_Perry.xml" into the "file1" input
+Type "CMS951-32" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/33_Phyllis_Sullivan.xml" into the "file1" input
+Type "CMS951-33" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/34_Regina_Briggs.xml" into the "file1" input
+Type "CMS951-34" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/35_Russell_Hill.xml" into the "file1" input
+Type "CMS951-35" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/36_Sharon_Rowe.xml" into the "file1" input
+Type "CMS951-36" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/37_Shirley_Malone.xml" into the "file1" input
+Type "CMS951-37" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/38_Stella_Rivera.xml" into the "file1" input
+Type "CMS951-38" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/39_Tamara_Hubbard.xml" into the "file1" input
+Type "CMS951-39" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/3_Becky_Pierce.xml" into the "file1" input
+Type "CMS951-3" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/40_Tammy_Kennedy.xml" into the "file1" input
+Type "CMS951-40" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/41_Veronica_Burton.xml" into the "file1" input
+Type "CMS951-41" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/42_Vickie_Mccormick.xml" into the "file1" input
+Type "CMS951-42" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/43_Virginia_Maxwell.xml" into the "file1" input
+Type "CMS951-43" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/44_Wanda_Hodges.xml" into the "file1" input
+Type "CMS951-44" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/45_Wanda_Powers.xml" into the "file1" input
+Type "CMS951-45" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/4_Beth_Fisher.xml" into the "file1" input
+Type "CMS951-4" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/5_Bryan_Hunt.xml" into the "file1" input
+Type "CMS951-5" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/6_Carmen_Casey.xml" into the "file1" input
+Type "CMS951-6" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/7_Carol_Mcbride.xml" into the "file1" input
+Type "CMS951-7" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/8_Carrie_Bowman.xml" into the "file1" input
+Type "CMS951-8" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+Type "QRDA/CMS951v3/9_Charlene_Cook.xml" into the "file1" input
+Type "CMS951-9" into the "mrnumber" input
+Click the "Submit File" button
+@Wait@driver.pause(1)
+
+@@@
+driver.navigate("?f=admin&s=system_report&opp=query&report_name=Patient%20Chart%20Compare&submit_query")
+while len(driver.getElements(xpath="(//a[string(.)='Merge B to A'])")) > 1:
+	driver.clickElement(xpath="(//a[string(.)='Merge B to A'])[2]")
+	driver.pause(2)
+	driver.navigate("?f=admin&s=system_report&opp=query&report_name=Patient%20Chart%20Compare&submit_query")
+@@@
+
+Verify !exists 2nd "Merge B to A" link
+
+@driver.miedb.dbExec("INSERT INTO measure_enrollment (report_name,provider_id,start_date,end_date,status,reporting_program,use_case) select report_name,8,'2025-01-01','2025-12-31',1,'MIPS','report' from rxdb_utf8.Measures where eMeasureId like 'CMS951v3' order by eMeasureId;")
+
+Navigate "?f=layout&module=MIPS&name=Quality+of+Care+Status&tabmodule=reports&tabselect=Quality%20of%20Care&ts_caption=Provider%20Quality%20of%20Care%20Status"
+Enter "Selenium" into the "users_ac_txt" autocomplete
+Click the "Run Report" button
+Click the 11th checkbox
+Click the "Recalculate Selected" button
+@Wait@driver.pause(15)
+
+@driver.returnToMainWindow()
+
+@@@
+import requests
+import zipfile
+import os
+
+res = driver.miedb.dbQuery('SELECT session_id FROM logins ORDER BY id DESC LIMIT 1')
+session_id = res.getRow(0)['session_id']
+patres = driver.miedb.dbQuery(
+				"SET @performing_user_id=(SELECT user_id FROM users WHERE username='selenium');SET @begin_date='2025-01-01';SET @end_date='2025-12-31';SELECT p.pat_id "
+				"FROM rxdb_utf8_test.Measures mm "
+				"INNER JOIN measure_calc mc ON mm.report_name=mc.report_name "
+				"INNER JOIN encounters e ON mc.encounter_id=e.encounter_id "
+				"INNER JOIN patients p ON e.pat_id=p.pat_id "
+				"INNER JOIN patient_mrns pm ON p.pat_id=pm.pat_id "
+				"WHERE mm.eMeasureId='CMS951v3' "
+				"AND p.is_tmp = 0 "
+				"AND mc.init_pat_pop>0 "
+				"AND pm.wc_partition IN ('CMS951') "
+				"AND e.serv_date BETWEEN CONCAT( @begin_date, ' 00:00:00') AND CONCAT(@end_date, ' 23:59:59') "
+				"AND e.performing_user_id = @performing_user_id "
+				"GROUP BY e.pat_id")
+
+def create_zip_file(file_names, zip_name, driver):
+	with zipfile.ZipFile(zip_name, 'w') as zipf:
+		for file in file_names:
+			driver.getWebDriver()
+			if os.path.isfile(file):
+				zipf.write(file, os.path.basename(file))
+
+files_to_zip = []
+
+for patRow in patres: 
+	pat_id = patRow['pat_id']
+	url = (
+	f"{driver.driverOptions.baseurl}?f=layout&session_id={session_id}&module=StructDocTypes&name=QRDA-I&cdatype=QRDA"
+	f"&pat_id={pat_id}&begin_dateYEAR=2025&begin_dateMONTH=1&begin_dateDAY=1&begin_date=2025-01-01"
+	f"&end_dateYEAR=2025&end_dateMONTH=12&end_dateDAY=31&end_date=2025-12-31"
+	f"&output_filename=QRDA{pat_id}.xml&qrda_consumer=Cypress&debug_level=0&measure_id=CMS951v3&XML"
+	)
+	file_path = f"{driver.driverOptions.uploadDir}/QRDA{pat_id}.xml"
+	r = requests.get(url, allow_redirects=True)
+	open(file_path, 'wb').write(r.content)
+	files_to_zip.append(file_path)
+	driver.getWebDriver().execute_script("return 1")
+
+zip_file_name = f"{driver.driverOptions.uploadDir}/WebChartDownloadCMS951v3.zip"
+create_zip_file(files_to_zip, zip_file_name, driver)
+
+driver.miedb.dbExec("UPDATE users SET nat_pro_id='1303691434', tax_id_number='327273814' WHERE user_id=8;")
+
+url = (
+f"{driver.driverOptions.baseurl}?f=layout&session_id={session_id}&XML&module=StructDocTypes&name=QRDA-III&year=2025"
+f"&begin_dateMONTH=01&begin_dateDAY=01&begin_dateYEAR=2025&end_dateMONTH=12&end_dateDAY=31&end_dateYEAR=2025"
+f"&my_user_id=8&partition=CMS951&measure_id=CMS951v3"
+)
+file_path = f"{driver.driverOptions.uploadDir}/QRDAIII.xml"
+r = requests.get(url, allow_redirects=True)
+open(file_path, 'wb').write(r.content)
+
+@@@
+
+@driver.getWebDriver().get("http://cypress730.med-web.com/users/sign_out")
+Type "rxdb@med-web.com" into the "user_email" input
+Type "Cypress2024" into the "user_password" input
+Click the "Sign in" button
+Click the "Selenium Testing" link
+CLick the "Selenium 2025 c1-c3" link
+Click the "C1 (QRDA-I)" link
+Click the 1st "Kidney Health Evaluation" link
+@Wait for the file results element to appear@driver.waitFor(driver, lambda d: d.getElement(xpath='//file[@id="results"] '), expected_return=True, timeout=60)
+
+@driver.runJS("document.getElementById('results').style.display='block';")
+@driver.runJS("document.getElementById('results').classList.remove('hidden');")
+@driver.runJS("document.getElementById('results').setAttribute('aria-hidden', 'false');")
+@driver.runJS("document.getElementById('results').parentNode.parentNode.appendChild(document.getElementById('results'));")
+
+Type "WebChartDownloadCMS951v3.zip" into the "results" input
+@driver.runJS("document.getElementById('submit-upload').classList.remove('fileinput-exists');")
+Click on the " Upload" link
+
+@Wait for the exposed objects to go away on refresh@driver.waitFor(driver, lambda d: d.getElement(xpath='//*[@id="results" and not(contains(@style, "display: block"))]'), expected_return=False, timeout=60)
+
+@Wait for the test to pass@driver.waitFor(driver, lambda d: d.getElement(xpath='//p[@class="lead bg-success execution-status"] '), expected_return=True, timeout=600)
+Screenshot "Results" 
+Verify exists "Passed" text
+
+# Upload QRDA III task-switch-link class
+@driver.getWebDriver().get("http://cypress730.med-web.com/vendors")
+Click the "Selenium Testing" link
+CLick the "Selenium 2025 c1-c3" link
+Click the "C2 + C3 (QRDA-III)" link
+Click the 2nd "Kidney Health Evaluation" link
+@Wait for the file results element to appear@driver.waitFor(driver, lambda d: d.getElement(xpath='//file[@id="results"] '), expected_return=True, timeout=60)
+
+@Wait for the page to load@driver.waitFor(driver, lambda d: d.getElement(xpath='//h1[contains(@value, "Expected Aggregate Results")] '), expected_return=True, timeout=30)
+Screenshot "QRDA III Page" 
+Verify exists "Expected Aggregate Results" text
+
+@driver.runJS("document.getElementById('results').style.display='block';")
+@driver.runJS("document.getElementById('results').classList.remove('hidden');")
+@driver.runJS("document.getElementById('results').setAttribute('aria-hidden', 'false');")
+@driver.runJS("document.getElementById('results').parentNode.parentNode.appendChild(document.getElementById('results'));")
+
+Type "QRDAIII.xml" into the "results" input
+@driver.runJS("document.getElementById('submit-upload').classList.remove('fileinput-exists');")
+Click on the " Upload" link
+
+@Wait for the exposed objects to go away on refresh@driver.waitFor(driver, lambda d: d.getElement(xpath='//*[@id="results" and not(contains(@style, "display: block"))]'), expected_return=False, timeout=60)
+
+# Wait 
+@Wait for the test to pass@driver.waitFor(driver, lambda d: d.getElement(xpath='//p[@class="lead bg-success execution-status"] '), expected_return=True, timeout=600)
+Screenshot "QRDA III Results" 
+Verify exists "Passed" text
+
+@Click Hamburger Menu button@driver.clickElement(xpath='//i[@class="fas fa-2x fa-bars"]')
+Click on the "Log Out" link
+
+@driver.miedb.dbExec("DELETE FROM `system_reports` WHERE name='Patient Chart Compare';")
+@driver.miedb.dbExec("DELETE FROM `patient_mrns` WHERE wc_partition LIKE 'CMS%';")
+@driver.miedb.dbExec("DELETE FROM `patient_partitions` WHERE wc_partition LIKE 'CMS%';")

@@ -1,0 +1,56 @@
+"""
+Pod used for interacting with the WebChart sidemenu on the left side of the WebChart application
+
+Usage examples:
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Pin the sidemenu
+
+"""
+
+sidemenu://span[@id="wc_menuicon"]
+	|//span[contains(@id,"wc_menuicon")]
+
+pin://span[@id="thumbtack"]
+
+entry://div[@id="wc_sidetabs"]/div[@id="wc_sidemenu_height"]/a[@class="wc_tab"]
+
+@Open
+#@@@Setup waiting for the animation
+# You can remove the pause when this is resolved: https://pm.mieweb.com/issues/106663
+#driver.pause(1)
+#driver.runJS("window.__triggerOpened = function() { window._sidemenu_opened = true }")
+#driver.runJS("mieevent.on($('wc_sidetabs'), 'transitionend', __triggerOpened)")
+#@@@
+@Wait for AJAX@driver.wcutils.waitForAJAX(quiet=3)
+Verify exists @menu icon@xpath='//span[@id="wc_menuicon"]'
+Click the @menu icon@xpath='//span[@id="wc_menuicon"]'
+#@Wait for animation@driver.waitFor(driver, lambda d: d.runJS("return window._sidemenu_opened"), expected_return=True)
+#@Remove wait condition@driver.runJS("mieevent.off($('wc_sidetabs'), 'transitionend', __triggerOpened)")
+# This is an assumption that in 1s the menu should be open assuming colors.c still has a .5s transition on the sidemenu
+@Wait for the menu to be open@driver.pause(1)
+
+@Close
+@@@
+menuopen = '//body[contains(@class, "wc_slideInSideMenu") and not(contains(@class, "wc_sidebarPinned"))]'
+menupinned = '//body[contains(@class, "wc_sidebarPinned")]'
+menuclosed = '//body[not(contains(@class, "wc_slideInSideMenu")) and not(contains(@class, " wc_sidebarPinned"))]'
+if driver.wcutils.waitFor(lambda d: d.getElement(xpath=menuclosed):
+	driver.reportCommandStatus('sidemenu.pod', 'Close Verb', True, '', 'Sidemenu is already closed')
+else:
+	if driver.wcutils.waitFor(lambda d: d.getElement(xpath=menuopen):
+		driver.wcutils.waitFor(lambda d: d.getElement(xpath=menuclosed)
+		driver.reportCommandStatus('sidemenu.pod', 'Close Verb', True, '', 'Sidemenu has been closed')
+	elif driver.wcutils.waitFor(lambda d: d.getElement(xpath=menupinned):
+		driver.clickElement(xpath='//span[@id="thumbtack"]')
+		driver.wcutils.waitFor(lambda d: d.getElement(xpath=menuclosed)
+		driver.reportCommandStatus('sidemenu.pod', 'Close Verb', True, '', 'Sidemenu has been closed')
+	else:
+		driver.reportCommandStatus('sidemenu.pod', 'Close Verb', False, '', 'Something went wrong')
+	
+@@@
+
+@Pin
+Open the sidemenu
+Click the sidemenu pin
+

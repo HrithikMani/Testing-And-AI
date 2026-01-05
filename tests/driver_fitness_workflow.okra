@@ -1,0 +1,62 @@
+Begin "Nurse adds Visit encounter on Christine Harris"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Driver Fitness Determination" quicklink
+	Begin "Encounter info"
+		@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+		Open the "Encounter info" dynamicsection
+		Enter "02-02-2007" into the DED_serv_date date
+		Enter "Selenium, Selen" in the provider_chart_ac_input autocomplete
+		Save the "Encounter info" dynamicsection
+		Wait for ajax
+		Verify exists "Better Corp." text
+	Begin "Certification Type"
+		@Wait@driver.wcutils.waitForAJAX(60, 30)
+		Open "Certification Type" dynamicsection
+		Verify exists "Carefully select the appropriate radio button below." text
+		Click the 1st radio
+		Save the "Certification Type" dynamicsection
+		Wait for ajax
+		Verify exists "New Certification" text
+	Begin "Personal Information"
+		@Wait@driver.wcutils.waitForAJAX(60, 30)
+		Open "Personal Information" dynamicsection
+		Type "Driver's License!" in the "Driver ID Verified By" input
+		Save the "Personal Information" dynamicsection
+		Verify exists "Driver's License" text
+	Begin "Testing"
+		@Wait@driver.wcutils.waitForAJAX(60, 30)
+		Open "Testing" dynamicsection
+		Type "22" in the "HEART RATE" input
+		Click the 1st radio
+		Type "72" in the "BODY HEIGHT" input
+		Type "300" in the "BODY WEIGHT" input
+		Close "Testing" dynamicsection
+		Verify exists "22" text
+		Verify exists "72" text
+		Verify exists "300" text
+		Verify exists "40.69" text
+	Begin "Visit orders"
+		@Wait@driver.wcutils.waitForAJAX(60, 30)
+		Open "Visit orders" dynamicsection
+		Click the "Panels" link
+		Begin "Order Pick Lists"
+			Click the "Driver Fitness Determination (DOT)" picklist link
+			Begin "Suggestions for Panel"
+				Click the "Check All" popup button
+				Click the "Ok" popup button
+				Verify exists "Audiogram" text
+				Verify exists "DMV DOT Physical" text
+				Verify exists "Monocular Test" text
+				Verify exists "Urinalysis" text
+				Verify exists "Vision Acuity" text
+				Verify exists "Vision Ishihara" text
+				Advance the dynamicsection
+	Begin "Required Items"
+		Verify exists "The following items are required before the Driver Fitness Determination is ready to be printed" text
+Begin "Test DoT SOAP message"
+	Navigate "?f=layout&module=SOAP&name=DOT+Certification&encounter_id=109&raw&xml&content_type=text%2Fxml"
+	@Validate SOAP Message@driver.saveSourceHTML('dot_certificate_soap.xml')

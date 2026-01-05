@@ -1,0 +1,92 @@
+Begin "Convert a Document"
+	Open the sidemenu
+	Click the "Control Panel" link
+	Click the "Chart" charttab
+	Click the "Document Types" charttab subtab
+	Unfilter grid
+	Click the @DocumentType filter button@xpath="//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Document Type']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Document Type']//p[contains(@class, 'SelectBox')]"
+	Type "CATH" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "CATH" label
+	Click the "OK" grid sumobutton
+	Verify exists "CATH" grid entry
+	Click the "CATH" grid checkbox
+	Click the 3rd "Convert Word to HTML" button
+	Wait for ajax
+	Screenshot "Converted"
+	Click the "Columns" button
+	Wait for ajax
+	Click the 3rd "Hide column?" @button @xpath="(//button[@title='Hide column?'])[2]"
+	Click the 4th "Hide column?" @button @xpath="(//button[@title='Hide column?'])[3]"
+	Click the 5th "Hide column?" @button @xpath="(//button[@title='Hide column?'])[4]"
+	Click the 6th "Hide column?" @button @xpath="(//button[@title='Hide column?'])[5]"
+	Click the 7th "Hide column?" @button @xpath="(//button[@title='Hide column?'])[6]"
+	Click the 8th "Hide column?" @button @xpath="(//button[@title='Hide column?'])[7]"
+	Click the "Ok" @button @xpath="//button[@title='OK']"
+	Wait for ajax
+	Click "Edit" @grid link @xpath="(//a[contains(text(),'Edit') and contains(@href, 'dt_stg_id')])[2]"
+	Wait for ajax
+	@@@
+	content_string = """&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+	&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;/&gt;
+	&lt;title&gt;&lt;/title&gt;
+	&lt;meta name=&quot;generator&quot; content=&quot;LibreOffice 24.2.3.2 (Linux)&quot;/&gt;
+	&lt;meta name=&quot;author&quot; content=&quot;Bridget&quot;/&gt;
+	&lt;meta name=&quot;created&quot; content=&quot;2012-03-08T11:13:00&quot;/&gt;
+	&lt;meta name=&quot;changedby&quot; content=&quot;anichols&quot;/&gt;
+	&lt;meta name=&quot;changed&quot; content=&quot;2012-03-08T11:13:00&quot;/&gt;
+	&lt;style type=&quot;text/css&quot;&gt;
+		@page { size: 8.5in 11in; margin-left: 1in; margin-right: 1in; margin-top: 0.5in; margin-bottom: 0.5in }
+		p { color: #000000; line-height: 115%; orphans: 2; widows: 2; margin-bottom: 0.1in; direction: ltr; background: transparent }
+		p.western { font-family: &quot;Calibri&quot;, sans-serif; font-size: 11pt; so-language: en-US }
+		p.cjk { font-family: &quot;Times New Roman&quot;, serif; font-size: 11pt }
+		p.ctl { font-family: &quot;Times New Roman&quot;, serif; font-size: 11pt; so-language: ar-SA }
+	&lt;/style&gt;
+&lt;/head&gt;
+&lt;body lang=&quot;en-US&quot; text=&quot;#000000&quot; link=&quot;#000080&quot; vlink=&quot;#800000&quot; dir=&quot;ltr&quot;&gt;
+&lt;div title=&quot;header&quot;&gt;&lt;p style=&quot;margin-bottom: 0in&quot;&gt;&lt;font face=&quot;Times New Roman, serif&quot;&gt;&lt;font size=&quot;3&quot; style=&quot;font-size: 12pt&quot;&gt;Patient:
+	&lt;span style=&quot;vertical-align:top;&quot; id=&quot;echtmledit.pat.full_name_legal&quot; contenteditable=&quot;false&quot;&gt;&lt;span style=&quot;background-Color:#AAAAAA&quot;&gt;pat.full_name_legal&lt;/span&gt;&lt;/span&gt;&lt;/font&gt;&lt;/font&gt;&lt;/p&gt;
+	&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;font face=&quot;Times New Roman, serif&quot;&gt;Page
+	&lt;span style=&quot;vertical-align:top;&quot; id=&quot;echtmledit.0&quot; contenteditable=&quot;false&quot;&gt;&lt;span style=&quot;background-Color:#AAAAAA&quot;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;/font&gt;&lt;/p&gt;
+	&lt;p style=&quot;margin-bottom: 0in&quot;&gt;&lt;br/&gt;
+
+	&lt;/p&gt;
+&lt;/div&gt;&lt;p class=&quot;western&quot; align=&quot;center&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;
+&lt;font face=&quot;Times New Roman, serif&quot;&gt;&lt;font size=&quot;3&quot; style=&quot;font-size: 12pt&quot;&gt;&amp;lt;system.wc_letterhead&amp;gt;&lt;/font&gt;&lt;/font&gt;&lt;/p&gt;
+&lt;p class=&quot;western&quot; align=&quot;center&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;
+&lt;br/&gt;
+
+&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;span style=&quot;vertical-align:top;&quot; id=&quot;echtmledit.serv_date.date&quot; contenteditable=&quot;false&quot;&gt;&lt;span style=&quot;background-Color:#AAAAAA&quot;&gt;serv_date.date&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;br/&gt;
+
+&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;br/&gt;
+
+&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;br/&gt;
+
+&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;font face=&quot;Times New Roman, serif&quot;&gt;&lt;font size=&quot;3&quot; style=&quot;font-size: 12pt&quot;&gt;RE:
+&lt;span style=&quot;vertical-align:top;&quot; id=&quot;echtmledit.pat.full_name_legal&quot; contenteditable=&quot;false&quot;&gt;&lt;span style=&quot;background-Color:#AAAAAA&quot;&gt;pat.full_name_legal&lt;/span&gt;&lt;/span&gt;&lt;/font&gt;&lt;/font&gt;&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;font face=&quot;Times New Roman, serif&quot;&gt;&lt;font size=&quot;3&quot; style=&quot;font-size: 12pt&quot;&gt;DOB:
+&lt;span style=&quot;vertical-align:top;&quot; id=&quot;echtmledit.pat.birth_date&quot; contenteditable=&quot;false&quot;&gt;&lt;span style=&quot;background-Color:#AAAAAA&quot;&gt;pat.birth_date&lt;/span&gt;&lt;/span&gt;&lt;/font&gt;&lt;/font&gt;&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;br/&gt;
+
+&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;font face=&quot;Times New Roman, serif&quot;&gt;&lt;font size=&quot;3&quot; style=&quot;font-size: 12pt&quot;&gt;&amp;lt;E&amp;gt;&lt;/font&gt;&lt;/font&gt;&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;br/&gt;
+
+&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;font face=&quot;Times New Roman, serif&quot;&gt;&lt;font size=&quot;3&quot; style=&quot;font-size: 12pt&quot;&gt;Sincerely,&lt;/font&gt;&lt;/font&gt;&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;br/&gt;
+
+&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;font face=&quot;Times New Roman, serif&quot;&gt;&lt;font size=&quot;3&quot; style=&quot;font-size: 12pt&quot;&gt;&amp;lt;dict.signature&amp;gt;&lt;/font&gt;&lt;/font&gt;&lt;/p&gt;
+&lt;p class=&quot;western&quot; style=&quot;line-height: 100%; margin-bottom: 0in&quot;&gt;&lt;span style=&quot;vertical-align:top;&quot; id=&quot;echtmledit.dictator.name_legal_wdgree&quot; contenteditable=&quot;false&quot;&gt;&lt;span style=&quot;background-Color:#AAAAAA&quot;&gt;dictator.name_legal_wdgree&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;"""
+	@@@
+	@Wait for the page to load@driver.waitFor(driver, lambda d: d.getElement(xpath='//input[@id="htm_temp_cont"][contains(@value, content_string)]'), expected_return=True, timeout=30)

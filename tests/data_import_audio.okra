@@ -1,0 +1,52 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Wait for the "DataImportTypes" grid
+	Click the "Show/Hide Grid Controls" icon
+	Select "Name" from the @Filters dropdown@xpath='//span[contains(., "Filters")]/parent::div/following-sibling::div/select[@class="wcdv_control_addField"]'
+	Sumoselect "Audiometric Data CSV API" from the "Name" grid sumoselect
+	Click the "OK" grid sumobutton
+	Wait for ajax
+	Click "Audiometric Data CSV API" grid checkbox
+	Click the "Upload Data" button
+	Verify exists @xpath="//div[@class='wc_win']"
+	Verify exists "Audiometric Data CSV API" text in @xpath="//div[@class='wc_win']"
+	Screenshot "test"
+	Click the "DI_Verbose" checkbox
+	@Wait@driver.pause(1)
+	Type 'AudioDataImportSuccess.csv' in the 'csv_file' input
+	Click the "Upload File" button
+	@driver.getWebDriver().switch_to.frame("di_output_frame")
+	@Wait@driver.pause(1)
+	Verify exists "Successfully imported file AudioDataImportSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+	Click the @Close button@xpath='//button[@class="xclose"]'
+Begin "Verify Entries"
+	Verify exists sidemenu
+	Open the sidemenu
+	Click "E-Chart" sidemenu entry
+	Click the "Name" radio
+	Type "Doe, Jane" in the "sstring" input
+	Click the "Search" button
+	Verify exists "Doe, Jane M" link
+	Click the "Medical Record" charttab
+	Click the Audiogram charttab subtab
+	Verify exists "Displaying 1-2" text
+	Click the "01-01-2014" link
+	Verify exists "01-01-2014 15:42" text
+	Verify exists "Patient well behaved" text
+	Verify exists "Good demeanor" text
+	Verify exists "Pain Present" text
+	Verify !exists "Late start due to equipment failure" text
+	Verify !exists "Picture Available" text
+	Click the "Medical Record" charttab
+	Click the Audiogram charttab subtab
+	Click the "01-02-2014" link
+	Verify exists "01-02-2014 15:43" text
+	Verify !exists "Patient well behaved" text
+	Verify !exists "Good demeanor" text
+	Verify !exists "Pain Present" text
+	Verify exists "Late start due to equipment failure" text
+	Verify exists "Picture Available" text

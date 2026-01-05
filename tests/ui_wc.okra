@@ -1,0 +1,750 @@
+"""
+	This test is a basic test to navigate to a page and take a screenshot of the page for any changes that may affect the pages visually.
+	@owners: akesler
+	@filedeps: src/nomoreclipboard.c, system/layouts/No Login/Login.html
+	@systemtype: WCNOW
+
+	READ ME:
+		* This test does not have committed baselines
+		to avoid constant updating of baselines.
+		* To utilize this test for diffing screenshots,
+		follow these steps:
+			1. Run "UI/Layout Tests" WITHOUT your changes
+			2. Checkout your branch
+			3. Once it is finished running, move all new
+			screenshots to baseline
+				* `View New` blue link in the top right
+				* `Move All New Screens To Baseline` link
+			4. Run "UI/Layout Tests" WITH your code changes
+			5. Compare any resulting screenshot diffs
+			6. Delete all *_page_layout.png files when done
+
+	Notes:
+	# Do not put any additional sections after the logout section, otherwise the screenshot will just capture the logged out page.
+	# Not everything is covered, if the page you've made changes to isn't here, it can be added.
+"""
+
+@@@ READ ME
+readme = [
+'READ ME:',
+'	* This test does not have committed baselines',
+'	to avoid constant updating of baselines.',
+'	* To utilize this test for diffing screenshots,',
+'	follow these steps:',
+'		1. Run "UI/Layout Tests" WITHOUT your changes',
+'		2. Once it is finished running, move all new',
+'		screenshots to baseline',
+'		3. Run "UI/Layout Tests" WITH your code changes',
+'		4. Compare any resulting screenshot diffs',
+'		5. Delete all *_page_layout.png files when done'
+]
+driver.addHeaderItem('UI Test - Read Me', readme)
+@@@
+Begin "DO NOT COMMIT DIFFS TO BASELINE - See 'READ ME' for instructions"
+Begin "UI Appearance Test"
+	Begin "sidemenu Page Layout"
+		Navigate '?func=omniscope'
+		Begin "Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+	Open the sidemenu
+		screenshot 'sidemenu_wc_page_layout'
+
+	Begin "Omniscope/QuickView Page Layout"
+		Navigate '?func=omniscope'
+		Begin "Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+	Open the sidemenu
+		screenshot 'omniscope_wc_page_layout'
+
+	Begin "E-Chart Page Layout"
+		Navigate '?f=chart'
+		Begin "E-Chart Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart_wc_page_layout'
+
+	Begin "Checkin Page Layout"
+		Navigate '?f=chart&s=checkin'
+		Begin "Checkin Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'Checkin_wc_page_layout'
+
+	Begin "Scheduler Page Layout"
+		Navigate '?func=scheduler'
+		Begin "Scheduler Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'Scheduler_wc_page_layout'
+
+	Begin "Task List Page Layout"
+		Navigate '?func=tlist'
+		Begin "Task List Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'Task List_wc_page_layout'
+
+	Begin "E-Sign Page Layout"
+		Navigate '?func=esign'
+		Begin "E-Sign Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Sign_wc_page_layout'
+
+	Begin "Control Panel Page Layout"
+		Navigate '?f=layout&module=Admin&name=Home&tabmodule=admin&t=Admin'
+		Begin "Control Panel Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'Control Panel_wc_page_layout'
+
+	Begin "WebScan Page Layout"
+		Navigate '?f=miewebscan'
+		Begin "WebScan Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'WebScan_wc_page_layout'
+
+	Begin "Fax Manager Page Layout"
+		Navigate '?f=admin&t=faxman'
+		Begin "Fax Manager Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'Fax Manager_wc_page_layout'
+
+	Begin "E-Chart - Summary Page Page Layout"
+		Navigate '?f=chart&s=pat&t=Summary&v=dashboard&pat_id=18'
+		Begin "E-Chart - Summary Page Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Summary Page_wc_page_layout'
+
+	Begin "E-Chart - Admin : Demographics Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3ADemographics&v=dashboard&pat_id=18'
+		Begin "E-Chart - Admin : Demographics Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Demographics_wc_page_layout'
+
+	Begin "E-Chart - Admin : Activity Log Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3AActivity+Log&v=dashboard&pat_id=18'
+		Begin "E-Chart - Admin : Activity Log Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Activity Log_wc_page_layout'
+
+	Begin "E-Chart - Admin : Appointments Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3AAppointments&v=apts&pat_id=18'
+		Begin "E-Chart - Admin : Appointments Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Appointments_wc_page_layout'
+
+	Begin "E-Chart - Admin : Cases Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3ACases&v=dashboard&pat_id=18'
+		Begin "E-Chart - Admin : Cases Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Cases_wc_page_layout'
+
+	Begin "E-Chart - Admin : Employee Education Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3AEmployee+Education&v=list&pat_id=18'
+		Begin "E-Chart - Admin : Employee Education Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Employee Education_wc_page_layout'
+
+	Begin "E-Chart - Admin : Email/Text Log Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3AEmail%2FText+Log&v=detail&pat_id=18'
+		Begin "E-Chart - Admin : Email/Text Log Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Email/Text Log_wc_page_layout'
+
+	Begin "E-Chart - Admin : Encounter Checkout Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3AEncounter+Checkout&v=dashboard&pat_id=18'
+		Begin "E-Chart - Admin : Encounter Checkout Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Encounter Checkout_wc_page_layout'
+
+	Begin "E-Chart - Admin : Forms Printed Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3AForms+Printed&v=dashboard&pat_id=18'
+		Begin "E-Chart - Admin : Forms Printed Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Forms Printed_wc_page_layout'
+
+	Begin "E-Chart - Admin : Message Center Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3AMessage+Center&v=list&pat_id=18'
+		Begin "E-Chart - Admin : Message Center Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Message Center_wc_page_layout'
+
+	Begin "E-Chart - Admin : Photos Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3APhotos&v=detail&pat_id=18'
+		Begin "E-Chart - Admin : Photos Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Photos_wc_page_layout'
+
+	Begin "E-Chart - Admin : Print & Fax History Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3APrint+%26+Fax+History&v=dashboard&pat_id=18'
+		Begin "E-Chart - Admin : Print & Fax History Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Print & Fax History_wc_page_layout'
+
+	Begin "E-Chart - Admin : Restrictions/Lost Time Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3ARestrictions%2FLost+Time&v=dashboard&pat_id=18'
+		Begin "E-Chart - Admin : Restrictions/Lost Time Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Restrictions/Lost Time_wc_page_layout'
+
+	Begin "E-Chart - Admin : Work Status Page Layout"
+		Navigate '?f=chart&s=pat&t=Admin%3AWork+Status&v=dashboard&pat_id=18'
+		Begin "E-Chart - Admin : Work Status Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Admin : Work Status_wc_page_layout'
+
+	Begin "E-Chart - Health Surveillance : Due List Page Layout"
+		Navigate '?f=chart&s=pat&t=Health+Surveillance%3ADue+List&v=dashboard&pat_id=18'
+		Begin "E-Chart - Health Surveillance : Due List Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Health Surveillance : Due List_wc_page_layout'
+
+	Begin "E-Chart - Health Surveillance : Health Questionnaires Page Layout"
+		Navigate '?f=chart&s=pat&t=Health+Surveillance%3AHealth+Questionnaires&v=list&pat_id=18'
+		Begin "E-Chart - Health Surveillance : Health Questionnaires Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Health Surveillance : Health Questionnaires_wc_page_layout'
+
+	Begin "E-Chart - Health Surveillance : Panel Membership Overview Page Layout"
+		Navigate '?f=chart&s=pat&t=Health+Surveillance%3APanel+Membership+Overview&v=dashboard&pat_id=18'
+		Begin "E-Chart - Health Surveillance : Panel Membership Overview Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Health Surveillance : Panel Membership Overview_wc_page_layout'
+
+	Begin "E-Chart - Health Surveillance : Personal Proctective Equipment Page Layout"
+		Navigate '?f=chart&s=pat&t=Health+Surveillance%3APersonal+Protective+Equipment&v=dashboard&pat_id=18'
+		Begin "E-Chart - Health Surveillance : Personal Proctective Equipment Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Health Surveillance : Personal Proctective Equipment_wc_page_layout'
+
+	Begin "E-Chart - Health Surveillance : Respirator Info Page Layout"
+		Navigate '?f=chart&s=pat&t=Health+Surveillance%3ARespirator+Info&v=dashboard&pat_id=18'
+		Begin "E-Chart - Health Surveillance : Respirator Info Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Health Surveillance : Respirator Info_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : ACOG Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AACOG&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : ACOG Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : ACOG_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Allergies/Medications Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AAllergies%2FMedications&v=rxlist&pat_id=18'
+		Begin "E-Chart - Medical Record : Allergies/Medications Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Allergies/Medications_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Audiogram Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AAudiogram&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : Audiogram Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Audiogram_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : BP Graph Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3ABP+Graph&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : BP Graph Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : BP Graph_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Conditions Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AConditions&v=cond&pat_id=18'
+		Begin "E-Chart - Medical Record : Conditions Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Conditions_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : EKG Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AEKG&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : EKG Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : EKG_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Encounters Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AEncounters&v=encounter&pat_id=18'
+		Begin "E-Chart - Medical Record : Encounters Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Encounters_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Immunization Schedule Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AImmunization+Schedule&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : Immunization Schedule Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(30)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Immunization Schedule_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Labs Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3ALabs&v=detail&pat_id=18'
+		Begin "E-Chart - Medical Record : Labs Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Labs_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : MAR/Injections Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AMAR%2FInjections&v=inject&pat_id=18'
+		Begin "E-Chart - Medical Record : MAR/Injections Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : MAR/Injections_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Observations/Flowsheets Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AObservations%2FFlowsheets&v=ob&pat_id=18'
+		Begin "E-Chart - Medical Record : Observations/Flowsheets Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Observations/Flowsheets_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Office Visit/Notes Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AOffice+Visits%2FNotes&v=list&pat_id=18'
+		Begin "E-Chart - Medical Record : Office Visit/Notes Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Office Visit/Notes_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Orders Documents Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AOrders+Documents&v=list&pat_id=18'
+		Begin "E-Chart - Medical Record : Orders Documents Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Orders Documents_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Order Requests Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AOrder+Requests&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : Order Requests Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Order Requests_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Other Tests Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AOther+Tests&v=list&pat_id=18'
+		Begin "E-Chart - Medical Record : Other Tests Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Other Tests_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Past Medical History Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3APast+Medical+History&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : Past Medical History Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Past Medical History_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Past Surgical History Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3APast+Surgical+History&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : Past Surgical History Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Past Surgical History_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : PFT Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3APFT&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : PFT Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : PFT_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Social History Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3ASocial+History&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : Social History Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Social History_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Task Notes Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3ATask+Notes&v=list&pat_id=18'
+		Begin "E-Chart - Medical Record : Task Notes Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Task Notes_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Vital Signs Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AVital+Signs&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : Vital Signs Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Vital Signs_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : Warnings Page Layout"
+		Navigate '?f=chart&s=pat&t=Medical+Record%3AWarnings&v=dashboard&pat_id=18'
+		Begin "E-Chart - Medical Record : Warnings Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : Warnings_wc_page_layout'
+
+	Begin "E-Chart - Medical Record : OrderRequestsLegacy Page Layout"
+		Navigate '?f=chart&s=pat&t=OrderRequestsLegacy&v=orders&pat_id=18&&order_opp=view_list'
+		Begin "E-Chart - Medical Record : OrderRequestsLegacy Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Medical Record : OrderRequestsLegacy_wc_page_layout'
+
+	Begin "E-Chart - On Screen Forms : COVID Consent Page Layout"
+		Navigate '?f=chart&s=pat&t=On+Screen+Forms%3ACOVID+Consent&v=dashboard&pat_id=18'
+		Begin "E-Chart - On Screen Forms : COVID Consent Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - On Screen Forms : COVID Consent_wc_page_layout'
+
+	Begin "E-Chart - On Screen Forms : COVID Decline Page Layout"
+		Navigate '?f=chart&s=pat&t=On+Screen+Forms%3ACOVID+Decline&v=dashboard&pat_id=18'
+		Begin "E-Chart - On Screen Forms : COVID Decline Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - On Screen Forms : COVID Decline_wc_page_layout'
+
+	Begin "E-Chart - On Screen Forms : DOT Certificate Page Layout"
+		Navigate '?f=chart&s=pat&t=On+Screen+Forms%3ADOT+Certificate&v=dashboard&pat_id=18'
+		Begin "E-Chart - On Screen Forms : DOT Certificate Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - On Screen Forms : DOT Certificate_wc_page_layout'
+
+	Begin "E-Chart - On Screen Forms : Flu Consent Page Layout"
+		Navigate '?f=chart&s=pat&t=On+Screen+Forms%3AFlu+Consent&v=dashboard&pat_id=18'
+		Begin "E-Chart - On Screen Forms : Flu Consent Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - On Screen Forms : Flu Consent_wc_page_layout'
+
+	Begin "E-Chart - On Screen Forms : Flu Decline Page Layout"
+		Navigate '?f=chart&s=pat&t=On+Screen+Forms%3AFlu+Decline&v=dashboard&pat_id=18'
+		Begin "E-Chart - On Screen Forms : Flu Decline Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - On Screen Forms : Flu Decline_wc_page_layout'
+
+	Begin "E-Chart - Documents :  Page Layout"
+		Navigate '?f=chart&s=pat&t=Documents&v=list&pat_id=18'
+		Begin "E-Chart - Documents :  Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	wd = driver.getWebDriver()
+	from selenium.webdriver.common.action_chains import ActionChains
+	ActionChains(wd).move_to_element_with_offset(driver.getElement(xpath='//body'), 2, 2).perform()
+	@@@
+		screenshot 'E-Chart - Documents_wc_page_layout'
+
+	Begin "Logout Page Layout"
+		Navigate '?func=logout'
+		Begin "Logout Setup"
+	# Place any necessary setup other than "Navigate" within this "Setup" section
+	@@@Wait for page
+	driver.pause(10)
+	@@@
+		screenshot 'DO-NOT-COMMIT-DIFFS-TO-BASELINE-Logout_wc_page_layout'

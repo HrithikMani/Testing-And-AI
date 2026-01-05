@@ -1,0 +1,130 @@
+Begin "Auto Route Workflow Testing Setup"
+	Begin "Grant Access"
+		@Grant Selenium "Send Patient Data" Access@driver.miedb.dbExec("INSERT INTO security_exception_revisions (user_id, module_name, category_name, security_value, admin_user_id, create_datetime, revision_datetime, active) VALUES ('8', 'E-Chart', 'Send Patient Data', '1', '8', '2007-02-02 09:15:00', '2007-02-02 09:15:00', '0')")
+		@Grant Selenium "Send By AutoRoute" Access@driver.miedb.dbExec("INSERT INTO security_exception_revisions (user_id, module_name, category_name, security_value, admin_user_id, create_datetime, revision_datetime, active) VALUES ('8', 'E-Chart', 'Send By AutoRoute', '2', '8', '2007-02-02 09:15:00', '2007-02-02 09:15:00', '0')")
+	Begin "Insert Auto Routes"
+		@Insert a User Auto Route@driver.miedb.dbExec("INSERT INTO datasend_auto_route (trigger_type, description, custom_join, where_clause, user_id, recipient_type, recipient_name, recipient_id, method, method_detail, send_criteria, no_auto_resend, custom_pending, route_option) VALUES ('0', 'Testing a User Route', '', '1', '8', '0', 'Selenium, Selenium ( Fort Wayne, IN United States 46804)', '0', '2', '(260) 459-6271', '0', '0', '', '')")
+		@Insert a Physician Auto Route@driver.miedb.dbExec("INSERT INTO datasend_auto_route (trigger_type, description, custom_join, where_clause, user_id, recipient_type, recipient_name, recipient_id, method, method_detail, send_criteria, no_auto_resend, custom_pending, route_option) VALUES ('0', 'Testing a Physician Route', '', 'd.doc_type=\\'WCDOCNOT\\'', '8', '1', '', '0', '0', '', '0', '0', '', '')")
+		@Insert an Encounter Physican Auto Route@driver.miedb.dbExec("INSERT INTO datasend_auto_route (trigger_type, description, custom_join, where_clause, user_id, recipient_type, recipient_id, method, send_criteria, no_auto_resend, custom_pending, route_option) VALUES ('0', 'Testing an Encounter User Route', '', '1', '8', '5', '0', '0', '0', '0', '', '')")
+		@Insert an Patient Contact Auto Route@driver.miedb.dbExec("INSERT INTO datasend_auto_route (trigger_type, description, custom_join, where_clause, user_id, recipient_type, recipient_name, recipient_id, method, method_detail, send_criteria, no_auto_resend, custom_pending, route_option) VALUES ('0', 'Testing a Patient Contact Route', '', 'd.doc_type=\\'BILLINGQ\\'', '8', '7', '', '0', '0', '', '0', '0', '', '')")
+		@Insert an Patient Contact Auto Route@driver.miedb.dbExec("INSERT INTO datasend_auto_route (trigger_type, description, custom_join, where_clause, user_id, recipient_type, recipient_name, recipient_id, method, method_detail, send_criteria, no_auto_resend, custom_pending, route_option) VALUES ('0', 'Testing a Specific Patient Contact Route', '', 'd.doc_type=\\'ADVDIRECT\\'', '8', '7', '', '501', '0', '', '0', '0', '', '')")
+	Begin "Set Preferred Routes and Link Users to Charts"
+		@Set Dr John Sample's preferred route to "Fax"@driver.miedb.dbExec("UPDATE users SET preferred_route='2' WHERE last_name='Sample' AND user_id='9'")
+		@Set Internist Butler's preferred route to "Fax"@driver.miedb.dbExec("UPDATE users SET preferred_route='2' WHERE last_name='Butler' AND user_id='16'")
+		@Set Receptions's preferred route to "Fax"@driver.miedb.dbExec("UPDATE users SET preferred_route='2' WHERE username='reception' AND user_id='21'")
+		@Create a user account for William Hart@driver.miedb.dbExec("INSERT INTO users (username, status, realm, last_name, first_name, fax_number, user_role_id, security_role_id, preferred_route) VALUES ('whart', '2', 'MIE', 'Hart', 'William', '2604596271', '0', '0', '2')")
+		@Link Hart's user account to his chart@driver.miedb.dbExec("INSERT INTO user_patients (id, id_type, pat_id, role_id, security_role_id, rank, entered_date) SELECT user_id, 'user', '18', '501', '0', '0', '2007-02-02 09:15:00' FROM users WHERE last_name='Hart'")
+		@Link Reception to William Hart as 'Administrative Asst'@driver.miedb.dbExec("INSERT INTO user_patients (id, id_type, pat_id, role_id, security_role_id, rank, entered_date) SELECT user_id, 'user', '18', '38', '0', '0', '2007-02-02 09:15:00' FROM users WHERE username='reception'")
+		@Make Internist Butler a Carbon Copied user on the encounter@driver.miedb.dbExec("INSERT INTO encounter_users (id, id_type, enc_id, role_id, rank, entered_date) SELECT user_id, 'user', '11', '9', '0', '2007-02-02 09:15:00' FROM users WHERE last_name='Butler'")
+
+Begin "Add a document to be routed by the User and Encounter User Autoroutes"
+	Navigate "?f=chart&s=pat&pat_id=18"
+	Open the quicklink list
+	Click the "Add Document" quicklink
+	Click the "Show" table link
+	Click the "Phone Note" table link
+	Verify exists @phone note selected@xpath='//option[contains(@value, "NNOTE") and contains(@selected, "")]'
+	Begin "Recent Encounter Search"
+		Enter "03-02-2010" into the 1st date
+		Click the "Search" button
+		Verify exists "Select Encounter" popup
+		Verify exists "No Matching Encounters" text
+# Temp fix until popup.pod changes in ticket #124529 are committed
+#		Verify exists "Search Within 6 days" popup link
+		Verify exists @"Search Within 6 days" popup link@xpath='//span[contains(text(), "Search Within 6 days")]'
+# Temp fix until popup.pod changes in ticket #124529 are committed
+#		Click the "Search Within 6 days" popup link
+		Click the @"Search Within 6 days" popup link@xpath='//span[contains(text(), "Search Within 6 days")]'
+		Verify exists "Office Visit" text
+		Verify exists "02-25-2010" text
+		Verify exists "Select" popup link
+		Click the "Select" popup link
+	Verify !exists "Select Encounter" popup
+	Type "I am a Nursing Note" in the freetext field
+	Verify exists "Add Document" button
+	Click the "Add Document" button
+	Verify exists "I am a Nursing Note" text
+	Begin "Verify the document was added and has an auto route"
+		Verify exists "(Phone Note) has been uploaded successfully!" text
+		Click the "Properties" link
+		Verify exists "Selenium, Selenium ( Fort Wayne" table row
+		Verify exists "Butler, Internist" table row
+		Verify !exists "Resend" link
+Begin "Add a document to be routed by the Family Physician Autoroute"
+	Open the quicklink list
+	Click the "Add Document" quicklink
+	Click the "Show" table link
+	Click the "Doctor Note" table link
+	Type "I saw this patient today" in the freetext field
+	Click the "Add Document" button
+	Begin "Verify the document was added and has an auto route"
+		Verify exists "(Doctor Note) has been uploaded successfully!" text
+		Click the "Properties" link
+		Verify exists "Selenium, Selenium ( Fort Wayne" table row
+		Verify exists "Sample, John" table row
+		Verify !exists "Resend" link
+Begin "Add a document to be routed by the All Contacts Autoroute"
+	Open the quicklink list
+	Click the "Add Document" quicklink
+	Click the "Show" table link
+	Click the "Billing Note" table link
+	Type "Why am I being billed for this" in the freetext field
+	Click the "Add Document" button
+	Begin "Verify the document was added and has an auto route"
+		Verify exists "(Billing Note) has been uploaded successfully!" text
+		Click the "Properties" link
+		Verify exists "Selenium, Selenium ( Fort Wayne" table row
+		Verify exists "Thomas, Alice" table row
+		Verify exists "Hart, William" table row
+		Verify exists "Sample, John" table row
+		Verify !exists "Resend" link
+Begin "Add a document to be routed by the Self Autoroute"
+	Open the quicklink list
+	Click the "Add Document" quicklink
+	Click the "Show" table link
+	Click "Advanced Directives" table link
+	Type "DNR" in the freetext field
+	Click the "Add Document" button
+	Begin "Verify the document was added and has an auto route"
+		Verify exists "(Advanced Directives) has been uploaded successfully!" text
+		Click the "Properties" link
+		Verify exists "Selenium, Selenium ( Fort Wayne" table row
+		Verify exists "Hart, William" table row
+		Verify !exists "Resend" link
+Begin "Re-send an Auto Route"
+	@Set the route for Internist Butler to Completed so we can re-send it@driver.miedb.dbExec("UPDATE datasend_route SET status='C', progress='Complete' WHERE recipient_name='Butler, Internist'")
+	Navigate "?f=chart&s=pat&t=Documents&v=list&pat_id=18"
+	Click the @"Doc ID" listview header@xpath='//table[contains(@class,"newui zebra")]//thead//tr/th/a[contains(.,"Doc ID")]'
+	Click the @"Doc ID" listview header@xpath='//table[contains(@class,"newui zebra")]//thead//tr/th/a[contains(.,"Doc ID")]'
+	Click the "Phone Note" table link
+	Click the "Properties" link
+	Verify exists "Resend" link
+	Click the "Resend" link
+	Begin "Verify Results"
+		Verify exists "Butler, Internist" table row
+		Verify !exists @"Complete" row in Current Routes@xpath=//td[@class="doc__curr__routes_Status_cell"]/span[contains(.,"Complete")]
+Begin "Click to Error the Auto Route"
+	Click the "Error" link
+	Begin "Verify Results"
+		Verify exists "Error" table row
+		Verify exists "Acknowledge" link
+		Verify exists "Resend" link
+		Verify exists "Deactivate" link
+Begin "Acknowledge the Auto Route"
+	Click the "Acknowledge" link
+	Begin "Verify Results"
+		Verify exists "Acknowledged" table row
+		Verify !exists "Acknowledge" link
+		Verify exists "Resend" link
+		Verify exists "Deactivate" link
+Begin "Deactivate the Auto Route"
+	Click the "Deactivate" link
+	Begin "Verify the 1st auto route for Selenium has been deactivated"
+		Verify !exists "Selenium, Selenium (" table row
+		Verify exists "Butler, Internist" table row
+Begin "Cancel the Auto Route"
+	Click the "Cancel" link
+	Begin "Verify there are no longer any current routes listed"
+		Verify !exists "Selenium, Selenium (" table row
+		Verify !exists @"Butler, Internist" row in Current Routes@xpath=//div[@id="lv_doc_curr_routes_span"]/table/tbody/tr/*[contains(.,"Butler, Internist")]
+	

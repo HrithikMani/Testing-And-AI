@@ -1,0 +1,61 @@
+Click the TEST-10019 link
+Open "Medical Record" charttab
+Click the Allergies/Medications charttab subtab
+Begin Add an allergy of Benadryl using the Quick Allergy page
+	Click the "Quick Allergy" link
+	Enter Benadryl into the 1st autocomplete
+	Type Rash into the @Reaction Input@id=qagy_reaction0
+	Enter 02-02-2007 into the qagy_start_date0 date
+	Click the Add button
+Begin Verify Benadryl allergy
+	Verify exists Benadryl text
+	Click the Prescribe link
+	Enter "Benadryl" into the 1st autocomplete
+	Type "capsule 25mg" in the "qp_formacval0" autocomplete
+	@Pause@driver.pause(5)
+#	@Wait for Benadryl warning@driver.wcutils.waitForEle(xpath='//div[@class="wc_win"]//*[contains(., "Warning for Benadryl")]', timeout=120)
+#	Close the "Warning for Benadryl" popup
+#	Enter "capsule 25mg" into the 2nd autocomplete
+	Type "1 cap po bid" in the "Practitioner Sig" autocomplete
+	Type "60" in the "qp_total_quantity0" input
+	Type "1" in the "qp_refills0" input
+	Begin "Warning for Benadryl modal"
+		Verify exists "Warning for Benadryl" text
+		Click the Close popup button
+	Click the "Prescribe" button
+Begin Delete the Benadryl allergy
+	screenshot diff
+	Open "Medical Record" charttab
+	screenshot diff
+	Click the Allergies/Medications charttab
+	screenshot diffupper
+	@Scroll down@driver.scrollTo(y=900)
+	screenshot difflower
+	Click the 1st !Delete link
+	screenshot diffupper
+	@Scroll down@driver.scrollTo(y=900)
+	screenshot difflower
+	Verify exists Benadryl text
+	screenshot diffupper
+	@Scroll down@driver.scrollTo(y=900)
+	screenshot difflower
+	Type deleted into the Reason autocomplete
+	screenshot diffupper
+	@Scroll down@driver.scrollTo(y=900)
+	screenshot difflower
+	Click the Submit button
+	screenshot diffupper
+	@Scroll down@driver.scrollTo(y=900)
+	screenshot difflower
+	Verify exists "Successfully deleted allergy" text
+	screenshot diffupper
+	@Scroll down@driver.scrollTo(y=900)
+	screenshot difflower
+	Begin "Check Unsent Prescription"
+		Verify exists "Unsent Prescriptions" text
+		Verify exists "Benadryl capsule 25mg" listview link
+		Verify exists "Do NOT Send" listview link
+		Click the "Do NOT Send" link
+	Open "Medical Record" charttab
+	Click the Allergies/Medications charttab
+	Verify !exists Benadryl text

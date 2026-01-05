@@ -1,0 +1,25 @@
+Begin "Navigate to chart"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Type "Harris" in the "sstring" input
+	Click the "Search" button
+Begin "Add Order Quick Links Portlet"
+	Click the "Select Portlets" link
+	Click the "Order Quick Links" checkbox
+	Click the "Save" popup button
+Begin "Add Orders"
+	Verify exists "Perform Selected Orders" button 
+	Verify exists "Audiogram" icon perform
+	Click the "Audiogram" icon perform
+	Wait for ajax
+	@Wait for new window to load with audiogram encounter@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//h3[@class="exam_tab" and text()="Audiogram"]'), expected=True, timeout=60)
+	Verify exists "Audiogram" jumptab
+	Open "Summary" charttab
+	Wait for ajax
+	Click the "Audiogram" checkbox
+	@Scroll to Order Quick Links portlet@driver.runJS('arguments[0].scrollIntoView({block: "center"})', driver.getElement(xpath='//label[contains(., "Order Quick Links")]'))
+	Click the "ECG" checkbox
+	Click the "Perform Selected Orders" button
+	Wait for page
+	Verify exists "Audiogram" text
+	Verify exists "ECG" text

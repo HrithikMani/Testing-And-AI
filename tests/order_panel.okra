@@ -1,0 +1,45 @@
+Begin Add a New Order Panel
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Orders" charttab
+	Click the "Orders-Panels" charttab subtab
+	Click the "Add Order Panel" link
+	Enter "Electrolytes Flowsheet"  into the "panel_order_ac_txt" autocomplete
+	Enter "Sodium" into the "le_order_panel_le_includes_order_id_display" autocomplete
+	Click the "Add" button
+	Enter "Magnesium" into the "le_order_panel_le_includes_order_id_display" autocomplete
+	Click the "Add" button
+	Enter "Chloride" into the "le_order_panel_le_includes_order_id_display" autocomplete
+	Click the "Add" button
+	Click the "Save" button
+	Verify exists "Order panel Electrolytes Flowsheet successfully created" text
+	Type "Electrolytes Flowsheet" into the "search_text" input
+	Click the "Search" button
+	Verify exists "Electrolytes Flowsheet" text
+
+Begin Edit the New Order Panel
+	Click the "Edit" listview link
+	Enter "Phosphorus" into the "le_order_panel_le_includes_order_id_display" autocomplete
+	Click the "Add" button
+	Click the "Save" button
+	Verify exists "Order panel Electrolytes Flowsheet successfully updated" text
+	Verify exists "Phosphorus" text
+
+Begin Copy the New Order Panel
+	Click the "Copy" listview link
+	Enter "Renal Panel"  into the "panel_order_ac_txt" autocomplete
+	Click the "Copy" button
+	Verify exists "Order panel successfully copied!" text
+	Type "Renal Panel" into the "search_text" input
+	Click the "Search" button
+	Verify exists "Sodium" text
+	Verify exists "Magnesium" text
+	Verify exists "Chloride" text
+	Verify exists "Phosphorus" text
+
+Begin Delete the Copied Order Panel
+	Click the "Delete" listview link
+	Verify exists "Are you sure you want to delete the order panel (Renal Panel)?" text
+	Click the "Yes" Button
+	Verify exists "Order panel Renal Panel successfully deleted (emptied)." text
+

@@ -1,0 +1,51 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Wait for the "DataImportTypes" grid
+	Click the "Show/Hide Grid Controls" icon
+	Select "Name" from the @Filters dropdown@xpath='//span[contains(., "Filters")]/parent::div/following-sibling::div/select[@class="wcdv_control_addField"]'
+	Sumoselect "Observation Codes CSV API" from the "Name" grid sumoselect
+	Click the "OK" grid sumobutton
+	Wait for ajax
+	Click "Observation Codes CSV API" grid checkbox
+	Click the "Upload Data" button
+	Verify exists @xpath="//div[@class='wc_win']"
+	Verify exists "Observation Codes CSV API" text in @xpath="//div[@class='wc_win']"
+	Type 'obs_codes_import_test' in the "DI_InterfaceName" input
+	Screenshot "test"
+	Click the "DI_Verbose" checkbox
+	@Wait@driver.pause(1)
+	Type 'ObsCodesDataImportSuccess.csv' in the 'csv_file' input
+	Click the "Upload File" button
+	@driver.getWebDriver().switch_to.frame("di_output_frame")
+	@Wait@driver.pause(1)
+	Verify exists "Successfully imported file ObsCodesDataImportSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+	Click the @Close button@xpath='//button[@class="xclose"]'
+Begin "Verify Details"
+	Verify exists sidemenu
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Chart charttab
+	Click the "Observation Codes" charttab subtab
+	Select "obs_codes_import_test" in the select_interface dropdown
+	Verify exists "Whee" link
+	Verify exists "obs_codes_import_test-Whee,obs_codes_import_test-Zer" text
+	Verify exists "clicks" text
+	Verify exists "Yo Yo" link
+	Verify exists "obs_codes_import_test-Yo Yo,obs_codes_import_test-Momma" text
+	Verify exists "waves" text
+	Begin "Verify obs units for first obs code"
+		Click the View listview link
+		Verify exists "double-clicks" text
+		Verify exists "deci-clicks" text
+		#Toby to investigate
+		#Click the 2nd Cancel button
+		Click @the Cancel button@xpath=//input[@type="submit" and contains(@value, "Cancel")]
+		#End Toby to investigate
+	Begin "Verify obs units for first obs code"
+		Click the 2nd View listview link
+		Verify exists "hand-waves" text
+		Verify exists "milli-waves" text

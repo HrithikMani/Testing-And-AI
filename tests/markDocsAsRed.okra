@@ -1,0 +1,18 @@
+@Backdate a Document @driver.miedb.dbExec("UPDATE documents SET origin_date=DATE_SUB(origin_date, INTERVAL 10 YEAR) WHERE doc_id=541")
+Open the sidemenu
+Click the "Control Panel" sidemenu entry
+#Click the "System" charttab
+#Click the "System Report" charttab subtab
+Navigate "?f=admin&s=system_report&tabmodule=admin"
+Type "Mark Documents As Read" in the "search_value" input
+Click the "Search" button
+Click the "Mark Documents As Read" listview link
+Verify exists "INJECT" text
+Click the "Perform" link
+Click the "Perform All" button
+Verify exists "( 1 ) Performed action on 8/8 records from system report (Mark Documents As Read)" text
+Click the "OK" button
+Click the "Refresh" link
+Verify !exists "INJECT" text
+@Restore the origin_date on the Backdated Document@driver.miedb.dbExec("UPDATE documents SET origin_date=DATE_ADD(origin_date, INTERVAL 10 YEAR) WHERE doc_id=541")
+

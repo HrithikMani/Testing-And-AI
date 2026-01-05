@@ -1,0 +1,19 @@
+Begin "Setup Supervisor Contact"
+	@Use Cory Rogers (username = case) to be our contact@driver.miedb.dbExec("INSERT INTO pat_pat_relations (pat_id, relation_type_id, related_pat_id) SELECT '43', relation_type_id, '51' FROM relation_types WHERE relation_type = 'Supervisor Contact'")
+	@Setup WCTestSession for Case@driver.wcutils.insertWCTSession('{case_username}')
+Begin "Employer Portal"
+	Begin "Homepage"
+		Click the "Supervisor Access" link
+		Close the popup
+		Verify exists @Notification Bell@id='portal-header-notify'
+		Verify exists @Message Center button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Message Center')]"
+		Verify exists @Order Status button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Order Status')]"
+		Verify exists @Reports button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Reports')]"
+		Verify exists @Work Status button@xpath="//span[contains(@class, 'portal-btn-inner')]/span[contains(., 'Work Status')]"
+		Verify exists @Notification Bell@id='portal-header-notify'
+		Screenshot "Supervisor Contact" Homepage
+		Click the 2nd "Reports" link
+		Verify exists @Employee Directory button@xpath="//a[contains(@class, 'round-btn')]/span[contains(., 'Employee Directory')]"
+		Click the @id='portal-user-menu-top'
+		Click the @id="leave-sv-portal"
+		Screenshot "Supervisor Contact Employee" Homepage

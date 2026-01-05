@@ -1,0 +1,124 @@
+Begin "Simple Search"
+	Begin "Search for Jane Doe by MR"
+		Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+		Click the @"MR# or EMP#" radio button@xpath='//input[@value="m"][@type="radio"]'
+		Type "10006" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Doe, Jane" text
+	Begin "Search for Cory Rogers by Name"
+		Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+		Click the "Name" radio
+		Type "roger" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Rogers, Cory" text
+	Begin "Search for Cory Rogers by Birthdate"
+		Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+		Click the "D.O.B (MM-DD-YYYY)" radio
+		Type "07-02-1990" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Rogers, Cory" text
+	Begin "Search for Jennifer Pregnant by Mobile Phone"
+		Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+		Click the @"Mobile Phone" radio@xpath='//input[@id="phone_radio"]'
+		Type "(617) 555-1234 " in the "sstring" input
+		Click the "Search" button
+		Verify exists "Pregnant, Jennifer" text
+	Begin "Search for Joseph Growing by Doc ID"
+		Navigate "?f=chart&s=pat&s=search&search_method=simple&tabmodule=patsearch"
+		Click the "Doc ID" radio
+		Type "0000458" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Growing, Joseph" text
+	Begin "Validate Search Results"
+		Navigate "?f=chart&s=search&search_method=simple&by=n&phone_list=Mobile+Phone&sstring=%25&pat_search=Search"
+		Verify !exists "Deceased" text
+		@Set chart to deceased@driver.miedb.dbExec("UPDATE patients SET death_indicator=1 WHERE pat_id=47")
+		Navigate "?f=chart&s=search&search_method=simple&by=n&phone_list=Mobile+Phone&sstring=%25&pat_search=Search"
+		Verify exists "Deceased" text
+Begin "Detailed Search"
+	Begin "Search for Jane Doe by MR"
+		Navigate "?f=chart&s=pat&s=search&search_method=detail&tabmodule=patsearch"
+		Type "10006" in the "mr_sstring" input
+		Click the "Search" button
+		Verify exists "Doe, Jane" text
+	Begin "Search for Cory Rogers by Name"
+		Navigate "?f=chart&s=pat&s=search&search_method=detail&tabmodule=patsearch"
+		Type "roger" in the "last_name" input
+		Click the "Search" button
+		Verify exists "Rogers, Cory" text
+	Begin "Search for Cory Rogers by Birthdate"
+		Navigate "?f=chart&s=pat&s=search&search_method=detail&tabmodule=patsearch"
+		Type "07-02-1990" in the "start_bdate" input
+		Click the "Search" button
+		Verify exists "Rogers, Cory" text
+	Begin "Search for Catherine Morrison by Home Phone"
+		Navigate "?f=chart&s=pat&s=search&search_method=detail&tabmodule=patsearch"
+		Type "(650) 326-2530" in the "phone" input
+		Click the "Search" button
+		Verify exists "Morrison, Catherine" text
+	Begin "Search for Joseph Growing by Doc ID"
+		Navigate "?f=chart&s=pat&s=search&search_method=detail&tabmodule=patsearch"
+		Type "0000458" in the "docid" input
+		Click the "Search" button
+		Verify exists "Growing, Joseph" text
+Begin "Encounter Search"
+	Begin "Search by Patient"
+		Navigate "?f=layout&s=pat&module=MASTER&name=EncountersSearch&tabmodule=patsearch"
+		Enter "Growing, Joseph T." in the "patient_ac_txt" autocomplete
+		Click the "Search" button
+		Verify exists "Growing, Joseph" text
+		Verify !exists "Hart, William" text
+	Begin "Search by Encounter ID"
+		Navigate "?f=layout&s=pat&module=MASTER&name=EncountersSearch&tabmodule=patsearch"
+		Type "68" in the "enc_id_val" input
+		Click the "Search" button
+		Verify exists "Doe, Jane" text
+		Verify !exists "Hart, William" text
+	Begin "Search by Visit Type"
+		Navigate "?f=layout&s=pat&module=MASTER&name=EncountersSearch&tabmodule=patsearch"
+		Enter "Driver Fitness Determination" in the "visit_type_ac_txt" autocomplete
+		Click the "Search" button
+		Verify exists "Hart, William" text
+		Verify !exists "Doe, John" text
+	Begin "Search by Provider"
+		Navigate "?f=layout&s=pat&module=MASTER&name=EncountersSearch&tabmodule=patsearch"
+		Enter "Sample, John M." in the "provider_ac_txt" autocomplete
+		Click the "Search" button
+		Verify exists "Smith, Theodore" text
+		Verify !exists "Hart, William" text
+	Begin "Search by Archive As"
+		Navigate "?f=layout&s=pat&module=MASTER&name=EncountersSearch&tabmodule=patsearch"
+		Enter "Surveillance Visit" in the "archive_as_ac_txt" autocomplete
+		Click the "Search" button
+		Verify exists "Morrison, Catherine" text
+		Verify !exists "Hart, William" text
+	Begin "Search by Office"
+		Navigate "?f=layout&s=pat&module=MASTER&name=EncountersSearch&tabmodule=patsearch"
+		Enter "Office" in the "location_ac_txt" autocomplete
+		Click the "Search" button
+		Verify exists "Pregnant, Jennifer" text
+		Verify !exists "Acardi, Sergio" text
+	Begin "Search by Service Date"
+		Navigate "?f=layout&s=pat&module=MASTER&name=EncountersSearch&tabmodule=patsearch"
+		Type "12" in the "start_dateMONTH" input
+		Type "03" in the "start_dateDAY" input
+		Type "2008" in the "start_dateYEAR" input
+		Type "12" in the "end_dateMONTH" input
+		Type "05" in the "end_dateDAY" input
+		Type "2008" in the "end_dateYEAR" input
+		Click the "Search" button
+		Verify exists "Haynes, Will" text
+		Verify !exists "Hart, William" text
+	Begin "Search by Status"
+		Navigate "?f=layout&s=pat&module=MASTER&name=EncountersSearch&tabmodule=patsearch"
+		Select "Open" from the "status" dropdown
+		Click the "Search" button
+		Verify exists "Simmons, Nicole" text
+		@Click the SHOW ALL link@driver.clickElement(text='SHOW ALL')
+		Verify exists "Anderson, Frederick" text
+	Begin "Search by Stage"
+		Navigate "?f=layout&s=pat&module=MASTER&name=EncountersSearch&tabmodule=patsearch"
+		Type "Physician" from the "stage" input
+		Click the "Search" button
+		Verify exists "Hart, William" text
+		Verify !exists "Growing, Joseph" text

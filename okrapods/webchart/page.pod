@@ -1,0 +1,22 @@
+"""
+Pod used for general page interactions
+
+Example:
+	Refresh page
+"""
+
+@Refresh
+@@@
+wd = driver.getWebDriver()
+wd.refresh()
+if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=60, comments='Wait for ajax and layoutInsert operations to complete'):
+		driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+driver.wcutils.waitForAJAX(timeout=60, quiet=15)
+@@@
+
+@Wait
+@@@
+if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=60, comments='Wait for ajax and layoutInsert operations to complete'):
+	driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+driver.wcutils.waitForAJAX(timeout=60, quiet=15)
+@@@

@@ -1,0 +1,52 @@
+Begin "Setup the Portal"
+	Navigate "?f=chart&s=pat&pat_id=43"
+	Click the "Portal Management" charttab
+	Click the "Portal Setup" charttab subtab
+	Open the "Applicant Portal Setup" dynamicsection
+	Click the "Run Setup" button
+	@Wait for the setup to finish@driver.waitFor(driver, lambda d: d.getElement(xpath='//a[contains(., "Better Corp.,  (Better Corp.)")]'), expected_return=True, timeout=120)
+	Open the "Configuration" dynamicsection
+	Click the @"Middle name" checkbox@xpath=//input[@id="DPCB_app_portal_enable_middle_name"]
+	Click the "Add Questionnaires" link
+	Click the "TB Annual Screening Questionnaire" checkbox
+	Click the Ok button
+	Save the "Configuration" dynamicsection
+Begin "Login to the applicant portal"
+	Click the @Applicant Portal link@xpath=//a[@id="ap-url"]
+	@Switch to Applicant Portal page@driver.switchToPopup()
+	Type "Jim" in the "first_name" input
+	Type "The" in the "middle_name" input
+	Type "Applicant" in the "last_name" input
+	Type "01" into the app_DATEMONTH input
+	Type "01" into the app_DATEDAY input
+	Type "1998" into the app_DATEYEAR input
+	Click the "submit" button
+	Verify exists "TB Annual Screening Questionnaire" text
+	@Close this window@driver.closePopup()
+Begin "Validate Patient"
+	Navigate "?f=logout"
+	@Setup WCTestSession for Selenium@driver.wcutils.insertWCTSession('{selenium_username}')
+	Navigate "?f=chart"
+	Type "Applicant" in the "sstring" input
+	Click the "Search" button
+	Verify exists "Applicant, Jim The" text
+Begin "Login to the applicant portal with clinic ID in URL"
+	Navigate "?f=logout"
+	Navigate "?f=layoutnouser&name=Applicant+Landing&svar_cobrand_patid=43&applicant_session=1&clinic=59"
+	Type "Jane" in the "first_name" input
+	Type "The" in the "middle_name" input
+	Type "Applicant" in the "last_name" input
+	Type "01" into the app_DATEMONTH input
+	Type "01" into the app_DATEDAY input
+	Type "1998" into the app_DATEYEAR input
+	Click the "submit" button
+	Verify exists "TB Annual Screening Questionnaire" text
+Begin "Validate Patient has Clinic relation"
+	Navigate "?f=logout"
+	@Setup WCTestSession for Selenium@driver.wcutils.insertWCTSession('{selenium_username}')
+	Navigate "?f=chart"
+	Type "Applicant, Jane" in the "sstring" input
+	Click the "Search" button
+	Click the "Admin" charttab
+	Click the "Demographics" charttab subtab
+	Verify exists "Enterprise Orthopedics (Clinic)" text

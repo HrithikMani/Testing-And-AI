@@ -1,0 +1,9 @@
+Begin Pending Orders Report
+	Open the sidemenu
+	Click the "Reports" sidemenu entry
+	Click the "Orders" charttab
+	Click the 2nd "Order Requests - Pending" link
+	Enter '08-22-2018' in the 'requested_start_date' date
+	Enter '08-22-2018' in the 'requested_end_date' date
+	Click the "Search" button
+	Verify exists "Simmons, Nicole" grid link

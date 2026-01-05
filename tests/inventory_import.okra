@@ -1,0 +1,314 @@
+Begin "Remove permission to Receive Inventory"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "No" from the "Receive Inventory" dropdown
+	Type "inventory_import.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify exists The "[ Receive Inventory: No ]" text
+Begin "Set 'Show Quantity in Autocomplete' System Setting"
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Type "Show Quantity in Autocomplete" in the input
+	Click the "Go" button
+	Click the "Add System Setting" link
+	Type "Show Quantity in Autocomplete!" in the autocomplete
+	@Wait@driver.wcutils.waitForAJAX(30)
+	Click the "E-Chart, Inventory, Show Quantity In AutoComplete" autocomplete choice
+	Select "Enabled" in the "Value" dropdown
+	Type "inventory_import.okra" in the "reason" input
+	Click the "Add" button
+	Verify exists the "Successfully modified system setting with module (E-Chart), section (Inventory) and item (Show Quantity In AutoComplete)" text
+	Type "Show Quantity In AutoComplete" in the "select_text" input
+	Click the "Go" button
+	# in the "Value" cell in the "Show Quantity In AutoComplete" row in the "System Settings" table
+	Verify exists the !"Enabled" text
+Begin "Verify that without permission, we can't see the import UI"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Import" charttab
+	Verify exists the "Your current permission of 'No' in the ('Inventory','Receive Inventory') security setting does not allow access to Receive Inventory." text
+Begin "Give permission to Receive Inventory"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Yes" from the "Receive Inventory" dropdown
+	Type "inventory_import.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify !exists The "[ Receive Inventory: No ]" text
+Begin "Verify that Inventory Import works"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Import" charttab
+	Verify exists The "Select Import File" text
+	Type inventory_scanner_import.csv in the file input
+	Click the "Upload" button
+	Screenshot "translations_needed"
+	Click the 1st "Create Translation" link
+	Begin "Create the Location translation"
+		#Switch to the "WebChart: Translation Manager" window
+		@SwitchToPopup@driver.switchToPopup()
+		Screenshot "trans_manager"
+		# in the "Translation Manager" table
+		Click the "!Edit" link
+		Screenshot "trans_edit"
+		Select "Location" from the "Type" dropdown
+		Type "OFFICE" in the "Trans To" input
+		Click the "Edit" button
+		Verify exists The "Edited translation." text
+		@Close the "WebChart: Translation Manager" window@driver.closePopup()
+		#Switch to the "WebChart: Inventory" window
+		@Return to mainwindow@driver.returnToMainWindow()
+	Click the "Continue" button
+	# in the table body in the "Add Inventory" box
+	Begin "Verify the barcodes are there"
+		Begin "the 1st row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=0006413341" in the @xpath=//input[@id='inv_acval0']
+			# in the "Qty" cell
+			Verify "value=1" in the "inv_quantity0" input
+		Begin "the 2nd row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=0100304094276021" in the @xpath=//input[@id='inv_acval1']
+			# in the "Qty" cell
+			Verify "value=10" in the "inv_quantity1" input
+		Begin "the 3rd row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=0100306410367253" in the @xpath=//input[@id='inv_acval2']
+			# in the "Qty" cell
+			Verify "value=5" in the "inv_quantity2" input
+		Begin "the 4th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=208357239252" in the @xpath=//input[@id='inv_acval3']
+			# in the "Qty" cell
+			Verify "value=20" in the "inv_quantity3" input
+		Begin "the 5th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=324208920640" in the @xpath=//input[@id='inv_acval4']
+			# in the "Qty" cell
+			Verify "value=60" in the "inv_quantity4" input
+		Begin "the 6th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=349281400100" in the @xpath=//input[@id='inv_acval5']
+			# in the "Qty" cell
+			Verify "value=1" in the "inv_quantity5" input
+		Begin "the 7th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=358160821523" in the @xpath=//input[@id='inv_acval6']
+			# in the "Qty" cell
+			Verify "value=2" in the "inv_quantity6" input
+		Begin "the 8th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=607415779851" in the @xpath=//input[@id='inv_acval7']
+			# in the "Qty" cell
+			Verify "value=1" in the "inv_quantity7" input
+		Begin "the 9th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=607415779868" in the @xpath=//input[@id='inv_acval8']
+			# in the "Qty" cell
+			Verify "value=1" in the "inv_quantity8" input
+		Begin "the 10th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=607415779875" in the @xpath=//input[@id='inv_acval9']
+			# in the "Qty" cell
+			Verify "value=1" in the "inv_quantity9" input
+		Begin "the 11th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=607415779882" in the @xpath=//input[@id='inv_acval10']
+			# in the "Qty" cell
+			Verify "value=1" in the "inv_quantity10" input
+		Begin "the 12th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=607415824674" in the @xpath=//input[@id='inv_acval11']
+			# in the "Qty" cell
+			Verify "value=1" in the "inv_quantity11" input
+		Begin "the 13th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=607415824711" in the @xpath=//input[@id='inv_acval12']
+			# in the "Qty" cell
+			Verify "value=1" in the "inv_quantity12" input
+		Begin "the 14th row"
+			# The autocomplete in the "Drug/Item" cell
+			Verify "placeholder=743537200108" in the @xpath=//input[@id='inv_acval13']
+			# in the "Qty" cell
+			Verify "value=20" in the "inv_quantity13" input
+	Click the "Import" charttab
+	Type inventory_scanner_import.csv in the file input
+	Click the "Upload" button
+	Begin "Teach the system what some barcodes mean by exercising the auto creation of inventory items from a med feature"
+		# in the "0100304094276021" row in the "Add Inventory" box
+		Begin "0100304094276021 is oxycodone"
+			# and get "oxycodone (New) qty: 0" from the autocomplete in the "Drug/Item" cell
+			Type "oxycodone!" in the @"inv_acval1" autocomplete@xpath=//input[@id='inv_acval1']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Click the "oxycodone qty: 0" autocomplete choice
+			#The autocomplete in the "Form" cell should contain "capsule 5mg (oral) qty: 0" because "Form is autofilled after we fill Drug/Item"
+			Click the @"inv_formacval1" autocomplete@xpath=//input[@id='inv_formacval1']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Click the "capsule 5mg (oral) qty: 0" autocomplete choice
+			# in the "Lot Number" cell
+			Type "4657X91" in the "inv_lot_number1" autocomplete
+			# in the "Manufacturer" cell
+			Type "GlaxoSmithKline" in the "inv_manufacturer1" autocomplete
+			# in the "Expiration Date" cell
+			Type "01-01-2030" in the "inv_exp_date1" date
+		# in the "324208920640" row in the "Add Inventory" box
+		Begin "324208920640 is atenolol"
+			#Select "aten" and get "atenolol (New) qty: 0" from the autocomplete in the "Drug/Item" cell
+			Type "atenolol!" in the @"inv_acval14 autocomplete@xpath=//input[@id='inv_acval4']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Click the "atenolol oral qty: 0" autocomplete choice
+			# The autocomplete in the "Form" cell should contain "tablet 25mg qty: 0" because "Form is autofilled once we select Drug/Item"
+			Click the @"inv_formacval4" autocomplete@xpath=//input[@id='inv_formacval4']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Click the "tablet 25mg qty: 0" autocomplete choice
+		Click the "Save" button
+		# We've fully mapped this import, so it doesn't show anymore
+		Begin "Verify Oxycode mapping and receipt"
+			Verify exists the "Received 10 of oxycodone 5 mg capsule" text
+			Verify exists the "Assigned Barcode (0100304094276021) to Item (oxycodone 5 mg capsule)" text
+			Verify !exists the @"oxycodone" row@xpath=//input[@placeholder='0100304094276021']|//input[contains(@value,'oxycodone')]
+		Begin "Verify soft-remembering of incomplete row: atenolol"
+			Verify !exists the "Assigned Barcode (324208920640) to Item (atenolol 25 mg tablet)" text
+			# The autocomplete in the "Drug/Item" cell should contain exactly "atenolol"
+			Verify "value=atenolol" in the @"inv_acval3" input@xpath=//input[@id='inv_acval3']
+			# in the "Form" cell
+			Verify "value=tablet 25mg" in the @"inv_formacval3" input@xpath=//input[@id='inv_formacval3']
+			# The input in the "Qty" cell
+			Verify "value=60" in the @"inv_quantity3" input@xpath=//input[@id='inv_quantity3']
+		Begin "358160821523 is amoxicillin in the 358160821523 row in the Add Inventory box"
+			# Select "amox" and get "amoxicillin qty: 450" from the autocomplete in the "Drug/Item" cell
+			Type "amox!" in the @"inv_acval15 autocomplete@xpath=//input[@id='inv_acval5']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Click the "amoxicillin qty: 450" autocomplete choice
+			# The autocomplete in the "Form" cell should contain "capsule 500mg qty: 450" because "Form suggests based on Drug/Item"
+			Click the @"inv_formacval5" autocomplete@xpath=//input[@id='inv_formacval5']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Click the "capsule 500mg qty: 450" autocomplete choice
+			Type "NGKJ921B" in the @autocomplete in the "Lot Number" cell@xpath=//input[@id='inv_lot_number5']
+			Type "Merywhether" in the @autocomplete in the "Manufacturer" cell@xpath=//input[@id='inv_manufacturer5']
+			# in the "Expiration Date" cell
+			Type "03-02-2029" in the "inv_exp_date5" date
+		Begin "607415779875 is Crutches 48 in the 607415779875 row in the Add Inventory box"
+			# Select "crutch" and get "Crutches 48" from the autocomplete in the "Drug/Item" cell
+			Type "Crutch!" in the @"inv_acval7" autocomplete@xpath=//input[@id='inv_acval7']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Click the "Crutches 48 qty: " autocomplete choice
+			# We don't have a form for supplies
+			Verify !exists @the autocomplete in the "Form" cell@xpath=//span[contains(@style,'display:inline')]/span/input[@id='inv_formacval7']
+		Begin "607415779882 is Demorol in the 607415779882 row in the Add Inventory box"
+			# Select "Demerol O" and get "Demerol oral (New) qty: 0" in the autocomplete in the "Drug/Item" cell
+			Type "Demerol!" in the @"inv_acval9" autocomplete@xpath=//input[@id='inv_acval9']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Click the "Demerol qty: 0" autocomplete choice
+			# The autocomplete in the "Form" cell should contain "solution 50mg/5 mL (injection) qty: 0" because "Form suggests based on Drug/Item"
+			Click the @"inv_formacval8" autocomplete@xpath=//input[@id='inv_formacval9']
+			@Wait@driver.wcutils.waitForAJAX(30)
+			Click the "tablet 100mg (oral) qty: 0" autocomplete choice
+			Type "BBB9191" in the @autocomplete in the "Lot Number" cell@xpath=//input[@id='inv_lot_number9']
+			Type "Pythagoras" in the @autocomplete in the "Manufacturer" cell@xpath=//input[@id='inv_manufacturer9']
+			# in the "Expiration Date" cell
+			Type "01-09-2028" in the "inv_exp_date9" date
+		Click the "Save" button
+		Verify exists the "Received 2 of Amoxicillin 500mg Capsule" text
+		Verify exists the "Assigned Barcode (358160821523) to Item (Amoxicillin 500mg Capsule)" text
+		Verify exists the "Received 1 of Demerol 100 mg tablet" text
+		Verify exists the "Assigned Barcode (607415779882) to Item (Demerol 100 mg tablet)" text
+		Begin "Verify partial atenolol mapping is still there in the atenolol row in the Add Inventory box"
+			# The autocomplete in the "Drug/Item" cell should contain exactly "atenolol"
+			Verify "value=atenolol" in the @"inv_acval3" input@xpath=//input[@id='inv_acval3']
+			Verify "value=tablet 25mg" in the @"inv_formacval3" input@xpath=//input[@id='inv_formacval3']
+			Verify "value=60" in the @"inv_quantity3" input@xpath=//input[@id='inv_quantity3']
+		# We completed the mapping, so it's not displayed
+		Verify !exists the @"Demerol" row  in the "Add Inventory" box@xpath=//input[contains(@id,'inv_acval') and @value='Demerol']
+		Begin "Verify partial Crutches 48 mapping is still there in the Crutches 48 row in the Add Inventory box"
+			Verify "value=Crutches 48" in the @autocomplete in the "Drug/Item" cell@xpath=//input[@id='inv_acval6']
+			Verify !exists the @autocomplete in the "Form" cell@xpath=//span[contains(@style,'display:inline')]/span/input[@id='inv_formacval6']
+			# in the "Qty" cell
+			Verify "value=1" in the @"inv_quantity6" input@xpath=//input[@id='inv_quantity6']
+		Begin "Disable the Lot Number Requirement"
+			Open the sidemenu
+			Click the "Control Panel" sidemenu entry
+			Click the "System" charttab
+			Click the "System Settings" charttab subtab
+			Type "Are Required" in the "select_text" input
+			Click the "!Go" button
+			Click the @"Edit" link in the "Lot Numbers" row@xpath=//td[contains(.,'Are Required')]/following-sibling::td//a[text()='Edit']
+			Select "0" in the "value" dropdown
+			Type "inventory_import.okra" in the "reason" input
+			Click the "Change" button
+			Verify exists the "Successfully modified system setting with module (Inventory), section (Lot Numbers) and item (Are Required)" text
+			Verify exists the @"Disabled" text in the "Value" cell in the "Lot Numbers" row in the "System Settings" table@xpath=//td[contains(.,'Are Required')]/following-sibling::td[text()='Disabled']
+		Begin "Reload the file to verify the submitted items have been learned"
+			Open the sidemenu
+			Click the "Inventory" sidemenu entry
+			Click the "Import" charttab
+			Type inventory_scanner_import.csv in the file input
+			Click the "Upload" button
+			Begin "Verify that our mappings still populate things and that selecting a Lot Number fills in Manufacturer and Expiration info in the Add Inventory box"
+				Begin "the oxycodone row"
+					# in the "Lot Number" cell
+					Type "4657X91!" in the "inv_lot_number1" input
+					Screenshot "inv_lot_in_manu1"
+					# Verify "value=4657X91" text in the autocomplete in the "Lot Number" cell
+					@Wait@driver.wcutils.waitForAJAX(30)
+					Screenshot "inv_lot_in_manu2"
+					Click the "4657X91 (GlaxoSmithKline 01-01-2030) qty: 10" autocomplete choice
+					Verify "value=GlaxoSmithKline" in the @autocomplete in the "Manufacturer" cell@xpath=//input[@id='inv_manufacturer1']
+					Begin "The date in the Expiration Date cell should contain 01-01-2030"
+						Verify "value=01" in the "inv_exp_date1" date month
+						Verify "value=01" in the "inv_exp_date1" date day
+						Verify "value=2030" in the "inv_exp_date1" date year
+				Begin "the amoxicillin row"
+					# in the "Lot Number" cell
+					Type "NGKJ921B!" in the "inv_lot_number6" input
+					# Verify exists the !"NGKJ921B" text The autocomplete in the "Lot Number" cell
+					@Wait@driver.wcutils.waitForAJAX(30)
+					Click the "NGKJ921B (Merywhether 03-02-2029) qty: 2" autocomplete choice
+					Verify "value=Merywhether" in the @autocomplete in the "Manufacturer" cell@xpath=//input[@id='inv_manufacturer6']
+					Begin "The date in the Expiration Date cell should contain 03-02-2029"
+						Verify "value=03" in the "inv_exp_date6" date month
+						Verify "value=02" in the "inv_exp_date6" date day
+						Verify "value=2029" in the "inv_exp_date6" date year
+				Begin "the Demerol row"
+					# in the "Lot Number" cell
+					Type "BBB9191!" in the "inv_lot_number10" input
+					# Verify exists the !"BBB9191" text The autocomplete in the "Lot Number" cell
+					@Wait@driver.wcutils.waitForAJAX(30)
+					Click the "BBB9191 (Pythagoras 01-09-2028) qty: 1" autocomplete choice
+					Verify "value=Pythagoras" in the @autocomplete in the "Manufacturer" cell@xpath=//input[@id='inv_manufacturer10']
+					Begin "The date in the Expiration Date cell should contain 01-09-2028"
+						Verify "value=01" in the "inv_exp_date10" date month
+						Verify "value=09" in the "inv_exp_date10" date day
+						Verify "value=2028" in the "inv_exp_date10" date year
+			# in the Demerol row in the "Add Inventory" box
+			Begin "Changing lot information for Demerol will not clear pre-entered info"
+				# in the "Lot Number" cell
+				Type "XXX1919!" in the "inv_lot_number10" input
+				Verify "value=Pythagoras" in the @autocomplete in the "Manufacturer" cell@xpath=//input[@id='inv_manufacturer10']
+				Begin "The date in the Expiration Date cell should contain 01-09-2028"
+					Verify "value=01" in the "inv_exp_date10" date month
+					Verify "value=09" in the "inv_exp_date10" date day
+					Verify "value=2028" in the "inv_exp_date10" date year
+				# in the "Expiration Date" cell
+				Enter "02-15-2028" in the "inv_exp_date10" date
+			Click the "Save" button
+			Verify exists the "Received 10 of oxycodone 5 mg capsule" text
+			Verify exists the "Received 2 of Amoxicillin 500mg Capsule" text
+			Verify exists the "Received 1 of Demerol 100 mg tablet" text
+		Begin "Verify everything is shown in the correct lots"
+			Click the "Show Inventory" charttab
+			# in the "General Inventory" box
+			Screenshot "inventory_after_import"

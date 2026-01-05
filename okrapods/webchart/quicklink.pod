@@ -1,0 +1,53 @@
+"""
+Pod used for interacting with quick links from the Quick Links lightning bolt icon or from the Quick Link Portlet
+- Quicklinks at the top of the patient's chart are no longer as of RC202009
+
+Usage examples:
+	Click the "Add Appt" quicklink
+	Verify exists "Checkin" quicklink
+	Click the quicklink icon
+	Click the quicklink portletlink
+	Open the quicklink list
+	Click the quicklink bolt
+
+"""
+
+quicklink://div[@id="quiclinks_win"]//div[contains(., "Quick Links")]/following-sibling::div//div//a{OKRA_TEXT_CLS}
+
+portletlink://div[@class="portlet"]/div[contains(., "Quick Links")]/following-sibling::div//div//a{OKRA_TEXT_CLS}
+
+icon://div[@id="wc_header_container"]//div[@id="wc_othertoolbars"]//span[contains(@class, "bolt") and contains(@title, "Quick Links")]
+	|//span[contains(@class, "bolt") and contains(@title, "Quick Links")]
+
+bolt://div[@id="wc_header_container"]//div[@id="wc_othertoolbars"]//span[contains(@class, "bolt") and contains(@title, "Quick Links")]
+	|//span[contains(@class, "bolt") and contains(@title, "Quick Links")]
+
+list://div[@id="quiclinks_win"]//div[contains(., "Quick Links")]
+
+close://div[contains(@class, "wc_win_title") and contains(., "Quick Links")]/preceding-sibling::button[contains(@class, "xclose")]
+
+
+@Open
+Wait for page
+Verify exists "Quick Links" icon
+Click the "Quick Links" icon
+Wait for page
+@Verify Quick Links is open and last link listed is present@driver.wcutils.waitForEle(xpath='(//div[@id="quiclinks_win"]//div[contains(., "Quick Links")]/following-sibling::div//li/a)[last()]', timeout=60)
+
+@Close
+@@@
+@Wait for AJAX@driver.wcutils.waitForAJAX(timeout=60, quiet=15)
+driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@class, "wc_win_title") and contains(., "Quick Links")]'), expected_return=True, timeout=60)
+wd = driver.getWebDriver()
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+modal = '//div[contains(@class, "wc_win") or contains(@class, "modal") or contains(@class, "miewin")]'
+if driver.waitFor(driver, lambda d: d.getElement(xpath=modal), expected_return=True, timeout=60):
+	driver.pause(10)
+	ActionChains(wd).send_keys(Keys.ESCAPE).perform()
+	driver.reportCommandStatus(cmd, 'Escape key sent', True, '', '')
+else:
+	driver.reportCommandStatus(cmd, 'Modal element not found', False, '', '')
+driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@id="quiclinks_win"]//div[contains(., "Quick Links")]'), expected_return=False, timeout=30)
+@@@
+

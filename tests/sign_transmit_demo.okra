@@ -1,0 +1,44 @@
+@Set the Cross-Browser EPCS to Mobile@driver.wcutils.SetPreference('physician', 'E-Chart', 'Meds/Allergies', 'Cross-Browser EPCS', 2)
+@Set Surescripts Staging URL@driver.miedb.dbExec('UPDATE system_settings SET value="https://zeus-qa.med-web.com/ssdms/interface.cgi" WHERE item="SureScripts Staging URL"')
+Begin Log in as Patel, Ashish
+	Open the sidemenu
+	Click the Logout sidemenu entry
+	@Setup WCTestSession for butler@driver.wcutils.insertWCTSession('physician')
+Begin "Set up a preferred pharmacy for William Hart"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Type "Hart, William" in the sstring input
+	Click the "Search" button
+	Click the TEST-10019 link
+	Click the "Medical Record" charttab
+	Click the Allergies/Medications link
+	Click the "Preferred Pharmacy" link
+	Click @id=phsearch_filter_zip
+	Type 46804 in @id=zipinput
+	Enter "Bannockburn Pharmacy" in the pharmacy_ac_text autocomplete
+	Click the "Set as Preferred" button
+	@Little pause to make sure screen is back@driver.pause(5)
+Begin "Prescribe Xanax"
+	Open the quicklink list
+	Click the Prescribe quicklink
+	Enter Xanax in the qp_acval0 autocomplete
+	Enter "tablet 0.5mg" in the qp_formacval0 autocomplete
+	Type "1 tab qd" in @id=qp_sig0
+	Type 30d in @id=qp_duration0
+	Type 0 in @id=qp_refills0
+	Select "Patel, Ashish" from @id=qp_doctor_id0
+	Click the 1st Prescribe button
+Begin "Sign Xanax"
+	Verify exists "Xanax 0.5 mg tablet" text
+	Click @Ashish Patel sign link@xpath=//span[@class="link"][contains(., "Ashish Patel")]
+	Click @Ready checkbox@xpath=//input[@class="ready"]
+	Click @Sign button@xpath=//input[@id="signBtn"]
+	@Wait for the sign@driver.wcutils.waitForEle(xpath='//div[@class="wc_win_title"][contains(., "Signing Prescription")]', expected=False, timeout=240)
+Begin "Transmit the E-prescription"
+	@Switch to "Print Chart" Window@driver.switchToPopup()
+	Verify exists "Xanax 0.5 mg tablet" text
+	Click the "-- Fax/Transmit --" button
+	Verify exists "All scripts sent successfully." text
+	@Close this window@driver.closePopup()
+Verify exists "Xanax 0.5 mg tablet" text
+Verify exists "E-sent:" text

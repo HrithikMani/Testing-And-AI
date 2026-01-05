@@ -1,0 +1,70 @@
+Begin "Provider Organizations Overview page"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Provider Management" link
+	Type "Enterprise" in the input
+	Click the "Search" button
+	Wait for the EPMProviders grid
+	Show for the EPMProviders grid
+	Click the "Enterprise Orthopedics" link
+	Click the "Overview (PO)" charttab
+	Begin "Provider Organizations"
+		Verify exists "Enterprise Orthopedics" text
+		Verify exists "6302 Constitution Dr" text
+	Begin "Branding"
+		Verify exists "Letterhead Components" text
+	Begin "Contacts"
+		Open the "Contacts" dynamicsection
+		Enter "Selenium"  in the "le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input" autocomplete
+		Select "Contact" in the "le_pat_parent_relations_rt_relation_type_value" dropdown
+		Click the "Add" button
+		Close the "Contacts' dynamicsection
+			Verify exists "Selenium Selenium" text
+			Verify exists "6302 Constitution Drive" text
+	Begin "Service Locations"
+		Open the "Service Locations" dynamicsection
+		Enter "Outside"  in the "le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input" autocomplete
+		Click the "Add" button
+		Close the "Service Locations" dynamicsection
+			Verify exists "Outside Clinic" text
+	Begin "Service Plans"
+		# Empty/unused 
+	Begin "Contracted Service Plans"
+		Verify exists "No contracted service plans exist, for this service provider" text
+	Begin "Accounts"
+		# Empty/unused 
+	Begin "Providers" dynamicsection
+		Verify exists "Dave David" text
+		Verify exists "Ashish Patel" text
+	Begin "Credentials and Licenses"
+		# Empty/unused 
+	Begin "Credentials and Licenses"
+		# Empty/unused 
+	Begin "Documentation"
+		# Empty/unused 
+	Begin "Insurance"
+		Open the "Insurance" dynamicsection
+		Select "General" in the dropdown
+		Type "Testing" in the "Liability Carrier" input
+		Type "10000" in the "Liability Limit Occurrence / Aggregate" input
+		Enter "11-30-2020" in the date
+		Close the "Insurance" dynamicsection
+			Verify exists "General" text
+			Verify exists "$10,000.00 / $0.00" text
+	Begin "Services"
+		# Empty/unused 
+	Begin "Conditions"
+		# Empty/unused 
+	Begin "Specialties"
+		Verify exists "Orthopedics" text
+	Begin "Body Parts Treated"
+		# Empty/unused 
+	Begin "Other Data"
+		# Empty/unused 
+	Begin "Notes"
+		# Empty/unused 
+	Begin "Sub-Provider Organizations"
+		# Empty/unused 
+	Begin "Chart Types"
+		Verify exists "Provider Organization" text
+

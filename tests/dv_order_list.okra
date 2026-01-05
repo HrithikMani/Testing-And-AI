@@ -1,0 +1,60 @@
+Navigate ?f=layout&module=Orders&name=OrderList
+
+Begin "Add a New Order"
+	Click the "Add Order" button
+	Select "PROC" from the "Order Type" dropdown
+	Type "Bleeding by Leeches" in the "Order Name" input
+	Type "BLEED" in the "Order Code" input
+	Type "Best done by Theodoric of York, Medieval Barber" in the "Provider Guideline" input
+	Click the "Save" button
+Begin "Search for New Order" # May need to search here
+	Navigate ?f=layout&module=Orders&name=OrderList
+	Wait for the "orderlist" grid
+
+	# Filter
+	Click the @Code filter button@xpath="//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Code']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Code']//p[contains(@class, 'SelectBox')]"
+	Type "BLEED" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "BLEED" label
+	Click the @ok button@xpath="//li[@data-wcdv-field='Code']//p[@class='btnOk']"
+
+	Verify exists "BLEED" grid entry
+Begin "Edit the New Order"
+	Click the "BLEED" grid checkbox
+	Click the "Edit" grid button
+	Type "OU812" in the "Billing Code" input
+	Click the "Save" button
+Begin "Verify changes"
+	Verify exists "OU812" grid entry
+Begin "Deactivate order"
+	Unfilter grid
+
+	# Filter 
+	Click the @Code filter button@xpath="//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Code']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Code']//p[contains(@class, 'SelectBox')]"
+	Type "BLEED" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "BLEED" label
+	Click the @ok button@xpath="//li[@data-wcdv-field='Code']//p[@class='btnOk']"
+
+	Click the "BLEED" grid checkbox	
+	Click the "Edit" grid button
+	Click the "inactive" checkbox
+	Click the "Save" button
+Begin "Deactive Order with Attached Pick List"
+	# For some reason, you can't just unfilter the grid, it bugs out. Need to navigate back (refresh) the page. :/
+	Navigate ?f=layout&module=Orders&name=OrderList 
+
+    # Filter
+	Click the @Name filter button@xpath="//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Name']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Name']//p[contains(@class, 'SelectBox')]"
+	Type "Electrolytes Serum" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "Electrolytes Serum" label
+	Click the @ok button@xpath="//li[@data-wcdv-field='Name']//p[@class='btnOk']"
+
+	Click the "Electrolytes Serum" grid checkbox
+	Click the "Edit" grid button
+	Click the "inactive" checkbox
+	Click the "Save" button
+	Click the "Yes" popup button
+
+# Filter "Electrolytes Serum" on "Name" grid

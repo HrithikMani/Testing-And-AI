@@ -1,0 +1,24 @@
+"""
+ Test for Security Tags appearing in security marked CCDAs
+ @owners: dcarlson nrichardson
+ @filedeps: system/layouts/WCENCSECTION/Patient Education.html, system/layouts/StructDoc/*.html
+"""
+@@@Set CCDA on VISIT archive
+driver.miedb.dbExec("UPDATE encounter_visit_types SET cda_template='Layout:CCDA' where visit_type='VISIT'")
+@@@
+Navigate "?f=chart&s=pat&t=Patient+Summary&v=dashboard&pat_id=18"
+Click the "Add Visit" link
+Open "CCDA Settings" dynamicsection
+Select 2nd 'RESTRICTED' radio
+Type "Selenium redisclosure text." into the "DEI_CCDA_RestrictedText" input
+Screenshot "Restricted Created and closed section"
+Click the "Save Incomplete & View" button
+Click the "Create Preliminary Archive" link
+@Wait 30 seconds@driver.pause(30)
+Screenshot "Doc Created"
+Click the "Documents" charttab
+Click the 1st "CDA Document" link
+Verify exists @Lock Icon@xpath='//img[@title="Confidentiality: Restricted"]'
+Click the "Properties" link
+Click the "CDA Document" link
+Verify exists 'confidentialityCode code="R"' text

@@ -1,0 +1,26 @@
+Begin "Add Supervisor relation type if it does not exist"
+	@Add Relation type for Supervisor if it does not exist@driver.miedb.dbExec("REPLACE INTO relation_types (relation_type, level, flatten) VALUES ('Supervisor', 1, 0)")
+	@Add Relation type for Subordinate if it does not exist@driver.miedb.dbExec("REPLACE INTO relation_types (relation_type, level, flatten) VALUES ('Subordinate', 1, 0)")
+	@Add Inverse relation type for Supervisor if it does not exist@driver.miedb.dbExec("SET @id = (SELECT relation_type_id FROM relation_types rt2 WHERE relation_type = 'Subordinate'); UPDATE relation_types SET inverse_relation_type_id = @id WHERE relation_type = 'Supervisor'")
+	@Add Inverse relation type for Subordinate if it does not exist@driver.miedb.dbExec("SET @id = (SELECT relation_type_id FROM relation_types rt2 WHERE relation_type = 'Supervisor'); UPDATE relation_types SET inverse_relation_type_id = @id WHERE relation_type = 'Subordinate'")
+Begin "Setup of Relationships"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+	Click the "Admin" charttab
+	Click the "Demographics" charttab subtab
+	Open the "Contacts / Relationships" dynamicsection
+	Enter "Thomas, All" in the le_UserPatientsuser__name__display autocomplete
+	Select "Supervisor" from the le_UserPatientsuser_up_role_id_value dropdown
+	Click the Add button
+	Enter "Thomas, All" in the le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input autocomplete
+	Select "Supervisor" from the le_pat_parent_relations_rt_relation_type_value dropdown
+	Type 12 in the le_pat_parent_relations_pr_end_date_value_varMONTH input
+	Type 31 in the le_pat_parent_relations_pr_end_date_value_varDAY input
+	Type 2999 in the le_pat_parent_relations_pr_end_date_value_varYEAR input
+	Click the 2nd Add button
+	Close the "Contacts / Relationships" dynamicsection
+Begin "Validation of view"
+	Click the "Hart, William S." link
+	Verify exists "Thomas, Allison" link
+	Verify !exists the 2nd "Thomas, Allison" link

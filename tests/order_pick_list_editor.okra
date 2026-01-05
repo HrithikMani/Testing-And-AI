@@ -1,0 +1,10 @@
+#The url for the Order Picklist Editor tab is broken, so until we get a new snapshot, we're gonna hardcode this
+Navigate "?f=layout&module=PicklistOrders&name=PicklistEditor&tabmodule=admin"
+Wait for ajax
+Verify exists "set_name_select" dropdown
+Select "Labs" from the "set_name_select" dropdown
+Click the "Other labs" icon addpanelitem
+Begin "Add Item MIEwindow"
+	Enter "Renal Panel" in the "Order Content" autocomplete
+	Select "Urinalysis" from the "Display After" dropdown
+	Click the "Save" button

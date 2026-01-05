@@ -1,0 +1,36 @@
+"""
+ Risk Adjustment Factor Tests
+ @owners: dcarlson 
+ @filedeps: system/layouts/wcquery/RAFStatus.html, system/layouts/Popups/RAF.html, system/layouts/dynList/NONPMHCurrent.html, system/layouts/dynList/Problem List.html, system/layouts/dynList/SmartPlan.html, system/layouts/dynList/AssessmentCurrent.html, system/layouts/dynList/PMHCurrent.html, system/layouts/dynList/Problem Tab-PMH.html, system/layouts/Header/ChartBar.html, system/layouts/WCDML/ArchiveEncounterRAFProcessing.html, system/layouts/WCXML/RAFScore.html, system/layouts/ObjectWin/cond_id.html, system/layouts/DML/RAF Update.html
+"""
+Begin "Turn on the needed settings"
+	@Set the Risk Adjustment Factor preference to Yes@driver.wcutils.SetPreference('{selenium_username}', 'E-Chart', 'Conditions', 'Risk Adjustment Factor', 1)
+	@Set the Risk Adjustment Factor preference to Yes@driver.wcutils.SetPreference('{nurse_username}', 'E-Chart', 'Conditions', 'Risk Adjustment Factor', 1)
+	@Create RAF_score observation@driver.miedb.dbExec("REPLACE INTO observation_codes SET obs_name='RAF_score',loinc_num='93127-9',interface='WEBCHART'")
+Begin "Nurse adds Visit encounter on Christine Harris"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+Begin "Test Risk Adjustment Factor" items
+	Wait for ajax
+	Unmask dynamicsection
+	Add "Smart Plan:Problem List" "Anxiety" quicklist item
+	Toggle the "Smart Plan" quicklist
+	Verify exists "RAF: Unknown" text
+Begin "Add a New Condition"
+	Toggle the "Smart Plan" quicklist
+	Add "Smart Plan" quicklist item
+	Verify exists "Add Assessment" popup
+	Enter "CHF - Congestive heart failure" in the Name autocomplete
+	Enter "Selenium" in the "Managed By" autocomplete
+	Click the 1st "Save" popup button
+	Verify exists "CHF - Congestive heart failure" dynamicitem
+Begin "Close Encounter"
+	Click the "Archive & Close" button
+	Click the "Yes" popup button
+	@Wait for AJAX with quiet@driver.wcutils.waitForAJAX(quiet=5)
+	Click the "Summary" charttab
+	Verify exists "RAF: 0.601" link

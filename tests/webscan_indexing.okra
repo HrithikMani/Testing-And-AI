@@ -1,0 +1,71 @@
+Navigate ?f=miewebscan&s=index&bat_id=11&no_footer
+@Enable bubble forms@driver.miedb.dbExec("UPDATE document_types SET active = 1 WHERE description LIKE '%Bubble Form%';")
+@Wait for batch to load@driver.wcutils.waitForEle(xpath="//table[@id='imginfotable']/tbody/tr")
+Click @wc_main to remove focus@xpath=//div[@id='wc_main']
+@Wait for the image to render@driver.wcutils.waitForEle(xpath='//div[@id="img_preview_div"]/canvas')
+@Stabilize screenshot positioning@driver.scrollTo()
+#Screenshot InitialIndex
+Click the "Process BarCodes" button
+Wait for ajax
+Click @wc_main to remove focus@xpath=//div[@id='wc_main']
+@Wait for the image to render@driver.wcutils.waitForEle(xpath='//div[@id="img_preview_div"]/canvas')
+@Stabilize screenshot positioning@driver.scrollTo()
+#Screenshot AfterBarcodes
+Wait for ajax
+Click the "1" link
+Enter "03-03-1981" into the service_date date
+Type "WebScan in Firefox" into the @subject input@id=subject
+Enter "Bubble Form-Biometric" into the "Doc Type" autocomplete
+Enter "Harris, Christine" into the Chart autocomplete
+@@@Save this page
+# This should be a feature of miedriver, allow native Key entry to a given element
+from selenium.webdriver.common.keys import Keys
+driver.enterFormData(Keys.ENTER, id='subject', clear=False)
+@@@
+Wait for ajax
+#Click the "OK" popup button
+Click the "1" link
+Verify exists "Bubble" button
+@Scroll the Bubble button into view@driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath='//button[@value="Bubble"]'))
+Click the "Bubble" button
+Verify exists "Please Wait" popup
+Verify !exists "Please Wait" popup
+Verify exists "BP Systolic" fieldlabel
+Verify exists "BP Diastolic" fieldlabel
+Verify exists "Pulse" fieldlabel
+Verify exists "Pulse Regularity" fieldlabel
+Verify exists "Temp" fieldlabel
+Verify exists "Height" fieldlabel
+Verify exists "Weight" fieldlabel
+Verify exists "BMI" fieldlabel
+Verify exists "Waist Circ" fieldlabel
+Verify exists "Hip Circ" fieldlabel
+Click @wc_main to remove focus@xpath=//div[@id='wc_main']
+@Wait for the image to render@driver.wcutils.waitForEle(xpath='//div[@id="img_preview_div"]/canvas')
+@Stabilize screenshot positioning@driver.scrollTo()
+#Screenshot BubbleValues
+Click the Cancel button
+Click the "Add Page" button
+@Wait for the Add Page window@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[contains(@class, "wc_win_title") and text()="Add Page"]'))
+Click the "File Upload" button
+# this is the snippet to use a wcupload input this should probably be in a pod
+@driver.runJS("document.getElementsByName('file_control')[0].style.display = ''")
+@Upload dummy file@driver.enterFormData('dummy.pdf', name='file_control')
+@driver.runJS("document.getElementsByName('file_control')[0].value = ''")
+@driver.runJS("document.getElementsByName('file_control')[0].style.display = 'none'")
+@driver.wcutils.waitForEle(xpath='//tr[contains(\@class, "list-item")][td//text()="dummy.pdf"]')
+Verify exists @xpath=//tr[contains(@class, "list-item")][td//text()="dummy.pdf"]
+Click the "Upload 1 Scanned File" button
+@Wait for the image to render@driver.wcutils.waitForEle(xpath='//div[@id="img_preview_div"]/canvas')
+@driver.scrollTo()
+Verify exists @xpath=//a[contains(text(), "9")]
+@Wait for loading window to close@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wc_win"]'), expected_return=False, timeout=60)
+#@Wait for Batch data to load@driver.wcutils.waitFor(lambda d: d.runJS('return webscan && webscan._data && typeof(webscan._data.batch) === "object"'), timeout=60, timeout=60)
+Wait for ajax
+Click the "Upload To Chart" button
+@Wait for popup@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[@class="wc_win"]'), timeout=120)
+Verify exists "Confirm Un-Indexed" popup
+Click the "Yes" popup button
+Wait for ajax
+Verify exists Uploaded link
+@Disable bubble forms@driver.miedb.dbExec("UPDATE document_types SET active = 0 WHERE description LIKE '%Bubble Form%';")

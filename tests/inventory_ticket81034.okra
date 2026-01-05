@@ -1,0 +1,199 @@
+Begin "Enable Lot Number entry"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Type "Lot Number" in the input
+	Click the "!Go" button
+	Click the "!Edit" link
+	Select "1" in the "value" dropdown
+	Type "inventory_ticket81034.okra" in the reason input
+	Click the "Change" button
+Begin "Test dispensing unrecognized Lot Numbers with Add permission and 'Restrict to Receive Permission' is disabled"
+	Begin "Grant Add Inventory permission"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "Yes" from the "Receive Inventory" dropdown
+		Type "inventory_ticket81034.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		Verify !exists The "[ Receive Inventory: No ]" text
+	Begin "Disable the 'Lot Creation' system setting"
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+		Type "Lot Creation" in the input
+		Click the "!Go" button
+		Click the "!Edit" link
+		Select "0" in the "value" dropdown
+		Type "inventory_ticket81034.okra" in the reason input
+		Click the "Change" button
+	Begin "Dispense an unknown Lot Number"
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Type "Hart" in the input
+		Click the "Search" button
+		Click the "TEST-10019" link
+		Click the "Medical Record" charttab
+		Click the "Dispense" charttab subtab
+		Click the 2nd "Fill From General" link
+		@Wait for the page to load@driver.pause(5)
+		#Click the @"disp_invac_txt" input@xpath=//input[@name='disp_invac_txt']
+		Select Office from the dropdown
+		@Wait for ajax to fire@driver.pause(2)
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Click the "lisinopril 5 mg tablet qty: 46" autocomplete choice
+		Close the popup
+		Type "6" in the "disp_quantity" input
+		Type "9876abcd" in the @"disp_lot_id_vis" input@xpath=//input[@name='disp_lot_id_vis']
+		Verify "value=" in the @"disp_manufacturer" input@xpath=//input[@name='disp_manufacturer']
+		Type "NoMyManu" in the @"disp_manufacturer" input@xpath=//input[@name='disp_manufacturer']
+		Enter "02-28-2030" in the "disp_exp_date" date
+		Type "selenium" in the "Enter User Name" input
+		Type "selenium" in the "Enter Password" input
+		Click the "Fill Rx" button
+		Verify exists the "Logging lisinopril 5 mg tablet...Success" text
+Begin "Test dispensing unrecognized Lot Numbers without Add permission and 'Restrict to Receive Permission' is disabled"
+	Begin "Revoke Add Inventory permission"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "No" from the "Receive Inventory" dropdown
+		Type "inventory_ticket81034.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		Verify exists The "[ Receive Inventory: No ]" text
+#	Begin "Dispense an unknown Lot Number"
+#		Open the sidemenu
+#		Click the "E-Chart" sidemenu entry
+#		Type "Hart" in the input
+#		Click the "Search" button
+#		Click the "TEST-10019" link
+#		Click the "Medical Record" charttab
+#		Click the "Dispense" charttab subtab
+#		Click the 2nd "Fill From General" link
+#		@Wait for the page to load@driver.pause(5)
+#		#Click the @"disp_invac_txt" input@xpath=//input[@name='disp_invac_txt']
+#		Select Office from the dropdown
+#		#@Wait for ajax to fire@driver.pause(2)
+#		#@Wait@driver.wcutils.waitForAJAX(30)
+#		Wait for ajax
+#		#Click the "lisinopril 5 mg tablet qty: 40" autocomplete choice
+#		@@@
+#		ac = driver.find_element(xpath=//input[@name='disp_invac_txt'])
+#		time.sleep(.5)
+#		ac.send_keys(Keys.TAB)
+#		@@@
+#		#Enter "lisinopril 5 mg tablet qty: 140" in the "disp_invac_txt" autocomplete
+#		#Click the "lisinopril 5 mg tablet qty: 140" autocomplete choice
+#		Close the popup
+#		Verify "value=2" in the @Hidden Inventory ID@xpath=//input[@name='disp_inventory_id']
+#		Type "8" in the "disp_quantity" input
+#		Verify "value=4" in the @disp_equiv input@xpath=//input[@name='disp_equiv']
+#		Type "98765abcde" in the @"disp_lot_id_vis" input@xpath=//input[@name='disp_lot_id_vis']
+#		Verify "value=" in the @"disp_manufacturer" input@xpath=//input[@name='disp_manufacturer']
+#		Type "NoMyManu2" in the @"disp_manufacturer" input@xpath=//input[@name='disp_manufacturer']
+#		Enter "02-27-2030" in the "disp_exp_date" date
+#		Type "selenium" in the "Enter User Name" input
+#		Type "selenium" in the "Enter Password" input
+#		Click the "Fill Rx" button
+#		Verify exists the "Logging lisinopril 5 mg tablet...Success" text
+#Begin "Test dispensing unrecognized Lot Numbers with Add permission and 'Restrict to Receive Permission' is enabled"
+#	Begin "Grant Add Inventory permission"
+#		Open the sidemenu
+#		Click the "Control Panel" sidemenu entry
+#		Click the "Access" charttab
+#		Click the "Access Control" charttab subtab
+#		Type "selenium" in the input
+#		Click the "Go!" button
+#		Gridclick "Username:selenium" "Edit" grid link
+#		Click the "Customize User Security" link
+#		Select "Yes" from the "Receive Inventory" dropdown
+#		Type "inventory_ticket81034.okra" in the securityrole reason
+#		Click the "Update Individual Security" button
+#		Verify !exists The "[ Receive Inventory: No ]" text
+#	Begin "Enable the 'Lot Creation' system setting"
+#		Click the "System" charttab
+#		Click the "System Settings" charttab subtab
+#		Type "Lot Creation" in the input
+#		Click the "!Go" button
+#		Click the "!Edit" link
+#		Select "1" in the "value" dropdown
+#		Type "inventory_ticket81034.okra" in the reason input
+#		Click the "Change" button
+#	Begin "Dispense an unknown Lot Number"
+#		Open the sidemenu
+#		Click the "E-Chart" sidemenu entry
+#		Type "Hart" in the input
+#		Click the "Search" button
+#		Click the "TEST-10019" link
+#		Click the "Medical Record" charttab
+#		Click the "Dispense" charttab subtab
+#		Click the 2nd "Fill From General" link
+#		@Wait for the page to load@driver.pause(5)
+#		#Click the @"disp_invac_txt" input@xpath=//input[@name='disp_invac_txt']
+#		Select Office from the dropdown
+#		#@Wait for ajax to fire@driver.pause(2)
+#		#@Wait@driver.wcutils.waitForAJAX(30)
+#		#Click the "lisinopril 5 mg tablet qty: 32" autocomplete choice
+#		Wait for ajax
+#		Enter "lisinopril 5 mg tablet qty: 132" in the "disp_invac_txt" autocomplete
+#		#Click the "lisinopril 5 mg tablet qty: 132" autocomplete choice
+#		#Close the popup
+#		Type "10" in the "disp_quantity" input
+#		Type "987654abcdef" in the @"disp_lot_id_vis" input@xpath=//input[@name='disp_lot_id_vis']
+#		Verify "value=" in the @"disp_manufacturer" input@xpath=//input[@name='disp_manufacturer']
+#		Type "NoMyManu3" in the @"disp_manufacturer" input@xpath=//input[@name='disp_manufacturer']
+#		Enter "02-26-2030" in the "disp_exp_date" date
+#		Type "selenium" in the "Enter User Name" input
+#		Type "selenium" in the "Enter Password" input
+#		Click the "Fill Rx" button
+#		Verify exists the "Logging lisinopril 5 mg tablet...Success" text
+Begin "Test dispensing unrecognized Lot Numbers without Add permission and 'Restrict to Receive Permission' is enabled"
+	Begin "Revoke Add Inventory permission"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type "selenium" in the input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select "No" from the "Receive Inventory" dropdown
+		Type "inventory_ticket81034.okra" in the securityrole reason
+		Click the "Update Individual Security" button
+		Verify exists The "[ Receive Inventory: No ]" text
+	Begin "Dispense an unknown Lot Number"
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Type "Hart" in the input
+		Click the "Search" button
+		Click the "TEST-10019" link
+		Click the "Medical Record" charttab
+		Click the "Dispense" charttab subtab
+		Click the 2nd "Fill From General" link
+		@Wait for the page to load@driver.pause(5)
+		#Click the @"disp_invac_txt" input@xpath=//input[@name='disp_invac_txt']
+		Select Office from the dropdown
+		@Wait for ajax to fire@driver.pause(2)
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Click the "lisinopril 5 mg tablet qty: 40" autocomplete choice
+		Close the popup
+		Type "12" in the "disp_quantity" input
+		Type "9876543abcdefg" in the @"disp_lot_id_vis" input@xpath=//input[@name='disp_lot_id_vis']
+		Verify "value=" in the @"disp_manufacturer" input@xpath=//input[@name='disp_manufacturer']
+		Type "NoMyManu4" in the @"disp_manufacturer" input@xpath=//input[@name='disp_manufacturer']
+		Enter "02-25-2030" in the "disp_exp_date" date
+		Type "selenium" in the "Enter User Name" input
+		Type "selenium" in the "Enter Password" input
+		Click the "Fill Rx" button
+		Verify !exists the "Logging lisinopril 5 mg tablet...Success" text
+		Verify exists the "Invalid Lot Specified." text

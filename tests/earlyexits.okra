@@ -1,0 +1,20 @@
+Begin "Test #exit"
+	Navigate "?f=layout&module=Test&name=Exit"
+	Verify notexists "After check" text
+	Navigate "?f=layout&module=Test&name=Exit&no_exit=1"
+	Verify exists "No exit" text
+Begin "Test #onlyinclude"
+	Navigate "?f=layout&module=Test&name=OnlyInclude"
+	Verify notexists "wcincluded" text
+	Navigate "?f=ajaxget&s=renderlayout&layout_module=Test&layout_name=OnlyInclude&response_format=html"
+	Verify notexists "wcincluded" text
+	Navigate "?f=layout&module=Test&name=IncludesOnlyInclude"
+	Verify exists "wcincluded" text
+	Verify exists "#included" text
+	Verify exists "wcqueried" text
+# Ignore intentional errors
+@@@
+driver.wcErrorLog.ignore("Encountered #exit in layout: Test, Exit")
+driver.wcErrorLog.ignore("Failed #includeonly check for layout: Test, OnlyInclude")
+driver.wcErrorLog.ignore("Failed #includeonly check for layout: Test, OnlyInclude")
+@@@

@@ -1,0 +1,41 @@
+Begin "Import the test data file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Wait for the "DataImportTypes" grid
+	Click the "Show/Hide Grid Controls" icon
+	Select "Name" from the @Filters dropdown@xpath='//span[contains(., "Filters")]/parent::div/following-sibling::div/select[@class="wcdv_control_addField"]'
+	Sumoselect "Locations Hierarchy CSV API" from the "Name" grid sumoselect
+	Click the "OK" grid sumobutton
+	Wait for ajax
+	Click "Locations Hierarchy CSV API" grid checkbox
+	Click the "Upload Data" button
+	Verify exists @xpath="//div[@class='wc_win']"
+	Verify exists "Locations Hierarchy CSV API" text in @xpath="//div[@class='wc_win']"
+	Screenshot "test"
+	Click the "DI_Verbose" checkbox
+	@Wait@driver.pause(1)
+	Type 'LocationsHierarchyTest.csv' in the 'csv_file' input
+	Click the "Upload File" button
+	@driver.getWebDriver().switch_to.frame("di_output_frame")
+	@Wait@driver.pause(1)
+	Verify exists "Successfully imported file LocationsHierarchyTest.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+	Click the @Close button@xpath='//button[@class="xclose"]'
+Begin "Validate Locations Hiererachy import values"
+	Begin "Check values for locations"
+		Verify exists sidemenu
+		Open the sidemenu
+		Click "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "Locations Manager" charttab subtab
+		Wait for ajax
+		Verify exists "LOC1" text
+		Verify exists "LOC3" text
+		Verify exists "LOC4" text
+		Verify exists "LOC5" text
+		Verify exists "LOC5B" text
+		Verify exists "LOC5C1" text
+		Verify exists "LOC6" text
+		Screenshot "chart"

@@ -1,0 +1,7 @@
+"""
+	Dynamic icons. Typically only visible after a mouseOver event
+
+	Click the "Add Task" dynicon
+"""
+
+dynicon://button[contains(@class, 'dynButton')]|@title

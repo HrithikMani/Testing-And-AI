@@ -1,0 +1,3 @@
+Begin MIEStache Each Test
+	Navigate ?f=layout&module=UnitTest&name=RunTest&test_module=Test&test_name=MIEStacheEachTags&myvar=abc&myvar=def
+	Verify exists "No layout unit test failures detected." text

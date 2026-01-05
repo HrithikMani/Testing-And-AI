@@ -1,0 +1,26 @@
+Begin IP Test
+	Open the sidemenu
+	Click the Control "Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "IP Settings" charttab subtab
+	Click the "Add" link
+	Type 192.168.1.1 into the "IP address" field
+	Type "1000" into the "Timeout" field
+	Click the "Add" button
+	Verify exists "192.168.1.1" text
+	Click the "192.168.1.1" grid checkbox
+	@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//button[contains(., "Edit")]'), expected_return=True, timeout=15)
+# Ticket #120461: DataVis and grid.pod button elements and TableTools
+	Click @the "Edit" grid button@xpath='//div[@class="wcdv_grid"]//div[contains(@id,"scriptlet") and not(contains(@id,"tt")) and contains(@style,"inline-block")]//button[@type="button" and not(@disabled)][contains(., "Edit")]'
+	Verify exists popup
+	Type "500" into the 2nd popup input
+	Click the "Submit" button
+	Verify exists "500" text
+	Click the "System" charttab
+	Click the "IP Settings" charttab subtab
+	Click the "192.168.1.1" grid checkbox
+	@Wait@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcdv_grid"]//button[contains(., "Delete")]'), expected_return=True, timeout=15)
+# Ticket #120461: DataVis and grid.pod button elements and TableTools
+	Click @the "Delete" grid button@xpath='//div[@class="wcdv_grid"]//div[contains(@id,"scriptlet") and not(contains(@id,"tt")) and contains(@style,"inline-block")]//button[@type="button" and not(@disabled)][contains(., "Delete")]'
+	Click the "Yes" popup button
+	Verify !exists "192.168.1.1" text

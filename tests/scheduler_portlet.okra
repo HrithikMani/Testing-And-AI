@@ -1,0 +1,34 @@
+"""
+ Testing Scheduler Portlets
+ @owners: manorman
+ @filedeps: system/layouts/User Portlet/Schedule.html, system/layouts/User Portlet/My Schedule.html, system/layouts/MASTER/MySchedule.html, system/layouts/MASTER/LegacySchedule.html
+"""
+
+Begin "Test the Scheduler Portlet"
+	Enter "Selenium, Selenium" in the "resourceac_txt" autocomplete
+	Enter "02-01-2010" into the view_sched_date date
+	Click the 2nd "Search" button
+	@Wait for the search results to load@driver.wcutils.waitForAJAX(30)
+	Click the 2nd "Checkin" link
+	Verify exists "Waiting Room (0s)" link
+
+Begin "Test the My Schedule Portlet"
+	Begin "Add My Schedule Portlet"
+		Click the "Select Portlets" link
+		# Turn off the "Schedule" portlet, which clashes with the "My Schedule" portlet... we're testing the latter.
+		Uncheck the "Schedule" checkbox
+		Check the "My Schedule" checkbox
+		Click "Save" button
+	Begin "Save Scheduler Settings" 
+		Open the sidemenu
+		Click the "Scheduler" link
+		Select "Selenium, Selenium" from "res_id" dropdown
+		Select "Office" in the @"Location" dropdown@xpath=//select[@id='location']
+		Click "Save" button
+	Begin "Check for Saved Settings and Test Search"
+		Click the @Home icon@id="wc_homeicon"
+		Verify exists @Selenium, Selenium@xpath="//div[@id='myresourceac_div']/div/span[contains(., 'Selenium, Selenium')]"
+		Verify exists @Office@xpath="//div[@id='mylocationac_div']/div/span[contains(., 'Office')]"
+		Enter "02-01-2010" into the view_mysched_date date
+		Click the @Search button@xpath="//*[@id='schedule_div']/form/div/div[5]/div/input[@value='Search']"
+		Verify exists @Pediatric, Pete@xpath="//*[@id='myschedulelist_div']/table/tbody/tr[1]/td[2]/a[contains(., 'Pediatric, Pete')]"

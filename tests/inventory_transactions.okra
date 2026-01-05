@@ -1,0 +1,99 @@
+Begin "Start without permission to View Transactions"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "No" from the "View Transactions" dropdown
+	Type "inventory_transictions.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify exists the "[ View Transactions: No ]" text
+Begin "Verify no permission"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Transaction Report" charttab
+	Verify exists the "Your current permission of 'No' in the ('Inventory','View Transactions') security setting does not allow access to View Transactions." text
+Begin "Give View Transaction permission"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Yes" from the "View Transactions" dropdown
+	Type "inventory_transictions.okra" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify !exists The "[ View Transactions: No ]" text
+Begin "Test the Transaction Report tab"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Transaction Report" charttab
+	Click the "Hide" link
+	Verify !exists The "Transaction Search" text
+	Click the "Show Search" link
+	Verify exists The "Transaction Search" text
+	Begin "Clear all of the non-Received transactions types"
+		Click the @"Dispensed" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='dispensed']
+		Click the @"Expired" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='expired']
+		Click the @"Transferred" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='transfered']
+		Click the @"Returned" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='return']
+		Click the @"Edited" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='manual']
+		Click the @"Corrected" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='correction']
+		Click the "Search" button
+	# in the "Inventory Transactions" table
+	Begin "Verify that the report only has 'received' transactions"
+		# in the table body within '60'
+		# //table[contains(@class,'lv_root')]//table//tr[16]
+		Verify !exists the @16th row@xpath=//tr[position()=16]
+		# in the table body
+		Verify exists the @14th "received" row@xpath=//tr[contains(.,'received') and position()=14]
+	Click the "!Clear" button
+	Type "SomeManu" in the @"Manufacturer" input@xpath=//input[@id='tS_t.manufacturer']
+	Click the "!Search" button
+	# in the "Inventory Transactions" table
+	Begin "Verify the report only has transactions involving 'SomeManu Co'"
+		# in the table body
+		Verify !exists the @8th row@xpath=//tr[8]
+		# in the table body
+		Verify exists The @7th "SomeManu Co" row@xpath=//tr[contains(.,'SomeManu Co') and position()=7]
+	Click the "!Clear" button
+	Begin "Verify that transferred locations show the username"
+		Begin "Clear all of the non-Received transactions types"
+			Click the @"Dispensed" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='dispensed']
+			Click the @"Expired" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='expired']
+			Click the @"Received" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='received']
+			Click the @"Returned" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='return']
+			Click the @"Edited" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='manual']
+			Click the @"Corrected" checkbox@xpath=//input[@type='checkbox' and contains(@name,'trans_type') and @value='correction']
+			Click the "Search" button
+		Verify exists the @"transferred" row contains "selenium" text@xpath=//tr[contains(.,'transfered')]/td[contains(.,'selenium')]
+	Click the "!Clear" button
+	Type "hart!" in the "tS_p_last_name_patac_txt" autocomplete
+	@Wait for Ajax@driver.wcutils.waitForAJAX(45)
+	Click the "Hart, William S. (TEST-10019) DOB: 11-30-1954 selenium@mieweb.com" autocomplete choice
+	Verify exists the "Hart, William S. (TEST-10019) DOB: 11-30-1954 selenium@mieweb.com" text
+	Click the "!Search" button
+	# in the "Inventory Transactions" table
+	Begin "Verify the report only has transactions involving Wm. Hart"
+		Verify !exists the @2nd row in the table body@xpath=table[@class='lv_root']//table//tr[2]
+		# in the table body
+		Verify exists The "Hart, William, S." text
+	Click the "Show Inventory" charttab
+	Select "All" in the @"Site" dropdown@xpath=//select[@name='ib.location']
+	Click the "Search" button
+	Click the "7892oasd" link
+	# in the "Inventory Transactions" list
+	Begin "Verify the filtering of the transactions"
+		Verify exists the "Displaying 1-1 / 1" text
+		Verify exists the @"Item Name" cell in the "7892oasd" row should contain "Lasix 80 mg tablet"@xpath=//td[contains(.,'Lasix 80 mg tablet')]/following-sibling::td[text()='7892oasd']
+	# in the "Transaction Search" box
+	Begin "Name and Lot were prepopulated"
+		Verify exists the @"Lasix 80 mg tablet" text@xpath=//div[@id='itemname_ac_div']//span[text()='Lasix 80 mg tablet']
+		Verify "value=7892oasd" in the "tS_il.lot_number" input

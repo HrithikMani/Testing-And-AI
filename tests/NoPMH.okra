@@ -1,0 +1,44 @@
+"""
+ Testing No Past Medical History Workflows
+ @owners: dcarlson
+ @filedeps: system/layouts/dynList/PMHCurrent.html, system/layouts/dynList/PMHCurrent.html, system/layouts/dynList/RemovePMH.html
+"""
+
+Begin Register Patient
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "Patient Registration" charttab
+	Type "Bond" in the "Last Name" input
+	Type "James" in the "First Name" input
+	Enter "01-23-1975" into the "Birth Date" date
+	Click the "Add New" button
+Begin Testing in Encounter
+	Click the "Quick Links" icon
+	Click the "Add Visit" quicklink
+	@Wait for New Visit to load@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//h2[@class="exam_tab"]'), timeout=30)
+	Toggle the "Past Medical History" quicklist
+	Click "Add New Condition" "No Past Medical History" quicklist item
+	Verify exists "Past Medical History" "No Past Medical History" quicklist item
+	Click "Add New Condition" "AIDS" quicklist item
+	@Wait for Yes Button to load@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//input[@value="Yes"]'), timeout=30)
+	Click the "Yes" Button
+	@Wait@driver.pause(2)
+	Verify !exists "Past Medical History" "No Past Medical History" quicklist item
+	Remove "Past Medical History" "AIDS" dynamicitem
+	@Wait@driver.pause(2)
+	Click the @Entry Error Radio@xpath="//input[@name='deleted' and @value='1' and @type='radio']"
+	Click the "Remove" button
+	@Wait@driver.pause(2)
+	Verify !exists @"Employee Past Medical History" "AIDS" quicklist item@xpath="//ul[starts-with(@id, 'ql-dynList-PMHProblemList-')][contains(., 'AIDS')]"
+	Verify exists @"Past Medical History" "No Encounter PMH" quicklist item@xpath="//ul[contains(@class, 'ui-sortable swipe-list')][contains(., 'No Encounter PMH')]"
+Begin Testing in Conditions tab
+	Click the "Medical Record" charttab
+	Click the "Conditions" charttab subtab
+	Toggle the "Problem List" quicklist
+	Click "Add New Condition" "No Past Medical History" quicklist item
+	Verify exists "Past Medical History" "No Past Medical History" quicklist item
+	Click "Add New Condition" "AIDS" quicklist item
+	@Wait for Yes Button to load@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//input[@value="Yes"]'), timeout=30)
+	Click the "Yes" Button
+	@Wait@driver.pause(2)
+	Verify !exists @"Past Medical History" "No Past Medical History" quicklist item@xpath="//div[contains(@data-name, 'dynList PMHCurrent')][contains(., 'No Past Medical History')]"

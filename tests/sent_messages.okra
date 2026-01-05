@@ -1,0 +1,41 @@
+Begin "Load Test Data"
+	@@@
+	driver.miedb.dbExec("INSERT INTO datasend_route (route_id, revision_number, item_type, item_id, status, sent_datetime) VALUES (999, 0, 'doc', 607, 'C', NOW())")
+	driver.miedb.dbExec("INSERT INTO datasend_message_history (route_id, revision_number, msg, response) VALUES (999, 0, 'message1', 'response1');")
+	driver.miedb.dbExec("UPDATE datasend_message_history SET msg = CONCAT(msg, '\n\n', 'message2'), response = CONCAT(response, '\n\n', 'response2');")
+	driver.miedb.dbExec("UPDATE datasend_message_history SET msg = CONCAT(msg, '\n\n', 'message3'), response = CONCAT(response, '\n\n', 'response3');")
+	driver.miedb.dbExec("UPDATE datasend_message_history SET msg = CONCAT(msg, '\n\n', 'message4'), response = CONCAT(response, '\n\n', 'response4');")
+	@@@
+
+Begin "No messages link with no 'View Sent Messages' permission"
+	Navigate ?f=layout&module=DataSend&name=Queue&tabmodule=admin&t=Datasend+Queue&tabmodule=admin&t=Interface
+	Verify !exists "Message" link
+
+Begin "Messages link with 'View Sent Messages' permission"
+	# Set the permission manually
+	@Set Sent Messages User Permission@driver.miedb.dbExec("INSERT INTO security_exception (user_id, module_name, category_name, security_value) VALUES (8, 'Control', 'View Sent Messages', 1)")
+
+	Navigate ?f=layout&module=DataSend&name=Queue&tabmodule=admin&t=Datasend+Queue&tabmodule=admin&t=Interface
+	Verify exists the "Message" link
+
+Begin "View messages"
+	Click the 'Message' link
+	Verify exists "HL7 Message for Route ID: 999" popup
+	Verify exists "message4" text
+	Verify exists "response4" text
+
+Begin "View the rest of the messages"
+	Click the "Prev" button
+	Verify exists "message3" text
+	Verify exists "response3" text
+	Click the "Prev" button
+	Verify exists "message2" text
+	Verify exists "response2" text
+	Click the "Prev" button
+	Verify exists "message1" text
+	Verify exists "response1" text
+
+Begin "Open 2nd popup"
+	Click the 'Message' link
+	Verify exists "message4" text
+	Verify exists "response4" text

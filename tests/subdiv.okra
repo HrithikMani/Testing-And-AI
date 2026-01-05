@@ -1,0 +1,47 @@
+Begin subdiv Test
+	Navigate ?f=layout&module=Test&name=Subdiv-Main
+	Begin initial values check
+		Verify exists "one:0" text
+		Verify exists "two:0" text
+		Verify exists "both:0" text
+	Begin Publish 1
+		Click the "Increment" button
+		Click the "Publish 1" button
+		Verify exists "one:1" text
+		Verify exists "two:0" text
+		Verify exists "both:1" text
+	Begin Publish 2
+		Click the "Increment" button
+		Click the "Publish 2" button
+		Verify exists "one:1" text
+		Verify exists "two:2" text
+		Verify exists "both:2" text
+		Verify exists "three:2" text
+	Begin Publish 3
+		Click the "Increment" button
+		Click the "Publish 3" button
+		Verify exists "one:1" text
+		Verify exists "two:2" text
+		Verify exists "both:2" text
+		Verify exists "three:3" text
+	Begin popup+1 test
+		Click the "Increment" button
+		Click the "Popup" button
+		Verify exists "popup:4" popup text
+		Verify exists "popupContents:4" popup text
+		Click the "Increment" button
+		Click the "Publish 1" button
+		Verify exists "popup:4" popup text
+		Verify exists "popupContents:5" popup text
+		Verify exists "one:5" text
+	Begin popup only test
+		Click the "Increment" button
+		Click the "Publish Popup" button
+		Verify exists "popup:4" popup text
+		Verify exists "popupContents:6" popup text
+		Verify exists "one:5" text
+		Verify exists "two:2" text
+		Verify exists "both:5" text
+		Verify exists "three:5" text
+
+

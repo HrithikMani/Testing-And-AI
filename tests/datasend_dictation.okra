@@ -1,0 +1,203 @@
+Begin "Test Send Patient Data Permissions"
+	Begin "Set no send permission"
+		@Set 'Send Patient Data' permission to no@driver.miedb.dbExec("INSERT INTO security_role_acl SET security_role_id=1, module_name='E-Chart', category_name='Send Patient Data', security_value='0' ON DUPLICATE KEY UPDATE security_value='0'")
+		Begin "Check that user has no permission to send patient encounters"
+			Navigate "?func=dictation"
+			Verify !exists "send" link
+	Begin "Grant send permission"
+		@Set 'Send Patient Data' permission to no@driver.miedb.dbExec("INSERT INTO security_role_acl SET security_role_id=1, module_name='E-Chart', category_name='Send Patient Data', security_value='0' ON DUPLICATE KEY UPDATE security_value='1'")
+		Begin "Check that user has permission to send patient encounters"
+			Navigate "?func=dictation"
+			Verify exists "send" link
+Begin "Send Document"
+	Navigate "?func=dictation"
+	Click the send link
+	@Switch Windows@driver.switchToPopup()
+	Begin "Send Methods"
+		Begin "Print Method"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Print" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Mail to:" text
+			Verify exists "le_datasendroute_method_detail_value_Print_input" input
+			Verify exists "Printer:" text
+			Verify exists "le_datasendroute_route_option_value_Print_input" dropdown
+			Verify exists "print_wo_headers" input
+			Verify exists "Print without document Header:" text
+		Begin "Fax Method"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Fax" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Fax Number:" text
+			Verify exists "le_datasendroute_method_detail_value_Fax_input" input
+			Verify exists "Coversheet:" text
+			Verify exists "fax_wo_headers" input
+			Verify exists "Fax without document Header:" text
+		Begin "HL7 Send Method"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "HL7 Send" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "CCR:" text
+			Verify exists "le_datasendroute_method_detail_value_HL7 Send_input" dropdown
+			Verify exists "ccr_as_html" input
+			Verify exists "Send As HTML" text
+		Begin "Text Export"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Text Export" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "output:" text
+			Verify exists "le_datasendroute_method_detail_value_Text Export_input" dropdown
+		Begin "Dictaphone HL7"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Dictaphone HL7" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_Dictaphone HL7_input" dropdown
+		Begin "NMC - Cannot send (per physician)"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "NMC - Cannot send (per physician)" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+		Begin "NMC - MedAccess"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "NMC - MedAccess" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+		Begin "Word2TIFF FTP"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Word2TIFF FTP" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "FTP site:" text
+			Verify exists "le_datasendroute_method_detail_value_Word2TIFF FTP_input" dropdown
+		Begin "ORDER RESULTS HL7"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "ORDER RESULTS HL7" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_ORDER RESULTS HL7_input" dropdown
+		Begin "OSHA"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "OSHA" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_OSHA_input" dropdown
+		Begin "Work Comp"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Work Comp" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_Work Comp_input" dropdown
+		Begin "Incident"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Incident" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_Incident_input" dropdown
+		Begin "Webchart Post"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Webchart Post" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+		Begin "Esign Request"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Esign Request" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+		Begin "Remote IFQ Batch"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Remote IFQ Batch" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Remote WebChart:" text
+			Verify exists "le_datasendroute_method_detail_value_Remote IFQ Batch_input" dropdown
+		Begin "Scripted Export"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Scripted Export" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Script RTS:" text
+			Verify exists "le_datasendroute_method_detail_value_Scripted Export_input" dropdown
+			Verify exists "Script Name:" text
+			Verify exists "le_datasendroute_route_option_valueScripted Export_input" input
+		Begin "MDM Reports HL7"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "MDM Reports HL7" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_MDM Reports HL7_input" dropdown
+			Verify exists "Send as TIFF image:" text
+			Verify exists "le_datasendroute_route_option_valueMDM Reports HL7_input" input
+		Begin "Immunization Export"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Immunization Export" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_Immunization Export" dropdown
+		Begin "Kareo Billing"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Kareo Billing" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_Kareo Billing" dropdown
+		Begin "Direct Email"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Direct Email" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Direct Address:" text
+			Verify exists "le_datasendroute_method_detail_value_Direct Email_input" input
+		Begin "Syndromic Surveillance"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "Syndromic Surveillance" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_Syndromic Surveillance" dropdown
+		Begin "837 Professional Claims"
+			Enter "Selenium, Selen" in the "user_ac_txt" autocomplete
+			Select "837 Professional Claims" from the "le_datasendroute_method_value" dropdown
+			Click the "!Add" button
+			Verify exists "Interface:" text
+			Verify exists "le_datasendroute_method_detail_value_837 Professional Claims" dropdown
+	Begin "Verify all entries listed in the 'To' listedit"
+		Verify exists "Print" listedit row
+		Verify exists "Fax" listedit row
+		Verify exists "HL7 Send" listedit row
+		Verify exists "Text Export" listedit row
+		Verify exists "Dictaphone HL7" listedit row
+		Verify exists "NMC - Cannot send (per physician)" listedit row
+		Verify exists "NMC - MedAccess" listedit row
+		Verify exists "Word2TIFF FTP" listedit row
+		Verify exists "ORDER RESULTS HL7" listedit row
+		Verify exists "OSHA" listedit row
+		Verify exists "Work Comp" listedit row
+		Verify exists "Incident" listedit row
+		Verify exists "Webchart Post" listedit row
+		Verify exists "Esign Request" listedit row
+		Verify exists "Remote IFQ Batch" listedit row
+		Verify exists "Scripted Export" listedit row
+		Verify exists "MDM Reports HL7" listedit row
+		Verify exists "Immunization Export" listedit row
+		Verify exists "Kareo Billing" listedit row
+		Verify exists "Direct Email" listedit row
+		Verify exists "Syndromic Surveillance" listedit row
+		Verify exists "837 Professional Claims" listedit row
+		Click the "Update & Close" button
+	Begin "Verify all routes listed in document properties"
+		@Switch to main window@driver.returnToMainWindow()
+		Navigate "?func=dictation&subfunc=edit&dic_id=1"
+		Click the "Show All" link
+		Verify exists "Print" listview row
+		Verify exists "Fax" listview row
+		Verify exists "HL7 Send" listview row
+		Verify exists "Text Export" listview row
+		Verify exists "Dictaphone HL7" listview row
+		Verify exists "NMC - Cannot send (per physician)" listview row
+		Verify exists "NMC - MedAccess" listview row
+		Verify exists "Word2TIFF FTP" listview row
+		Verify exists "ORDER RESULTS HL7" listview row
+		Verify exists "OSHA" listview row
+		Verify exists "Work Comp" listview row
+		Verify exists "Incident" listview row
+		Verify exists "Webchart Post" listview row
+		Verify exists "Esign Request" listview row
+		Verify exists "Remote IFQ Batch" listview row
+		Verify exists "Scripted Export" listview row
+		Verify exists "MDM Reports HL7" listview row
+		Verify exists "Immunization Export" listview row
+		Verify exists "Kareo Billing" listview row
+		Verify exists "Direct Email" listview row
+		Verify exists "Syndromic Surveillance" listview row
+		Verify exists "837 Professional Claims" listview row

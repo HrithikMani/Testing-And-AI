@@ -1,0 +1,36 @@
+Begin "Add Allergy"
+	Click the TEST-10019 link
+	Open "Medical Record" charttab
+	Click the Allergies/Medications charttab subtab
+	Begin Add an allergy of Lipitor
+		Wait for ajax
+		@Wait for "Add Allergy/Intol" link@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//a[contains(., "Add Allergy/Intol")]'), expected=True, timeout=60)
+		Click the "Add Allergy/Intol" link
+		Enter Lipitor in the Name autocomplete
+	#	Autocomplete Death in the Reaction field
+		Click the Add button
+		Verify exists 'Successfully Added Allergy/Intolerance (Lipitor)' text
+		Begin Verify that the allergy shows up in the record
+			Open Allergies/Medications charttab
+			Click the Allergies/Medications charttab subtab
+			Verify exists Lipitor link
+Begin "Edit Allergy"
+	Open "Medical Record" charttab
+	Click the Allergies/Medications charttab subtab
+	Begin Indicate that penicillin gives the patient hives
+		Click the PENICILLINS link
+		# We are not using an autocomplete here because the system is not setup
+		# to use any reactions for PENICILLINS so we will just use the type verb
+		Type hives into the Reaction autocomplete
+		Click the Submit button
+		Verify exists hives text
+Begin "Delete Allergy"
+	Open "Medical Record" charttab
+	Click the Allergies/Medications charttab subtab
+	Begin Delete the allergy to Lipitor
+		Click the 1st !Delete link
+		Verify exists Lipitor text
+		Type deleted into the Reason autocomplete
+		Click the Submit button
+		Navigate "?f=chart&s=pat&t=Medical+Record%3AAllergies%2FMedications&v=rxlist&pat_id=18"
+		Verify !exists Lipitor text

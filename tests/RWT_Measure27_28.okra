@@ -1,0 +1,32 @@
+"""
+ Test for Security Tags appearing in security marked CCDAs in a LIVE system
+ @owners: dcarlson nrichardson
+"""
+# Corney says "Github action????"
+# Password protect the key
+# Schedule a github action with the password as a github secret
+#
+# Get the Key Value from a file
+#file1 = open("/maui_test_login.key", "r+")
+#sso_key = file1.read()
+#file1.close()
+#
+#https://github.mieweb.com/mie/miedeviceapp/blob/master/wclogin.py
+#Navigate "https://zeus.med-web.com/webchart/wctpepperson/mauiTestLogin.cgi"
+#This should already be there Type "https://maui.webchartnow.com/webchart.cgi" into the "SimpleLogin_Referer" input
+#pl file can grab the key: Type "{sso_key}" in the input
+#Go to Aris MIE Test User
+#Navigate "https://maui.webchartnow.com/webchart.cgi?f=chart&s=pat&t=Patient+Summary&v=dashboard&pat_id=18"
+#Click the "Add Visit" link
+#Open "CCDA / Clinical Education" dynamicsection
+#Select the 2nd 'RESTRICTED' radio
+#Type "Selenium redisclosure text." into the "DEI_CCDA_RestrictedText" input
+#Close "CCDA / Clinical Education" dynamicsection
+#Navigate "https://maui.webchartnow.com/webchart.cgi?f=chart&s=pat&pat_id=18&v=encounter&encopp=exam&enc_lay_id=View+Visit&encounter_id=112&set_curr_enc=112"
+#Click the "Create Preliminary Archive" link
+#@Wait 10 seconds@driver.pause(10)
+#Navigate "https://maui.webchartnow.com/webchart.cgi?v=encounter&encopp=exam&pat_id=18&encounter_id=112&enc_lay_id=View+Visit&f=chart&s=doc&doc_id=663"
+#Verify exists @Lock Icon@xpath='//img[@title="Confidentiality: Restricted"]'
+#Click the "Properties" link
+#Click the "CDA Document" link
+#Verify exists 'confidentialityCode code="R"' text

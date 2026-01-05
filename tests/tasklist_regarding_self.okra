@@ -1,0 +1,42 @@
+Begin "Add selenium to physicians dept"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab 
+	Click the "Access Control" charttab subtab
+	Type "Selenium" in the input 
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Check the "Physicians" checkbox
+	Click the "Submit" button 
+Begin "Login as butler"
+	Open the sidemenu
+	Click the Logout sidemenu entry
+	@Setup WCTestSession for butler@driver.wcutils.insertWCTSession('butler')
+Begin "Add task regarding Selenium"
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Add New Task" link
+	Type "Test regard provider" in the "Description" input 
+	Type "test notes" in the "Notes" input
+	Select "Chart" from the "regard_type" dropdown
+	Enter "Selenium" into the "Regarding" autocomplete 
+	Enter "03-20-2025" in the "Due Date" date
+	#Enter "Physicians" in the 'le_task_assign_realm_display' autocomplete
+	#@Wait@driver.wcutils.waitForAJAX(30)
+	#Click the "Add" listedit button
+	#Click the "Add Task" button 
+	Select "Physicians" from the 'realmDropdown' dropdown
+	Click the "Assign" button
+	Check the "assignToMyself" checkbox
+	Click the "Save" button
+	Wait for ajax
+Begin "Check task"
+	Verify exists "test notes" text
+	Begin "log in as selenium"
+		Open the sidemenu
+		Click the Logout sidemenu entry
+		@Setup WCTestSession for Selenium@driver.wcutils.insertWCTSession('{selenium_username}')
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Verify exists "Physicians" text
+	Verify notexists "test notes" text

@@ -1,0 +1,38 @@
+Begin "Grant permission to edit stockpiles"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Edit" from the "Manage Stockpiles" dropdown
+	Type "inventory_stockpile_edit.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	# We've given selenium the default permission, so no info about 'Manage Stockpiles' permissions is displayed
+	Verify !exists The "[ Manage Stockpiles:" text
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Stockpiles" charttab
+	Verify exists The "Inventory Stockpiles" text
+	Verify exists The "Add Stockpile" link
+	# in the "Inventory Stockpiles" table
+	Verify exists The "Edit" link
+Begin "Editing a stockpile to have a blank description generates an error"
+	#  in the "Store Rome B" row in the "Inventory Stockpiles" table
+	Click the "!Edit" link
+	@Clear the "Description" input@driver.enterFormData('', name='description', clear=True)
+	Click the "Save" button
+	Verify exists the "Please Fill In All Fields." text
+	Verify exists the "Store Rome B" text
+Begin "Editing a stockpile to have a good description edits the stockpile"
+	Type "Store Room B" in the "!description" input
+	Click the "Save" button
+	Verify exists the "Inventory Stockpile Edited" text
+Begin "Verify the outcome"
+	Verify !exists the "Store Rome B" text
+	# The "Stockpile" cell in the 1st "Hospital" row
+	Verify exists the "Store Room A" text
+	#  The "Stockpile" cell in the 2nd "Hospital" row
+	Verify exists the "Store Room B" text

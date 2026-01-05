@@ -1,0 +1,24 @@
+Open the sidemenu
+Click the "E-Chart" link
+Type "%" in @name=sstring
+Click the "Search" button
+Click the TEST-10050 link
+@pause@driver.pause(5)
+Click the "Medical Record" charttab
+Click the Allergies/Medications link
+Begin "Submit first observation to set baseline"
+	Click the @height and weight obs span@xpath="//span[@title='Edit Height/Weight']"
+	Type 154 in @name=height
+	Type 163 in @name=weight
+	Click the -1st Submit button
+	@pause@driver.pause(5)
+	Verify exists "163 lbs (73.94 kg)" text
+	Verify exists "154 in (391.2 cm)" text
+Begin "Submit second observation to verify change of data"
+	Click the @height and weight obs span@xpath="//span[@title='Edit Height/Weight']"
+	Type 150 in @name=height
+	Type 180 in @name=weight
+	Click the -1st Submit button
+	@pause@driver.pause(5)
+	Verify exists "180 lbs (81.65 kg)" text
+	Verify exists "150 in (381.0 cm)" text

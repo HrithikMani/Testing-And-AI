@@ -1,0 +1,47 @@
+Begin "Open an Encounter"
+	Open the sidemenu
+	Click the "E-Chart" link
+	Click the "TEST-10019" link
+	Click the "Add Visit" link
+	Open the "Encounter" dynamicsection
+	Enter "Butler, Internist" in the provider_chart_ac_input autocomplete
+	Save the "Encounter" dynamicsection
+	Wait for ajax
+Begin "Add Chief complaint"
+	Open the "Chief complaint" dynamicsection
+	Type "SYZYGY" into the enc_ccomplaint input
+	Save the "Chief complaint" dynamicsection
+	Wait for ajax
+	Screenshot "proof" 
+Begin "Add HPI"
+	Open the "HPI" dynamicsection
+	Type "Prior to Injury textbox test" in the obs_result_105_0 input
+	Type "What happened textbox test" in the obs_result_105_1 input
+	Type "HPI Narrative textbox test" in the obs_result_105_2 input
+	Save the "HPI" dynamicsection
+	Wait for ajax
+	Verify exists "Injury textbox" text
+	Verify exists "happened textbox" text
+	Verify exists "Narrative textbox" text
+Begin "Close Encounter"
+	Click the "Archive & Close" button
+	Wait for ajax
+	Verify exists "Encounter has been closed and Archived successfully as Document" text
+Begin "Re-open Encounter"
+	Click the "List All Encounters" link
+	Wait for the "Encounters" grid
+	Click the "Show/Hide Grid Controls" icon
+	Select "Chief Complaint" from the @Filters dropdown@xpath='//span[contains(., "Filters")]/parent::div/following-sibling::div/select[@class="wcdv_control_addField"]'
+	Sumoselect "SYZYGY" from the "Chief Complaint" grid sumoselect
+	Click the "OK" grid sumobutton
+	Gridclick "Chief Complaint:SYZYGY" "Set Open" grid link
+	Gridclick "Chief Complaint:SYZYGY" "Visit" grid link
+	Wait for ajax
+	Screenshot "re-opened encounter"
+Begin "Edit HPI"
+	Scroll "HPI" dynamicsection
+	Wait for ajax
+	Click the "HPI" dynamicsection section
+	Screenshot "HPI reopen warning" 
+	Verify exists "Caution" text
+	Click the dynamicsection reopen_confirm

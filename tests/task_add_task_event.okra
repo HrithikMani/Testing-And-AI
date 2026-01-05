@@ -1,0 +1,44 @@
+Begin "Go to Tasklist Event Setup Screen"
+	Open the sidemenu
+	Click the "Task List" sidemenu entry
+	Click the "Tasklist Events" link
+
+Begin "Add Document Task Event"
+	Click the "Add A Task Event" link
+	Select "Fax Records" from the "Use Fast Task" autocomplete
+	Type "1" in the "Task Priority" input
+	Begin "Verify Event Type Alert"
+		Click the "Build Interfaces Clause" button
+		Verify exists "You must select an event type before building an interface clause." text
+		Click the "OK" popup button
+	Select "On Document Add" from the "Event Type" dropdown
+	Click the "Build Stg. Types Clause" button
+	Verify exists "Build Storage Types Clause" text
+	Click the "stg_type_0" checkbox
+	Click the "stg_type_1" checkbox
+	Click the "Done" popup button
+	Click the "Insert Stg. Types Clause" button
+	Verify "value=d.storage_type IN ('0','1')" @id=evt_where
+	Click the 'Save And Close' button
+	Verify exists "Task List Event Added" text
+
+Begin "Add Observation Task Event"
+	Click the "Add A Task Event" link
+	Select "Flu Declination" from the "Use Fast Task" autocomplete
+	Type "1" in the "Task Priority" input
+	Select "On Observation Add" from the "Event Type" dropdown
+	Type "WHERE o.obs_name='Diet' AND o.obs_result='Twinkies'" in @id=evt_where
+	Click the 'Save And Close' button
+	Verify exists "Task List Event Added" text
+
+Begin "Add Diet Observation"
+	Navigate "?f=chart&s=pat&t=Medical+Record%3AObservations%2FFlowsheets&v=ob&pat_id=18&obopp=add"
+	Click @id=ob_observed_datetimeNOW
+	Enter "Diet" in the "Observation" autocomplete
+	Type "Twinkies" in the "obs_result" input
+	Click the Submit button
+
+Begin "Check for Flu Declination Task"
+	Navigate "?f=tlist&s=all_pending&realm_id=Flu+Program+Reviewer"
+	Verify exists "Flu Declination" text
+	Verify exists "Hart, William" text

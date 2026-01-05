@@ -1,0 +1,209 @@
+"""
+Pod containing elements and verbs for interacting with dynamic sections in visit-style encounters
+If you're trying to use dynamic sections, you'll need these verbs as you can't just click a section
+and expect it to be ready instantly
+
+- Unmask is used to wait and allow the modal blocker to clear before proceding
+- Reopen is used when an encounter has previously been archived and closed and we are reopening a section within an archived encounter to edit
+- Advance acts as a shortcut to close a currently open dynamic section and then open the following section.
+
+Usage examples:
+	Open the "Past procedures" dynamicsection
+	Close the "Past procedures" dynamicsection
+	Reopen the "Past procedures" dynamicsection
+	Unmask dynamicsection
+	Save the "Past procedures" dynamicsection
+	Advance the "Past procedures" dynamicsection
+
+"""
+
+section://div[contains(@class, "wc-enc-dynamic-section")]/*[contains(@class, "exam_tab")]
+
+# The next button is defined by looking for an open section that has a next class button with text of 'Next'
+nextbutton://*[contains(@class, "exam_tab")]/parent::div[contains(@class, "edit_mode")]//button[contains(@class, "next") and @type="button" or contains(., "Next")]
+
+# The save button is defined by looking for an open section that has a save class button with text of 'save'
+savebutton://*[contains(@class, "exam_tab")]/parent::div[contains(@class, "edit_mode")]//button[contains(@class, "save") and @type="button" or contains(., "save")]
+
+reopen_confirm://div[contains(., "Reopen previously archived section?")]/parent::div//input[@type="button" and @value="Yes"]
+
+@@@
+def waitOpen():
+	xp = "//div[contains(@class, 'wc-enc-dynamic-section')]/*[contains(@class, 'exam_tab')][text()='{OKRA_TEXT}']/parent::div"
+	ele = driver.getElement(xpath=xp)
+	if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'),
+		comments='Wait for ajax and layoutInsert operations to complete'):
+		driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+	if driver.getElement(xpath=xp + "[contains(@class, 'edit_mode')]"):
+		driver.reportCommandStatus('dynamicsection.pod', 'waitOpen()', True, 'Dynamic Section', 'The "{OKRA_TEXT}" section is open, no wait needed')
+	else:
+		if ele:
+			driver.wcutils.waitFor(lambda d: d.getElement(xpath=xp + "[contains(@class, 'edit_mode')]"),
+				comments='Wait for section edit_mode')
+		else:
+			driver.reportCommandStatus('dynamicsection.pod', 'waitOpen()', False, 'Dynamic Section', 'Section "{OKRA_TEXT}" Not Found')
+
+def ajaxSections():
+	if driver.runJS('return typeof wcutils !== "undefined" && (wcutils._layoutOps === 1 || miehttp.isWaiting() === true)'):
+		driver.wcutils.waitForAJAX(timeout=60, quiet=10)
+		if driver.runJS('return typeof wcutils !== "undefined" && (wcutils._layoutOps === 1 || miehttp.isWaiting() === true)'):
+			driver.wcutils.waitForAJAX(timeout=60, quiet=5)
+
+def waitClose():
+	xp = "//div[contains(@class, 'wc-enc-dynamic-section')]/*[contains(@class, 'exam_tab')][text()='{OKRA_TEXT}']/parent::div"
+	ele = driver.getElement(xpath=xp)
+	oldtimeout = driver.timeout
+	driver.setTimeout(.5)
+	if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=30, comments='Wait for ajax and layoutInsert operations to complete'):
+		driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+	if driver.getElement(xpath=xp + "[not(contains(@class, 'edit_mode'))]"):
+		driver.reportCommandStatus('dynamicsection.pod', 'waitClose()', True, 'Dynamic Section', 'The "{OKRA_TEXT}" section is closed, no wait needed')
+	else:
+		if ele:
+			driver.wcutils.waitFor(lambda d: d.getElement(xpath=xp + "[contains(@class, 'edit_mode')]"), expected=False, timeout=60, comments='Wait for section not edit_mode')
+			if driver.getElement(xpath=xp + "[contains(@class, 'edit_mode')]"):
+				driver.wcutils.waitFor(lambda d: d.getElement(xpath=xp + "[contains(@class, 'edit_mode')]"), expected=False, timeout=60, comments='Wait again for section not edit_mode')
+				if driver.getElement(xpath=xp + "[contains(@class, 'edit_mode')]"):
+					driver.reportCommandStatus('dynamicsection.pod', 'waitClose()', False, 'Dynamic Section', 'Section "{OKRA_TEXT}" Failed to Close within 2 Minutes')
+		else:
+			driver.reportCommandStatus('dynamicsection.pod', 'waitClose()', False, 'Dynamic Section', 'Section "{OKRA_TEXT}" Not Found')
+	driver.setTimeout(oldtimeout)
+
+def flipOff():
+	oldtimeout = driver.timeout
+	driver.setTimeout(3)
+	secflipping = '//div[contains(@class, "wc-enc-dynamic-section")]/*[contains(@class, "exam_tab")][text()="{OKRA_TEXT}"]/parent::div[contains(@class, "flipping")]'
+	secnotflipping = '//div[contains(@class, "wc-enc-dynamic-section")]/*[contains(@class, "exam_tab")][text()="{OKRA_TEXT}"]/parent::div[not(contains(@class, "flipping"))]'
+	if driver.waitFor(driver, lambda d: d.getElement(xpath=secnotflipping)):
+		driver.reportCommandStatus('dynamicsection.pod', 'flipOff()', True, '', '"{OKRA_TEXT}" section not flipping')
+	elif driver.waitFor(driver, lambda d: d.getElement(xpath=secflipping)):
+		driver.wcutils.waitForAJAX(timeout=60, quiet=3)
+		if driver.wcutils.waitFor(lambda d: d.getElement(xpath=secnotflipping), timeout=120, comments="Section found to be flipping, wait for it to finish"):
+			driver.reportCommandStatus('dynamicsection.pod', 'flipOff()', True, '', '"{OKRA_TEXT}" is no longer flipping')
+		else:
+			driver.reportCommandStatus('dynamicsection.pod', 'flipOff()', False, '', '"{OKRA_TEXT}" is still flipping after 2 min')
+	driver.setTimeout(oldtimeout)
+
+def checkStateOpen():
+	oldtimeout = driver.timeout
+	driver.setTimeout(0)
+	section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[contains(@class, "exam_tab")][text()="{OKRA_TEXT}"]/parent::div'
+	open = section + '[contains(@class, "edit_mode") and not(contains(@class, "flipping"))]'
+	if driver.getElement(xpath=open):
+		driver.reportCommandStatus('dynamicsection.pod', 'checkStateOpen()', False, open, '"{OKRA_TEXT}" is already open')
+	driver.setTimeout(oldtimeout)
+
+def checkStateClosed():
+	oldtimeout = driver.timeout
+	driver.setTimeout(0)
+	section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[contains(@class, "exam_tab")][text()="{OKRA_TEXT}"]/parent::div'
+	closed = section + '[not(contains(@class, "edit_mode")) and not(contains(@class, "flipping"))]'
+	if driver.getElement(xpath=closed):
+		driver.reportCommandStatus('dynamicsection.pod', 'checkStateClosed()', False, closed, '"{OKRA_TEXT}" is already closed')
+	driver.setTimeout(oldtimeout)
+
+# No longer in active use, but keeping statusCheck() for use when debugging dynamicsection.pod issues.
+def statusCheck():
+	oldtimeout = driver.timeout
+	driver.setTimeout(0)
+	section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[contains(@class, "exam_tab")][text()="{OKRA_TEXT}"]/parent::div'
+	open = section + '[contains(@class, "edit_mode") and not(contains(@class, "flipping"))]'
+	closed = section + '[not(contains(@class, "edit_mode")) and not(contains(@class, "flipping"))]'
+	flipping = section + '[contains(@class, "flipping")]'
+	if driver.getElement(xpath='//div[contains(@class, "wc-enc-dynamic-section")]/*[contains(@class, "exam_tab")][not(text()="{OKRA_TEXT}")]/parent::div[contains(@class, "edit_mode") or contains(@class, "flipping")]'):
+		driver.reportCommandStatus('dynamicsection.pod', 'statusCheck()', False, '', 'Another section is currently open or flipping')
+	else:
+		if driver.getElement(xpath=open):
+			driver.reportCommandStatus('dynamicsection.pod', 'statusCheck()', True, open, '"{OKRA_TEXT}" is currently open')
+		elif driver.getElement(xpath=closed):
+			driver.reportCommandStatus('dynamicsection.pod', 'statusCheck()', True, closed, '"{OKRA_TEXT}" is currently closed')
+		elif driver.getElement(xpath=flipping):
+			driver.reportCommandStatus('dynamicsection.pod', 'statusCheck()', True, flipping, '"{OKRA_TEXT}" is currently flipping')
+		else:
+			driver.reportCommandStatus('dynamicsection.pod', 'statusCheck()', True, 'unknown', '"{OKRA_TEXT}" status undetermined')
+	driver.setTimeout(oldtimeout)
+@@@
+
+@Open
+@Check current state@checkStateOpen()
+@Wait for ajax@ajaxSections()
+Scroll "{OKRA_TEXT}" dynamicsection
+@@@If Encounter section, wait for section refresh
+if "{OKRA_TEXT}"=="Encounter" or "{OKRA_TEXT}"=="Encounter Info":
+	driver.pause(10)
+@@@
+@Wait for masking@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[contains(@class, "mask")]'), expected=False, timeout=60)
+@Wait for ajax@ajaxSections()
+Click the "{OKRA_TEXT}" dynamicsection section
+@Check and wait for flipping@flipOff()
+@Wait for section to open@waitOpen()
+
+@Reopen
+@Check current state@checkStateOpen()
+@Wait for ajax@ajaxSections()
+Scroll "{OKRA_TEXT}" dynamicsection
+@Wait for masking@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[contains(@class, "mask")]'), expected=False, timeout=60)
+@Wait for ajax@ajaxSections()
+Click the "{OKRA_TEXT}" dynamicsection section
+$Click the dynamicsection reopen_confirm
+@Check and wait for flipping@flipOff()
+@Wait for section to open@waitOpen()
+
+@Close
+@Check current state@checkStateClosed()
+Scroll "{OKRA_TEXT}" dynamicsection
+@Wait for masking@driver.wcutils.waitFor(lambda d: d.getElement(xpath='//div[contains(@class, "mask")]'), expected=False, timeout=60)
+Click the "{OKRA_TEXT}" dynamicsection section
+@Check and wait for flipping@flipOff()
+@@@If Encounter section, wait for section refresh
+if "{OKRA_TEXT}"=="Encounter" or "{OKRA_TEXT}"=="Encounter Info":
+	driver.pause(10)
+@@@
+@Wait for section to close@waitClose()
+
+@Unmask
+@Wait for mask@driver.wcutils.waitForMask(expected=False)
+
+@Save
+Scroll "{OKRA_TEXT}" dynamicsection
+@@@Click the {OKRA_TEXT} dynamicsection savebutton
+if "{OKRA_TEXT}":
+	driver.clickElement(xpath='//*[contains(@class, "exam_tab")][contains(., "{OKRA_TEXT}")]/parent::div[contains(@class, "edit_mode")]//button[contains(@class, "save") and @type="button" or contains(., "save")]')
+else:
+	driver.clickElement(xpath='//*[contains(@class, "exam_tab")]/parent::div[contains(@class, "edit_mode")]//button[contains(@class, "save") and @type="button" or contains(., "save")]')
+@@@
+@@@If Encounter section, wait for section refresh
+if "{OKRA_TEXT}"=="Encounter" or "{OKRA_TEXT}"=="Encounter Info":
+	driver.pause(10)
+@@@
+
+@Advance
+@@@ Get the sections
+eles = driver.getElements(xpath="//*[contains(@class, 'exam_tab')]/parent::div[contains(@class, 'wc-enc-dynamic-section')]")
+current = None
+next = None
+for ele in eles:
+	if current:
+		next = ele.text.split('\n')[0].strip()
+		break
+	if 'edit_mode' in ele.get_attribute('class'):
+		current = ele.text.split('\n')[0].strip()
+if not current or not next:
+	driver.reportCommandStatus('Advance dynamicsection', 'Current or next sections not found', False,
+		'Current: {0}'.format(current), 'Next: {0}'.format(next))
+return {
+	'_currentSection': str(current),
+	'_nextSection': str(next)
+}
+@@@
+Scroll "{_currentSection}" dynamicsection
+Close the "{_currentSection}" dynamicsection
+Open the "{_nextSection}" dynamicsection
+
+@Scroll
+@@@Scroll {OKRA_TEXT} section into view
+section = '//div[contains(@class, "wc-enc-dynamic-section")]/*[contains(@class, "exam_tab")][contains(., "{OKRA_TEXT}")]'
+if driver.getElement(xpath=section):
+	driver.runJS('arguments[0].scrollIntoView(true)', driver.getElement(xpath=section))
+@@@
+

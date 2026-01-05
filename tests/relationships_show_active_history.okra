@@ -1,0 +1,31 @@
+Begin "Setup of Relationships"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "TEST-10019" link
+	Click the "Admin" charttab
+	Click the "Demographics" charttab subtab
+	Open the "Contacts / Relationships" dynamicsection
+	Enter "Thomas, All" in the le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input autocomplete
+	Select "Contact" from the le_pat_parent_relations_rt_relation_type_value dropdown
+	Type 12 in the le_pat_parent_relations_pr_end_date_value_varMONTH input
+	Type 31 in the le_pat_parent_relations_pr_end_date_value_varDAY input
+	Type 2999 in the le_pat_parent_relations_pr_end_date_value_varYEAR input
+	Click the 2nd Add button
+	Enter "Smith, Theo" in the le_pat_parent_relations_pr_related_pat_id_as_name_value_patac_input autocomplete
+	Select "Contact" from the le_pat_parent_relations_rt_relation_type_value dropdown
+	Type 1 in the le_pat_parent_relations_pr_end_date_value_varMONTH input
+	Type 1 in the le_pat_parent_relations_pr_end_date_value_varDAY input
+	Type 2000 in the le_pat_parent_relations_pr_end_date_value_varYEAR input
+	Click the 2nd Add button
+	Close the "Contacts / Relationships" dynamicsection
+Begin "Validation of view"
+	Click the "Hart, William S." link
+	Click the @Manage Information link@xpath="//label[text()='Contacts']/following-sibling::div/div/a[@title='Manage Information']"
+	Verify exists "Thomas, Allison" link
+	Verify !exists "Smith, Theodore S." link
+	Click the "Show History" link
+	Verify exists "Thomas, Allison" link
+	Verify exists "Smith, Theodore S." link
+	Click the "Show Active" link
+	Verify exists "Thomas, Allison" link
+	Verify !exists "Smith, Theodore S." link

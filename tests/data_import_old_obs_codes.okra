@@ -1,0 +1,40 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Click the "Legacy Data Import" link
+	Verify exists "Please Choose Data Import type:" text 
+	Select "Observation Codes CSV API" in the opp dropdown
+	Click the Go button
+	@driver.getWebDriver().switch_to.frame("di_frame_Observation_20Codes")
+	Type "obs_codes_import_test" in the "DI_InterfaceName" input
+	Click the "DI_Verbose" checkbox
+	Type 'ObsCodesDataImportSuccess.csv' in the 'csv_file' input
+	Click the "Upload" button
+	Verify exists "Successfully imported file ObsCodesDataImportSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+Begin "Verify Details"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Chart charttab
+	Click the "Observation Codes" charttab subtab
+	Select "obs_codes_import_test" in the select_interface dropdown
+	Verify exists "Whee" link
+	Verify exists "obs_codes_import_test-Whee,obs_codes_import_test-Zer" text
+	Verify exists "clicks" text
+	Verify exists "Yo Yo" link
+	Verify exists "obs_codes_import_test-Yo Yo,obs_codes_import_test-Momma" text
+	Verify exists "waves" text
+	Begin "Verify obs units for first obs code"
+		Click the View listview link
+		Verify exists "double-clicks" text
+		Verify exists "deci-clicks" text
+		#Toby to investigate
+		#Click the 2nd Cancel button
+		Click @the Cancel button@xpath=//input[@type="submit" and contains(@value, "Cancel")]
+		#End Toby to investigate
+	Begin "Verify obs units for first obs code"
+		Click the 2nd View listview link
+		Verify exists "hand-waves" text
+		Verify exists "milli-waves" text

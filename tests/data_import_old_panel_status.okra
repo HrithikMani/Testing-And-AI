@@ -1,0 +1,21 @@
+Begin "Import file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Click the "Legacy Data Import" link
+	Verify exists "Please Choose Data Import type:" text 
+	Select "Patient Panel Status CSV API" in the opp dropdown
+	Click the Go button
+	@driver.getWebDriver().switch_to.frame("di_frame_Patient_20Panel_20Status")
+	Click the "DI_Verbose" checkbox
+	Type 'PatientPanelStatusSuccess.csv' in the 'csv_file' input
+	Click the "Upload" button
+	Verify exists "Successfully imported file PatientPanelStatusSuccess.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+Begin "Go to Panel Status Report and Verify Entries"
+	Navigate "?f=layout&s=pat&module=SystemReport&name=PanelStatus&tabmodule=reports&t=Health+Surveillance"
+	Enter "Exposure-Varicella" in the panel_ac_txt autocomplete
+	Click the "Search" button
+	Verify exists @xpath=//*[@id='panel__stat_gridContainer_0']//td[text()='TEST-10019']
+	Verify exists @xpath=//*[@id='panel__stat_gridContainer_1']//td[text()='TEST-10006']

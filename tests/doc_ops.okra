@@ -1,0 +1,155 @@
+Begin "Go to Growing, Joseph"
+	Navigate "?f=chart&s=pat&t=Documents&v=detail&pat_id=27"
+	Wait for page
+	Click the "Show All" link
+	Wait for page
+
+Begin "Add task on first document"
+	Hover "Immunization Schedule" document header
+	Click the "Add Task" document dynop
+	Enter "Selenium, Selen" in the "owner_id_ac" autocomplete
+	Type "Remind me" in the "notes" freetext field
+	Click the "Save" popup button
+	Wait for page
+	Verify !exists popup
+
+Begin "Batch document"
+	Hover "0000477" "Injection" document header
+	Click the "Batch" document dynop
+
+Begin "Send Document on Injection doc"
+	Hover "07-11-2023 12:33 | MMR" "Injection" document header
+	Click the "Send Document" document dynop
+	Verify exists "Send Document" popup
+	Verify exists "Recipient" text
+	Click the "Cancel" popup button
+
+Begin "Quick Link the Well Child Exam Injection doc"
+	Hover "08-24-2011" "Pediatric Exam" document header
+	Click the "Quick Link" document dynop
+	Verify exists "Quick Links" popup
+	Verify exists "Add Visit" text
+	Close popup
+
+Begin "Conversation dynOp on the Patient Photo"
+	Hover "Patient Photo" "Patient Photo" document header
+	Click the "Conversations" document dynop
+	Verify exists "Conversations" popup
+	Verify exists "No task available" text
+	Close popup
+
+Begin "View Document dynOp on the Patient Photo"
+	Hover "Patient Photo" document header
+	Click the "View Document" document dynop
+	@Switch Windows@driver.switchToPopup()
+	Verify exists "Patient Photo" document
+	Verify !exists 2nd document
+
+Begin "Attempt to link a document without a current encounter"
+	Navigate "?f=chart&s=pat&t=Documents&v=detail&pat_id=27"
+	Wait for page
+	Hover "Immunization Schedule" document header
+	Verify !exists "Link to Encounter" icon
+	Verify !exists "Link with Details" icon
+	Verify !exists "Link with Interpretation" icon
+
+Begin "Link document"
+	Navigate "?f=chart&s=pat&t=Medical+Record%3AEncounters&v=encounter&pat_id=27"
+	Wait for page
+	Gridclick "Serv Date:02-02-2016" "Set Current" grid link
+	Navigate "?f=chart&s=pat&t=Documents&v=detail&pat_id=27"
+	Wait for page
+	Hover "07-11-2023" document header
+	Click the "Link to Encounter" document dynop
+	Verify exists "Unlink from Encounter" document dynop
+
+Begin "Unlink document"
+	Navigate "?f=chart&s=pat&t=Documents&pat_id=27&v=list"
+	Wait for page
+	Hover "Immunization Schedule" document header
+	Click the "Unlink from Encounter" document dynop
+	Hover "Immunization Schedule" document header
+	Verify exists "Link to Encounter" document dynop
+
+Begin "Unbatch document"
+	Navigate "?f=chart&s=pat&t=Documents&pat_id=27&v=list"
+	Wait for page
+	Hover "0000477" "Injection" document header
+	Click the "Un-Batch" document dynop
+
+Begin "View Task Regarding Document"
+	Navigate "?f=tlist&s=all_pending&user_id=8"
+	Wait for page
+	Hover "Immunization Schedule" document header
+	Click the 3rd "Batch" icon
+
+Begin "Link with Details"
+	Begin "Verify details are not currently present on the encounter and the document is not linked"
+		Navigate "?f=chart&s=pat&t=Documents&pat_id=27&v=list"
+		Wait for page
+		Click the "Visit" toolbar link
+		Verify exists "Linked Documents" dynamicsection
+		Verify !exists "ROTAVIRUS" text
+		Verify !exists "Immunization Schedule" dynamicitem
+		Verify !exists "Unlink from Encounter" icon
+		Verify !exists "Remove Details from Encounter" icon
+	Begin "Link the document"
+		Navigate "?f=chart&s=pat&t=Documents&pat_id=27&v=list"
+		Wait for page
+		Hover "Immunization Schedule" document header
+		Click the "Link with Details" document dynop
+	Begin "Revisit the Documents chart tab to verify that the 'Link with Details' icon is now 'Add Details to Encounter'"
+		Navigate "?f=chart&s=pat&t=Documents&pat_id=27&v=list"
+		Wait for page
+		Hover "Immunization Schedule" document header
+		Verify exists "Add Details to Encounter" document dynop
+	Begin "Verify details are present on the encounter and doc was linked"
+		Navigate "?f=chart&s=pat&t=Documents&pat_id=27&v=list"
+		Wait for page
+		Click the "Visit" toolbar link
+		Verify exists "Linked Documents" dynamicsection
+		Verify exists "ROTAVIRUS" text
+	Begin "Remove Details from Encounter"
+		Hover "Immunization Schedule" dynamicitem
+		Verify exists "Remove Details from Encounter" icon
+		Click "Remove Details from Encounter" document dynop
+	Begin "Check that the document is still linked but details are removed"
+		Hover "Immunization Schedule" dynamicitem
+		Verify exists "Unlink from Encounter" document dynop
+		Verify exists "Add Details to Encounter" document dynop
+	Begin "Unlink the document"
+		Hover "Immunization Schedule" dynamicitem
+		Click "Unlink from Encounter" document dynop
+
+Begin "Link with Interpretation"
+	Begin "Verify details are not currently present on the encounter and the document is not linked"
+		Navigate "?f=chart&s=pat&t=Documents&pat_id=27&v=list"
+		Wait for page
+		Click the "Visit" toolbar link
+		Verify exists "Linked Documents" dynamicsection
+		Verify !exists "ROTAVIRUS" text
+		Verify !exists "Immunization Schedule" dynamicitem
+		Verify !exists "Unlink from Encounter" icon
+		Verify !exists "Remove Details from Encounter" icon
+	Begin "Link the document"
+		Navigate "?f=chart&s=pat&t=Documents&pat_id=27&v=list"
+		Wait for page
+		Hover "Immunization Schedule" document header
+		Click the "Link with Interpretation" document dynop
+		Type "Testing link with interpretation" in the "Interpretation / Analysis" freetext field
+		Click the "Submit" popup button
+	Begin "Revisit the Documents chart tab to verify that the 'Link with Interpretation' icon is now 'Add Interpretation'"
+		Hover "Immunization Schedule" document header
+		Verify exists "Add Interpretation" document dynop
+	Begin "Verify interpretation is present on the encounter and doc was linked"
+		Navigate "?f=chart&s=pat&t=Documents&pat_id=27&v=list"
+		Wait for page
+		Click the "Visit" toolbar link
+		Verify exists "Linked Documents" dynamicsection
+		Verify exists "Testing link with interpretation" text
+		Hover "Immunization Schedule" dynamicitem
+		Verify exists "Unlink from Encounter" icon
+	Begin "Unlink from Encounter"
+		Hover "Immunization Schedule" dynamicitem
+		Click "Unlink from Encounter" document dynop
+	

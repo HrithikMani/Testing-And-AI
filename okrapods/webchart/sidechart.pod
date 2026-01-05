@@ -1,0 +1,25 @@
+"""
+Pod used for interacting with the WebChart sidechart within a patient's chart
+
+Usage examples:
+	Open the sidechart
+	Click the "Hart, William S" sidechart section
+	Close the sidechart
+
+"""
+
+symbol://div[@id='wc_pat_bar']/div/a[contains(@class, 'toggleSideChart')]
+
+section://div[@id='wc_sidechart']//div[contains(@class, 'treeTitle')]
+
+subsection://div[@id='wc_sidechart']//div[contains(@class, 'treeTitle')]/span
+
+@Open:30
+Click the sidechart symbol
+Verify exists @Sidechart Container@id=wc_sidechart
+Verify exists @Expected Body Class@xpath=//body[contains(@class, 'wc_sidechart_open')]
+
+@Close
+Click the sidechart symbol
+Verify !exists @Expected Body Class@xpath=//body[contains(@class, 'wc_sidechart_open')]
+

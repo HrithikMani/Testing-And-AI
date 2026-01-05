@@ -1,0 +1,16 @@
+"""
+	Set up the AI Assistant
+	@systemtype: WCNOW
+"""
+Begin Navigate to admin portlets
+Navigate "?f=layout&s=pat&module=MASTER&name=AdministratorPortlets"
+Click the "Review and sign an AI License for your system" link
+Verify exists "END USER AGREEMENT AND TERMS OF USE" text
+Click the "AGREE" button
+Wait for page
+Verify exists "Choose Security Roles" popup
+Verify exists "Which security roles should have access to the following" popup text
+Verify exists "Submit" popup button
+Click the "Submit" popup button
+Verify exists "The AI agreement has been accepted, and the assistant has been enabled." text
+

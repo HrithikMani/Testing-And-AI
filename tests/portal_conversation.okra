@@ -1,0 +1,172 @@
+Begin "Employee Portal Conversation"
+	Begin "Login as employee"
+		@Setup WCTestSession for Outside@driver.wcutils.insertWCTSession('employee')
+		Click the "Better Corp." link
+		Begin "Accept the time zone alert"
+			Verify exists "TIMEZONE MISMATCH" popup
+			Click the "Update" popup button
+
+	Begin "Portal Message Reply"
+		Click the @xpath='//a/span[contains(text(), "Message Center")]'
+		Begin "Verify Message Center"
+			Wait for ajax
+			Verify exists "Fred" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System%20Logo")]'
+			Verify exists "Message Center" text
+			Verify exists "Messages" text
+			Verify exists "Unread" text
+			Verify exists "Date" text
+			Verify exists "Sender" text
+			Verify exists "Subject" text
+			Verify exists "Unread Only" text
+			Verify exists "Show All" text
+			Verify exists "Send a Message" link
+			@Axe Test@driver.wcutils.reportAxe()
+		Begin "Navigate to send Message from Portal"
+			Screenshot picbefore
+			Click the @xpath='//a[contains(text(), "Send a Message")]'
+			Screenshot picafter
+			Click the @xpath='//td[contains(text(), "Ask a Clinical Question")]/following-sibling::td[1]//a'
+			Screenshot sendmessage
+		Begin "Ask a Clinical Question Form"
+			Wait for ajax
+			Begin "Verify Ask Clinical Question Form"
+				Verify exists "Corporate Office" text
+				Verify exists "Indianapolis Office" text
+				Verify exists "Type your question in the space provided." text
+			Begin "Fill Ask Clinical Question Form"
+				@Scroll down@driver.scrollTo(y=150)
+				Click @the Corporate Office radio@xpath='//input[@type="radio" and @title="Corporate Office"]/parent::span'
+				Screenshot radioel
+				Type "Send Text to Clinical from Fred" in the @Text Area@xpath=//textarea[@id="obs_result_71_3"]
+				@Scroll down@driver.scrollTo(y=900)
+				Screenshot textareael
+				Click @the consent-box checkbox@xpath='//input[@type="checkbox" and @id="consent-box"]/parent::span'
+				Screenshot textareael
+				@Axe Test@driver.wcutils.reportAxe()
+				Click the SUBMIT button
+				Screenshot showcase
+				Navigate "?f=logout"
+Begin "Webchart Task Reply"
+	@Setup WCTestSession for Outside@driver.wcutils.insertWCTSession('selenium')
+	Begin "Documents Task Reply"
+		Navigate "?f=chart&s=pat&t=Documents&v=list&pat_id=42"
+		Click the @"Doc ID" listview header@xpath='//table[contains(@class,"newui zebra")]//thead//tr/th/a[contains(.,"Doc ID")]'
+		Click the @"Doc ID" listview header@xpath='//table[contains(@class,"newui zebra")]//thead//tr/th/a[contains(.,"Doc ID")]'
+		Screenshot Test1
+		Click the "Question to Clinician Initiated From Portal" listview link
+		Begin "Document View Reply"
+			Verify exists "Send Text to Clinical from Fred" text
+			Screenshot Test2
+			@Mouse over document heading@driver.mouseOver(xpath="(//div[@data-keyname='doc_id'])[1]")
+			@Wait@driver.pause(5)
+			Click the "Conversations" dynicon
+			@Wait@driver.pause(5)
+			Screenshot Test3
+		Begin "Conversation Threads Popup"
+			Verify exists "Conversations" popup
+			Click the "Reply" popup button
+			@Wait@driver.pause(5)
+		Begin "Reply Task Form"
+			Verify exists "Reply Task" popup
+			Verify exists "Employee Ask a Clinical Question" text
+			Verify exists "Question to Clinician Initiated From Portal: Anderson, Frederick" text
+			Verify exists "Employees" text
+			Verify exists "Anderson, Frederick" text
+			Screenshot replytask1
+			Type "Send Text Portal from Nurse" in the @Text Area@xpath='//textarea[@id="notes"]'
+			Screenshot replytask2
+			Click the "Reply Task" popup button
+			@Wait@driver.pause(5)
+			Begin "Verify Posted Task Reply"
+				@Mouse over document heading@driver.mouseOver(xpath="(//div[@data-keyname='doc_id'])[1]")
+				@Wait@driver.pause(5)
+				Click the "Conversations" dynicon
+				@Wait@driver.pause(5)
+				Screenshot repliedpopup
+				Verify exists "Send Text Portal from Nurse" popup text
+				Close popup
+				@Scroll down@driver.scrollTo(y=500)
+				Click the @xpath='//div[contains(@class, "document_tasks") and contains(., "Hide/Show Tasks")]'
+				Verify exists "Send Text Portal from Nurse" text
+				Screenshot repliedmessage
+				Navigate "?f=logout"
+
+Begin "Re-Employee Portal Conversation"
+	Begin "Login as employee"
+		@Setup WCTestSession for Outside@driver.wcutils.insertWCTSession('employee')
+		Click the "Better Corp." link
+	Begin "Portal Message Reply"
+		Click the @xpath='//a/span[contains(text(), "Message Center")]'
+		Begin "Verify Message Center"
+			Wait for ajax
+			Verify exists "Fred" text
+			Verify exists @Notification Bell@id='portal-header-notify'
+			Verify exists @Notification Bell img@xpath='//img[contains(@src, "portal-header-notify") and contains(@src, "svg")]'
+			Verify exists @Home icon@id='portal-header-home'
+			Verify exists @Home icon img@xpath='//img[contains(@src, "portal-header-home.svg")]'
+			Verify exists @System logo@id='header-logo'
+			Verify exists @System logo img@xpath='//img[contains(@src, "System+Logo")]'
+			Verify exists "Message Center" text
+			Verify exists "Messages" text
+			Verify exists "Unread" text
+			Verify exists "Date" text
+			Verify exists "Sender" text
+			Verify exists "Subject" text
+			Verify exists "Unread Only" text
+			Verify exists "Show All" text
+			Verify exists "Send a Message" link
+			@Axe Test@driver.wcutils.reportAxe()
+		Begin "Check Message Received"
+			Click @the Unread Only button@xpath='//button[@id="new-message-opt"]'
+			Screenshot "Received Notification"
+			Verify exists "unread message(s)." text
+			@Scroll down@driver.scrollTo(y=500)
+			Verify exists "Question to Clinician Initiated From Portal" text
+		Begin "Navigate to the Questionnaire-Clinical Question"
+			Click the "Question to Clinician Initiated From Portal" link
+		Begin "Check Portal Conversations"
+			Verify exists "An employee has asked a clinical question on the portal." text
+			Verify exists "Send Text Portal from Nurse" text
+			#Type "Re-Send from Portal" in the @Text Area@xpath='//span/textarea[@id="reply-field-94"]'
+			Type "Re-Send from Portal" in the @Text Area@xpath='(//textarea)[1]'
+			@Wait@driver.pause(5)
+			Click the SUBMIT button
+			@Wait@driver.pause(5)
+			Screenshot "Resend portal conversation"
+			Verify exists "Re-Send from Portal" text
+			@Scroll down@driver.scrollTo(y=400)
+			Verify exists "Send Text to Clinical from Fred" text
+			Navigate "?f=logout"
+Begin "Webchart Task Reply"
+	@Setup WCTestSession for Outside@driver.wcutils.insertWCTSession('selenium')
+	Begin "Documents Task Reply"
+		Navigate "?f=chart&s=pat&t=Documents&v=list&pat_id=42"
+		Click the @"Doc ID" listview header@xpath='//table[contains(@class,"newui zebra")]//thead//tr/th/a[contains(.,"Doc ID")]'
+		Click the @"Doc ID" listview header@xpath='//table[contains(@class,"newui zebra")]//thead//tr/th/a[contains(.,"Doc ID")]'
+		Screenshot DocumentsList
+		Click the "Question to Clinician Initiated From Portal" listview link
+		Begin "Document View Reply"
+			Verify exists "Send Text to Clinical from Fred" text
+			Screenshot Test2
+			@Mouse over document heading@driver.mouseOver(xpath="(//div[@data-keyname='doc_id'])[1]")
+			@Wait@driver.pause(5)
+			Click the "Conversations" dynicon
+			@Wait@driver.pause(5)
+			Screenshot Test3
+		Begin "Conversation Threads Popup"
+			Verify exists "Conversations" popup
+			Verify exists "An employee has asked a clinical question on the portal." popup text
+			Verify exists "Send Text Portal from Nurse" popup text
+			Verify exists "Re-Send from Portal" popup text
+			Close popup
+			@Scroll down@driver.scrollTo(y=500)
+			Click the @xpath='//div[contains(@class, "document_tasks") and contains(., "Hide/Show Tasks")]'
+			Verify exists "Send Text Portal from Nurse" text
+			Verify exists "Re-Send from Portal" text
+			Screenshot repliedmessage

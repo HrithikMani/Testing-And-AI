@@ -1,0 +1,17 @@
+Begin "Test Add Favorites"
+	Open the sidemenu
+	Click the "Reports" sidemenu entry
+	Verify exists "Favorites" charttab
+	Click the @Accommodation Report Favorite Icon@xpath='//a[contains(.,"Accommodations Report")]/preceding-sibling::span[contains(@class,"favorite_div")]'
+	Click the "Financials" charttab
+	Click the @Account Details Favorite Icon@xpath='//span/a[contains(.,"Account Details")]/parent::span/preceding-sibling::span'
+	Click the "Favorites" charttab
+	Verify exists @Accomodation Report@xpath='//span[@id="favorites_tab"]/following-sibling::ul/div/li/span/a[contains(.,"Accommodations Report")]'
+	Verify exists @Account Details@xpath='//span[@id="favorites_tab"]/following-sibling::ul/div/li/span/a[contains(.,"Account Details")]'
+
+Begin "Test Remove Favorites"
+	Click the @Accommodation Report Favorite Icon@xpath='//a[contains(.,"Accommodations Report")]/preceding-sibling::span[contains(@class,"favorite_div")]'
+	Click the @Account Details Favorite Icon@xpath='//a[contains(.,"Account Details")]/preceding-sibling::span[contains(@class,"favorite_div")]'
+	Click the "Favorites" charttab
+	Verify !exists @Accomodation Report@xpath='//span[@id="favorites_tab"]/following-sibling::ul/div/li/span/a[contains(.,"Accommodations Report")]'
+	Verify !exists @Account Details@xpath='//span[@id="favorites_tab"]/following-sibling::ul/div/li/span/a[contains(.,"Account Details")]'

@@ -1,0 +1,49 @@
+"""
+    Workflow test for webscan add batch window
+    @owners: dcornewell, sgrider
+    @filedeps: system/layouts/MIEWebScan/AddBatchWin.html, system/layouts/MIEWebScan/AddBatchWinOptions.html
+"""
+Open the sidemenu
+Click the WebScan sidemenu entry
+Click the "Add Batch" link
+Verify exists "Upload" popup
+Verify exists "Scan" button
+Verify exists "Settings" button
+Click the File Upload button
+Verify exists "Choose Files" button
+Verify exists @Disabled "Upload Scanned File" button@xpath='//input[contains(@value, "Upload Scanned File") and @disabled]'
+Verify exists @Disabled "Clear List" button@xpath='//input[contains(@value, "Clear List") and @disabled]'
+
+Begin "Setup Enable Clinic Location for Batch Processes System Setting"
+	Close popup
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click "System" charttab
+	Click "System Settings" charttab subtab
+	Click "Add System Setting" link
+	Enter "Enable Clinic Location for Batch Processes" in the "settings_query" autocomplete
+	@Wait@driver.wcutils.waitForAJAX(30)
+	Select "1" in the "value" dropdown
+	Type "Setup Enable Clinic Location for Batch Processes System Setting" into "reason" input
+	Click Add button
+
+Begin "Test Add Batch with Clinic Location"
+	Open the sidemenu
+	Click the WebScan sidemenu entry
+	Click the "Add Batch" link
+	Verify exists "Batch Upload" popup
+	Verify exists "clinic_location" autocomplete
+# for windows
+# Click the "Scanner Settings" button
+# Select "Black/White" in the colormode dropdown
+# Verify !exists "Automatically adjust contrast" text
+# Select "Grayscale" in the colormode dropdown
+# Verify exists "Automatically adjust contrast" text
+# Verify exists "Contrast" text
+# Verify exists "Brightness" text
+# Type 50 in to the contrast_percent input
+# Type 25 in to the brightness_percent input
+# Screenshot "WebScan Scan Settings"
+# Check the "auto_contrast" checkbox
+# Verify !exists @Contrast input@xpath="//label[contains(., "Contrast") and not(contains(@class,'hidden')) and not(ancestor::div[contains(@class,'hidden')])]"
+# Verify !exists @Brightness input@xpath="//label[contains(., "Brightness") and not(contains(@class,'hidden')) and not(ancestor::div[contains(@class,'hidden')])]"

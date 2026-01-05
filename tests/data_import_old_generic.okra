@@ -1,0 +1,56 @@
+Begin "Import the test data file"
+	Open the sidemenu
+	Click "Control Panel" sidemenu entry
+	Click the Interface charttab
+	Click the "Data import" charttab subtab
+	Click the "Legacy Data Import" link
+	Verify exists "Please Choose Data Import type:" text 
+	Select "Chart Data CSV API" in the opp dropdown
+	Click the Go button
+	@driver.getWebDriver().switch_to.frame("di_frame_Chart_20Data_20CSV_20API")
+	Click the "DI_Verbose" checkbox
+	Type 'GenericImportTestFile.csv' in the 'csv_file' input
+	Click the "Upload" button
+	Verify exists "Successfully imported file GenericImportTestFile.csv!" text
+	@driver.getWebDriver().switch_to.parent_frame()
+Begin "Validate CDC Race and CDC Ethnicity values"
+	Begin "Check values for Lastname1, Firstname1"
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Type "Lastname1" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Lastname1" text
+		Click the "Lastname1" link
+		Click the "Demographics" icon manageinformation
+		Verify exists "American Indian or Alaska Native" text
+		Verify exists "Hispanic or Latino" text
+	Begin "Check values for Lastname2, Firstname2"
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Type "Lastname2" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Lastname2" text
+		Click the "Lastname2" link
+		Click the "Demographics" icon manageinformation
+		Verify exists "Asian" text
+		Verify exists "Not Hispanic or Latino" text
+	Begin "Check values for Lastname3, Firstname3"
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Type "Lastname3" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Lastname3" text
+		Click the "Lastname3" link
+		Click the "Demographics" icon manageinformation
+		Verify exists "Black or African American" text
+		Verify exists "Hispanic or Latino" text
+	Begin "Check values for Lastname4, Firstname4"
+		Open the sidemenu
+		Click "E-Chart" sidemenu entry
+		Type "Lastname4" in the "sstring" input
+		Click the "Search" button
+		Verify exists "Lastname4" text
+		Click the "Lastname4" link
+		Click the "Demographics" icon manageinformation
+		Verify exists "Native Hawaiian or Other Pacific Islander" text
+		Verify exists "Not Hispanic or Latino" text

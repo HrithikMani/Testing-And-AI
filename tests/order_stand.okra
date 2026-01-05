@@ -1,0 +1,41 @@
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+Open the sidemenu
+Click the "E-Chart" link
+Type "Garza" in the "sstring" input
+Click the "Search" button
+Begin "Create a standing order"
+	Open the quicklink list
+	Click the "Add Order" quicklink
+	Select "Selenium, Selenium" from the "ordering_physician" dropdown
+	Type "1" in the "Standing Order Frequency" input
+	Select "Weeks" from the "order_frequency_units dropdown
+	Type "2" in the "Recurrence" input
+	Click the "ANA" picklist checkbox
+	Click the "Submit" button
+@Switch Windows@driver.switchToPopup()
+Verify exists "ANA" text
+@Close this window@driver.closePopup()
+Open "Medical Record" charttab
+Click the "OrderRequestsLegacy" charttab subtab
+Begin "Definite Standing Order behavior"
+	Verify exists "2 Times" text
+	Click the "Complete" listview link
+	Type "02-09-2016" in the "Completed At" date
+	Click the "Complete" button
+	Wait for page
+	Verify notexists popup
+	Verify exists "View Recent" link
+	Click the "View Recent" link
+	Verify exists "1 Time" text
+	Click the "Complete" listview link
+	Type "02-16-2016" in the "Completed At" date
+	Click the "Complete" button
+	Wait for page
+	Click the "View Recent" link
+	Verify !exists "Standing Orders" listview name
+@@@Switch Back to New Requisition Screen
+driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@

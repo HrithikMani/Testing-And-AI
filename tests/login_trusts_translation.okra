@@ -1,0 +1,135 @@
+Begin "Login Trusts Translation"
+	Begin "Enabled Manage Login Trusts"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "Access" charttab
+		Click the "Access Control" charttab subtab
+		Type {selenium_username} into the search input
+		Click the "Go!" button
+		Gridclick "Username:selenium" "Edit" grid link
+		Click the "Customize User Security" link
+		Select Yes from the "Manage Login Trusts" dropdown
+		Select Yes from the "Manage Layouts" dropdown
+		Select "Add/Edit" from the "Manage System Reports" dropdown
+		Select Yes from the "Manage System Layouts" dropdown
+		Select Yes from the "Refer to Systems Editor" dropdown
+		Type "Login trust translation test" in the sec_role_comment input
+		Click the "Update Individual Security" button
+		Verify exists "[ Manage Login Trusts: Yes ]" text
+		Verify exists "[ Manage System Layouts: Yes ]" text
+		Verify exists "[ Manage System Reports: Add/Edit ]" text
+		Verify exists "[ Refer to Systems Editor: Yes ]" text
+		Verify exists "[ Manage Login Trusts: Yes ]" text
+	Begin "Navigating to Login Trusts Translations"
+		Open the sidemenu
+		Click the "Control Panel" link
+		Click the "Access" charttab
+		Click the "Login Trusts" charttab subtab
+		Verify exists "MIE Login" grid entry 
+		#Verify exists @MIE Login exists@xpath='//*[@id="LoginTrust_gridContainer_0"]//td[contains(., "MIE Login")]'
+		Click the @First Translation Link of MIE Login@xpath='//*[@id="LoginTrust_gridContainer_0-tt"]/td[1]/a[2]'
+	Begin "Login Trust Translation Datavis"
+		Begin "Add to Login Trust Translation Username"
+			Click the "Add Login Trust Translation" link
+			Type "TestUsernameFrom" into the trans_from input
+			Enter "Selenium, Selenium" into the username_trans_to autocomplete
+			@Wait@driver.pause(5)
+			Screenshot Username Translations1
+			Click the Submit button
+			Screenshot Username Translations
+			@Wait@driver.pause(5)
+			Verify exists "TestUsernameFrom" grid entry
+			@Wait@driver.pause(5)
+		Begin "Add to Login Trust Translation User Realm"
+			Click the "Add Login Trust Translation" link
+			Click the "User Realm" link
+			Type "TestUserRealmFrom" into the trans_from input
+			@Wait@driver.pause(5)
+			Select "Applicant" in the user_realm_trans_to popup dropdown
+			@Wait@driver.pause(5)
+			Screenshot UserRealmNavigation
+			Click the Submit button
+			@Wait@driver.pause(5)
+		Begin "Add to Login Trust Translation Security Role"
+			Click the "Add Login Trust Translation" link
+			Click the "Security Role" link
+			Type "TestSecurityRoleFrom" into the trans_from input
+			@Wait@driver.pause(5)
+			Select "Physicians" in the sec_role_trans_to popup dropdown
+			@Wait@driver.pause(5)
+			Screenshot SecurityRoleNavigation
+			Click the Submit button
+			@Wait@driver.pause(5)
+		Begin "Add to Login Trust Translation SAML Attribute Name"
+			Click the "Add Login Trust Translation" link
+			Click the "SAML Attribute Name" link
+			Type "TestSAMLFrom" into the trans_from input
+			Type "TestSAMLTo" into the saml_attribute_name_trans_to input
+			Screenshot SecurityRoleNavigation
+			Click the Submit button
+			@Wait@driver.pause(5)
+	Begin "Verify added Login Trust Translations"
+		Begin "Verify Username"
+			Verify exists "TestUsernameFrom" grid entry
+			Verify exists "Selenium, Selenium" grid entry
+		Begin "Verify User Realm"
+			Verify exists "TestUserRealmFrom" grid entry
+			Verify exists "Applicant" grid entry
+		Begin "Verify Security Role"
+			Verify exists "TestSecurityRoleFrom" grid entry
+			Verify exists "Physicians" grid entry
+		Begin "Verify SAML Attribute name"
+			Verify exists "TestSAMLFrom" grid entry
+			Verify exists "TestSAMLTo" grid entry
+	Begin "Edit Login Trust Translation"
+		Begin "Edit Login Trust Translation Username"
+			Check the "TestUsernameFrom" grid checkbox
+			Click the "Edit" grid button
+			Type "TestUsernameFromEdited" into the trans_from input
+			Enter "Anderson, Frederick" into the username_trans_to autocomplete
+			Click the Submit button
+			Verify exists "TestUsernameFromEdited" grid entry
+			Verify exists "Anderson, Frederick" grid entry
+
+		Begin "Edit Login Trust Translation User Realm"
+			Check the "TestUserRealmFrom" grid checkbox
+			Click the "Edit" grid button
+			Type "TestUserRealmFromEdited" into the trans_from input
+			@Wait@driver.pause(5)
+			Select "Assets" in the user_realm_trans_to popup dropdown
+			@Wait@driver.pause(5)
+			Screenshot UserRealmNavigation
+			Click the Submit button
+			@Wait@driver.pause(5)
+			Verify exists "TestUserRealmFromEdited" grid entry
+			Verify exists "Assets" grid entry
+
+		Begin "Edit Login Trust Translation Security Role"
+			Check the "TestSecurityRoleFrom" grid checkbox
+			Click the "Edit" grid button
+			Type "TestSecurityRoleFromEdited" into the trans_from input
+			@Wait@driver.pause(5)
+			Select "Physicians" in the sec_role_trans_to popup dropdown
+			@Wait@driver.pause(5)
+			Click the Submit button
+			@Wait@driver.pause(5)
+			Verify exists "TestSecurityRoleFromEdited" grid entry
+			Verify exists "Physicians" grid entry
+
+		Begin "Edit Login Trust Translation SAML Attribute Name"
+			Check the "TestSAMLFrom" grid checkbox
+			Click the "Edit" grid button
+			@Wait@driver.pause(5)
+			Type "TestSAMLFromEdited" into the trans_from input
+			Type "TestSAMLToEdited" into the saml_attribute_name_trans_to input
+			Click the Submit button
+			@Wait@driver.pause(5)
+			Verify exists "TestSAMLFromEdited" grid entry
+			Verify exists "TestSAMLToEdited" grid entry
+	Begin "Delete Login Trust Translation"
+		Check the "TestSAMLFrom" grid checkbox
+		Click the "Delete" grid button
+		Verify exists "TestSAMLFrom" popup text
+		Click the "Yes" popup button
+		@Wait@driver.pause(5)
+		Verify !exists "TestSAMLFrom" grid entry

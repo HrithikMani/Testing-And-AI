@@ -1,0 +1,35 @@
+Navigate "?f=layout&module=reports&name=HR%20Data%20Feed&tabmodule=reports&tabmodule=reports&t=undefined"
+
+Begin "Enter Inputs"
+	Type "9164509" into the "Chart ID" input
+	Click the "Search" button
+	Wait for ajax
+
+Begin "Open Window"
+	@driver.sleep(10)
+	# Replace when ticket #137035 is completed
+	@@@ Expand the "HR Interface Report" DataVis table
+	expandedTable='//div[contains(@id, "HRInterfaceReport")]/div[contains(@class, "wcdv_grid_content") and not(contains(@style, "display: none"))]'
+	collapsedTable='//div[contains(@id, "HRInterfaceReport")]/div[contains(@class, "wcdv_grid_content") and contains(@style, "display: none")]'
+	expButton='//div[contains(@id, "HRInterfaceReport") and contains(@class, "wcdv_grid")]/div[@title]//button[contains(@class, "showhide") and not(contains(@class, "open"))]/span[contains(@class, "chevron")]'
+	if driver.getElement(xpath=expandedTable):
+		driver.reportCommandStatus('', '', True, '', 'Table is already expanded')
+	elif driver.getElement(xpath=collapsedTable):
+		driver.clickElement(xpath=expButton)
+	else:
+		driver.reportCommandStatus('', '', False, '', 'Table not found to be in an expanded or collapsed state')
+	@@@
+	Click the 1st "View Row" link
+	Wait for ajax
+
+Begin "Validation"
+	Verify !exists "datafeed_interface JSON is invalid or missing" text
+	Verify exists "Show Details" button
+	# Update this once we don't find hidden text by default or have a way to ignore it
+	#Verify !exists "CSV Key" text
+	Click the "Show Details" button
+	Wait for ajax
+	Verify exists "CSV Key" text
+	Verify exists "Employee ID" text
+	Verify exists "patient_mrns_globalid" text
+	Verify exists "mbenadetterm@1688.com" text

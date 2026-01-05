@@ -1,0 +1,54 @@
+Begin "Add and Enable system settings"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Begin "Add preferred name in Patient Search"
+		Click the "Add System Setting" link
+		Enter "Show preferred name on results" into the "System Settings" autocomplete
+		Select "Enabled" in the "Value" dropdown
+		Type "Chart search test" in the "Reason" input
+		Click the "Add" button
+	Begin "Add preferred name in Recent Patients"
+		Click the "Add System Setting" link
+		Enter "Show Preferred Name Column" into the "System Settings" autocomplete
+		Select "Enabled" in the "Value" dropdown
+		Type "Recent Patient test" in the "Reason" input
+		Click the "Add" button
+Begin Register Patient and Create Preferred name
+	Begin Register Patient
+		Open the sidemenu
+		Click the "E-Chart" sidemenu entry
+		Click the "Patient Registration" charttab
+		Type "Bond" in the "Last Name" input
+		Type "James" in the "First Name" input
+		Enter "01-23-1975" into the "Birth Date" date
+		Click the "Add New" button
+	Begin Create Preferred name
+		Open the "Demographic Information" dynamicsection
+		Type "Agent" in the "Preferred First Name" input
+		Type "Danger" in the "Preferred Middle Name" input
+		Type "007" in the "Preferred Last Name" input
+		Save the "Demographic Information" dynamicsection
+Begin Check Preferred Name in Recent Patients and Simple Search
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Verify exists "Agent" text
+	Verify exists "Danger" text
+	Verify exists "007" text
+	Click @the "Name" radio button@xpath="//input[@value='n']"
+	Type "007, Agent" in the @search input@xpath="//input[@name='sstring']"
+	Screenshot "Recent Patients"
+	Click the "Search" Button
+	Wait for ajax
+	Verify exists "Bond, James (Agent Danger 007)" link
+Begin Check Preferred Name in Detailed Search
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Click the "Detailed" link
+	Type "Agent" in the @first name input@xpath="//input[@id='first_name']"
+	Select "All" in the "Partition" dropdown
+	Click the "Search" button
+	Wait for ajax
+	Verify exists "Bond, James (Agent Danger 007)" link
+	Screenshot "Got here"

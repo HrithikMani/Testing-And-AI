@@ -1,0 +1,57 @@
+"""
+    Workflow test for editing a user's preferred name
+    @owners: sdrupa
+    @filedeps: include/controldb.h, src/topmenu.c, src/wcuser.c, src/wcuserdb.c
+"""
+Begin "Set preferred name for self without last name"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type {selenium_username} into the search input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Type "testfirst" into "Preferred First Name" input
+	Type "testmid" into "Preferred Middle Name" input
+	Click the "Submit" button
+	Wait for page
+	Verify exists @unchanged username in topmenu@xpath="//div[@id='wc_alerts']/a[contains(text(), "Selenium, Selenium")]"
+
+
+Begin "Add System Setting"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Click the "Add System Setting" link
+	Enter "System, WebChart, Show User Preferred Name" in the "settings_query" autocomplete
+	Type "1" in the @"value" input@xpath='//span[@id="sysset_type_1"]/input[@type="number"]'
+	Type "Test value 1" into "reason" input
+	Click the "Add" button
+	Wait for page
+
+
+Begin "Check different values of system setting" 
+	Begin "reload page without re-submitting form"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+	Verify exists @updated username in topmenu@xpath="//div[@id='wc_alerts']/a[contains(text(), "Selenium, Selenium (testfirst testmid Selenium)")]"
+	Begin "Change system setting value to 2"
+		Type "Show User Preferred Name" in the input
+		Click the "Go" button
+		Wait for page
+		Verify exists "Edit" table link 
+		Click the "Edit" table link
+		Wait for page
+		Type "2" in the "Value" input
+		Type "Test value 2" into "reason" input
+		Click the "Change" button 
+		Wait for page
+	Begin "reload page without re-submitting form"
+		Open the sidemenu
+		Click the "Control Panel" sidemenu entry
+		Click the "System" charttab
+		Click the "System Settings" charttab subtab
+	Verify exists @updated username in topmenu@xpath="//div[@id='wc_alerts']/a[contains(text(), "testfirst testmid Selenium")]"

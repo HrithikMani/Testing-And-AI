@@ -1,0 +1,90 @@
+Begin "Make an encounter for Allison Thomas"
+	Navigate "?f=chart&s=pat&pat_id=52"
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+Begin "Encounter Setup"
+	@Wait for the dynamic encounter to settle@driver.wcutils.waitForAJAX(30)
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+Begin "Scroll to the Presenting meds section"
+	Toggle the "Smart Plan" quicklist
+# This next step is unstable, you may see "BG tasks mask is present"
+	Toggle the "Presenting medications" quicklist
+Begin "Add a detailed medication"
+	Type "Other" in the "Presenting medications" quicklist search
+	# This is slow. Why?
+	Add "Presenting medications: Quick List" "Other" quicklist item
+	Click the "Show All Details" button
+	Enter "lisinopril" in the "Medication" autocomplete
+	Enter "tablet 10mg" in the "Form" autocomplete
+	Type "1 tab qd" in the "Practitioner Sig" input
+	Click the "30d" button
+	Type "30" in the "Total Quantity" input
+	Select "Tablet" from the "Total Quantity" dropdown
+	Click the "11" button
+	Click the 2nd "Save" popup button
+Begin "Add a bunch of name-only medications"
+	Add "Presenting medications: Quick List" "Other" quicklist item
+	Enter "Zoloft" in the "Medication" autocomplete
+	Click the 2nd "Save" popup button
+	Add "Presenting medications: Quick List" "Other" quicklist item
+	Enter "Lipitor" in the "Medication" autocomplete
+	Click the 2nd "Save" popup button
+#	Other medications for later planned testing...
+#	Add "Presenting medications: Quick List" "Other" quicklist item
+#	Enter "Zocor" in the "Medication" autocomplete
+#	Click the 2nd "Save" popup button
+#	Add "Presenting medications: Quick List" "Other" quicklist item
+#	Enter "levothyroxine" in the "Medication" autocomplete
+#	Click the 2nd "Save" popup button
+#	Add "Presenting medications: Quick List" "Other" quicklist item
+#	Enter "metformin" in the "Medication" autocomplete
+#	Click the 2nd "Save" popup button
+#	Add "Presenting medications: Quick List" "Other" quicklist item
+#	Enter "Prilosec" in the "Medication" autocomplete
+#	Click the 2nd "Save" popup button
+#	Add "Presenting medications: Quick List" "Other" quicklist item
+#	Enter "albuterol" in the "Medication" autocomplete
+#	Click the 2nd "Save" popup button
+#	Add "Presenting medications: Quick List" "Other" quicklist item
+#	Enter "fluticasone" in the "Medication" autocomplete
+#	Click the 2nd "Save" popup button
+#	Add "Presenting medications: Quick List" "Other" quicklist item
+#	Enter "Lasix" in the "Medication" autocomplete
+#	Click the 2nd "Save" popup button
+Begin "Show the Smark Plan quicklist"
+	Toggle the "Presenting medications" quicklist
+	Open the "Smart Plan" dynamicsection
+	Close the "Smart Plan" dynamicsection
+	@Allow zeus to meditate@driver.pause(30)
+Begin "Refill a detailed med"
+	Type "lisin" in the "Smart Plan" quicklist search
+	Refill the "lisinopril" quicklist item
+	Select "Butler, Internist E." from the "Prescriber" dropdown
+	@Scroll last input into view@driver.runJS('document.getElementsByName("pharm_note")[0].scrollIntoView(true)')
+	Click the "None" labelledradio
+	Click the "Save" popup button
+	Verify exists "Refill lisinopril 10 mg tablet, Dur: 30d, Qty: 30 Tablet, Ref: 11, May Substitute" text
+Begin "Change-Refill an undetailed med"
+	Type "Zol" in the "Smart Plan" quicklist search
+	ChangeTherapy the "Zoloft" quicklist item
+	Click the "Refill" labelledradio
+	Enter "tablet 50mg" in the "Form" autocomplete
+	Type "1 tab bid" in the "Practitioner Sig" input
+	Click the "90d" button
+	@Scroll last input into view@driver.runJS('document.getElementsByName("pharm_note")[0].scrollIntoView(true)')
+	Select "Butler, Internist E." from the "Prescriber" dropdown
+	Click the "None" labelledradio
+	Click the "Save" popup button
+	Verify exists "Refill Zoloft 50 mg tablet, Sig:1 tab bid, Dur: 90d, Qty: 180 Tablet, Ref: 0" text
+Begin "Change-Increase an undetailed med"
+	Type "lipi!" in the "Smart Plan" quicklist search
+	ChangeTherapy the "Lipitor" quicklist item
+	Click the "Increase" labelledradio
+	Enter "tablet 80mg" in the "Form" autocomplete
+	Type "1 tab qd" in the "Practitioner Sig" input
+	Type "30d" in the "Duration" input
+	@Scroll last input into view@driver.runJS('document.getElementsByName("pharm_note")[0].scrollIntoView(true)')
+	Select "Butler, Internist E." from the "Prescriber" dropdown
+	Click the "None" labelledradio
+	Click the "Save" popup button
+	Verify exists "Increase Lipitor 80 mg tablet, Sig:1 tab qd, Dur: 30d, Qty: 30 Tablet, Ref: 0, May Substitute" text

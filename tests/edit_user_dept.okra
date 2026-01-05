@@ -1,0 +1,50 @@
+Open the sidemenu
+Click the "Control Panel" link
+Click the Access charttab
+Click the "Access Control" charttab subtab
+Begin "Edit a department"
+	Click the "Show All" link
+	Click the @Employees "Edit" link@xpath='//td[@class="depts_Department_cell" and contains(., "Employees")]/following-sibling::td/a[contains(., "Edit")]'
+	@Remove every existing employee@for i in range(0, 7): driver.clickElement(id="user_realm_le_RecordList_rmbutton" + str(i))
+	Enter Dave into the user_realm autocomplete
+	Click the Add button
+	Click the "Submit Dept" button
+	Click the Employees link
+	Verify notexists supervisor grid entry
+	Verify exists "dave" grid entry
+Begin "Edit a user's primary department"
+	Gridclick "Username:dave" "Edit" grid link
+	Click the "Back to MIE" link
+	Verify "exists" "WebChart Users in Dept: MIE" text
+	Gridclick "Username:dave" "Edit" grid link
+	Select Applicant in the realm dropdown
+	Click the "Submit" button
+	Verify "exists" "WebChart Users in Dept: MIE" text
+	Click the "View Departments" link
+	Click the Applicant listview link
+	Verify exists dave grid entry
+Begin "Delete a user"
+	Gridclick "Username:dave" "Delete" grid link
+	Click the !Cancel button
+	Verify "exists" "WebChart Users in Dept: Applicant" text
+	Gridclick "Username:dave" "Delete" grid link
+	Click the Delete button
+	Verify notexists dave grid entry
+Begin "Re-activate a user"
+	Click the "..." button
+	Uncheck the "Show Active" checkbox
+	Click the "..." button
+	Uncheck the "Show Inactive" checkbox
+	Click the "..." button
+	Check the "Show Deleted" checkbox
+	Click the "Go" button
+	Verify exists dave grid entry
+	Gridclick "Username:dave" "Activate" grid link
+	Click the "..." button
+	Check the "Show Active" checkbox
+	Click the "..." button
+	Check the "Show Inactive" checkbox
+	Click the "..." button
+	Uncheck the "Show Deleted" checkbox
+	Click the "Go" button
+	Verify exists dave grid entry

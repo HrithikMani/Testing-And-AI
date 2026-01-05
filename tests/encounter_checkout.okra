@@ -1,0 +1,72 @@
+Begin "Employee Checks in Christine Harris to the Waiting Room"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	# We have to click the 2nd one here because the 1st one is technically the sidemenu entry
+	# This will require an okra feature to only consider visible elements
+	Open the quicklink list
+	Click the Checkin quicklink
+	#@Switch Windows@driver.switchToPopup()
+	Select "Waiting Room" from the Station field
+	Click the Save button
+	@Close this window@driver.closePopup()
+	Open the sidemenu
+	Click the Logout sidemenu entry
+Begin "Login as Receptionist to Move Patient to a Visit Encounter"
+	@Setup WCTestSession for Reception@driver.wcutils.insertWCTSession('{reception_username}')
+	Open the sidemenu
+	Click the Checkin sidemenu entry
+# Temporary change to improve test runs
+# The four following lines should be replaced by changes/improvements to grid.pod
+# Ticket #83640
+	@Wait@driver.wcutils.waitForAJAX(30)
+	@Wait@driver.pause(5)
+	@Scroll Open into View@driver.runJS("document.evaluate(`//a[contains(text(),'Open')]`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView();")
+	Click the "Open" grid link
+	@Switch to Encounters Window@driver.switchToPopup()
+	Select Visit from the DEI_visit_type dropdown
+	Click the Save button
+	@Close this window@driver.closePopup()
+	Open the sidemenu
+	Click the Logout sidemenu entry
+Begin "Nurse Begins the Visit Encounter"
+	@Setup WCTestSession for Nurse@driver.wcutils.insertWCTSession('{nurse_username}')
+	Begin "Nurse Moves Patient Into Exam Room 1"
+		Open the sidemenu
+		Click the Checkin sidemenu entry
+# Temporary change to improve test runs
+# The four following lines should be replaced by changes/improvements to grid.pod
+# Ticket #83640
+		@Wait@driver.pause(5)
+		@Scroll Open into View@driver.runJS("document.evaluate(`//a[contains(text(),'Waiting Room')]`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView();")
+		Click the "Waiting Room" grid link
+		@Wait@driver.wcutils.waitForAJAX(30)
+		Select "Exam Room 1" from the "New Station" field
+		Type "Christine Harris in Exam Room 1" in the Comment field
+		Click the Save button
+		Verify exists "Exam Room 1" text
+# Temporary change to improve test runs
+# The four following lines should be replaced by changes/improvements to grid.pod
+# Ticket #83640
+		@Wait@driver.wcutils.waitForAJAX(30)
+		@Wait@driver.pause(5)
+		@Scroll Open into View@driver.runJS("document.evaluate(`//a[contains(text(),'Open')]`, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView();")
+		Click the "Open" grid link
+	Begin "Fill Out Dynamic Sections"
+		@Switch windows@driver.switchToPopup()
+		Begin "Encounter"
+			@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+			@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=15)
+			Open the "Encounter" dynamicsection
+			Enter "02-02-2007" into the DED_serv_date date
+			Click the dynamicsection nextbutton
+			@Wait for the page to finish loading@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="wcstatus_bar" and style="opacity: 0;"]'), expected_return=True, timeout=15)
+		Begin "Smart Plan"
+			Unmask dynamicsection
+			Toggle the "Smart Plan" quicklist
+	Begin "Go to Encounter Checkout tab"
+		Click the "Admin" charttab
+		Click the "Encounter Checkout" charttab subtab
+		Wait for the DueListOrdersInProgressDV grid
+		Wait for the EncounterOrdersGridDV grid

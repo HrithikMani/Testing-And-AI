@@ -1,0 +1,68 @@
+"""
+Pod used to interact with the encounter nav Jump Tabs.
+
+Usage examples:
+	Click the "Plan" jumptab
+	Verify exists "Plan" jumptab
+"""
+
+jumptab://div[@id="wc_encnav"]//a[text()="{OKRA_TEXT}"]
+
+subtab://div[@id="wc_encnav"]//a/parent::li/parent::ul/parent::li[@class="hasSubmenu"]/a[text()="{OKRA_TEXT}"]
+
+@Hover
+@@@ Hover over the parent jump tab
+encnavbar = '//a[contains(., "{OKRA_TEXT}")]/ancestor::div[@id="wc_encnav"]'
+jmptab = '//div[@id="wc_encnav"]//a[text()="{OKRA_TEXT}"]'
+open = '//div[contains(@id, "wc_encnav") and contains(@class, "open")]'
+oldTimeout = driver.timeout
+driver.setTimeout(5)
+if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=90, comments='Wait for ajax and layoutInsert operations to complete'):
+	driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+driver.wcutils.waitForAJAX(timeout=60, quiet=5)
+driver.wcutils.waitForMask(expected=False)
+if driver.wcutils.waitFor(lambda d: d.getElement(xpath=encnavbar), timeout=60, comments='Wait and verify wc_encnav bar'):
+	if driver.wcutils.waitFor(lambda d: d.getElement(xpath=jmptab), timeout=60, comments='Wait and verify jump tab'):
+		driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath=encnavbar))
+		driver.mouseOver(xpath=jmptab)
+		driver.screenshot('mouseover')
+		if driver.wcutils.waitFor(lambda d: d.getElement(xpath=open), timeout=60, comments='Wait and verify jump tab is open'):
+			driver.reportCommandStatus('jumptab.pod', 'Hover verb', True, '', 'Jump tab found and displaying sub menu')
+		else:
+			driver.reportCommandStatus('jumptab.pod', 'Hover verb', False, '', 'Jump tab is not being hovered over or does not contain a sub menu')
+	else:
+		driver.reportCommandStatus('jumptab.pod', 'Hover verb', False, '', 'Jump tab not found')
+else:
+	driver.reportCommandStatus('jumptab.pod', 'Hover verb', False, '', 'wc_encnav bar not found')
+driver.setTimeout(oldTimeout)
+@@@
+
+@Click
+@@@ Click the jump tab
+encnavbar = '//a[contains(., "{OKRA_TEXT}")]/ancestor::div[@id="wc_encnav"]'
+parentjt = '//div[@id="wc_encnav"]//a[text()="{OKRA_TEXT}"]/parent::li/parent::ul/parent::li[@class="hasSubmenu"]/a'
+openparent = '//div[contains(@id, "wc_encnav") and contains(@class, "open")]//a[text()="{OKRA_TEXT}"]/parent::li/parent::ul/parent::li[@class="hasSubmenu"]/a'
+jmptab = '//div[@id="wc_encnav"]//a[text()="{OKRA_TEXT}"]'
+oldTimeout = driver.timeout
+driver.setTimeout(5)
+if openparent and jmptab:
+	driver.clickElement(xpath=jmptab)
+else:
+	if not driver.wcutils.waitFor(lambda d: d.runJS('return wcutils._layoutOps === 0 && miehttp.isWaiting() === false'), timeout=90, comments='Wait for ajax and layoutInsert operations to complete'):
+		driver.reportCommandStatus('LayoutOps', driver.runJS('return wcutils._layoutOps'), None, 'isWaiting()', driver.runJS('return miehttp.isWaiting()'))
+	driver.wcutils.waitForAJAX(timeout=60, quiet=5)
+	if driver.wcutils.waitFor(lambda d: d.getElement(xpath=encnavbar), timeout=60, comments='Wait and verify wc_encnav bar'):
+		if not parentjt:
+			driver.reportCommandStatus('jumptab.pod', 'Click verb', False, '', 'Parent jump tab is not present')
+		elif not openparent:
+			driver.reportCommandStatus('jumptab.pod', 'Click verb', False, '', 'Parent jump tab is not open')
+		else:
+			if jmptab:
+				driver.runJS('arguments[0].scrollIntoView()', driver.getElement(xpath=encnavbar))
+				driver.clickElement(xpath=jmptab)
+			else:
+				driver.reportCommandStatus('jumptab.pod', 'Click verb', False, '', 'Jump tab not found')
+	else:
+		driver.reportCommandStatus('jumptab.pod', 'Click verb', False, '', 'wc_encnav bar not found')
+driver.setTimeout(oldTimeout)
+@@@

@@ -1,0 +1,416 @@
+# Create observations for each type of widget in the flowsheet.  If we need to make discrete values,
+# as some inputs use them, then do so.  Discrete values are just elements of the NATO alphabet.
+
+Begin "Setup Observations"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Observation Codes" charttab subtab
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_Text" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_Text_Large" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_AC" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_AC_Large" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_AC_DiscreteList" in the "obs_name" input
+	Type "Alpha" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "1" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Bravo" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "2" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Charlie" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "3" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Delta" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "4" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Echo" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "5" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_Date" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_DateTime" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_Time" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_YesNo" in the "obs_name" input
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_SAL_Vertical" in the "obs_name" input
+	Type "Alpha" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "1" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Bravo" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "2" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Charlie" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "3" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Delta" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "4" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Echo" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "5" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_SAL_Horizontal" in the "obs_name" input
+	Type "Alpha" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "1" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Bravo" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "2" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Charlie" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "3" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Delta" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "4" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Echo" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "5" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Click the "Add Observation Code" link
+	Type "FlowsheetTestReq_SAL_Dropdown" in the "obs_name" input
+	Type "Alpha" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "1" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Bravo" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "2" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Charlie" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "3" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Delta" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "4" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Type "Echo" in the "le_obs_codes_codes_list_obs_result_value" input
+	Type "5" in the "le_obs_codes_codes_list_sort_order_value" input
+	Click the 2nd "Add" button
+	Click the "Save" button
+	Verify exists "Successfully added new observation code." text
+
+	Type "FlowsheetTestReq" into the "select_text" input
+	Click the "Go" button
+	Verify exists "Displaying 1-12 / 12" text
+
+# Create a flowsheet that uses all the observations from above, with the corresponding input types.
+# They are all marked required, to test that we properly detect when a value has been entered for
+# each input we support.
+
+Begin "Setup Flowsheet"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Chart" charttab
+	Click the "Observation Codes" charttab subtab
+	Click the "Display Flowsheets" link
+	Click the "Add Flowsheet" link
+	Type "FlowsheetTestReq" in the "form_name" input
+
+	Enter "FlowsheetTestReq_Text" in the "obs_name" autocomplete
+	Select "Text" from the 1st dropdown
+
+	Enter "FlowsheetTestReq_Text_Large" in the "obs_name" autocomplete
+	Select "Text (large)" from the 3rd dropdown
+
+	Enter "FlowsheetTestReq_AC" in the "obs_name" autocomplete
+	Select "AutoComplete" from the 5th dropdown
+
+	Enter "FlowsheetTestReq_AC_Large" in the "obs_name" autocomplete
+	Select "AutoComplete (large)" from the 7th dropdown
+
+	Enter "FlowsheetTestReq_AC_DiscreteList" in the "obs_name" autocomplete
+	Select "AutoComplete (Discrete List)" from the 9th dropdown
+
+	Enter "FlowsheetTestReq_Date" in the "obs_name" autocomplete
+	Select "Date" from the 11th dropdown
+
+	Enter "FlowsheetTestReq_DateTime" in the "obs_name" autocomplete
+	Select "Datetime" from the 13th dropdown
+
+	Enter "FlowsheetTestReq_Time" in the "obs_name" autocomplete
+	Select "Time" from the 15th dropdown
+
+	Enter "FlowsheetTestReq_YesNo" in the "obs_name" autocomplete
+	Select "Yes/No Answer List" from the 17th dropdown
+
+	Enter "FlowsheetTestReq_SAL_Vertical" in the "obs_name" autocomplete
+	Select "Vertical Structured Answer List" from the 19th dropdown
+
+	Enter "FlowsheetTestReq_SAL_Horizontal" in the "obs_name" autocomplete
+	Select "Horizontal Structured Answer List" from the 21st dropdown
+
+	Enter "FlowsheetTestReq_SAL_Dropdown" in the "obs_name" autocomplete
+	Select "Drop Down Structured Answer List" from the 23rd dropdown
+
+	Click the "Mark All Required" button
+	Click the "Yes" button
+	Click the "Submit" button
+
+	Type "FlowsheetTestReq" into the "select_text" input
+	Click the "Go" button
+	Verify exists "Displaying 1-1 / 1" text
+
+# Create an order that uses the flowsheet, for testing purposes.
+
+Begin "Setup Order"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Orders" charttab
+	Click the "Orders-List Editor" charttab subtab
+	#Click the "Old Order Lists Editor" link
+	
+	Click the "Add Order" button
+	Select "Exams (EXAM)" from the "Order Type" dropdown
+	Type "FlowsheetTestReq" in the "Order Name" input
+	Select "Flowsheet" from the "Exam Order Layouts" dropdown
+	Click the "Save" button
+	
+	Navigate ?f=layout&module=Orders&name=OrderList&tabmodule=admin&tabselect=Orders&ts_caption=Orders-List+Editor	
+	Wait for the "orderlist" grid
+	Click the @Code filter button@xpath="//div[contains(@class, 'outer thead')]//div[contains(@class, 'wcdv_heading_container')]/span[@data-wcdv-field='Name']/following-sibling::div/button[contains(@class, 'wcdv_icon_button')]"
+	Click the @filter search input@xpath="//li[@data-wcdv-field='Name']//p[contains(@class, 'SelectBox')]"
+	Type "FlowsheetTestReq" in @xpath="//input[@class='search-txt' and @placeholder='Search...']"
+	Click the "FlowsheetTestReq" label
+	Click the @ok button@xpath="//li[@data-wcdv-field='Name']//p[@class='btnOk']"
+	Verify exists "FlowsheetTestReq" grid entry
+ 
+	# Click the "Add An Order" link
+	# Select "Exams (EXAM)" from the "orl_type" dropdown
+	# Type "FlowsheetTestReq" into the "orl_name" input
+	# Select "Flowsheet" from the "orl_layout_name" dropdown
+	# Click the "Save" button
+
+	# Verify exists "Order List Entry Added" text
+	# Type "FlowsheetTestReq" into the "srch_text" input
+	# Click the "Search" button
+	# Verify exists "Displaying 1-1 / 1" text
+
+Begin "Find patient, add encounter"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Harris, Christine" into the sstring input
+	Click the Search button
+	Open the quicklink list
+	Click the "Add Visit" quicklink
+	@Wait for the dynamic encounter section to open@driver.wcutils.waitForAJAX(30)
+	# No growl notifications please.
+	@wait for growl@driver.waitFor(driver, lambda d: d.getElement(xpath='//div[@class="growl-message"]'), expected_return=False, timeout=60)
+
+Begin "Add order for FlowsheetTestReq"
+	# Within the Smart Plan, the Visit Orders quicklist starts off hidden (i.e. collapsed).  For
+	# some reason, this doesn't support the colon syntax like [quicklist item] does, so just hope
+	# that there's only one Visit Orders quicklist.
+	Show "Smart Plan" "Visit Orders" quicklist
+	Add "Smart Plan:Visit Orders" "Other" quicklist item
+	Enter "FlowsheetTestReq" in the "order_id" autocomplete
+	# We've got two save buttons: 1st = "Save to Library", 2nd = "Save"
+	Click the 2nd "Save" popup button
+	ExamAdd "Smart Plan" "FlowsheetTestReq" dynamicitem
+
+# The general loop for the actual test is:
+#
+#   1. Try to close the section.
+#   2. You should get a popup.
+#   3. Make sure the first unfilled item is listed in the popup.
+#   4. Hit "OK" to close the popup.
+#   5. Fill in a value for the first unfilled input.
+#   6. Try to close the section again.
+#   7. If there are more unfilled inputs:
+#      7/1. Make sure the thing we just filled in *isn't* listed in the popup.
+#      7/2. Close the popup and repeat from step 1.
+
+Begin "Test required flowsheet items"
+	Open the "FlowsheetTestReq" dynamicsection
+
+	# Text
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "FlowsheetTestReq_Text" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "FlowsheetTestReq_Text INPUT VALUE" into the "FlowsheetTestReq_Text" flowsheet textarea
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_Text" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# Text_Large
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_Text_Large" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "FlowsheetTestReq_Text_Large INPUT VALUE" into the "FlowsheetTestReq_Text_Large" flowsheet textarea
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_Text_Large" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# AC
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_AC" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "FlowsheetTestReq_AC INPUT VALUE" into the "FlowsheetTestReq_AC" flowsheet autocomplete_input
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_AC" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# AC_Large
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_AC_Large" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "FlowsheetTestReq_AC_Large INPUT VALUE" into the "FlowsheetTestReq_AC_Large" flowsheet autocomplete_input
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_AC_Large" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# AC_DiscreteList
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_AC_DiscreteList" flowsheet required_popup_item
+	Click the "OK" popup button
+	EnterAutoComplete "Alpha" into the "FlowsheetTestReq_AC_DiscreteList" flowsheet
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_AC_DiscreteList" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# Date
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_Date" flowsheet required_popup_item
+	Click the "OK" popup button
+	EnterDate "1/1/2020" into the "FlowsheetTestReq_Date" flowsheet
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_Date" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# DateTime
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_DateTime" flowsheet required_popup_item
+	Click the "OK" popup button
+	EnterDate "1/1/2020 12:30" into the "FlowsheetTestReq_DateTime" flowsheet
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_DateTime" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# Time
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_Time" flowsheet required_popup_item
+	Click the "OK" popup button
+	Type "9:30" into the "FlowsheetTestReq_Time" flowsheet time
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_Time" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# YesNo
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_YesNo" flowsheet required_popup_item
+	Click the "OK" popup button
+	Click 1st "FlowsheetTestReq_YesNo" flowsheet radio
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_YesNo" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# SAL_Vertical
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_SAL_Vertical" flowsheet required_popup_item
+	Click the "OK" popup button
+	Click 2nd "FlowsheetTestReq_SAL_Vertical" flowsheet radio
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_SAL_Vertical" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# SAL_Horizontal
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_SAL_Horizontal" flowsheet required_popup_item
+	Click the "OK" popup button
+	Click 3rd "FlowsheetTestReq_SAL_Horizontal" flowsheet radio
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify notexists "!FlowsheetTestReq_SAL_Horizontal" flowsheet required_popup_item
+	Click the "OK" popup button
+
+	# SAL_Dropdown
+
+	Click the dynamicsection nextbutton
+	Verify exists "Errors Detected" popup
+	Verify exists "!FlowsheetTestReq_SAL_Dropdown" flowsheet required_popup_item
+	Click the "OK" popup button
+	Select "Delta" from the "FlowsheetTestReq_SAL_Dropdown" flowsheet dropdown
+
+	# You can't seem to select without blurring, and since this is the last input in the section,
+	# blurring out of it causes the section to advance.  We should now be able to see the flowsheet
+	# in view mode, and check that everything saved.
+
+	# Check that it all saved
+
+	Verify exists "FlowsheetTestReq_Text INPUT VALUE" text
+	Verify exists "FlowsheetTestReq_Text_Large INPUT VALUE" text
+	Verify exists "FlowsheetTestReq_AC INPUT VALUE" text
+	Verify exists "FlowsheetTestReq_AC_Large INPUT VALUE" text
+	Verify exists "Alpha" text
+	Verify exists "Bravo" text
+	Verify exists "Charlie" text
+	Verify exists "Delta" text

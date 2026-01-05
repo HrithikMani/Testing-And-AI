@@ -1,0 +1,18 @@
+"""
+    Testing some insurnacedb stuff
+    @owners: ccartwright
+    @filedeps: src/insurancedb.c
+"""
+@Add Insurance Plan@driver.miedb.dbExec('INSERT INTO `insurance_plans` (`name`, `address1`, `address2`, `city`, `state`, `zip`, `phone`, `fax`, `eligibility_phone`, `interface`, `universal_id`, `payor_type`, `payor_id`, `active`, `profile_id`, `comment_template`, `insurance_type_code`) VALUES ("Aetna, I\'m glad I met ya.","4953 North by Northwest St.","","Los Angeles","CA","98765","987-654-3210","","","","AETNA","chart",0,1,0,"",5)')
+Begin "Test adding insurance"
+	Navigate "?f=chart&s=pat&pat_id=18&t=Demographics&v=dashboard"
+	Click the "Add Insurance" link
+	Enter "Aetna, I\'m glad I met ya." in the "Insurance Plan" autocomplete
+	Type "12345678" in the "Policy Number" input
+	Type "OU812" in the "Group Number" input
+	Enter "01-01-2001" into the "Policy Start Date" date
+	Enter "12-31-2030" into the "Policy End Date" date
+	Click the "Save" button
+Begin "Verify that the insurance policy saved"
+	Click the "Edit Demo" link
+	Verify exists "Aetna, I'm glad I met ya." listview row

@@ -1,0 +1,81 @@
+"""
+	Test for MedicalCodify Pages
+	@owners: dcarlson
+	@filedeps: system/layouts/rxdb/*.html
+"""
+Navigate "?f=layout&name=RXDBmain&module=Layout&tabmodule=+"
+Begin Navigation starting with a Quality Measure search
+# This will exercise the following areas: Measure
+	Type CMS139 into @id='searchterm'
+	Click the "Search" button
+	Click the "Falls: Screening for Future Fall Risk" link
+	Click the "CMS139v7" link
+	Verify exists "Patients aged 65 years and older with a visit during the measurement period" text
+	Click the "2.16.840.1.113883.3.526.3.1240" link
+Begin Validation of Value Set page and return to another Quality Measure page
+	Verify exists "Annual wellness visit; includes a personalized prevention plan of service" text
+	Click the "Measures" link
+	Verify exists "Diabetes: Hemoglobin A1c (HbA1c) Poor Control" text
+	Click the "CMS122v7" link
+	Verify exists "Patient is numerator compliant if most recent HbA1c level" text
+Begin LOINC pages Testing
+	Type "Edema" into @id='searchterm'
+	Click the "Advanced Search" link
+	Click the "Uncheck All" button
+	Click the @LOINC checkbox@id=loincsearch_cb
+	Click the "Search" button
+	Verify exists "44966-0" text
+	Click the "Edema" link
+	Verify exists "Short Name: Edema" text
+	Verify exists "Tissue perfusion assessment panel" text
+Begin SNOMED pages Testing
+	Type "Edema" into @id='searchterm'
+	Click the "Advanced Search" link
+	Click the "Uncheck All" button
+	Click the @LOINC checkbox@id=snomedsearch_cb
+	Click the "Search" button
+	Verify exists "79654002" text
+	Click the "Edema - lesion" link
+	Verify exists "Edema - lesion" text
+	Verify exists "107666005" text
+	Verify exists "103619005" text
+Begin FDB pages Testing
+	Type "Lasix" into @id='searchterm'
+	Click the "Advanced Search" link
+	Click the "Uncheck All" button
+	Click the @LOINC checkbox@id=fdbsearch_cb
+	Click the @LOINC checkbox@id=fdbnamesearch_cb
+	Click the "Search" button
+	Verify exists "Lasix 40 mg tablet" text
+	Verify exists "Lasix 10 mg/mL injection solution" text 
+	Verify exists "Lasix 20 mg tablet" text
+Begin LabCorp pages Testing
+	Type "CBC" into @id='searchterm'
+	Click the "Advanced Search" link
+	Click the "Uncheck All" button
+	Click the @LOINC checkbox@id=labcorpsearch_cb	
+	Click the "Search" button
+	Verify exists "CBC, No Differential/Platelet" text
+	Click the "CBC With Differential/Platelet" link
+	Verify exists "85025 (1)" text
+	Verify exists "Tube fill capacity" text
+Begin Quest pages Testing
+	Type "CBC" into @id='searchterm'
+	Click the "Advanced Search" link
+	Click the "Uncheck All" button
+	Click the @LOINC checkbox@id=questsearch_cb
+	Click the "Search" button
+	Verify exists "CBC (INCLUDES DIFF/PLT)" text
+	Click the "CBC (H/H, RBC, INDICES, WBC, PLT)" link
+	Verify exists "BLOOD" text
+	Verify exists "WHITE BLOOD CELL COUNT" text
+Navigate "?f=chart&s=pat&pat_id=18"
+	Click the "Add Visit" link
+	Verify exists "Problem List" "Hypertension" quicklist item
+	Add "Smart Plan:Problem List" "Hypertension" quicklist item
+	Prescribe "Smart Plan" "Hypertension" dynamicitem
+	# per Toby quicklist.pod needs updated or rewritten to locate quick lists contained within miewins
+	@Hover the "Calcium" quicklist item@driver.mouseOver(xpath="//div[contains(@class, 'wc_win_title') and contains(., 'Prescribe Medication')]/../..//div[contains(@class, 'ql-container') and contains(., 'Current Meds')]//ul/li[contains(@class, 'dynItem') and contains(., 'Calcium')]")
+	Click the @Calcium icon druginfo@xpath="//div[contains(@class, 'wc_win_title') and contains(., 'Prescribe Medication')]/../..//div[contains(@class, 'ql-container') and contains(., 'Current Meds')]//ul/li[contains(@class, 'dynItem') and contains(., 'Calcium')]//button[@title='Drug Info']"
+	Verify exists "MedicalCodify.com" text
+	Verify notexists "searchterm" input

@@ -1,0 +1,91 @@
+"""
+
+Pod used to interact with flowsheets
+
+Usage examples:
+
+	Select "OPTION" from the "FLOWSHEET ITEM DESCRIPTION" flowsheet dropdown
+	EnterAutoComplete "Alpha" into the "FlowsheetTestReq_AC_DiscreteList" flowsheet
+	EnterDate "1/1/2020 12:30" into the "FlowsheetTestReq_DateTime" flowsheet
+	Type "Alpha" into the "FlowsheetTestHdr_One" flowsheet textarea
+	Verify exists "!Informational Text: FlowsheetTestHdr_One = Alpha" flowsheet section_header
+	Verify notexists "!Informational Text: FlowsheetTestHdr_One = Bravo" flowsheet section_header
+	Verify exists "FlowsheetTestReq_Text" flowsheet required_popup_item
+	Click 3rd "FlowsheetTestReq_SAL_Horizontal" flowsheet radio
+	Click "Yes" in the "Executed" flowsheet radio
+	Type "9:30" into the "FlowsheetTestReq_Time" flowsheet time
+	Select "Never smoker" from the "Smoking Status" flowsheet dropdown
+
+"""
+
+edit_flowsheet_button://button[@title = "Edit flowsheet"]
+
+textarea://div/label{OKRA_TEXT_CLS}/following-sibling::div//textarea
+
+dropdown://div[contains(., "{OKRA_TEXT}")]/parent::td/following-sibling::td//div//select
+	|//div/label{OKRA_TEXT_CLS}/following-sibling::div//select
+
+date_month://div/label{OKRA_TEXT_CLS}/following-sibling::div//input[contains(@class, "month") and (not(@type="hidden") or not(@type))]
+
+date_day://div/label{OKRA_TEXT_CLS}/following-sibling::div//input[contains(@class, "day") and (not(@type="hidden") or not(@type))]
+
+date_year://div/label{OKRA_TEXT_CLS}/following-sibling::div//input[contains(@class, "year") and (not(@type="hidden") or not(@type))]
+
+time://div/label{OKRA_TEXT_CLS}/following-sibling::div//input[contains(@class, "time") and (not(@type="hidden") or not(@type))]
+
+radio://div/legend{OKRA_TEXT_CLS}/following-sibling::div//input[@type="radio"]
+
+radio_label://div/legend{OKRA_TEXT_CLS}/following-sibling::div//input[@type="radio"]/following-sibling::label[contains(.,"{OKRA_TEXT}")]
+
+autocomplete_input://div/label{OKRA_TEXT_CLS}/following-sibling::div//input[@type="text" and contains(@class,"autocomplete")]
+
+required_popup_item://div[contains(@class,"wc_win")]//div[contains(@class,"wc_win_body")]//li{OKRA_TEXT_CLS}
+
+autocomplete_menu://div[contains(@class, "defaultacdiv")]//div
+
+section_header://div[not(contains(@class,"collapsed"))]/div[contains(@class,"flowsheet_header")]{OKRA_TEXT_CLS}
+
+delete_copied_checkbox://div[@id="delete-copied"]//li[not(contains(@class, "collapsed"))]/label[contains(., "{{OKRA_TEXT}}")]/input[@type="checkbox"]
+
+@EnterDate
+"""
+def parse(val):
+	val = val.replace('/', '-')
+	spl = val.split()
+	mm, dd, yy = spl[0].split('-')
+	if len(spl) > 1:
+		return mm, dd, yy, spl[1]
+	else:
+		return mm, dd, yy
+"""
+Type "{0}" into the flowsheet date_month
+Type "{1}" into the flowsheet date_day
+Type "{2}" into the flowsheet date_year
+Type "{3}" into the flowsheet time
+
+@EnterAutoComplete
+"""
+def parse(v):
+	if len(v) >= 3:
+		return (v[:int(round(len(v) * .66))], v)
+	elif len(v) == 2:
+		return (v[1], v)
+	else:
+		driver.reportCommandStatus("Autocomplete", "", False, "Values must be at least 2 characters", "")
+"""
+Type "{0}!" into the autocomplete_input
+@Wait for ajax@driver.wcutils.waitForAJAX(45)
+$Click the "{1}" flowsheet autocomplete_menu
+
+@Clear
+Click the flowsheet textarea
+@@@
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+a = ActionChains(driver.getWebDriver())
+a.key_down(Keys.CONTROL)
+a.send_keys('a')
+a.key_up(Keys.CONTROL)
+a.send_keys(Keys.DELETE)
+a.perform()
+@@@

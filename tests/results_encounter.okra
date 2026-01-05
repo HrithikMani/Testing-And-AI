@@ -1,0 +1,74 @@
+@@@Force legacy Requisition Screen
+#SEE TICKET: 125117
+driver.miedb.dbExec("UPDATE preferences SET preference_value=0 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+Open the sidemenu
+Click the "E-Chart" link
+Type "Harris" in the "sstring" input
+Click the "Search" button
+Click the "Medical Record" charttab
+Verify exists "OrderRequestsLegacy" charttab subtab
+Click the "OrderRequestsLegacy" charttab subtab
+Select "All" from the "location" dropdown
+Verify !exists "Completed Orders" listview name
+#Go back to the Summary tab because the Order Requests tab has an orders autocomplete that "hides" the one on the order requests miewindow from okra
+Click the "Summary" charttab
+Click the "Quick Links" icon
+Click the "Add Order" quicklink
+Begin "Order Request MIEwindow"
+	Select "Selenium, Selenium" from the "ordering_physician" dropdown
+	Enter "Electrolytes Flowsheet" in the "ordersac_txt" autocomplete
+	Click the "Phosphorus" picklist checkbox
+	Click the "Calcium" picklist checkbox
+	Click the "Submit" button
+Begin "Finish Order Request MIEwindow"
+	Begin "Phosphorus dialog"
+		Select "White/Caucasian" from the "Patient Race" field
+		Select "Yes" from the "Hispanic" field
+		Type "cheese-whiz" in the "What is the most important intellectual development in western thought in the last millenium?" field
+	Click the "Finish" button
+Navigate "?f=chart&s=pat&t=OrderRequestsLegacy&v=orders&pat_id=40&&order_opp=view_list"
+Click the "View Recent" link
+Verify exists "Incomplete Orders" listview name
+Begin "Create the Results Encounter"
+	Click the "Complete with Encounter" link
+	Verify exists "Calcium" dynamicsection
+	Verify exists "Phosphorus" dynamicsection
+	Verify exists "Electrolytes Flowsheet" dynamicsection
+	Begin "Electrolytes Flowsheet Section"
+		Open the "Electrolytes Flowsheet" dynamicsection
+		Type "153" in the "Sodium" freetext field
+		Type "3.14" in the "Potassium" freetext field
+		Type "1.41" in the "Chloride" freetext field
+		Type "6.023" in the "CO2" freetext field
+	Begin "Calcium Section"
+		Type "11" in the Calcium input
+		Click the dynamicsection nextbutton
+	Begin "Phosphorus Section"
+		Type "6.2" in the "Phosphorus" input
+		Edit "Phosphorus" dynamicitem
+		Type "Shiney" in the "comment" input
+		Click the "Save" popup button
+		Close the "Phosphorus" dynamicsection
+	Click the "Archive & Close" button
+Navigate "?f=chart&s=pat&t=OrderRequestsLegacy&v=orders&pat_id=40&&order_opp=view_list"
+@scrollto@driver.scrollTo(y=750)
+Click the 2nd "Complete" link
+Click the "Complete" button
+Navigate "?f=chart&s=pat&t=OrderRequestsLegacy&v=orders&pat_id=40&&order_opp=view_list"
+Verify exists "Completed Orders" listview name
+@@@Switch Back to New Requisition Screen
+driver.miedb.dbExec(f"UPDATE preferences SET preference_value=1 WHERE user_id=0 AND preference_name='Use New Requisition Screen'")
+@@@
+Begin "Recommendations"
+	Navigate "?f=chart&s=pat&pat_id=40"
+	Click the 1st "Perform" link
+	Open the "Recommendations" dynamicsection
+	Click the "Add Recommendations" link
+	Click "Smart Plan" "Medical Clearance" picklist checkbox
+	Click the 1st "Add Procedures" popup button
+	Verify notexists "Recommendations" picklist
+	Verify exists "Medical Clearance" dynamicsection
+	Open the "Medical Clearance" dynamicsection
+	Click the @Fit radio@xpath=//input[not(@disabled) and @type="radio"][(@value = "Fit")]
+	Close the  "Medical Clearance" dynamicsection

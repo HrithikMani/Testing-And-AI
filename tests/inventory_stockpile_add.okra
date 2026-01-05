@@ -1,0 +1,88 @@
+Begin "Add a location so that we can transfer inventory between two locations"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "Locations Manager" charttab subtab
+	Click the "Add Location" link
+	Type "HOSP" in the !code input
+	Type "Hospital" in the !description input
+	# Make sure the location is active - select no and yes, because double clicking on yes unchecks it
+	Click the @No radio button@xpath=//input[@name='active' and @value='0']
+	Click the @Yes radio button@xpath=//input[@name='active' and @value='1']
+	Click the Save button
+	Verify exists "HOSP" grid row
+Begin "Verify that if we don't have permission to manage stockpiles, we can't"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "No" from the "Manage Stockpiles" dropdown
+	Type "inventory_stockpile_add.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	Verify exists "[ Manage Stockpiles: No ]" text
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Stockpiles" charttab
+	Verify exists the "Your current permission of 'No' in the ('Inventory','Manage Stockpiles') security setting does not allow access to Manage Inventory Stockpiles." text
+Begin "Grant permission to view stockpiles"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "!Customize User Security" link
+	Select "View" from the "Manage Stockpiles" dropdown
+	Type "inventory_stockpile_add.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	Verify exists the "[ Manage Stockpiles: View ]" text
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Stockpiles" charttab
+	Verify exists the "!Inventory Stockpiles" text
+	Verify !exists the "!Add Stockpile" link
+	Verify !exists the "!Edit" link
+Begin "Grant permission to add stockpiles"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Add" from the "Manage Stockpiles" dropdown
+	Type "inventory_stockpile_add.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	Verify exists the "[ Manage Stockpiles: Add ]" text
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "Stockpiles" charttab
+	Verify exists the "Inventory Stockpiles" text
+	Verify exists the "Add Stockpile" link
+Begin "Add a stockpile for the location we made"
+	Click the "Stockpiles" charttab
+	Click the "Add Stockpile" link
+	Click the "Save" button
+	Verify exists the "Please Fill In All Fields." text
+	Type "Store Room A" in the "!description" input
+	Click the "Save" button
+	Verify exists the "Inventory Stockpile Added" text
+	Verify exists the "Store Room A" text
+Begin "Add a second stockpile for the location we made, with a typo in the name"
+	Click the "Stockpiles" charttab
+	Click the "Add Stockpile" link
+	Type "Store Rome B" in the "!description" input
+	Click the "Save" button
+	Verify exists the "Inventory Stockpile Added" text
+	Verify exists the "Store Rome B" text
+Begin "Verify the outcome"
+	# because "The user does not have edit permission"
+	Verify !exists the "!Edit" link
+	Verify exists the "!Store Rome B" text
+	Verify exists the "!Store Room A" text

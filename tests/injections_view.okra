@@ -1,0 +1,187 @@
+Begin "View the Injections charttab"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Hart, William" in the input
+	Click the "Search" button
+	Click the "TEST-10019" link
+	Click the "Medical Record" charttab
+	Click the "MAR/Injections" charttab subtab
+	Begin "Medication Administration"
+		Verify exists the "Medication Administration" listview name
+		Verify exists the "Injection" listview header
+		Verify exists the "Date Given" listview header
+		Verify exists the "Next Due" listview header
+		Verify exists the "Route" listview header
+		Verify exists the "Site" listview header
+		Verify exists the "Vial/Lot" listview header
+		Verify exists the "Manufacturer" listview header
+		Verify exists the "Series" listview header
+		Verify exists the "Strength" listview header
+		Verify exists the "Dose" listview header
+		Verify exists the "Comments/Reaction" listview header
+		Verify exists the "Modified By" listview header
+		Verify exists the "Admin" listview header
+		Verify exists the "Contraindication" listview header
+		Verify !exists the "Expiration Date" listview header
+		Verify !exists the "Status" listview header
+		Verify !exists the "Deleted" listview header		
+		Verify !exists the "Source" listview header
+	Begin "Immunizations"
+		Verify exists the "Immunizations" listview name
+		Verify exists the "Injection" listview header
+		Verify exists the "Date Given" listview header
+		Verify exists the "Next Due" listview header
+		Verify exists the "Route" listview header
+		Verify exists the "Site" listview header
+		Verify exists the "Vial/Lot" listview header
+		Verify exists the "Manufacturer" listview header
+		Verify exists the "Series" listview header
+		Verify exists the "Strength" listview header
+		Verify exists the "Dose" listview header
+		Verify exists the "Comments/Reaction" listview header
+		Verify exists the "Modified By" listview header
+		Verify exists the "Admin" listview header
+		Verify exists the "Contraindication" listview header
+		Verify !exists the "Expiration Date" listview header
+		Verify !exists the "Status" listview header
+		Verify !exists the "Deleted" listview header		
+		Verify !exists the "Source" listview header
+	Begin "Contraindications"
+		Verify exists the "Contraindicated Immunizations" listview name
+		Verify exists the "Date Entered" listview header
+	Begin "Injection Documents"
+		Verify exists the "Injection Documents" listview name
+		Verify exists the "Doc ID" listview header
+		Verify exists the "Serv Date" listview header
+		Verify exists the "Doc Type" listview header
+		Verify exists the "Subject" listview header
+		Verify exists the "By" listview header
+		Verify exists the "Serv Location" listview header
+		Verify exists the "Options" listview header
+	Begin "Vials"
+		Verify exists the "Vials" listview name
+		Verify exists the "Inject" listview header
+		Verify exists the "Vial" listview header
+		Verify exists the "Contents" listview header
+		Verify exists the "Strength" listview header
+		Verify exists the "Expires" listview header
+		Verify exists the "Start Date" listview header
+		Verify exists the "End Date" listview header
+		Verify exists the "Options" listview header
+Begin "Enable optional columns in the Injections charttab view"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "System" charttab
+	Click the "System Settings" charttab subtab
+	Begin "Completion Status"
+		Type "Display Completion Status" in the input
+		Click the "!Go" button
+		Click the "!Edit" listview link
+		Select "1" in the Value dropdown
+		Type "injections_view.okra" in the Reason input
+		Click the Change button
+Begin "Display Interface In ListView"
+		Type "Display Interface In ListView" in the input
+		Click the "!Go" button
+		Click the "!Edit" listview link
+		Select "1" in the Value dropdown
+		Type "injections_view.okra" in the Reason input
+		Click the Change button
+Begin "Use Contraindications"
+		Type "Use Contraindications" in the input
+		Click the "!Go" button
+		Click the "!Edit" listview link
+		Select "1" in the Value dropdown
+		Type "injections_view.okra" in the Reason input
+		Click the Change button
+Begin "Use Ordered By"
+		Type "Use Ordered By" in the input
+		Click the "!Go" button
+		Click the "!Edit" listview link
+		Select "1" in the Value dropdown
+		Type "injections_view.okra" in the Reason input
+		Click the Change button
+Begin "Display Expiration Date in ListView"
+		Type "Display Expiration Date in ListView" in the input
+		Click the "!Go" button
+		Click the "!Edit" listview link
+		Select "1" in the Value dropdown
+		Type "injections_view.okra" in the Reason input
+		Click the Change button
+Begin "View the Injections charttab with optional columns"
+	Open the sidemenu
+	Click the "E-Chart" sidemenu entry
+	Type "Hart, William" in the input
+	Click the "Search" button
+	Click the "TEST-10019" link
+	Click the "Medical Record" charttab
+	Click the "MAR/Injections" charttab subtab
+	Begin "Medication Administration"
+		Verify exists the "Medication Administration" listview name
+		Verify exists the "Injection" listview header
+		Verify exists the "Date Given" listview header
+		Verify exists the "Next Due" listview header
+		Verify exists the "Route" listview header
+		Verify exists the "Site" listview header
+		Verify exists the "Vial/Lot" listview header
+		Verify exists the "Manufacturer" listview header
+		Verify exists the "Series" listview header
+		Verify exists the "Strength" listview header
+		Verify exists the "Dose" listview header
+		Verify exists the "Comments/Reaction" listview header
+		Verify exists the "Modified By" listview header
+		Verify exists the "Admin" listview header
+
+		Verify exists the "Expiration Date" listview header
+		Verify exists the "Status" listview header
+		Verify !exists the "Deleted" listview header		
+		Verify exists the "Source" listview header
+	Begin "Immunizations"
+		Verify exists the "Immunizations" listview name
+		Verify exists the "Injection" listview header
+		Verify exists the "Date Given" listview header
+		Verify exists the "Next Due" listview header
+		Verify exists the "Route" listview header
+		Verify exists the "Site" listview header
+		Verify exists the "Vial/Lot" listview header
+		Verify exists the "Manufacturer" listview header
+		Verify exists the "Series" listview header
+		Verify exists the "Strength" listview header
+		Verify exists the "Dose" listview header
+		Verify exists the "Comments/Reaction" listview header
+		Verify exists the "Modified By" listview header
+		Verify exists the "Admin" listview header
+
+		Verify exists the "Expiration Date" listview header
+		Verify exists the "Status" listview header
+		Verify !exists the "Deleted" listview header		
+		Verify exists the "Source" listview header
+	Begin "Contraindications"
+		Verify exists the "Contraindicated Immunizations" listview name
+		Verify exists the "Injection" listview header
+		Verify exists the "Date Entered" listview header
+		Verify exists the "Contraindication" listview header
+		Verify exists the "Comments/Reaction" listview header
+		Verify exists the "Modified By" listview header
+		Verify exists the "Admin" listview header
+		Verify exists the "Status" listview header
+		Verify exists the "Source" listview header
+	Begin "Injection Documents"
+		Verify exists the "Injection Documents" listview name
+		Verify exists the "Doc ID" listview header
+		Verify exists the "Serv Date" listview header
+		Verify exists the "Doc Type" listview header
+		Verify exists the "Subject" listview header
+		Verify exists the "By" listview header
+		Verify exists the "Serv Location" listview header
+		Verify exists the "Options" listview header
+	Begin "Vials"
+		Verify exists the "Vials" listview name
+		Verify exists the "Inject" listview header
+		Verify exists the "Vial" listview header
+		Verify exists the "Contents" listview header
+		Verify exists the "Strength" listview header
+		Verify exists the "Expires" listview header
+		Verify exists the "Start Date" listview header
+		Verify exists the "End Date" listview header
+		Verify exists the "Options" listview header

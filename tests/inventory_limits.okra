@@ -1,0 +1,257 @@
+Open the sidemenu
+Click the "Control Panel" sidemenu entry
+Begin "Remove Stock Levels permission"
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "No" from the "Manage Stock Warning Levels" dropdown
+	Type "inventory_limits.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify exists the "[ Manage Stock Warning Levels: No ]" text
+Begin "Verify no access"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "PAR Levels" charttab
+	Verify exists the "Your current permission of 'No' in the ('Inventory','Manage Stock Warning Levels') security setting does not allow access to Manage Inventory Stock Warning Levels." text
+Begin "Ignore the JS Errors for now"
+	Begin "Ignore jqwidgets 1st  10"
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+	Begin "Ignore jqwidgets 2nd 10"
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+	Begin "Ignore jqwidgets last 7"
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+		@driver.wcErrorLog.ignore('*Error TypeError in function(){IVS_initSlider(*,*,*)}:*')
+Begin "Grant View Stock Levels permission"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "View" from the "Manage Stock Warning Levels" dropdown
+	Type "inventory_limits.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify exists the "[ Manage Stock Warning Levels: View ]" text
+Begin "Verify view access"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "PAR Levels" charttab
+	Verify exists The "Inventory Warning Levels" listview
+	Verify !exists The "Manage Levels" link
+Begin "Grant Edit Stock Levels permission"
+	Open the sidemenu
+	Click the "Control Panel" sidemenu entry
+	Click the "Access" charttab
+	Click the "Access Control" charttab subtab
+	Type "selenium" in the input
+	Click the "Go!" button
+	Gridclick "Username:selenium" "Edit" grid link
+	Click the "Customize User Security" link
+	Select "Edit" from the "Manage Stock Warning Levels" dropdown
+	Type "inventory_limits.vision" in the securityrole reason
+	Click the "Update Individual Security" button
+	# in the "Access Control (selenium)" box
+	Verify !exists the "[ Manage Stock Warning Levels: " text
+Begin "Verify Edit access"
+	Open the sidemenu
+	Click the "Inventory" sidemenu entry
+	Click the "PAR Levels" charttab
+	Verify exists the "Inventory Warning Levels" listview
+	Verify exists the "Manage Levels" link
+Begin "Select a location and create limits"
+	Select "Hospital" in the @"Location" dropdown@xpath=//select[@id='srch_transloc0']
+	@Wait@driver.wcutils.waitForAJAX(30)
+	Verify exists the @"Stockpile" dropdown@xpath=//select[@id='srch_stockpile_id0']
+	Select "Store Room A" in the @"Stockpile" dropdown@xpath=//select[@id='srch_stockpile_id0']
+	Click the "Filter" button
+	Click the "Manage Levels" link
+	Select "All" in the "Level Set" dropdown
+	Click the "Filter" button
+	# in the "Stock Warning Levels" table
+	Begin "Verify the levels appeared"
+		Begin the "Amoxicillin 500mg Capsule row"
+			Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//td[contains(.,'Amoxicillin 500mg Capsule')]/following-sibling::td//input[@id='value_low_1']
+			#The checkbox in the "Link" cell should not be checked
+			#The checkbox in the "Limit High" cell should not be checked
+		Begin the "diphenhydramine 25 mg capsule row"
+			Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//td[contains(.,'diphenhydramine 25 mg capsule')]/following-sibling::td//input[@id='value_low_7']
+			#The checkbox in the "Link" cell should not be checked
+			#The checkbox in the "Limit High" cell should not be checked
+		Begin the "japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe row"
+			Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//td[contains(.,'Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe')]/following-sibling::td//input[@id='value_low_8']
+			#The checkbox in the "Link" cell should not be checked
+			#The checkbox in the "Limit High" cell should not be checked
+		Begin the "Lasix 20 mg tablet row"
+			Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//td[contains(.,'Lasix 20 mg tablet')]/following-sibling::td//input[@id='value_low_5']
+			#The checkbox in the "Link" cell should not be checked
+			#The checkbox in the "Limit High" cell should not be checked
+		Begin the "Lasix 80 mg tablet row"
+			Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//td[contains(.,'Lasix 80 mg tablet')]/following-sibling::td//input[@id='value_low_6']
+			#The checkbox in the "Link" cell should not be checked
+			#The checkbox in the "Limit High" cell should not be checked
+		Begin the "lisinopril 10 mg tablet row"
+			Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td//input[@id='value_low_3']
+			#The checkbox in the "Link" cell should not be checked
+			#The checkbox in the "Limit High" cell should not be checked
+		Begin the "lisinopril 20 mg tablet row"
+			Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//td[contains(.,'lisinopril 20 mg tablet')]/following-sibling::td//input[@id='value_low_4']
+			#The checkbox in the "Link" cell should not be checked
+			#The checkbox in the "Limit High" cell should not be checked
+		Begin the "lisinopril 5 mg tablet row"
+			Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td//input[@id='value_low_2']
+			#The checkbox in the "Link" cell should not be checked
+			#The checkbox in the "Limit High" cell should not be checked
+	Begin "Manage limit levels" in the "Stock Warning Levels" table
+		Begin "Link all Lisinopril levels"
+			Click the @checkbox in the "Link" cell in the "lisinopril 10 mg tablet" row@xpath=//td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td//input[@id='items_link_3']
+			Click the @checkbox in the "Link" cell in the "lisinopril 20 mg tablet" row@xpath=//td[contains(.,'lisinopril 20 mg tablet')]/following-sibling::td//input[@id='items_link_4']
+			Click the @checkbox in the "Link" cell in the "lisinopril 5 mg tablet" row@xpath=//td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td//input[@id='items_link_2']
+		Begin "Allow a high limit on Amoxicillin in the Amoxicillin 500mg Capsule row"
+			Click the @checkbox in the "Limit High" cell@xpath=//td[contains(.,'Amoxicillin 500mg Capsule')]/following-sibling::td//input[@id='allow_high_1']
+			# This is the default High level
+			Verify "value=1000" in the @"High" input in the "Levels" cell@xpath=//td[contains(.,'Amoxicillin 500mg Capsule')]/following-sibling::td//input[@id='value_high_1']
+			# This sets the High limit to 250
+			Type "250" in the @"High" input in the "Levels" cell@xpath=//td[contains(.,'Amoxicillin 500mg Capsule')]/following-sibling::td//input[@id='value_high_1']
+		Begin "Updated the low limit on the linked items"
+			Type "10" in the @"Low" input in the "Levels" cell in the "lisinopril 10 mg tablet" row@xpath=//td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td//input[@id='value_low_3']
+			# jqwidgets is broken yet again... I'll deal with it later, maybe.
+			#@wait@driver.pause(5)
+			#Verify "value=10" in the @"Low" input in the "Levels" cell in the "lisinopril 20 mg tablet" row@xpath=//td[contains(.,'lisinopril 20 mg tablet')]/following-sibling::td//input[@id='value_low_4']
+			#Verify "value=10" in the @"Low" input in the "Levels" cell in the "lisinopril 5 mg tablet" row@xpath=//td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td//input[@id='value_low_2']
+	Click the "Save" button
+	Begin "The success messages"
+		Verify exists the "Set Quantity Limits for Amoxicillin 500mg Capsule" text
+		Verify exists the "Set Quantity Limits for lisinopril 10 mg tablet" text
+		#Verify exists the "Set Quantity Limits for lisinopril 20 mg tablet" text
+		#Verify exists the "Set Quantity Limits for lisinopril 5 mg tablet" text
+	Begin "The stored values" in the "Inventory Warning Levels" table
+		Verify exists @the @!"10" text in the "Min" cell in the "lisinopril 10 mg tablet" row@xpath=//td[contains(.,'lisinopril 10 mg tablet')]/following-sibling::td[text()='10']
+		#Verify exists @the !"10" text in the "Min" cell in the "lisinopril 20 mg tablet" row@xpath=//td[contains(.,'lisinopril 20 mg tablet')]/following-sibling::td[text()='10']
+		#Verify exists @the !"10" text in the "Min" cell in the "lisinopril 5 mg tablet" row@xpath=//td[contains(.,'lisinopril 5 mg tablet')]/following-sibling::td[text()='10']
+		Verify exists @the !"0" text in the "Min" cell and the !"250" text in the "Max" cell in the "Amoxicillin 500mg Capsule" row@xpath=//td[contains(.,'Amoxicillin 500mg Capsule')]/following-sibling::td[text()='0']/following-sibling::td[text()='250']
+		#Verify exists the !"250" text in the "Max" cell in the "Amoxicillin 500mg Capsule" row
+	Begin "Filtering by Searching for an Item"
+		Enter "Amoxicillin 500mg Capsule" in the "srch_invac0_txt" autocomplete
+		Click the "Filter" button
+		Verify exists The "Amoxicillin 500mg Capsule" text
+		Verify !exists The "lisinopril 10 mg tablet" text
+		Begin "Reset Filter"
+			@Clear the "Item" autocomplete@driver.enterFormData("", "srch_invac0_txt", clear=True)
+			Click the "Filter" button
+	Begin "Filter and Manage by Clicking an Item"
+		Click the "lisinopril 10 mg tablet" link
+		Begin "the Stock Warning Levels table"
+			# we filtered by this item
+			Verify exists The "lisinopril 10 mg tablet" text
+		# this proves we're in manager mode
+		Verify exists The "View Levels" link
+		Begin "Reset Filter"
+			@Clear the "Item" autocomplete@driver.enterFormData("", "srch_invac0_txt", clear=True)
+			Click the "Filter" button
+	Begin "Filtering by Set/Not Set Items"
+		Begin "Show only non-limited items"
+			Select "No" in the "Level Set" dropdown
+			Click the "Filter" button
+			Begin "Verify the filtering in the Stock Warning Levels table"
+				Verify exists the "diphenhydramine 25 mg capsule" text
+				Verify exists the "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" text
+				Verify exists the "Lasix 20 mg tablet" text
+				Verify exists the "Lasix 80 mg tablet" text
+				Verify !exists the "Amoxicillin 500mg Capsule" text
+				Verify !exists the "lisinopril 10 mg tablet" text
+				#Verify !exists the "lisinopril 20 mg tablet" text
+				#Verify !exists the "lisinopril 5 mg tablet" text
+		Begin "Show only limited items"
+			Select "Yes" in the "Level Set" dropdown
+			Click the "Filter" button
+			Begin "Verify the filtering in the Stock Warning Levels table"
+				Verify !exists the "diphenhydramine 25 mg capsule" text
+				Verify !exists the "Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe" text
+				Verify !exists the "Lasix 20 mg tablet" text
+				Verify !exists the "Lasix 80 mg tablet" text
+				Verify exists the "Amoxicillin 500mg Capsule" text
+				Verify exists the "lisinopril 10 mg tablet" text
+				#Verify exists the "lisinopril 20 mg tablet" text
+				#Verify exists the "lisinopril 5 mg tablet" text
+		Begin "Show All items"
+			Select "All" in the "Level Set" dropdown
+			Click the "Filter" button
+			Begin "Verify the filtering in the Stock Warning Levels table"
+				Begin "the diphenhydramine 25 mg capsule row"
+					#The checkbox in the "Link" cell should not be checked
+					# there is no high limit
+					#The checkbox in the "Limit High" cell should not be checked
+					Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//input[@id='value_low_7']
+					Verify !exists the @"High" input in the "Levels" cell@xpath=//div[contains(@style,'inline-block')]//input[@id='value_high_7']
+				Begin "the Japanese encephalitis vaccine (PF) 6 mcg/0.5 mL intramuscular syringe row"
+					#The checkbox in the "Link" cell should not be checked
+					# there is no high limit
+					#The checkbox in the "Limit High" cell should not be checked
+					Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//input[@id='value_low_8']
+					Verify !exists the @"High" input in the "Levels" cell@xpath=//div[contains(@style,'inline-block')]//input[@id='value_high_8']
+				Begin "the Lasix 20 mg tablet row"
+					#The checkbox in the "Link" cell should not be checked
+					# there is no high limit
+					#The checkbox in the "Limit High" cell should not be checked
+					Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//input[@id='value_low_5']
+					Verify !exists the @"High" input in the "Levels" cell@xpath=//div[contains(@style,'inline-block')]//input[@id='value_high_5']
+				Begin the "Lasix 80 mg tablet" row
+					#The checkbox in the "Link" cell should not be checked
+					# there is no high limit
+					#The checkbox in the "Limit High" cell should not be checked
+					Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//input[@id='value_low_6']
+					Verify !exists the @"High" input in the "Levels" cell@xpath=//div[contains(@style,'inline-block')]//input[@id='value_high_6']
+				Begin "the Amoxicillin 500mg Capsule row"
+					#The checkbox in the "Link" cell should not be checked
+					# there is a high limit
+					#The checkbox in the "Limit High" cell should be checked
+					Verify "value=0" in the @"Low" input in the "Levels" cell@xpath=//input[@id='value_low_1']
+					Verify "value=250" in the @"High" input in the "Levels" cell@xpath=//div[contains(@style,'inline-block')]//input[@id='value_high_1']
+				Begin "the lisinopril 10 mg tablet row"
+					#The checkbox in the "Link" cell should not be checked
+					# there is no high limit
+					#The checkbox in the "Limit High" cell should not be checked
+					Verify "value=10" in the @"Low" input in the "Levels" cell@xpath=//input[@id='value_low_3']
+					Verify !exists the @"High" input in the "Levels" cell@xpath=//div[contains(@style,'inline-block')]//input[@id='value_high_3']
+				Begin "the lisinopril 20 mg tablet row"
+					#The checkbox in the "Link" cell should not be checked
+					# there is no high limit
+					#The checkbox in the "Limit High" cell should not be checked
+					#Verify "value=10" in the @"Low" input in the "Levels" cell@xpath=//input[@id='value_low_4']
+					#Verify !exists the @"High" input in the "Levels" cell@xpath=//div[contains(@style,'inline-block')]//input[@id='value_high_4']
+				Begin "the lisinopril 5 mg tablet row"
+					#The checkbox in the "Link" cell should not be checked
+					# there is no high limit
+					#The checkbox in the "Limit High" cell should not be checked
+					#Verify "value=10" in the @"Low" input in the "Levels" cell@xpath=//input[@id='value_low_2']
+					#Verify !exists the @"High" input in the "Levels" cell@xpath=//div[contains(@style,'inline-block')]//input[@id='value_high_2']
