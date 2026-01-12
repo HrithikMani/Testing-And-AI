@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "okra": {
+      "command": "python3",
+      "args": [
+        "/Users/hkonda/mie/Testing-And-AI/okra_mcp/server.py"
+      ]
+    }
+  }
+}
