@@ -1,0 +1,88 @@
+# WebChart Application Selectors
+# Migrated from okrapods/webchart/*.pod files
+# These selectors match the Okra element definitions
+
+description: |
+  WebChart application selectors for UI automation.
+  Derived from okrapods definitions (sidemenu.pod, charttab.pod, listedit.pod, listview.pod, autocomplete.pod, _std.pod)
+
+elements:
+  # ============== Side Menu (sidemenu.pod) ==============
+  sidemenu_icon: "//span[@id='wc_menuicon'] | //span[contains(@id,'wc_menuicon')]"
+  sidemenu_pin: "//span[@id='thumbtack']"
+  sidemenu_entry: "//div[@id='wc_sidetabs']/div[@id='wc_sidemenu_height']/a[@class='wc_tab']"
+  sidemenu_entry_text: "//div[@id='wc_sidetabs']/div[@id='wc_sidemenu_height']/a[@class='wc_tab'][contains(text(), '{TEXT}')]"
+  sidemenu_open: "//body[contains(@class, 'wc_slideInSideMenu')]"
+  sidemenu_closed: "//body[not(contains(@class, 'wc_slideInSideMenu')) and not(contains(@class, 'wc_sidebarPinned'))]"
+
+  # ============== Chart Tabs (charttab.pod) ==============
+  charttab: "//ul[@id='wc_tabwrapper']//span[contains(@class, 'wc_tab')]/a[contains(@class, 'wc_tab_title')][contains(text(), '{TEXT}')] | //ul[@id='wc_tabwrapper']//span[contains(@class, 'wc_tab')]/span[contains(@class, 'wc_tab_title')][contains(text(), '{TEXT}')]"
+  charttab_any: "//ul[@id='wc_tabwrapper']//span[contains(@class, 'wc_tab')]/a[contains(@class, 'wc_tab_title')] | //ul[@id='wc_tabwrapper']//span[contains(@class, 'wc_tab')]/span[contains(@class, 'wc_tab_title')]"
+  charttab_subtab: "//ul[@class='wc_tab_submenu']//a[contains(text(), '{TEXT}')]"
+  charttab_subtab_any: "//ul[@class='wc_tab_submenu']//a"
+
+  # ============== List Edit (listedit.pod) ==============
+  listedit_row: "//table[contains(@class,'dlg_root')]/tbody/tr/td//strong[contains(text(), '{TEXT}')] | //table[contains(@class,'dlg_root')]/tbody/tr/td//font[contains(text(), '{TEXT}')]"
+  # Note: WebChart uses both <input type='button'> and <button> elements - match both
+  listedit_button: "//table[contains(@class,'dlg_root')]//input[@type='button'][contains(@value, '{TEXT}')] | //table[contains(@class,'dlg_root')]//button[contains(text(), '{TEXT}')]"
+  listedit_add_button: "//table[contains(@class,'dlg_root')]//input[@type='button'][contains(@value, 'Add')] | //table[contains(@class,'dlg_root')]//button[contains(text(), 'Add')]"
+  listedit_minusbutton: "//strong[contains(text(), '{TEXT}')]/preceding::span[2]/input[@value='—'] | //td[contains(text(), '{TEXT}')]/following::span[2]/input[@value='—']"
+  listedit_editbutton: "//strong[contains(text(), '{TEXT}')]/preceding::span[1]/input[@value='Edit'] | //td[contains(text(), '{TEXT}')]/following::span[1]/input[contains(@value, 'Edit')]"
+  listedit_textfield: "//div[contains(.,'le')]/table[@class='dlg_root']//input[@type='text' and not(@disabled)]"
+
+  # ============== List View (listview.pod) ==============
+  listview_name: "//table[contains(@class,'lv_root')]//fieldset//span[contains(text(), '{TEXT}')]"
+  listview_row: "//table[contains(@class,'lv_root')]/tbody//tr//td[contains(text(), '{TEXT}')]"
+  listview_header: "//table[contains(@class,'lv_root')]//thead//tr/th[contains(text(), '{TEXT}')] | //table[contains(@class,'lv_root')]//thead//tr/th/a[contains(text(), '{TEXT}')]"
+  listview_footer: "//table[contains(@class,'lv_root')]//tfoot//tr/td[contains(text(), '{TEXT}')] | //table[contains(@class,'lv_root')]//tfoot//tr/td/a[contains(text(), '{TEXT}')]"
+  listview_link: "//table[contains(@class,'lv_root')]/tbody//*[not(self::th)]//tr//td//a[contains(text(), '{TEXT}')] | //table[contains(@class,'zebra')]/tbody//*[not(self::th)]//td//a[contains(text(), '{TEXT}')]"
+  listview_item: "//table[contains(@class,'lv_root')]/tbody//td//*[contains(text(), '{TEXT}')]"
+
+  # ============== Autocomplete (autocomplete.pod) ==============
+  autocomplete_input: "//label[contains(text(), '{TEXT}')]/following-sibling::div//input[contains(@class, 'autocomplete')] | //td[@class='field'][contains(text(), '{TEXT}')]/following-sibling::td[@class='value']//input[contains(@class, 'autocomplete')] | //input[contains(@class, 'autocomplete')][contains(@id, '{TEXT}')] | //input[contains(@class, 'autocomplete')][contains(@name, '{TEXT}')]"
+  autocomplete_input_by_id: "//input[contains(@class, 'autocomplete')][@id='{TEXT}'] | //input[contains(@class, 'autocomplete')][@name='{TEXT}']"
+  autocomplete_choice: "//div[contains(@class, 'defaultacdiv')]//div[contains(@id, 'choices')]"
+  autocomplete_option: "//div[contains(@class, 'defaultacdiv')]/div[contains(text(), '{TEXT}')]"
+  autocomplete_pending: "//input[contains(@class, 'autocomplete pending')]"
+
+  # ============== Standard Elements (_std.pod) ==============
+  link: "//a[contains(text(), '{TEXT}')] | //span[@class='link'][contains(text(), '{TEXT}')]"
+  link_exact: "//a[text()='{TEXT}']"
+  
+  text: "//*[contains(text(), '{TEXT}')]"
+  text_exact: "//*[text()='{TEXT}']"
+  
+  field: "//td[@class='field'][contains(text(), '{TEXT}')]/following-sibling::td[@class='value']//input[not(@type='hidden')] | //td[@class='field'][contains(text(), '{TEXT}')]/following-sibling::td/input[not(@type='hidden')]"
+  
+  input: "//input[not(@type='hidden') and not(@type='submit') and not(@type='button') and not(@disabled)][@id='{TEXT}'] | //input[not(@type='hidden') and not(@type='submit') and not(@type='button') and not(@disabled)][@name='{TEXT}']"
+  input_by_label: "//label[contains(text(), '{TEXT}')]/following-sibling::div//input[not(@type='hidden')] | //td[contains(text(), '{TEXT}')]/following-sibling::td//input[not(@type='hidden') and not(@disabled)]"
+  
+  dropdown: "//select[not(@disabled)][@id='{TEXT}'] | //select[not(@disabled)][@name='{TEXT}']"
+  dropdown_by_label: "//td[contains(text(), '{TEXT}')]/following-sibling::td//select[not(@disabled)]"
+  
+  button: "//input[(@type='button' or @type='submit') and not(@disabled)][contains(@value, '{TEXT}')] | //button[not(@disabled)][contains(text(), '{TEXT}')]"
+  button_exact: "//input[(@type='button' or @type='submit') and not(@disabled)][@value='{TEXT}'] | //button[not(@disabled)][text()='{TEXT}']"
+  
+  checkbox: "//input[@type='checkbox'][not(@disabled)][@id='{TEXT}'] | //input[@type='checkbox'][not(@disabled)][@name='{TEXT}']"
+  checkbox_by_label: "//label[contains(text(), '{TEXT}')]/preceding-sibling::input[@type='checkbox'] | //label[contains(text(), '{TEXT}')]/input[@type='checkbox']"
+  
+  radio: "//input[@type='radio'][not(@disabled)][@value='{TEXT}']"
+  radio_by_label: "//label[contains(text(), '{TEXT}')]/preceding-sibling::input[@type='radio'] | //label[contains(text(), '{TEXT}')]/input[@type='radio']"
+
+  # ============== Access Control / Departments (custom for add_user_dept) ==============
+  add_department_link: "//a[contains(text(), 'Add Department')]"
+  submit_dept_button: "//input[@type='button'][contains(@value, 'Submit')] | //input[@type='submit'][contains(@value, 'Submit')] | //button[contains(text(), 'Submit')]"
+  show_all_link: "//a[contains(text(), 'Show All')]"
+  dept_edit_link: "//td[@class='depts_Department_cell' and contains(., '{TEXT}')]/following-sibling::td/a[contains(., 'Edit')]"
+
+# WebChart URLs
+urls:
+  base: "https://your-webchart-instance.com"
+  login: "/webchart.cgi"
+  control_panel: "/webchart.cgi?f=admin"
+
+# Wait timeouts (in milliseconds)
+timeouts:
+  ajax_wait: 10000
+  animation_wait: 1000
+  autocomplete_wait: 5000

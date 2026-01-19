@@ -3,12 +3,20 @@ Pytest configuration and shared fixtures.
 
 This file is automatically loaded by pytest and makes fixtures
 available to all test files.
+
+Features:
+- Centralized configuration via support/config.py
+- Before/After test hooks for login/logout
+- Screenshot on failure
+- Custom BDD reporting
 """
 
 import pytest
 import sys
 import time
+import os
 from pathlib import Path
+from datetime import datetime
 
 # Add the experiment2 directory to Python path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -16,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 # Import fixture configurations (extends pytest-playwright's built-in fixtures)
 from support.fixtures import browser_context_args, browser_type_launch_args
 from support.gherkin_report import GherkinReportGenerator
+from support.config import config, env
 
 # Global report generator instance
 _report_generator = None
@@ -29,6 +38,31 @@ def get_report_generator():
     return _report_generator
 
 
+def pytest_addoption(parser):
+    """Add custom command line options."""
+    parser.addoption(
+        "--run-feature",
+        action="store",
+        default=None,
+        help="Run tests for a specific feature file (e.g., --run-feature add_user_dept)"
+    )
+
+
+def pytest_collection_modifyitems(session, config, items):
+    """Filter tests based on --run-feature option."""
+    feature_filter = config.getoption("--run-feature")
+    if feature_filter:
+        # Remove .feature extension if provided
+        feature_name = feature_filter.replace(".feature", "")
+        
+        # Map feature name to test file name
+        feature_test_name = f"test_{feature_name}"
+        
+        # Filter items to only those matching the feature
+        items[:] = [item for item in items 
+                   if feature_test_name in str(item.fspath) or feature_name in str(item.fspath)]
+
+
 def pytest_configure(config):
     """Configure pytest with custom markers."""
     config.addinivalue_line("markers", "playwright: Playwright browser tests")
@@ -38,6 +72,107 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "search: Search tests")
     config.addinivalue_line("markers", "api: API documentation tests")
     config.addinivalue_line("markers", "failure: Intentional failure tests")
+    # WebChart markers
+    config.addinivalue_line("markers", "webchart: WebChart application tests")
+    config.addinivalue_line("markers", "access_control: Access control tests")
+    config.addinivalue_line("markers", "add_department: Add department tests")
+    config.addinivalue_line("markers", "add_user_on_creation: Add user on creation tests")
+    config.addinivalue_line("markers", "add_more_users: Add more users tests")
+    config.addinivalue_line("markers", "verify_users: Verify users tests")
+    config.addinivalue_line("markers", "skip_login: Skip automatic login for this test")
+
+
+# ============== WebChart Login/Logout Fixtures ==============
+
+@pytest.fixture(scope="function")
+def webchart_login(page):
+    """
+    Fixture that handles WebChart login before test and logout after.
+    
+    This is automatically used by tests marked with @webchart.
+    Use @pytest.mark.skip_login to skip automatic login.
+    
+    Usage in test:
+        def test_something(webchart_login, page):
+            # page is now logged in
+            pass
+    """
+    from pages.webchart_page import LoginPage
+    
+    login_page = LoginPage(page)
+    
+    # Before test: Login
+    print(f"\n🔐 Logging into WebChart as '{config.USERNAME}'...")
+    login_page.goto()
+    login_page.login(config.USERNAME, config.PASSWORD)
+    login_page.wait_for_dashboard()
+    print("✅ Login successful")
+    
+    yield page  # Test runs here
+    
+    # After test: Logout
+    print("\n🔓 Logging out...")
+    try:
+        login_page.logout()
+        print("✅ Logout successful")
+    except Exception as e:
+        print(f"⚠️ Logout failed: {e}")
+
+
+@pytest.fixture(scope="function")
+def webchart_page(page):
+    """
+    Fixture that provides a logged-in WebChart page.
+    Handles login/logout automatically.
+    """
+    from pages.webchart_page import LoginPage, WebChartPage
+    
+    login_page = LoginPage(page)
+    
+    # Login
+    login_page.goto()
+    login_page.login(config.USERNAME, config.PASSWORD)
+    login_page.wait_for_dashboard()
+    
+    # Provide WebChartPage instance
+    wc_page = WebChartPage(page)
+    
+    yield wc_page
+    
+    # Logout
+    try:
+        login_page.logout()
+    except:
+        pass
+
+
+# ============== Screenshot on Failure ==============
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_call(item):
+    """Take screenshot on test failure."""
+    outcome = yield
+    
+    if outcome.excinfo is not None and config.SCREENSHOT_ON_FAILURE:
+        # Get the page fixture if available
+        page = item.funcargs.get('page')
+        if page:
+            try:
+                # Create screenshots directory
+                screenshot_dir = Path(config.SCREENSHOT_DIR)
+                screenshot_dir.mkdir(parents=True, exist_ok=True)
+                
+                # Generate filename
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                test_name = item.name.replace('[', '_').replace(']', '_')
+                filename = f"{test_name}_{timestamp}.png"
+                filepath = screenshot_dir / filename
+                
+                # Take screenshot
+                page.screenshot(path=str(filepath))
+                print(f"\n📸 Screenshot saved: {filepath}")
+            except Exception as e:
+                print(f"\n⚠️ Failed to take screenshot: {e}")
 
 
 # Track current test's steps
