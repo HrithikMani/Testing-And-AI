@@ -4,4 +4,3 @@ playwright>=1.40.0
 pytest-playwright>=0.4.0
 pyyaml>=6.0
 pytest-html>=4.0.0
-allure-pytest-bdd>=2.13.0
