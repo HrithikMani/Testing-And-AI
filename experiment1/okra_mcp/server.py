@@ -6,10 +6,12 @@ import traceback
 from pod_loader import PodLoader
 
 # Configuration
-# Assuming server.py is in okra_mcp/ and okrapods/ is in parent
-WORKSPACE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# server.py is in experiment1/okra_mcp/, okrapods is at workspace root
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+EXPERIMENT_DIR = os.path.dirname(SCRIPT_DIR)  # experiment1/
+WORKSPACE_ROOT = os.path.dirname(EXPERIMENT_DIR)  # Testing-And-AI/
 PODS_DIR = os.path.join(WORKSPACE_ROOT, 'okrapods')
-GENERATED_TESTS_DIR = os.path.join(WORKSPACE_ROOT, 'generated_tests')
+GENERATED_TESTS_DIR = os.path.join(EXPERIMENT_DIR, 'generated_tests')
 
 # Initialize Logic
 loader = PodLoader(PODS_DIR)
@@ -109,19 +111,7 @@ TOOLS = [
         "description": "Get a ready-to-use XPath/Selector for a specific element and text.",
         "inputSchema": {
             "type": "object",
-     ,
-    {
-        "name": "save_generated_test",
-        "description": "Saves a generated Playwright test script to the dedicated 'generated_tests' folder.",
-        "inputSchema": {
-            "type": "object",
             "properties": {
-                "filename": {"type": "string", "description": "The filename (e.g. test_login.py)"},
-                "content": {"type": "string", "description": "The full Python code content"}
-            },
-            "required": ["filename", "content"]
-        }
-    }       "properties": {
                 "element_name": {"type": "string", "description": "element type (e.g. 'link')"},
                 "target_text": {"type": "string", "description": "visible text (e.g. 'Save')"}
             },
@@ -138,6 +128,18 @@ TOOLS = [
             },
             "required": ["line"]
         }
+    },
+    {
+        "name": "save_generated_test",
+        "description": "Saves a generated Playwright test script to the dedicated 'generated_tests' folder.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "filename": {"type": "string", "description": "The filename (e.g. test_login.py)"},
+                "content": {"type": "string", "description": "The full Python code content"}
+            },
+            "required": ["filename", "content"]
+        }
     }
 ]
 
@@ -146,7 +148,7 @@ def handle_request(request):
     
     if method == "initialize":
         return {
-            "protocolVersion": "2024-11-05", # Dummy version
+            "protocolVersion": "2024-11-05",
             "capabilities": {
                 "tools": {}
             },
@@ -157,7 +159,7 @@ def handle_request(request):
         }
     
     if method == "notifications/initialized":
-        return None # No response needed
+        return None
         
     if method == "tools/list":
         return {
@@ -169,9 +171,7 @@ def handle_request(request):
         name = params.get("name")
         args = params.get("arguments", {})
         
-        # Log if name == "save_generated_test":
-                result_text = save_generated_test(args.get("filename"), args.get("content"))
-            elfor debug
+        # Log for debug
         with open("server.log", "a") as log:
             log.write(f"Calling {name} with {args}\n")
 
@@ -183,6 +183,8 @@ def handle_request(request):
                 result_text = resolve_selector(args.get("element_name"), args.get("target_text"))
             elif name == "explain_okra_line":
                 result_text = explain_okra_line(args.get("line"))
+            elif name == "save_generated_test":
+                result_text = save_generated_test(args.get("filename"), args.get("content"))
             else:
                 raise ValueError(f"Unknown tool: {name}")
                 
