@@ -9,6 +9,7 @@ from pod_loader import PodLoader
 # Assuming server.py is in okra_mcp/ and okrapods/ is in parent
 WORKSPACE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PODS_DIR = os.path.join(WORKSPACE_ROOT, 'okrapods')
+GENERATED_TESTS_DIR = os.path.join(WORKSPACE_ROOT, 'generated_tests')
 
 # Initialize Logic
 loader = PodLoader(PODS_DIR)
@@ -72,6 +73,23 @@ def explain_okra_line(line: str) -> str:
     
     return "Could not parse line structure. Expected format: Action \"Text\" Element"
 
+def save_generated_test(filename: str, content: str) -> str:
+    """
+    Saves generated test code to the generated_tests directory.
+    """
+    if not os.path.exists(GENERATED_TESTS_DIR):
+        os.makedirs(GENERATED_TESTS_DIR)
+        
+    if not filename.endswith('.py'):
+        filename += '.py'
+        
+    file_path = os.path.join(GENERATED_TESTS_DIR, filename)
+    
+    with open(file_path, "w") as f:
+        f.write(content)
+        
+    return f"Successfully saved test to: {file_path}"
+
 # --- Minimal Dependency-Free MCP Server ---
 
 TOOLS = [
@@ -91,7 +109,19 @@ TOOLS = [
         "description": "Get a ready-to-use XPath/Selector for a specific element and text.",
         "inputSchema": {
             "type": "object",
+     ,
+    {
+        "name": "save_generated_test",
+        "description": "Saves a generated Playwright test script to the dedicated 'generated_tests' folder.",
+        "inputSchema": {
+            "type": "object",
             "properties": {
+                "filename": {"type": "string", "description": "The filename (e.g. test_login.py)"},
+                "content": {"type": "string", "description": "The full Python code content"}
+            },
+            "required": ["filename", "content"]
+        }
+    }       "properties": {
                 "element_name": {"type": "string", "description": "element type (e.g. 'link')"},
                 "target_text": {"type": "string", "description": "visible text (e.g. 'Save')"}
             },
@@ -139,7 +169,9 @@ def handle_request(request):
         name = params.get("name")
         args = params.get("arguments", {})
         
-        # Log for debug
+        # Log if name == "save_generated_test":
+                result_text = save_generated_test(args.get("filename"), args.get("content"))
+            elfor debug
         with open("server.log", "a") as log:
             log.write(f"Calling {name} with {args}\n")
 
