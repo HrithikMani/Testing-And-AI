@@ -1,0 +1,64 @@
+# Common UI Element Selectors
+# These are reusable selectors for standard HTML elements
+# Use {TEXT} placeholder for dynamic text matching
+
+description: |
+  Common selectors for standard HTML elements.
+  Similar to _std.pod in okrapods.
+
+elements:
+  # Links
+  link: "//a[contains(text(), '{TEXT}')]"
+  link_exact: "//a[text()='{TEXT}']"
+  link_by_href: "//a[contains(@href, '{TEXT}')]"
+  
+  # Buttons
+  button: "//button[contains(text(), '{TEXT}')]"
+  button_exact: "//button[text()='{TEXT}']"
+  button_by_id: "//button[@id='{TEXT}']"
+  submit_button: "//button[@type='submit'] | //input[@type='submit']"
+  
+  # Input fields
+  input_by_placeholder: "//input[@placeholder='{TEXT}']"
+  input_by_name: "//input[@name='{TEXT}']"
+  input_by_id: "//input[@id='{TEXT}']"
+  input_by_label: "//label[contains(text(), '{TEXT}')]/following::input[1]"
+  textarea: "//textarea[@name='{TEXT}'] | //textarea[@id='{TEXT}']"
+  
+  # Checkboxes and Radio buttons
+  checkbox: "//input[@type='checkbox'][@name='{TEXT}']"
+  checkbox_by_label: "//label[contains(text(), '{TEXT}')]/input[@type='checkbox'] | //label[contains(text(), '{TEXT}')]/preceding-sibling::input[@type='checkbox']"
+  radio: "//input[@type='radio'][@value='{TEXT}']"
+  
+  # Dropdowns
+  select: "//select[@name='{TEXT}'] | //select[@id='{TEXT}']"
+  option: "//option[contains(text(), '{TEXT}')]"
+  
+  # Text elements
+  heading: "//h1[contains(text(), '{TEXT}')] | //h2[contains(text(), '{TEXT}')] | //h3[contains(text(), '{TEXT}')]"
+  paragraph: "//p[contains(text(), '{TEXT}')]"
+  span: "//span[contains(text(), '{TEXT}')]"
+  div_text: "//div[contains(text(), '{TEXT}')]"
+  any_text: "//*[contains(text(), '{TEXT}')]"
+  
+  # Tables
+  table_row: "//tr[contains(., '{TEXT}')]"
+  table_cell: "//td[contains(text(), '{TEXT}')]"
+  table_header: "//th[contains(text(), '{TEXT}')]"
+  
+  # Navigation
+  nav_link: "//nav//a[contains(text(), '{TEXT}')]"
+  menu_item: "//li//a[contains(text(), '{TEXT}')] | //li[contains(text(), '{TEXT}')]"
+  
+  # Common containers
+  modal: "//div[contains(@class, 'modal')] | //div[@role='dialog']"
+  alert: "//div[contains(@class, 'alert')] | //div[@role='alert']"
+  
+  # Form elements
+  form: "//form[@name='{TEXT}'] | //form[@id='{TEXT}']"
+  fieldset: "//fieldset[.//legend[contains(text(), '{TEXT}')]]"
+  
+  # Aria/Accessibility
+  role_button: "//*[@role='button'][contains(text(), '{TEXT}')]"
+  role_link: "//*[@role='link'][contains(text(), '{TEXT}')]"
+  aria_label: "//*[@aria-label='{TEXT}']"

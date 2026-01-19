@@ -1,0 +1,52 @@
+# Playwright Documentation Website Selectors
+# https://playwright.dev
+
+description: |
+  Selectors for testing the Playwright documentation website.
+  Used for demo/example tests.
+
+elements:
+  # Navigation
+  navbar: "//nav[contains(@class, 'navbar')]"
+  docs_link: "//a[contains(@class, 'navbar__link')][contains(text(), 'Docs')]"
+  api_link: "//a[contains(@class, 'navbar__link')][contains(text(), 'API')]"
+  
+  # Theme toggle
+  theme_toggle: "//button[contains(@class, 'toggleButton')] | //button[@aria-label='Switch between dark and light mode']"
+  theme_toggle_aria: "//*[@aria-label='Switch between dark and light mode']"
+  
+  # Search
+  search_button: "//button[contains(@class, 'DocSearch')] | //button[@aria-label='Search']"
+  search_input: "//input[@type='search'] | //input[contains(@class, 'DocSearch-Input')]"
+  
+  # Content
+  main_content: "//main | //div[contains(@class, 'main-wrapper')]"
+  article: "//article"
+  sidebar: "//aside | //div[contains(@class, 'sidebar')]"
+  
+  # Headings
+  page_title: "//h1"
+  section_heading: "//h2[contains(text(), '{TEXT}')]"
+  
+  # Code blocks
+  code_block: "//pre[contains(@class, 'prism-code')] | //div[contains(@class, 'codeBlock')]"
+  copy_button: "//button[contains(@class, 'copyButton')]"
+  
+  # Language tabs
+  language_tab: "//li[@role='tab'][contains(text(), '{TEXT}')]"
+  python_tab: "//li[@role='tab'][contains(text(), 'Python')]"
+  javascript_tab: "//li[@role='tab'][contains(text(), 'JavaScript')]"
+  
+  # Get Started button
+  get_started: "//a[contains(text(), 'Get started')] | //a[contains(@class, 'getStarted')]"
+  
+  # Footer
+  footer: "//footer"
+  github_link: "//a[contains(@href, 'github.com/microsoft/playwright')]"
+
+# Page-specific URLs
+urls:
+  home: "https://playwright.dev"
+  docs: "https://playwright.dev/docs/intro"
+  api: "https://playwright.dev/docs/api/class-playwright"
+  python: "https://playwright.dev/python/"
