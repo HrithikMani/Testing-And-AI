@@ -41,7 +41,8 @@ def verify_listview_row(page: Page, text: str):
 @then("I should be on the add department form")
 def verify_add_dept_form(page: Page):
     """Verify we are on the add department form."""
-    expect(page.locator("input[type='text']").first).to_be_visible()
+    selector = get_selector('webchart', 'department_name_input')
+    expect(page.locator(selector).first).to_be_visible()
 
 
 @then("I should see a success message")

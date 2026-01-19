@@ -97,15 +97,15 @@ def webchart_login(page):
             # page is now logged in
             pass
     """
-    from pages.webchart_page import LoginPage
+    from components import LoginComponent
     
-    login_page = LoginPage(page)
+    login_component = LoginComponent(page)
     
     # Before test: Login
     print(f"\n🔐 Logging into WebChart as '{config.USERNAME}'...")
-    login_page.goto()
-    login_page.login(config.USERNAME, config.PASSWORD)
-    login_page.wait_for_dashboard()
+    login_component.goto()
+    login_component.login(config.USERNAME, config.PASSWORD)
+    login_component.wait_for_dashboard()
     print("✅ Login successful")
     
     yield page  # Test runs here
@@ -125,23 +125,23 @@ def webchart_page(page):
     Fixture that provides a logged-in WebChart page.
     Handles login/logout automatically.
     """
-    from pages.webchart_page import LoginPage, WebChartPage
+    from components import LoginComponent, BaseComponent
     
-    login_page = LoginPage(page)
+    login_component = LoginComponent(page)
     
     # Login
-    login_page.goto()
-    login_page.login(config.USERNAME, config.PASSWORD)
-    login_page.wait_for_dashboard()
+    login_component.goto()
+    login_component.login(config.USERNAME, config.PASSWORD)
+    login_component.wait_for_dashboard()
     
-    # Provide WebChartPage instance
-    wc_page = WebChartPage(page)
+    # Provide BaseComponent instance
+    wc_component = BaseComponent(page)
     
-    yield wc_page
+    yield wc_component
     
     # Logout
     try:
-        login_page.logout()
+        login_component.logout()
     except:
         pass
 

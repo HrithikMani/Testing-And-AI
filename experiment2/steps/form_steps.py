@@ -16,14 +16,15 @@ from steps.login_steps import wait_for_ajax
 @when(parsers.parse('I type "{value}" in the input'))
 def type_in_input(page: Page, value: str):
     """Type value in the first visible input."""
-    selector = "//input[not(@type='hidden') and not(@disabled)][@type='text']"
+    selector = get_selector('webchart', 'text_input_visible')
     page.locator(selector).first.fill(value)
 
 
 @when(parsers.parse('I type "{value}" in the department name input'))
 def type_department_name(page: Page, value: str):
     """Type value in the department name input field."""
-    page.locator("input[type='text']:not([disabled])").first.fill(value)
+    selector = get_selector('webchart', 'department_name_input')
+    page.locator(selector).first.fill(value)
 
 
 @when(parsers.parse('I type "{value}" in the "{field}" input'))
@@ -94,7 +95,8 @@ def click_listedit_button(page: Page, text: str):
     wait_for_ajax(page)
     
     try:
-        listedit_section = page.locator('table.dlg_root').last
+        listedit_selector = get_selector('webchart', 'listedit_section')
+        listedit_section = page.locator(listedit_selector).last
         button = listedit_section.get_by_role('button', name=text, exact=True)
         if button.count() > 0 and button.first.is_visible(timeout=2000):
             button.first.click()

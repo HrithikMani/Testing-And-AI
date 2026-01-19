@@ -1,21 +1,29 @@
 """
-WebChart Base Page Object
+WebChart Base Component
 Provides methods for common WebChart interactions.
+
+This is the base class for all WebChart components.
+It provides shared functionality like navigation, sidemenu, chart tabs, etc.
 """
 
 import time
-from typing import Optional
+from typing import List, Optional
 from playwright.sync_api import Page, expect
 
 from support.selector_loader import get_selector
 from support.config import config
 
 
-class WebChartPage:
+class BaseComponent:
     """
-    Page object for WebChart application.
+    Base component for WebChart application.
     Provides methods for common WebChart interactions.
+    
+    All other components should extend this class.
     """
+    
+    # URL patterns this component handles (override in subclasses)
+    URL_PATTERNS: List[str] = []
     
     def __init__(self, page: Page, base_url: str = ""):
         self.page = page

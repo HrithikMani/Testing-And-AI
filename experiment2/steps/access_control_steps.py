@@ -18,8 +18,10 @@ def uncheck_all_viewable_departments(page: Page):
     """Uncheck all checkboxes in the Viewable Departments section."""
     wait_for_ajax(page)
     
-    viewable_section = page.locator('fieldset:has-text("Viewable Departments")')
-    checked_boxes = viewable_section.locator('input[type="checkbox"]:checked')
+    section_selector = get_selector('webchart', 'viewable_departments_section')
+    checked_selector = get_selector('webchart', 'viewable_checkbox_checked')
+    viewable_section = page.locator(section_selector)
+    checked_boxes = viewable_section.locator(checked_selector)
     count = checked_boxes.count()
     
     for i in range(count):
@@ -37,10 +39,12 @@ def check_viewable_department_checkbox(page: Page, dept_name: str):
     """
     wait_for_ajax(page)
     
-    viewable_section = page.locator('fieldset:has-text("Viewable Departments")')
+    section_selector = get_selector('webchart', 'viewable_departments_section')
+    viewable_section = page.locator(section_selector)
     
-    # Try exact match first
-    checkbox = viewable_section.locator(f'td:has-text("{dept_name}") input[type="checkbox"]')
+    # Try exact match first - using selector from YAML with parameter
+    checkbox_selector = get_selector('webchart', 'viewable_checkbox_by_name', dept_name)
+    checkbox = viewable_section.locator(checkbox_selector)
     if checkbox.count() == 1:
         checkbox.check()
     elif checkbox.count() > 1:
@@ -55,7 +59,8 @@ def check_viewable_department_checkbox(page: Page, dept_name: str):
                     break
     else:
         # Try by value attribute
-        checkbox = viewable_section.locator(f'input[type="checkbox"][value="{dept_name}"]')
+        value_selector = get_selector('webchart', 'viewable_checkbox_by_value', dept_name)
+        checkbox = viewable_section.locator(value_selector)
         if checkbox.count() > 0:
             checkbox.first.check()
 
@@ -93,7 +98,8 @@ def add_user_to_department(page: Page, username: str):
     wait_for_ajax(page)
     
     # Click the Add button
-    listedit_section = page.locator('table.dlg_root').last
+    listedit_selector = get_selector('webchart', 'listedit_section')
+    listedit_section = page.locator(listedit_selector).last
     button = listedit_section.get_by_role('button', name='Add', exact=True)
     if button.count() > 0 and button.first.is_visible(timeout=2000):
         button.first.click()
@@ -136,7 +142,7 @@ def delete_department_if_exists(page: Page, dept: str):
         pass
     
     # Look for the department's Delete link
-    delete_selector = f'//td/a[normalize-space(text())="{dept}"]/parent::td/following-sibling::td//a[text()="Delete"]'
+    delete_selector = get_selector('webchart', 'dept_delete_link', dept)
     delete_link = page.locator(delete_selector).first
     
     try:

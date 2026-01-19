@@ -1,18 +1,34 @@
 """
-Login Page Object
+Login Component
 Handles all login/logout operations for WebChart.
+
+URL Patterns:
+- Base URL (no func parameter) - Login page
+- ?func=logout - Logout
+- ?f=login&s=ulookup - Forgot username
+- ?f=login&s=preset - Forgot password
 """
 
+from typing import List
 from playwright.sync_api import Page
 
 from support.config import config
 
 
-class LoginPage:
+class LoginComponent:
     """
-    Page object for WebChart login page.
+    Component for WebChart login page.
     Handles all login/logout operations.
     """
+    
+    # URL patterns this component handles
+    URL_PATTERNS: List[str] = [
+        '',                    # Base URL - login page
+        '?func=logout',        # Logout
+        '?f=login',            # Login variations
+        '?f=login&s=ulookup',  # Forgot username
+        '?f=login&s=preset',   # Forgot password
+    ]
     
     def __init__(self, page: Page):
         self.page = page

@@ -74,6 +74,19 @@ elements:
   submit_dept_button: "//input[@type='button'][contains(@value, 'Submit')] | //input[@type='submit'][contains(@value, 'Submit')] | //button[contains(text(), 'Submit')]"
   show_all_link: "//a[contains(text(), 'Show All')]"
   dept_edit_link: "//td[@class='depts_Department_cell' and contains(., '{TEXT}')]/following-sibling::td/a[contains(., 'Edit')]"
+  dept_delete_link: "//td/a[normalize-space(text())='{TEXT}']/parent::td/following-sibling::td//a[text()='Delete']"
+  department_name_input: "input[type='text']:not([disabled])"
+  
+  # ============== Viewable Departments ==============
+  viewable_departments_section: "fieldset:has-text('Viewable Departments')"
+  viewable_checkbox_checked: "input[type='checkbox']:checked"
+  viewable_checkbox_by_name: "td:has-text('{TEXT}') input[type='checkbox']"
+  viewable_checkbox_by_value: "input[type='checkbox'][value='{TEXT}']"
+  
+  # ============== Form Elements ==============
+  text_input_visible: "//input[not(@type='hidden') and not(@disabled)][@type='text']"
+  text_input_first: "input[type='text']:not([disabled])"
+  listedit_section: "table.dlg_root"
 
 # WebChart URLs
 urls:

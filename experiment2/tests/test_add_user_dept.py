@@ -24,8 +24,8 @@ from playwright.sync_api import Page
 # Import WebChart step definitions (registers all steps)
 from steps.webchart_steps import *
 
-# Import page objects for more complex scenarios
-from pages import LoginPage, WebChartPage, AccessControlPage
+# Import components for more complex scenarios
+from components import LoginComponent, BaseComponent, AccessControlComponent
 
 # Load all scenarios from the feature file
 scenarios('../features/add_user_dept.feature')
@@ -34,9 +34,9 @@ scenarios('../features/add_user_dept.feature')
 # ============== Test Fixtures ==============
 
 @pytest.fixture
-def access_control_page(page: Page) -> AccessControlPage:
-    """Provide an AccessControlPage instance."""
-    return AccessControlPage(page)
+def access_control_component(page: Page) -> AccessControlComponent:
+    """Provide an AccessControlComponent instance."""
+    return AccessControlComponent(page)
 
 
 # ============== Test-Specific Configuration ==============

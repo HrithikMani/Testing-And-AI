@@ -8,7 +8,7 @@ from pytest_bdd import given, when, then, parsers
 from playwright.sync_api import Page
 
 from support.config import config
-from pages import LoginPage
+from components import LoginComponent
 
 
 # ============== Helper Functions ==============
@@ -37,24 +37,24 @@ def wait_for_animation(page: Page, duration: float = None):
 @given("I login to WebChart")
 def login_to_webchart(page: Page):
     """Login to WebChart with configured credentials."""
-    login_page = LoginPage(page)
-    login_page.goto()
-    login_page.login(config.USERNAME, config.PASSWORD)
-    login_page.wait_for_dashboard()
+    login_component = LoginComponent(page)
+    login_component.goto()
+    login_component.login(config.USERNAME, config.PASSWORD)
+    login_component.wait_for_dashboard()
 
 
 @given(parsers.parse('I login to WebChart as "{username}" with password "{password}"'))
 def login_to_webchart_with_creds(page: Page, username: str, password: str):
     """Login to WebChart with specific credentials."""
-    login_page = LoginPage(page)
-    login_page.goto()
-    login_page.login(username, password)
-    login_page.wait_for_dashboard()
+    login_component = LoginComponent(page)
+    login_component.goto()
+    login_component.login(username, password)
+    login_component.wait_for_dashboard()
 
 
 @when("I logout from WebChart")
 @then("I logout from WebChart")
 def logout_from_webchart(page: Page):
     """Logout from WebChart."""
-    login_page = LoginPage(page)
-    login_page.logout()
+    login_component = LoginComponent(page)
+    login_component.logout()

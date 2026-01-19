@@ -1,19 +1,34 @@
 """
-Access Control Page Object
-Handles department management in WebChart.
+Access Control Component
+Handles department and user access management in WebChart.
+
+URL Patterns:
+- ?f=admin&subfunc=access_control - Access Control list
+- ?f=admin&subfunc=access_control&t=user_realms - Departments tab
+- ?f=admin&subfunc=access_control&opp=add - Add department
+- ?f=admin&subfunc=access_control&opp=edit - Edit department
 """
 
+from typing import List
 from playwright.sync_api import Page
 
-from pages.webchart_base_page import WebChartPage
+from components.base_component import BaseComponent
 from support.selector_loader import get_selector
 
 
-class AccessControlPage(WebChartPage):
+class AccessControlComponent(BaseComponent):
     """
-    Page object for Access Control section of WebChart.
-    Extends WebChartPage with department management methods.
+    Component for Access Control section of WebChart.
+    Extends BaseComponent with department management methods.
     """
+    
+    # URL patterns this component handles
+    URL_PATTERNS: List[str] = [
+        '?f=admin&subfunc=access_control',           # Access Control main
+        '?f=admin&subfunc=access_control&t=user_realms',  # Departments
+        '?f=admin&subfunc=access_control&opp=add',   # Add department
+        '?f=admin&subfunc=access_control&opp=edit',  # Edit department
+    ]
     
     def navigate_to_access_control(self):
         """Navigate to Access Control from anywhere."""
@@ -25,7 +40,8 @@ class AccessControlPage(WebChartPage):
     def add_department(self, name: str):
         """Click Add Department and enter name."""
         self.click_link("Add Department")
-        self.page.locator("input[type='text']").first.fill(name)
+        selector = get_selector('webchart', 'department_name_input')
+        self.page.locator(selector).first.fill(name)
     
     def add_user_to_department(self, username: str):
         """Add a user to the department being edited."""
